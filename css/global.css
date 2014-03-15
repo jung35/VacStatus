@@ -15,10 +15,6 @@ body {
   padding: 0 15px;
 }
 
-.container .text-muted {
-  margin: 20px auto;
-}
-
 .navbar, .navbar-inverse {
   background: #04B2D9;
   font-size: 13px;
@@ -90,6 +86,10 @@ h1 {
   background-color: #f5f5f5;
 }
 
+.copyright {
+  margin: 20px auto;
+}
+
 .cursor {
   cursor: pointer;
 }
@@ -106,4 +106,8 @@ h1 {
   .text-center-md {
     text-align: left;
   }
+}
+
+.admin-menu {
+  background: #a94442;
 }

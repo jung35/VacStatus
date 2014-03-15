@@ -1,0 +1,8 @@
+.nav .active a, .breadcrumb {
+  border-bottom: 0 !important;
+  background: #efefef !important;
+}
+
+.text-bold {
+  font-weight: bold;
+}
