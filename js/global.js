@@ -1,1 +1,0 @@
-$('.ttip').tooltip({container: 'html'});
