@@ -1,0 +1,33 @@
+.big-text {
+  font-size: 72px;
+}
+
+.bordered {
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.bordered:hover {
+  background: rgba(255, 255, 255, .3);
+}
+
+.bordered h4 {
+  margin: 0;
+}
+
+.site-stats {
+  padding: 10px 0 0;
+}
+
+.site-stats div {
+  padding: 0 5px;
+}
+
+@media (min-width: 768px) {
+  .col-sm-offset-half {
+    margin-left: 4.16666667%;
+  }
+  .stats-label {
+    text-align: right;
+  }
+}
