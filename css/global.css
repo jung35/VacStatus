@@ -1,0 +1,109 @@
+html {
+  position: relative;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: #efefef;
+  color: #333;
+  margin-bottom: 60px;
+}
+
+.container {
+  padding: 0 15px;
+}
+
+.container .text-muted {
+  margin: 20px auto;
+}
+
+.navbar, .navbar-inverse {
+  background: #04B2D9;
+  font-size: 13px;
+  border: 0;
+}
+
+.navbar-collapse {
+  background: #04B2D9;
+  border-color: #fff !important;
+}
+
+.navbar-nav li a {
+  color: rgba(255, 255, 255, .9) !important;
+  display: block;
+  text-decoration: none;
+  font-weight: 400;
+  padding: inherit 20px;
+}
+
+.navbar-nav li:not(.active) a:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, .1) !important;
+}
+
+.navbar-nav .active a {
+  background: rgba(255, 255, 255, .3) !important;
+}
+
+.navbar-brand {
+  font-size: 24px;
+  padding: inherit 20px;
+  border: 0;
+  color: #fff !important;
+}
+
+.navbar-toggle {
+  border-color: #fff !important;
+}
+
+.navbar-toggle:hover, .navbar-toggle:focus {
+  background: rgba(255, 255, 255, .3) !important;
+}
+
+.main-container {
+  background: inherit;
+  margin: 61px auto 0;
+}
+
+h1 {
+  margin: 0;
+  padding: 20px 0 10px;
+}
+
+.h1-sub {
+  display: block;
+  font-size: 18px;
+  color: #777;
+}
+
+.text-center {
+  text-align: center;
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.table td {
+   vertical-align: middle !important;
+}
+
+.text-center-md {
+  text-align: center;
+}
+
+@media (min-width: 990px) {
+  .text-center-md {
+    text-align: left;
+  }
+}

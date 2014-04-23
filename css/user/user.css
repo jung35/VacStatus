@@ -1,0 +1,13 @@
+.user-avatar {
+  border: 5px solid #ccc;
+  border-radius: 5px;
+  display: inline-block !important;
+}
+
+.user-profile-status {
+  padding: 0;
+}
+
+.user-info-box {
+  padding: 0 0 15px;
+}
