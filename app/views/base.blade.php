@@ -53,7 +53,7 @@
   </div>
   <div id="footer">
     <div class="container">
-      <p class="col-md-6 text-muted copyright">&copy; 2014 vBan Status (v0.3) &middot; <a href="https://github.com/jung3o/vBan-Status" target="_blank">Github</a> &middot; <a href="http://jung3o.com" target="_blank">Jung Oh</a> ( <a href="http://steamcommunity.com/id/Jung3o/" target="_blank">Steam</a> &middot; <a href="http://facepunch.com/member.php?u=451226" target="_blank">Facepunch</a> &middot; <a href="http://www.reddit.com/user/jung3o/" target="_blank">Reddit</a> )</p>
+      <p class="col-md-6 text-muted copyright">&copy; 2014 vBan Status (v0.4) &middot; <a href="https://github.com/jung3o/vBan-Status" target="_blank">Github</a> &middot; <a href="http://jung3o.com" target="_blank">Jung Oh</a> ( <a href="http://steamcommunity.com/id/Jung3o/" target="_blank">Steam</a> &middot; <a href="http://facepunch.com/member.php?u=451226" target="_blank">Facepunch</a> &middot; <a href="http://www.reddit.com/user/jung3o/" target="_blank">Reddit</a> )</p>
       <p class="col-md-6 text-muted copyright text-right">
          <a href="/privacy">Privacy Policy</a> &middot; Powered By <a href="http://steampowered.com" target="_blank">Steam</a>
       </p>
