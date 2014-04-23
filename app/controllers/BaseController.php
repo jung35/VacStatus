@@ -12,7 +12,7 @@ class BaseController extends Controller {
    */
   public function __construct()
   {
-    $this->steamAPI = '';
+    $this->steamAPI = 'F9B7CDC088820DEABB7D4AA9745177C4';
     $this->log = Log::getMonolog();
 
     if(empty($this->steamAPI)) {
@@ -20,7 +20,7 @@ class BaseController extends Controller {
         "ipAddress" => Request::getClientIp(),
         "controller" => "__construct@BaseController"
       ));
-
+      echo 'STEAMAPI MISSING <!--';
     }
   }
 

@@ -28,8 +28,10 @@ else
 Route::get('search', array('as' => 'search', 'uses' => 'AppController@doSearch'));
 Route::post('search', 'AppController@doSearch');
 
-Route::get('most', array('as' => 'most', 'uses' => 'AppController@listMostUserTracked'));
 Route::get('u/{steamCommunityId?}', array('as' => 'user', 'uses' => 'AppController@showUser'));
+
+Route::get('most', array('as' => 'most', 'uses' => 'AppController@listMostUserTracked'));
+Route::get('latest', array('as' => 'latest', 'uses' => 'AppController@showLatestUserAdded'));
 
 Route::get('news', array('as' => 'news', 'uses' => 'HomeController@showNews'));
 Route::get('about', array('as' => 'about', 'uses' => 'HomeController@showAbout'));

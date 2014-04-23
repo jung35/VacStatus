@@ -34,6 +34,7 @@
           <li><a href="{{{ URL::route('news') }}}">Site News</a></li>
           <li><a href="{{{ URL::route('about') }}}">About / Contact</a></li>
           <li><a href="{{{ URL::route('most') }}}">Most Tracked User</a></li>
+          <li><a href="{{{ URL::route('latest') }}}">Latest Added User</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           @if(Session::get('user.in'))

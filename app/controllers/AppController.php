@@ -122,7 +122,7 @@ class AppController extends BaseController {
     ));
 
     vBanList::whereRaw('steam_user_id = '.Session::get('user.id').' and v_ban_user_id = '.$searchData)->delete();
-    
+
 
     $checkURL = explode("/",$_SERVER['HTTP_REFERER']);
     if($checkURL[count($checkURL)-1] == 'search') {
@@ -153,12 +153,9 @@ class AppController extends BaseController {
     $newCount = $count;
     sort($newCount);
 
-    // print_r($newCount);
-    // return;
-
     $arrCount = count($newCount)-1;
 
-    $hatedUsers = Array();
+    $vBanUsers = Array();
     $arrOfId = Array();
     $vBanUser = Array();
 
@@ -166,12 +163,24 @@ class AppController extends BaseController {
     {
       $keyOfId = array_search($newCount[$x], $count);
       $vBanUser = $this->getVBanUser($community_id[$keyOfId]);
-      $hatedUsers[] = Array($newCount[$x], $vBanUser);
+      $vBanUsers[] = $vBanUser;
       unset($newCount[$x]);
       unset($count[$keyOfId]);
     }
 
-    return View::make('user.mostHated', array('hatedUsers' => $hatedUsers));
+    return View::make('user.userList', array('hatedUsers' => true, 'vBanUsers' => $vBanUsers));
+  }
+
+  public function showLatestUserAdded()
+  {
+    $vBanLists = vBanList::all()->sortByDesc('id')->take(20);
+    $vBanUsers = Array();
+
+    foreach($vBanLists as $vBanList) {
+      $vBanUsers[] = $this->getVBanUser($vBanList->vBanUser->community_id);
+    }
+
+    return View::make('user.userList', array('latestUserAdded' => true, 'vBanUsers' => $vBanUsers));
   }
 
   private function getSteamSearchCommunityId($data)
