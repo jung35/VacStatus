@@ -6,7 +6,9 @@
 @stop
 
 @section('title')
-&mdash; Most Tracked Users
+&mdash; @if(isset($hatedUsers)) Most Tracked Users
+@elseif(isset($latestUserAdded)) Latest Added User
+@endif
 @stop
 
 @section('content')
@@ -32,32 +34,32 @@
         </tr>
       </thead>
       <tbody>
-      @foreach ($hatedUsers as $hatedUser)
+      @foreach ($vBanUsers as $vBanUser)
       <tr>
-        <td><img src="{{{ $hatedUser[1]->steam_avatar_url_small }}}"></td>
-        <td>{{{ $hatedUser[1]->display_name }}}</td>
-        @if($hatedUser[1]->vac_banned > -1)
-        <td class="text-danger text-center"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;{{{ date('m/d/Y', time()-($hatedUser[1]->vac_banned*86400)) }}}</td>
+        <td><img src="{{{ $vBanUser->steam_avatar_url_small }}}"></td>
+        <td>{{{ $vBanUser->display_name }}}</td>
+        @if($vBanUser->vac_banned > -1)
+        <td class="text-danger text-center"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;{{{ date('m/d/Y', time()-($vBanUser->vac_banned*86400)) }}}</td>
         @else
         <td class="text-success text-center"><span class="glyphicon glyphicon-remove"></span></td>
         @endif
-        @if($hatedUser[1]->community_banned)
+        @if($vBanUser->community_banned)
         <td class="text-danger text-center"><span class="glyphicon glyphicon-ok"></span></td>
         @else
         <td class="text-success text-center"><span class="glyphicon glyphicon-remove"></span></td>
         @endif
-        <td class="text-center">{{{ $hatedUser[0] }}}</td>
-        <td><a href="{{ URL::route('user', array( $hatedUser[1]->community_id )) }}" target="_blank" type="button" class="btn btn-info btn-sm">Info</a></td>
+        <td class="text-center">{{{ $vBanUser->get_num_tracking }}}</td>
+        <td><a href="{{ URL::route('user', array( $vBanUser->community_id )) }}" target="_blank" type="button" class="btn btn-info btn-sm">Info</a></td>
         <td>
           @if (Session::get('user.in'))
-            @if($hatedUser[1]->is_tracking)
+            @if($vBanUser->is_tracking)
               {{ Form::open(array('route' => 'remove')) }}
-              {{ Form::hidden('vBanUserId', $hatedUser[1]->id) }}
+              {{ Form::hidden('vBanUserId', $vBanUser->id) }}
               <input type="submit" class="btn btn-danger btn-sm" value="Delete">
               {{ Form::close() }}
             @else
               {{ Form::open(array('route' => 'add')) }}
-              {{ Form::hidden('vBanUserId', $hatedUser[1]->id) }}
+              {{ Form::hidden('vBanUserId', $vBanUser->id) }}
               <input type="submit" class="btn btn-info btn-sm" value="Add">
               {{ Form::close() }}
             @endif
