@@ -13,6 +13,7 @@
 /bootstrap/start.php
 /composer.phar
 /vendor
+/app/storage/*
 Thumbs.db
 
 !/vendor/hybridauth/hybridauth/hybridauth/Hybrid/Providers/Steam.php
