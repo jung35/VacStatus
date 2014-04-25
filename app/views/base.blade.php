@@ -70,15 +70,22 @@
     ga('create', 'UA-26127712-1', 'jung3o.com');
     ga('send', 'pageview');
   </script>
+
+  <script>(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;/*uv.src='//widget.uservoice.com/FAKEFAKEFAKE.js';*/var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})()</script>
+
   <script>
-    UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/FAKEFAKEFAKEFAKEFAKEFAKE.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
-    UserVoice.push(['set', {
-      accent_color: '#448dd6',
-      trigger_color: 'white',
-      trigger_background_color: '#448dd6'
+    UserVoice = window.UserVoice || [];
+    UserVoice.push(['showTab', 'classic_widget', {
+      mode: 'full',
+      primary_color: '#cc6d00',
+      link_color: '#007dbf',
+      default_mode: 'feedback',
+      forum_id: 249952,
+      tab_label: 'Feedback & Support',
+      tab_color: '#04b2d9',
+      tab_position: 'middle-left',
+      tab_inverted: false
     }]);
-    UserVoice.push(['addTrigger', { mode: 'satisfaction', trigger_position: 'bottom-right' }]);
-    UserVoice.push(['autoprompt', {}]);
   </script>
 </body>
 </html>
