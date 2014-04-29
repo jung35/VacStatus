@@ -53,7 +53,7 @@
   </div>
   <div id="footer">
     <div class="container">
-      <p class="col-md-6 text-muted copyright">&copy; 2014 vBan Status (v0.4) &middot; <a href="https://github.com/jung3o/vBan-Status" target="_blank">Github</a> &middot; <a href="http://jung3o.com" target="_blank">Jung Oh</a> ( <a href="http://steamcommunity.com/id/Jung3o/" target="_blank">Steam</a> &middot; <a href="http://facepunch.com/member.php?u=451226" target="_blank">Facepunch</a> &middot; <a href="http://www.reddit.com/user/jung3o/" target="_blank">Reddit</a> )</p>
+      <p class="col-md-6 text-muted copyright">&copy; 2014 vBan Status &middot; <a href="https://github.com/jung3o/vBan-Status" target="_blank">Github</a> &middot; <a href="http://jung3o.com" target="_blank">Jung Oh</a> ( <a href="http://steamcommunity.com/id/Jung3o/" target="_blank">Steam</a> &middot; <a href="http://facepunch.com/member.php?u=451226" target="_blank">Facepunch</a> &middot; <a href="http://www.reddit.com/user/jung3o/" target="_blank">Reddit</a> )</p>
       <p class="col-md-6 text-muted copyright text-right">
          <a href="/privacy">Privacy Policy</a> &middot; Powered By <a href="http://steampowered.com" target="_blank">Steam</a>
       </p>
@@ -67,10 +67,25 @@
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
     ga('create', 'UA-26127712-1', 'jung3o.com');
     ga('send', 'pageview');
+  </script>
 
+  <script>(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;/*uv.src='//widget.uservoice.com/FAKEFAKEFAKE.js';*/var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})()</script>
+
+  <script>
+    UserVoice = window.UserVoice || [];
+    UserVoice.push(['showTab', 'classic_widget', {
+      mode: 'full',
+      primary_color: '#cc6d00',
+      link_color: '#007dbf',
+      default_mode: 'feedback',
+      forum_id: 249952,
+      tab_label: 'Feedback & Support',
+      tab_color: '#04b2d9',
+      tab_position: 'middle-left',
+      tab_inverted: false
+    }]);
   </script>
 </body>
 </html>
