@@ -13,11 +13,11 @@ class VBanUser extends Migration {
 	public function up()
 	{
     Schema::create('vBanUser', function($table) {
-      $table->bigIncrements('id');
+      $table->increments('id');
       $table->bigInteger('community_id')->unique();
       $table->boolean('private_profile');
       $table->text('display_name');
-      $table->integer('steam_creation');
+      $table->bigInteger('steam_creation');
       $table->text('steam_avatar_url_big');
       $table->text('steam_avatar_url_small');
       $table->integer('vac_banned');

@@ -10,15 +10,15 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+
+Route::filter('steamAuth', function()
+{
+    if(!Session::get('user.in')) return View::make('noLogin');
+});
+
 if(Session::get('user.in'))
 {
   Route::get('', array('as' => 'home', 'uses' => 'AppController@showIndex'));
-
-  Route::post('add', 'AppController@addUser');
-  Route::post('remove', 'AppController@removeUser');
-
-  Route::get('add', array('before' => 'csrf', 'as' => 'add', 'uses' => 'AppController@addUser'));
-  Route::get('remove', array('before' => 'csrf', 'as' => 'remove', 'uses' => 'AppController@removeUser'));
 }
 else
 {
@@ -39,7 +39,20 @@ Route::get('about', array('as' => 'about', 'uses' => 'HomeController@showAbout')
 Route::get('login/{action?}', array('as' => 'login', 'uses' => 'HomeController@steamLogin'));
 Route::get('logout', array('as' => 'logout', 'uses' => 'HomeController@steamLogout'));
 
+Route::get('verify/{verificationCode}', array('as' => 'verify', 'uses' => 'MailController@verifyEmail'));
+
 Route::get('privacy', function()
 {
-    return View::make('privacyPolicy');
+  return View::make('privacyPolicy');
 });
+
+Route::post('add', array('before' => 'steamAuth', 'uses' => 'AppController@addUser'));
+Route::post('remove', array('before' => 'steamAuth', 'uses' => 'AppController@removeUser'));
+
+Route::get('add', array('before' => 'steamAuth|csrf', 'as' => 'add', 'uses' => 'AppController@addUser'));
+Route::get('remove', array('before' => 'steamAuth|csrf', 'as' => 'remove', 'uses' => 'AppController@removeUser'));
+
+Route::get('subscribe', array('before' => 'steamAuth', 'as' => 'subscribe', 'uses' => 'MailController@showSub'));
+Route::post('subscribe', array('before' => 'steamAuth', 'uses' => 'MailController@doSub'));
+
+Route::get('resend', array('before' => 'steamAuth', 'as' => 'resendEmail', 'uses' => 'MailController@sendVerification'));

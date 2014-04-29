@@ -32,14 +32,20 @@
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
           <li><a href="{{{ URL::route('news') }}}">Site News</a></li>
-          <li><a href="{{{ URL::route('about') }}}">About / Contact</a></li>
-          <li><a href="{{{ URL::route('most') }}}">Most Tracked User</a></li>
-          <li><a href="{{{ URL::route('latest') }}}">Latest Added User</a></li>
+          <li><a href="{{{ URL::route('most') }}}">Most Tracked</a></li>
+          <li><a href="{{{ URL::route('latest') }}}">Latest Added</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           @if(Session::get('user.in'))
-            <li><a href="{{{ URL::route('user', array( Session::get('user.communityId') )) }}}">Profile</a></li>
-            <li><a href="{{{ URL::route('logout') }}}">Logout ({{{ Session::get('user.name') }}})</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{{ Session::get('user.name') }}} <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="{{{ URL::route('user', array( Session::get('user.communityId') )) }}}">Profile</a></li>
+              <li class="divider"></li>
+              <li><a href="{{{ URL::route('subscribe') }}}">Notification</a></li>
+            </ul>
+          </li>
+            <li><a href="{{{ URL::route('logout') }}}">Logout</a></li>
           @else
             <li><a href="{{{ URL::route('login') }}}">Login with Steam</a></li>
           @endif
@@ -71,7 +77,7 @@
     ga('send', 'pageview');
   </script>
 
-  <script>(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;/*uv.src='//widget.uservoice.com/FAKEFAKEFAKE.js';*/var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})()</script>
+  <script>(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/L36sOvpl12GBt8Lf0BDk3A.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})()</script>
 
   <script>
     UserVoice = window.UserVoice || [];

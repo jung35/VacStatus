@@ -26,7 +26,7 @@ body {
   border-color: #fff !important;
 }
 
-.navbar-nav li a {
+.navbar-nav > li > a {
   color: rgba(255, 255, 255, .9) !important;
   display: block;
   text-decoration: none;
@@ -34,12 +34,13 @@ body {
   padding: inherit 20px;
 }
 
-.navbar-nav li:not(.active) a:hover {
+.navbar-nav > li:not(.active) > a:hover,
+.navbar-nav .dropdown.open > a {
   color: #fff !important;
   background: rgba(255, 255, 255, .1) !important;
 }
 
-.navbar-nav .active a {
+.navbar-nav .active > a {
   background: rgba(255, 255, 255, .3) !important;
 }
 
@@ -56,6 +57,15 @@ body {
 
 .navbar-toggle:hover, .navbar-toggle:focus {
   background: rgba(255, 255, 255, .3) !important;
+}
+
+.dropdown .dropdown-menu a {
+  color: #333 !important;
+}
+
+.dropdown .dropdown-menu a:hover {
+  color: #eee !important;
+  background: #04B2D9;
 }
 
 .main-container {
@@ -110,4 +120,8 @@ h1 {
 
 .admin-menu {
   background: #a94442;
+}
+
+p {
+  padding: 20px;
 }

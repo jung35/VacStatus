@@ -13,9 +13,10 @@ class VBanList extends Migration {
 	public function up()
 	{
     Schema::create('vBanList', function($table) {
-      $table->bigIncrements('id');
-      $table->bigInteger('steam_user_id');
-      $table->bigInteger('v_ban_user_id');
+      $table->increments('id');
+      $table->integer('steam_user_id');
+      $table->integer('v_ban_user_id');
+      $table->integer('last_checked');
       $table->timestamps();
     });
 	}

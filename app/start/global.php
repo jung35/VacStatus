@@ -97,6 +97,7 @@ App::bind('Hybrid_Auth', function() {
 
 App::error(function($exception, $code)
 {
+
   $errorList = Array(
     "default" => Array($code, "Sorry."),
     403 => Array("Forbidden", "Sorry, you do not have access to this!"),
@@ -110,6 +111,7 @@ App::error(function($exception, $code)
     "displayName" => Session::get('user.name'),
     "ipAddress" => Request::getClientIp(),
     "data" => Array(
+      "code" => $code,
       "info" => $exception->getMessage(),
       "file" => $exception->getFile(),
       "line" => $exception->getLine()

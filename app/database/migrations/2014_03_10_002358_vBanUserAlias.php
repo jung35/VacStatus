@@ -13,8 +13,8 @@ class VBanUserAlias extends Migration {
 	public function up()
 	{
     Schema::create('vBanUserAlias', function($table) {
-      $table->bigIncrements('id');
-      $table->bigInteger('v_ban_user_id');
+      $table->increments('id');
+      $table->integer('v_ban_user_id');
       $table->text('alias');
       $table->integer('time_used');
       $table->timestamps();
