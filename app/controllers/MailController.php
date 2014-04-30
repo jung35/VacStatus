@@ -6,7 +6,20 @@ class MailController extends BaseController {
 
     $userMail = mailList::whereSteamUserId(Session::get('user.id'))->first();
 
-    return View::make('user.subscribe', array('userMail' => $userMail) );
+    $emailSendTime = Session::get('email.send');
+    if(!is_null($emailSendTime)) {
+      $emailSendTime = time() - $emailSendTime;
+
+      if($emailSendTime > 3600) {
+        $emailSendTime = (int)($emailSendTime / 3600). ' hours ago';
+      } elseif($emailSendTime > 60) {
+        $emailSendTime = (int)($emailSendTime / 60). ' mintues ago';
+      } else {
+        $emailSendTime .= ' seconds ago';
+      }
+    }
+
+    return View::make('user.subscribe', array('userMail' => $userMail, 'emailSendTime' => $emailSendTime) );
   }
 
   public function doSub()
@@ -39,7 +52,7 @@ class MailController extends BaseController {
 
   public function sendVerification()
   {
-    if(Session::get('email.send') != null && time() - Session::get('email.send') < 0) {
+    if(Session::get('email.send') != null && time() - Session::get('email.send') < 300) {
       return Redirect::route('subscribe');
     }
 

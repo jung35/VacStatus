@@ -8,7 +8,10 @@
 
   @if(isset($userMail->verify))
     @if ($userMail->verify != 'done')
-      <p class="bg-info">It looks like you haven't confirmed your email yet. Please check you inbox and spam! <a href="{{{ URL::route('resendEmail') }}}">Send verification mail!</p>
+      @if ($emailSendTime != null)
+      <p class="bg-primary">You have been sent a verification mail request {{{ $emailSendTime }}}.</p>
+      @endif
+      <p class="bg-info">It looks like you have not confirmed your email yet. Please check you inbox and spam! <a href="{{{ URL::route('resendEmail') }}}">Send verification mail!</a></p>
     @elseif($userMail->verify == 'done')
       <p class="bg-info">You're all done! You're currently being tracked and all your email will be sent to {{{ $userMail->email }}}</p>
     @endif

@@ -12,7 +12,7 @@ class BaseController extends Controller {
    */
   public function __construct()
   {
-    $this->steamAPI = 'A5FFEE096D570742A1E7C6F46EE69687';
+    $this->steamAPI = '03D0723513386B78C4D6CD0301B8B3AB';
     $this->log = Log::getMonolog();
 
     if(empty($this->steamAPI)) {
