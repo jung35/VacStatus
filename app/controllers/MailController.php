@@ -72,7 +72,8 @@ class MailController extends BaseController {
     return Redirect::route('subscribe');
   }
 
-  public function verifyEmail($verificationCode = null) {
+  public function verifyEmail($verificationCode = null)
+  {
 
     if($verificationCode == null) return Redirect::route('home');
 
@@ -87,6 +88,11 @@ class MailController extends BaseController {
     }
 
     return Redirect::route('home');
+
+  }
+
+  public function getASubscribedUser()
+  {
 
   }
 }
