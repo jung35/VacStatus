@@ -101,7 +101,7 @@ class MailController extends BaseController {
         return $this->getASubscribedUser();
       }
 
-      return $getNewUser->steam_user_id;
+      return $getNewUser;
     }
     Cache::forever('getLastCheckedUser', -1);
     return $this->getASubscribedUser();

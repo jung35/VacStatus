@@ -36,8 +36,25 @@ class vBanListChecker extends Command {
 	public function fire()
 	{
 		$MailController = new MailController;
+		$mailList = $MailController->getASubscribedUser();
+		$steamUser = steamUser::whereId($mailList->steam_user_id)->first();
+		$vBanUser = $steamUser->vBanUser;
+		$vBanList = $steamUser->vBanList;
 
-		$this->info($MailController->getASubscribedUser());
+		$this->info("");
+		$this->info("");
+		$this->info("========== User Found! [ID {$mailList->steam_user_id}] ==========");
+		$this->info("");
+		$this->info("     Display Name:    {$vBanUser->display_name}");
+		$this->info("     Community ID:    {$vBanUser->community_id}");
+		$this->info("           E-Mail:    {$mailList->email}");
+		$this->info("    Users in List:    {$vBanList->count()}");
+		$this->info("");
+		$this->info("========================================");
+		$this->info("");
+		$this->info("");
+
+		$MailController->checkUserList($vBanList);
 
 		return;
 	}
