@@ -3,7 +3,6 @@ class MailController extends BaseController {
 
   public function showSub()
   {
-
     $userMail = mailList::whereSteamUserId(Session::get('user.id'))->first();
 
     $emailSendTime = Session::get('email.send');
@@ -93,7 +92,19 @@ class MailController extends BaseController {
 
   public function getASubscribedUser()
   {
+    if(Cache::has('getLastCheckedUser')) {
+      $getLastCheckedUser = Cache::get('getLastCheckedUser');
+      $getNewUser = mailList::whereRaw('id > ? and verify = ?', array($getLastCheckedUser, 'done'))->first();
 
+      if($getNewUser->id == null) {
+        Cache::set('getLastCheckedUser', -1);
+        return $this->getASubscribedUser();
+      }
+
+      return $getNewUser->steam_user_id;
+    }
+    Cache::forever('getLastCheckedUser', -1);
+    return $this->getASubscribedUser();
   }
 }
 ?>

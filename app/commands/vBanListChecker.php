@@ -36,6 +36,10 @@ class vBanListChecker extends Command {
 	public function fire()
 	{
 		$MailController = new MailController;
+
+		$this->info($MailController->getASubscribedUser());
+
+		return;
 	}
 
 }
