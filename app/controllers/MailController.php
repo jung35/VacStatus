@@ -106,5 +106,20 @@ class MailController extends BaseController {
     Cache::forever('getLastCheckedUser', -1);
     return $this->getASubscribedUser();
   }
+
+  public function checkUserList($vBanList)
+  {
+    $suspects = $vBanList->whereCheckBanned(false);
+
+    foreach($suspects as $suspect) {
+      $userInfo = $this->updateVBanUser($suspect->steam_user_id);
+      if($userInfo->vac_banned > -1) {
+        $suspect->check_banned = true;
+        $suspect->save();
+
+        // Mailstuff
+      }
+    }
+  }
 }
 ?>
