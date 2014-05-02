@@ -50,11 +50,20 @@ class vBanListChecker extends Command {
 		$this->info("           E-Mail:    {$mailList->email}");
 		$this->info("    Users in List:    {$vBanList->count()}");
 		$this->info("");
+		$this->info("... Checking & Sending E-Mail ...");
+
+		if($MailController->checkUserList($vBanList, $mailList->steam_user_id)) {
+			$this->info("");
+			$this->info("Email SENT!");
+			$this->info("");
+		} else {
+			$this->info("");
+			$this->info("Email Wasn't needed!");
+			$this->info("");
+		}
 		$this->info("========================================");
 		$this->info("");
 		$this->info("");
-
-		$MailController->checkUserList($vBanList);
 
 		return;
 	}

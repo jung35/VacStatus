@@ -435,20 +435,6 @@
                       <table border="0" cellpadding="0" cellspacing="0" id="templateContainer">
                           <tr>
                               <td align="center" valign="top">
-                                  <!-- BEGIN PREHEADER // -->
-                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templatePreheader">
-                                        <tr>
-                                            <td valign="top" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:20px;" mc:edit="preheader_content00">
-                                                @section('previewText')
-                                                @show
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <!-- // END PREHEADER -->
-                                </td>
-                            </tr>
-                          <tr>
-                              <td align="center" valign="top">
                                   <!-- BEGIN HEADER // -->
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
                                         <tr>
@@ -468,14 +454,6 @@
                                             <td valign="top" class="bodyContent" mc:edit="body_content">
                                               @section('emailContent')
                                               @show
-                                                <h1>Designing Your Template</h1>
-                                                <h3>Creating a good-looking email is simple</h3>
-                                                Customize your template by clicking on the style editor tabs above. Set your fonts, colors, and styles. After setting your styling is all done you can click here in this area, delete the text, and start adding your own awesome content.
-                                                <br />
-                                                <br />
-                                                <h2>Styling Your Content</h2>
-                                                <h4>Make your email easy to read</h4>
-                                                After you enter your content, highlight the text you want to style and select the options you set in the style editor in the "<em>styles</em>" drop down box. Want to <a href="http://www.mailchimp.com/kb/article/im-using-the-style-designer-and-i-cant-get-my-formatting-to-change" target="_blank">get rid of styling on a bit of text</a>, but having trouble doing it? Just use the "<em>remove formatting</em>" button to strip the text of any formatting and reset your style.
                                             </td>
                                         </tr>
                                     </table>
@@ -488,7 +466,7 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateFooter">
                                         <tr>
                                             <td valign="top" class="footerContent" style="padding-top:20px;" mc:edit="footer_content01">
-                                                <em>Copyright &copy; 2014 vBanStatus<em>
+                                                <em>&copy; 2014 vBanStatus<em>
                                             </td>
                                         </tr>
                                         <tr>

@@ -4,10 +4,6 @@
 You're Almost Done!
 @stop
 
-@section('previewText')
-Now the final step is to verify your mail and you're in!
-@stop
-
 @section('emailContent')
 <h1>You're Almost Done!</h1>
 <h3>Thank you for subscribing :)</h3>

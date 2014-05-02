@@ -107,18 +107,39 @@ class MailController extends BaseController {
     return $this->getASubscribedUser();
   }
 
-  public function checkUserList($vBanList)
+  public function checkUserList($vBanList, $steamUserId)
   {
-    $suspects = $vBanList->whereCheckBanned(false);
+    $suspects = array();
+    foreach($vBanList->all() as $vBanUser) {
+      if(!$vBanUser->check_banned)
+        $suspects[] = $vBanUser;
+    }
+
+    $bannedUsers = array();
 
     foreach($suspects as $suspect) {
-      $userInfo = $this->updateVBanUser($suspect->steam_user_id);
+      $userInfo = $this->updateVBanUser(null, $suspect->vBanUser->community_id);
       if($userInfo->vac_banned > -1) {
         $suspect->check_banned = true;
         $suspect->save();
-
-        // Mailstuff
+        $bannedUsers[] = $suspect;
       }
+    }
+    if(count($bannedUsers) > 0) {
+      $userMail = mailList::whereSteamUserId($steamUserId)->first();
+
+      Mail::send(
+        'emails.foundBannedUser',
+        Array('bannedUsers' => $bannedUsers),
+        function($message) use ($userMail)
+        {
+          $message->to($userMail->email)->subject('Hackers Found On vBanStatus!');
+        }
+      );
+
+      return true;
+    } else {
+      return false;
     }
   }
 }

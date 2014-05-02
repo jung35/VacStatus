@@ -158,16 +158,16 @@ class AppController extends BaseController {
     $vBanUsers = Array();
     $arrOfId = Array();
     $vBanUser = Array();
-
-    for($x = $arrCount; $x > $arrCount-20; $x--)
-    {
-      $keyOfId = array_search($newCount[$x], $count);
-      $vBanUser = $this->getVBanUser($community_id[$keyOfId]);
-      $vBanUsers[] = $vBanUser;
-      unset($newCount[$x]);
-      unset($count[$keyOfId]);
+    if($arrCount > -1) {
+      for($x = $arrCount; $x > $arrCount-20; $x--)
+      {
+        $keyOfId = array_search($newCount[$x], $count);
+        $vBanUser = $this->getVBanUser($community_id[$keyOfId]);
+        $vBanUsers[] = $vBanUser;
+        unset($newCount[$x]);
+        unset($count[$keyOfId]);
+      }
     }
-
     return View::make('user.userList', array('hatedUsers' => true, 'vBanUsers' => $vBanUsers));
   }
 

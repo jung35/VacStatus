@@ -64,7 +64,7 @@ class BaseController extends Controller {
     }
     $userInfo = new stdClass();
 
-    $data = $this->getFileURL( "http://steamcommunity.com/profiles/$steamCommunityId/?xml=1" ) or
+    $data = $this->getFileURL( "http://steamcommunity.com/profiles/$steamCommunityId/?xml=1&".time() ) or
       $this->log->addError("fileLoad", array(
         "steamId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
@@ -90,11 +90,11 @@ class BaseController extends Controller {
     $userInfo->steam_avatar_url_big      = (string) $data->avatarFull;
     $userInfo->steam_avatar_url_small = (string) $data->avatarIcon;
     $userInfo->steam_creation   = (string) strtotime($data->memberSince);
-    $userInfo->privacy_state  = (string) $data->privacyState == 'public' ? 0:1;
+    $userInfo->private_profile  = (string) $data->privacyState == "private"?1:0;
 
     $userInfo->steam_id = $this->getSteamId($steamCommunityId);
 
-    $getBanInfo = $this->getFileURL( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$steamCommunityId}" ) or
+    $getBanInfo = $this->getFileURL( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time() ) or
       $this->log->addError("fileLoad", array(
         "steamId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
@@ -127,8 +127,12 @@ class BaseController extends Controller {
     }
 
     $vBanUser->display_name = $userInfo->display_name;
-    $vBanUser->private_profile = $userInfo->privacy_state;
-    $vBanUser->steam_creation = $userInfo->steam_creation;
+    $vBanUser->private_profile = $userInfo->private_profile;
+    if($vBanUser->steam_creation == 0) {
+      $vBanUser->steam_creation = $userInfo->steam_creation;
+    } else {
+      $userInfo->steam_creation = $vBanUser->steam_creation;
+    }
     $vBanUser->steam_avatar_url_big = $userInfo->steam_avatar_url_big;
     $vBanUser->steam_avatar_url_small = $userInfo->steam_avatar_url_small;
     $vBanUser->vac_banned = $userInfo->vac_banned;
@@ -136,7 +140,7 @@ class BaseController extends Controller {
     $vBanUser->market_banned = $userInfo->market_banned;
     $vBanUser->save();
 
-    $getUserAlias = $this->getFileURL( "http://steamcommunity.com/profiles/$steamCommunityId/ajaxaliases/" ) or
+    $getUserAlias = $this->getFileURL( "http://steamcommunity.com/profiles/$steamCommunityId/ajaxaliases/?".time() ) or
       $this->log->addError("fileLoad", array(
         "steamId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
