@@ -9,6 +9,6 @@ class steamUser extends Eloquent {
   }
 
   public function vBanUser() {
-    return $this->hasMany('vBanUser','steam_id');
+    return $this->hasOne('vBanUser','community_id','community_id');
   }
 }

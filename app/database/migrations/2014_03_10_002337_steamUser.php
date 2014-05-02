@@ -13,7 +13,7 @@ class SteamUser extends Migration {
 	public function up()
 	{
     Schema::create('steamUser', function($table) {
-      $table->bigIncrements('id');
+      $table->increments('id');
       $table->bigInteger('community_id')->unique();
       $table->text('display_name');
       $table->boolean('site_admin')->default(0);

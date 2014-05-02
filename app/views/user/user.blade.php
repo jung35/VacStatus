@@ -15,8 +15,8 @@
 <div class="col-md-8 col-md-offset-2">
   <div class="row">
     <div class="col-md-4 text-center"><h3>{{{ $userInfo->display_name }}}</h3></div>
-    @if ($userInfo->privacy_state)
-    <h3 class="col-md-8 text-danger text-center-md user-profile-status"><b>PRIVATE</b></h3>
+    @if ($userInfo->private_profile)
+    <h3 class="col-md-4 text-danger text-center-md user-profile-status"><b>PRIVATE</b></h3>
     @endif
   </div>
   <div class="row">

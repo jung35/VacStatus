@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class SiteNews extends Migration {
+class MailList extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,10 +12,11 @@ class SiteNews extends Migration {
 	 */
 	public function up()
 	{
-    Schema::create('siteNews', function($table) {
+    Schema::create('mailList', function($table) {
       $table->increments('id');
-      $table->text('title');
-      $table->text('news');
+      $table->integer('steam_user_id');
+      $table->string('email');
+      $table->string('verify', 40);
       $table->timestamps();
     });
 	}
@@ -27,7 +28,7 @@ class SiteNews extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('siteNews');
+		Schema::drop('mailList');
 	}
 
 }

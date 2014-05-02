@@ -80,6 +80,7 @@ class HomeController extends BaseController {
     Session::forget('user.communityId');
     Session::forget('user.id');
     Session::forget('user.in');
+    Session::forget('email.send');
     $this->hybridAuth->logoutAllProviders();
 
     $this->log->addInfo("Logout", array(
