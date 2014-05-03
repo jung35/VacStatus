@@ -43,6 +43,10 @@
               <li><a href="{{{ URL::route('user', array( Session::get('user.communityId') )) }}}">Profile</a></li>
               <li class="divider"></li>
               <li><a href="{{{ URL::route('subscribe') }}}">Notification</a></li>
+              @if(Session::get('user.admin'))
+              <li class="divider"></li>
+              <li><a href="{{{ URL::route('subscribe') }}}">Notification</a></li>
+              @endif
             </ul>
           </li>
             <li><a href="{{{ URL::route('logout') }}}">Logout</a></li>

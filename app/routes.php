@@ -56,3 +56,10 @@ Route::get('subscribe', array('before' => 'steamAuth', 'as' => 'subscribe', 'use
 Route::post('subscribe', array('before' => 'steamAuth', 'uses' => 'MailController@doSub'));
 
 Route::get('resend', array('before' => 'steamAuth', 'as' => 'resendEmail', 'uses' => 'MailController@sendVerification'));
+
+Route::filter('admin', function()
+{
+    if(Session::get('user.admin') >! 0) return View::make('noAdmin');
+});
+
+Route::controller('admin', 'steamAuth|admin');

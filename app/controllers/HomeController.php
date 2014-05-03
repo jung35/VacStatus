@@ -63,6 +63,10 @@ class HomeController extends BaseController {
     Session::put('user.id', $steamUser->id);
     Session::put('user.in', true);
 
+    if(isset($steamUser->site_admin) && $steamUser->site_admin > 0) {
+      Session::put('user.admin', $steamUser->site_admin);
+    }
+
     $this->log->addInfo("Login", array(
       "steamId" => $steamUser->id,
       "displayName" => $steamUser->display_name,
@@ -80,6 +84,7 @@ class HomeController extends BaseController {
     Session::forget('user.communityId');
     Session::forget('user.id');
     Session::forget('user.in');
+    Session::forget('user.admin');
     Session::forget('email.send');
     $this->hybridAuth->logoutAllProviders();
 
