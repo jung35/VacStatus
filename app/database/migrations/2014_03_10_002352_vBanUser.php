@@ -21,6 +21,7 @@ class VBanUser extends Migration {
       $table->text('steam_avatar_url_big');
       $table->text('steam_avatar_url_small');
       $table->integer('vac_banned');
+      $table->integer('num_of_bans');
       $table->boolean('community_banned');
       $table->boolean('market_banned');
       $table->timestamps();

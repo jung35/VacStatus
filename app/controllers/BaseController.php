@@ -117,6 +117,7 @@ class BaseController extends Controller {
 
     $getBanInfo = $getBanInfo->players[0];
     $userInfo->vac_banned = $getBanInfo->VACBanned ? $getBanInfo->DaysSinceLastBan : -1;
+    $userInfo->num_of_bans = $getBanInfo->NumberOfVACBans;
     $userInfo->community_banned = $getBanInfo->CommunityBanned == true;
     $userInfo->market_banned = $getBanInfo->EconomyBan == 'banned';
 
@@ -136,6 +137,7 @@ class BaseController extends Controller {
     $vBanUser->steam_avatar_url_big = $userInfo->steam_avatar_url_big;
     $vBanUser->steam_avatar_url_small = $userInfo->steam_avatar_url_small;
     $vBanUser->vac_banned = $userInfo->vac_banned;
+    $vBanUser->num_of_bans = $userInfo->num_of_bans;
     $vBanUser->community_banned = $userInfo->community_banned;
     $vBanUser->market_banned = $userInfo->market_banned;
     $vBanUser->save();

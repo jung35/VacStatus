@@ -111,7 +111,7 @@ class MailController extends BaseController {
   {
     $suspects = array();
     foreach($vBanList->all() as $vBanUser) {
-      if(!$vBanUser->check_banned)
+      if($vBanUser->check_banned < $vBanUser->vBanUser->num_of_bans)
         $suspects[] = $vBanUser;
     }
 
@@ -140,11 +140,11 @@ class MailController extends BaseController {
         ));
         return false;
       }
-      $vac_banned = $getBanInfo->VACBanned ? $getBanInfo->DaysSinceLastBan : -1;
+      $num_of_bans = $getBanInfo->NumberOfVACBans;
 
-      if($vac_banned > -1) {
+      if($num_of_bans > $suspect->vBanUser->num_of_bans) {
         $this->updateVBanUser(null, $suspect->vBanUser->community_id);
-        $suspect->check_banned = true;
+        $suspect->check_banned = $num_of_bans;
         $suspect->save();
         $bannedUsers[] = $suspect;
       }
