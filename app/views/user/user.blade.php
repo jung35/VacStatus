@@ -52,7 +52,7 @@
         {{{ date('m/d/Y', $userInfo->steam_creation) }}}
         @endif
         </div>
-        <div class="user-info-box col-md-6"><b class="ttip cursor" data-toggle="tooltip" data-placement="top" title="VAC Ban status (mm/dd/yy)">VAC Status</b>:
+        <div class="user-info-box col-md-6"><b class="ttip cursor" data-toggle="tooltip" data-placement="top" title="Valve Anti-Cheat / Overwatch Status (mm/dd/yy)">VAC / Overwatch Status</b>:
         @if($userInfo->vac_banned > -1)
         <span class="text-danger">BANNED ({{{ date('m/d/Y', time() - $userInfo->vac_banned * 86400) }}})</span>
         @else

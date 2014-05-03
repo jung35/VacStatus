@@ -22,10 +22,7 @@
           <th></th>
           <th><span class="ttip cursor" data-toggle="tooltip" data-placement="top" title="Alias of user added">User</span></th>
           <th class="text-center">
-            <span class="ttip cursor" data-toggle="tooltip" data-placement="top" title="Valve Anti-Cheat Status (mm/dd/yy)">VAC</span>
-          </th>
-          <th class="text-center">
-            <span class="ttip cursor" data-toggle="tooltip" data-placement="top" title="Community Ban Status">Community</span>
+            <span class="ttip cursor" data-toggle="tooltip" data-placement="top" title="Valve Anti-Cheat / Overwatch Status (mm/dd/yy)">VAC / Overwatch</span>
           </th>
           <th class="text-center">
             <span class="ttip cursor" data-toggle="tooltip" data-placement="top" title="# of people who has this person on list">Tracked By</span>
@@ -40,11 +37,6 @@
         <td>{{{ $vBanUser->display_name }}}</td>
         @if($vBanUser->vac_banned > -1)
         <td class="text-danger text-center"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;{{{ date('m/d/Y', time()-($vBanUser->vac_banned*86400)) }}}</td>
-        @else
-        <td class="text-success text-center"><span class="glyphicon glyphicon-remove"></span></td>
-        @endif
-        @if($vBanUser->community_banned)
-        <td class="text-danger text-center"><span class="glyphicon glyphicon-ok"></span></td>
         @else
         <td class="text-success text-center"><span class="glyphicon glyphicon-remove"></span></td>
         @endif
