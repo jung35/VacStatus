@@ -128,6 +128,7 @@ class MailController extends BaseController {
       ));
 
       $getBanInfo = json_decode($getBanInfo);
+      $getBanInfo = $getBanInfo->players[0];
 
       if(!is_object($getBanInfo))
       {
@@ -142,10 +143,10 @@ class MailController extends BaseController {
       $vac_banned = $getBanInfo->VACBanned ? $getBanInfo->DaysSinceLastBan : -1;
 
       if($vac_banned > -1) {
+        $this->updateVBanUser(null, $suspect->vBanUser->community_id);
         $suspect->check_banned = true;
         $suspect->save();
         $bannedUsers[] = $suspect;
-        $this->updateVBanUser(null, $suspect->vBanUser->community_id);
       }
     }
     if(count($bannedUsers) > 0) {
