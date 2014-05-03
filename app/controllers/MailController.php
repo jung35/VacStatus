@@ -118,11 +118,34 @@ class MailController extends BaseController {
     $bannedUsers = array();
 
     foreach($suspects as $suspect) {
-      $userInfo = $this->updateVBanUser(null, $suspect->vBanUser->community_id);
-      if($userInfo->vac_banned > -1) {
+
+      $getBanInfo = $this->getFileURL( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$suspect->vBanUser->community_id}&".time() ) or
+      $this->log->addError("fileLoad", array(
+        "steamId" => Session::get('user.id'),
+        "displayName" => Session::get('user.name'),
+        "ipAddress" => Request::getClientIp(),
+        "controller" => "checkUserList@MailController"
+      ));
+
+      $getBanInfo = json_decode($getBanInfo);
+
+      if(!is_object($getBanInfo))
+      {
+        $this->log->addWarning("unknownContent", array(
+          "steamId" => Session::get('user.id'),
+          "displayName" => Session::get('user.name'),
+          "ipAddress" => Request::getClientIp(),
+          "controller" => "checkUserList@MailController"
+        ));
+        return false;
+      }
+      $vac_banned = $getBanInfo->VACBanned ? $getBanInfo->DaysSinceLastBan : -1;
+
+      if($vac_banned > -1) {
         $suspect->check_banned = true;
         $suspect->save();
         $bannedUsers[] = $suspect;
+        $this->updateVBanUser(null, $suspect->vBanUser->community_id);
       }
     }
     if(count($bannedUsers) > 0) {
