@@ -22,9 +22,7 @@
   <div class="row">
     <div class="col-md-4 text-center">
       <img class="text-center user-avatar img-responsive" src="{{{ $userInfo->steam_avatar_url_big }}}">
-      <br><br>
       <p><a href="http://steamcommunity.com/profiles/{{{ $userInfo->community_id }}}" target="_blank">Community Profile</a></p>
-      <br>
       @if(Session::get('user.in'))
         @if($userInfo->is_tracking)
         {{ Form::open(array('route' => 'remove')) }}
