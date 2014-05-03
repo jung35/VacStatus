@@ -46,6 +46,7 @@ class MailController extends BaseController {
     $userMail->verify = $verificationCode;
     $userMail->save();
 
+    Session::remove('email.send');
     return Redirect::route('subscribe');
   }
 
@@ -142,7 +143,7 @@ class MailController extends BaseController {
       }
       $num_of_bans = $getBanInfo->NumberOfVACBans;
 
-      if($num_of_bans > $suspect->vBanUser->num_of_bans) {
+      if($num_of_bans > $suspect->check_banned) {
         $this->updateVBanUser(null, $suspect->vBanUser->community_id);
         $suspect->check_banned = $num_of_bans;
         $suspect->save();

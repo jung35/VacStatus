@@ -12,6 +12,7 @@ class BaseController extends Controller {
    */
   public function __construct()
   {
+    DB::connection()->disableQueryLog();
     $this->steamAPI = '03D0723513386B78C4D6CD0301B8B3AB';
     $this->log = Log::getMonolog();
 

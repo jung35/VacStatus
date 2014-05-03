@@ -8,6 +8,7 @@ Found {{{ count($bannedUsers) }}} Users
 <h1>Hackers Found!</h1>
 <h3>Notification to finding hacker :)</h3>
 You were right! We found {{{ count($bannedUsers) }}} of those who were on your list that were hackers.
+<br><br>
 <table width="100%">
   <tr>
     <td></td>
