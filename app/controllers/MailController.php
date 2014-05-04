@@ -47,6 +47,8 @@ class MailController extends BaseController {
     $userMail->save();
 
     Session::remove('email.send');
+
+    $this->sendVerification();
     return Redirect::route('subscribe');
   }
 
