@@ -57,5 +57,9 @@ Route::post('subscribe', array('before' => 'steamAuth', 'uses' => 'MailControlle
 
 Route::get('resend', array('before' => 'steamAuth', 'as' => 'resendEmail', 'uses' => 'MailController@sendVerification'));
 
-Route::controller('admin', 'AdminController');
+Route::controller('admin', 'AdminController',
+  array(
+      'getIndex'     => 'admin.index',
+  )
+);
 

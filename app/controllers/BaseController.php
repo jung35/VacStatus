@@ -13,7 +13,7 @@ class BaseController extends Controller {
   public function __construct()
   {
     DB::connection()->disableQueryLog();
-    $this->steamAPI = '03D0723513386B78C4D6CD0301B8B3AB';
+    $this->steamAPI = '8E6D2A9391969665005DAA7B96C1D3B4';//'03D0723513386B78C4D6CD0301B8B3AB';
     $this->log = Log::getMonolog();
 
     if(empty($this->steamAPI)) {
@@ -43,7 +43,7 @@ class BaseController extends Controller {
       $userInfo = $this->updateVBanUser($vBanUser, $steamCommunityId);
     } else {
       $userInfo = $vBanUser;
-      $userInfo->steam_id          = $this->getSteamId($userInfo->community_id);
+      $userInfo->steam_id          = $this->convertSteamId($userInfo->community_id);
       $userInfo->user_alias        = $vBanUser->vBanUserAlias()->orderBy('time_used','desc')->get();
     }
 
@@ -57,7 +57,7 @@ class BaseController extends Controller {
     return $userInfo;
   }
 
-  public function updateVBanUser($vBanUser = null, $steamCommunityId)
+  private function updateVBanUser($vBanUser = null, $steamCommunityId)
   {
     if($vBanUser == null)
     {
@@ -65,7 +65,7 @@ class BaseController extends Controller {
     }
     $userInfo = new stdClass();
 
-    $data = $this->getFileURL( "http://steamcommunity.com/profiles/$steamCommunityId/?xml=1&".time() ) or
+    $data = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/?xml=1&".time() ) or
       $this->log->addError("fileLoad", array(
         "steamId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
@@ -93,9 +93,9 @@ class BaseController extends Controller {
     $userInfo->steam_creation   = (string) strtotime($data->memberSince);
     $userInfo->private_profile  = (string) $data->privacyState == "private"?1:0;
 
-    $userInfo->steam_id = $this->getSteamId($steamCommunityId);
+    $userInfo->steam_id = $this->convertSteamId($steamCommunityId);
 
-    $getBanInfo = $this->getFileURL( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time() ) or
+    $getBanInfo = $this->cURLPage( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time() ) or
       $this->log->addError("fileLoad", array(
         "steamId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
@@ -143,7 +143,7 @@ class BaseController extends Controller {
     $vBanUser->market_banned = $userInfo->market_banned;
     $vBanUser->save();
 
-    $getUserAlias = $this->getFileURL( "http://steamcommunity.com/profiles/$steamCommunityId/ajaxaliases/?".time() ) or
+    $getUserAlias = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/ajaxaliases/?".time() ) or
       $this->log->addError("fileLoad", array(
         "steamId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
@@ -171,7 +171,7 @@ class BaseController extends Controller {
     return $userInfo;
   }
 
-  public function getFileURL($url) {
+  public function cURLPage($url) {
     $ch = curl_init();
 
     curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
@@ -186,7 +186,7 @@ class BaseController extends Controller {
     return $data;
   }
 
-  public function getSteamId($steamCommunityId = '')
+  public function convertSteamId($steamCommunityId = '')
   {
     $steamIdPartOne = (substr($steamCommunityId,-1)%2 == 0) ? 0 : 1;
     $steamIdPartTwo = bcsub($steamCommunityId,'76561197960265728');

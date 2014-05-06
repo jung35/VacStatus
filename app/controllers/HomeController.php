@@ -37,7 +37,7 @@ class HomeController extends BaseController {
     $steamUser = steamUser::wherecommunityId($steamCommunityId)->first();
 
     if(!isset($steamUser->id)) {
-      $steamUserGrab = $this->getFileURL( "http://steamcommunity.com/profiles/$steamCommunityId/?xml=1" ) or
+      $steamUserGrab = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/?xml=1" ) or
         die($this->log->addError("fileLoad", array(
           "steamId" => Session::get('user.id'),
           "displayName" => Session::get('user.name'),

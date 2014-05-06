@@ -45,7 +45,7 @@
               <li><a href="{{{ URL::route('subscribe') }}}">Notification</a></li>
               @if(Session::get('user.admin'))
               <li class="divider"></li>
-              <li><a href="{{{ URL::route('subscribe') }}}">Notification</a></li>
+              <li><a href="{{{ URL::route('admin.index') }}}">Admin Panel</a></li>
               @endif
             </ul>
           </li>

@@ -72,7 +72,7 @@ class AppController extends BaseController {
       return Redirect::back()->withInput()->with('error', 'Unable to fetch data');
     }
 
-    $userInfo->steamId = $this->getSteamId($steamCommunityId);
+    $userInfo->steamId = $this->convertSteamId($steamCommunityId);
 
     return View::make('user.user', array('userInfo' => $userInfo));
   }
@@ -159,7 +159,7 @@ class AppController extends BaseController {
     $arrOfId = Array();
     $vBanUser = Array();
     if($arrCount > -1) {
-      for($x = $arrCount; $x > $arrCount-20; $x--)
+      for($x = $arrCount; $x > $arrCount-($arrCount - 20 >= 20 ? 20 : $arrCount+1); $x--)
       {
         $keyOfId = array_search($newCount[$x], $count);
         $vBanUser = $this->getVBanUser($community_id[$keyOfId]);
@@ -224,7 +224,7 @@ class AppController extends BaseController {
         }
         else
         {
-          $xml = $this->getFileURL("http://steamcommunity.com/id/$data?xml=1");
+          $xml = $this->cURLPage("http://steamcommunity.com/id/$data?xml=1");
           $xml = simplexml_load_string($xml);
           if(!is_object($xml)) return array('type' => 'error', 'data' => 'Invalid input');
           $steamid64 = (string) $xml->steamID64;
@@ -238,7 +238,7 @@ class AppController extends BaseController {
       }
       else
       {
-        $xml = $this->getFileURL("http://steamcommunity.com/id/$data?xml=1");
+        $xml = $this->cURLPage("http://steamcommunity.com/id/$data?xml=1");
         $xml = simplexml_load_string($xml);
         if(!is_object($xml)) return array('type' => 'error', 'data' => 'Invalid input');
         $steamid64 = (string) $xml->steamID64;
