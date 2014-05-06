@@ -183,7 +183,7 @@ class BaseController extends Controller {
     $data = @curl_exec($ch);
     curl_close($ch);
 
-    return $data;
+    return trim($data);
   }
 
   public function convertSteamId($steamCommunityId = '')
