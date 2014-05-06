@@ -6,8 +6,6 @@
 
 @section('content')
     <img src="./img/screen.png" class="example-screen img-responsive">
-    <div id="carousel-generic" class="carousel slide" data-ride="carousel">
-      <!-- Indicators -->
       <ol class="carousel-indicators">
         <li data-target="#carousel-generic" data-slide-to="0" class="active"></li>
         <li data-target="#carousel-generic" data-slide-to="1"></li>
@@ -15,7 +13,6 @@
         <li data-target="#carousel-generic" data-slide-to="3"></li>
       </ol>
 
-      <!-- Wrapper for slides -->
       <div class="carousel-inner">
         <div class="item active">
           <img src="./img/example.png" class="img-responsive">
@@ -31,7 +28,6 @@
         </div>
       </div>
 
-      <!-- Controls -->
       <a class="left carousel-control" href="#carousel-generic" data-slide="prev">
         <span class="glyphicon glyphicon-chevron-left"></span>
       </a>

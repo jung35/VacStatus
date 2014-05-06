@@ -12,16 +12,17 @@ class BaseController extends Controller {
    */
   public function __construct()
   {
-    DB::connection()->disableQueryLog();
-    $this->steamAPI = '8E6D2A9391969665005DAA7B96C1D3B4';//'03D0723513386B78C4D6CD0301B8B3AB';
+    $this->steamAPI = '';
+
     $this->log = Log::getMonolog();
+    DB::connection()->disableQueryLog();
 
     if(empty($this->steamAPI)) {
       $this->log->addError("STEAMAPI", array(
         "ipAddress" => Request::getClientIp(),
         "controller" => "__construct@BaseController"
       ));
-      echo 'STEAMAPI MISSING <!--';
+      die('STEAMAPI MISSING');
     }
   }
 
