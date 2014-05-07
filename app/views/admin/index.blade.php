@@ -25,18 +25,61 @@
     <div class="row">
       <div class="col-md-4">
         <h3 class="text-center">Site Info</h3>
-        <ul class="admin-site-info">
-          <li><b>Steam Users</b>: 123</li>
-          <li><b>Subscribed Users</b>: 123</li>
-          <li><b>Recorded Users</b>: 123</li>
-          <li><b>Listed Users</b>: 123</li>
-          <li><b>Avg. Users Per List</b>: 123</li>
-          <li><b># Of Aliases Users</b>: 123</li>
-          <li><b># Of Site News</b>: 123</li>
-        </ul>
+        <table class="table table-bordered admin-table">
+          <tr>
+            <th>Type</th>
+            <th>#</th>
+          </tr>
+          <tr>
+            <td>Steam Users</td>
+            <td>123</td>
+          </tr>
+          <tr>
+            <td>Subscribed Users</td>
+            <td>123</td>
+          </tr>
+          <tr>
+            <td>Recorded Users</td>
+            <td>123</td>
+          </tr>
+          <tr>
+            <td>Listed Users</td>
+            <td>123</td>
+          </tr>
+          <tr>
+            <td>Avg. Users Per List</td>
+            <td>123</td>
+          </tr>
+          <tr>
+            <td># Of Aliases Users</td>
+            <td>123</td>
+          </tr>
+          <tr>
+            <td># Of Site News</td>
+            <td>123</td>
+          </tr>
+        </table>
       </div>
       <div class="col-md-4">
-        <h3 class="text-center">Test</h3>
+        <h3 class="text-center">Logs</h3>
+        <table class="table table-bordered admin-table">
+          <tr>
+            <th>File (Last 5 Days)</th>
+            <th>Size (KB)</th>
+          </tr>
+          <tr>
+            <td><a href="#">laravel-2014-05-05.log</a></td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><a href="#">laravel-2014-05-06.log</a></td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><a href="#">laravel-2014-05-07.log</a></td>
+            <td>2</td>
+          </tr>
+        </table>
       </div>
       <div class="col-md-4">
         <h3 class="text-center">Test</h3>
