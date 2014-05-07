@@ -76,7 +76,7 @@ class AppController extends BaseController {
 
     if(!$userInfo)
     {
-      return Redirect::back()->withInput()->with('error', 'Unable to fetch data');
+      return Redirect::intended()->withInput()->with('error', 'Unable to fetch data');
     }
 
     $userInfo->steamId = $this->convertSteamId($steamCommunityId);
@@ -236,7 +236,7 @@ class AppController extends BaseController {
         }
         else
         {
-          $userInfo = $this->cURLPage("{$data}/?xml=1&".time(), false);
+          $userInfo = $this->cURLPage("http://steamcommunity.com/id/{$data}/?xml=1&".time(), false);
 
           try {
             $userInfo = simplexml_load_string($userInfo);

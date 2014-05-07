@@ -58,6 +58,11 @@
     </div>
   </div>
   <div class="container main-container">
+    @if (Session::get('error'))
+      <p class="bg-danger search-error"><span class="text-danger">Error : </span>{{ Session::get('error') }}</p>
+    @elseif (Session::get('success'))
+      <p class="bg-success search-error"><span class="text-success">Success : </span>{{ Session::get('success') }}</p>
+    @endif
     @section('content')
     @show
   </div>

@@ -43,7 +43,7 @@ class BaseController extends Controller {
     {
       $userInfo = $this->updateVBanUser($vBanUser, $steamCommunityId);
       if(!$userInfo) {
-        if(isset($vBanUser->id)) {
+        if(!isset($vBanUser->id)) {
           return false;
         } else {
           $userInfo = $vBanUser;
@@ -93,7 +93,13 @@ class BaseController extends Controller {
       ));
       return false;
     }
-    $data = $data->response->players[0];
+    $data = $data->response->players;
+
+    if(isset($data[0])) {
+      $data = $data[0];
+    } else {
+      return false;
+    }
 
     $userInfo->display_name   = (string) $data->personaname;
     $userInfo->community_id   = (string) $data->steamid;
