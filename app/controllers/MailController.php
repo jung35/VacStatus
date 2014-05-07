@@ -27,6 +27,13 @@ class MailController extends BaseController {
 
     $unsub = Input::get('unsub');
     if($unsub != null) {
+
+      $this->log->addInfo("UnSubscribe", array(
+        "steamUserId" => Session::get("user.id"),
+        "displayName" => Session::get("user.name"),
+        "ipAddress" => Request::getClientIp()
+      ));
+
       $userMail->delete();
       return Redirect::route('subscribe');
     }
@@ -48,6 +55,13 @@ class MailController extends BaseController {
 
     Session::remove('email.send');
 
+
+    $this->log->addInfo("Subscribe", array(
+      "steamUserId" => Session::get("user.id"),
+      "displayName" => Session::get("user.name"),
+      "ipAddress" => Request::getClientIp()
+    ));
+
     $this->sendVerification();
     return Redirect::route('subscribe');
   }
@@ -68,6 +82,12 @@ class MailController extends BaseController {
         $message->to($userMail->email)->subject('You\'re Almost Done!');
       });
 
+      $this->log->addInfo("SendVerification", array(
+        "steamUserId" => Session::get("user.id"),
+        "displayName" => Session::get("user.name"),
+        "ipAddress" => Request::getClientIp()
+      ));
+
       Session::put('email.send', time());
     }
 
@@ -82,6 +102,13 @@ class MailController extends BaseController {
     $find = mailList::whereVerify($verificationCode)->first();
 
     if($find != null) {
+
+      $this->log->addInfo("Finish Verification", array(
+        "steamUserId" => $find->steam_user_id,
+        "displayName" => Session::get("user.name"),
+        "ipAddress" => Request::getClientIp()
+      ));
+
       $find->verify = 'done';
       $find->save();
     }

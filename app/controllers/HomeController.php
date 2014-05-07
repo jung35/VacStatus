@@ -39,7 +39,7 @@ class HomeController extends BaseController {
     if(!isset($steamUser->id)) {
       $steamUserGrab = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/?xml=1" ) or
         die($this->log->addError("fileLoad", array(
-          "steamId" => Session::get('user.id'),
+          "steamUserId" => Session::get('user.id'),
           "displayName" => Session::get('user.name'),
           "ipAddress" => Request::getClientIp(),
           "controller" => "steamLogin@HomeController"
@@ -51,7 +51,7 @@ class HomeController extends BaseController {
       $steamUser->save();
 
       $this->log->addInfo("newAccount", array(
-        "steamId" => $steamUser->id,
+        "steamUserId" => $steamUser->id,
         "displayName" => $steamUser->display_name,
         "ipAddress" => Request::getClientIp()
       ));
@@ -68,7 +68,7 @@ class HomeController extends BaseController {
     }
 
     $this->log->addInfo("Login", array(
-      "steamId" => $steamUser->id,
+      "steamUserId" => $steamUser->id,
       "displayName" => $steamUser->display_name,
       "ipAddress" => Request::getClientIp()
     ));

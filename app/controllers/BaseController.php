@@ -68,7 +68,7 @@ class BaseController extends Controller {
 
     $data = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/?xml=1&".time() ) or
       $this->log->addError("fileLoad", array(
-        "steamId" => Session::get('user.id'),
+        "steamUserId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
         "controller" => "updateVBanUser@BaseController"
@@ -79,7 +79,7 @@ class BaseController extends Controller {
     if ( ! is_object( $data ) )
     {
       $this->log->addWarning("unknownContent", array(
-        "steamId" => Session::get('user.id'),
+        "steamUserId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
         "controller" => "updateVBanUser@BaseController"
@@ -98,7 +98,7 @@ class BaseController extends Controller {
 
     $getBanInfo = $this->cURLPage( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time() ) or
       $this->log->addError("fileLoad", array(
-        "steamId" => Session::get('user.id'),
+        "steamUserId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
         "controller" => "updateVBanUser@BaseController"
@@ -109,7 +109,7 @@ class BaseController extends Controller {
     if(!is_object($getBanInfo))
     {
       $this->log->addWarning("unknownContent", array(
-        "steamId" => Session::get('user.id'),
+        "steamUserId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
         "controller" => "updateVBanUser@BaseController"
@@ -146,7 +146,7 @@ class BaseController extends Controller {
 
     $getUserAlias = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/ajaxaliases/?".time() ) or
       $this->log->addError("fileLoad", array(
-        "steamId" => Session::get('user.id'),
+        "steamUserId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
         "controller" => "updateVBanUser@BaseController"

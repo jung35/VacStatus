@@ -37,7 +37,7 @@ class AppController extends BaseController {
     $searchData = $this->getSteamSearchCommunityId(Input::get('doSearch'));
 
     $this->log->addInfo("doSearch", array(
-      "steamId" => Session::get('user.id'),
+      "steamUserId" => Session::get('user.id'),
       "displayName" => Session::get('user.name'),
       "ipAddress" => Request::getClientIp(),
       "data" => Input::get('doSearch')
@@ -54,7 +54,7 @@ class AppController extends BaseController {
   {
 
     $this->log->addInfo("requestUser", array(
-      "steamId" => Session::get('user.id'),
+      "steamUserId" => Session::get('user.id'),
       "displayName" => Session::get('user.name'),
       "ipAddress" => Request::getClientIp(),
       "data" => $steamCommunityId
@@ -83,7 +83,7 @@ class AppController extends BaseController {
     $searchData = Input::get('vBanUserId');
 
     $this->log->addInfo("addUser", array(
-      "steamId" => Session::get('user.id'),
+      "steamUserId" => Session::get('user.id'),
       "displayName" => Session::get('user.name'),
       "ipAddress" => Request::getClientIp(),
       "data" => $searchData
@@ -115,7 +115,7 @@ class AppController extends BaseController {
     $searchData = Input::get('vBanUserId');
 
     $this->log->addInfo("removeUser", array(
-      "steamId" => Session::get('user.id'),
+      "steamUserId" => Session::get('user.id'),
       "displayName" => Session::get('user.name'),
       "ipAddress" => Request::getClientIp(),
       "data" => $searchData

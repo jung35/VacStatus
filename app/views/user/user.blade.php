@@ -2,7 +2,7 @@
 @include('user.search')
 
 @section('head')
-  <link rel="stylesheet" href="/css/user/user.css">
+  <link rel="stylesheet" href="{{{ URL::route('home') }}}/css/user/user.css">
 @stop
 
 @section('title')
