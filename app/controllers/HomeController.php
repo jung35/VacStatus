@@ -37,17 +37,23 @@ class HomeController extends BaseController {
     $steamUser = steamUser::wherecommunityId($steamCommunityId)->first();
 
     if(!isset($steamUser->id)) {
-      $steamUserGrab = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/?xml=1" ) or
+      $steamUserGrab = $this->cURLPage("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time()) or
         die($this->log->addError("fileLoad", array(
           "steamUserId" => Session::get('user.id'),
           "displayName" => Session::get('user.name'),
           "ipAddress" => Request::getClientIp(),
           "controller" => "steamLogin@HomeController"
         )));
-      $steamUserGrab = simplexml_load_string($steamUserGrab);
+
+      if(!$steamUserGrab) {
+        return Redirect::to('/');
+      }
+
+      $steamUserGrab = $steamUserGrab->response->players[0];
+
       $steamUser = new steamUser;
-      $steamUser->community_id = (string) $steamUserGrab->steamID64;
-      $steamUser->display_name = (string) $steamUserGrab->steamID;
+      $steamUser->community_id = (string) $steamUserGrab->steamid;
+      $steamUser->display_name = (string) $steamUserGrab->personaname;
       $steamUser->save();
 
       $this->log->addInfo("newAccount", array(
