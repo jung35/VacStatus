@@ -6,6 +6,7 @@
 
 @section('content')
     <img src="./img/screen.png" class="example-screen img-responsive">
+    <div id="carousel-generic" class="carousel slide" data-ride="carousel">
       <ol class="carousel-indicators">
         <li data-target="#carousel-generic" data-slide-to="0" class="active"></li>
         <li data-target="#carousel-generic" data-slide-to="1"></li>
