@@ -35,7 +35,7 @@
         <span class="glyphicon glyphicon-chevron-right"></span>
       </a>
     </div>
-    <h1 class="text-center">vBan Status</h1>
-    <p class="h1-sub text-center">Keep track of people's VAC ban status in a list</p>
+    <h1 class="text-center">VacStatus</h1>
+    <p class="h1-sub text-center">Keep track of people's VAC status in a list</p>
     <p class="text-center"><a href="{{ action('HomeController@steamLogin') }}" type="button" class="btn btn-info btn-lg">Login with Steam</a></p>
 @stop

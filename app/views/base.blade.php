@@ -9,7 +9,7 @@
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
 
   <title>
-  Ban Status
+  VacStatus
   @section('title')
   @show
   </title>
@@ -27,7 +27,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-        <a class="navbar-brand" href="{{{ URL::route('home') }}}">vBan Status</a>
+        <a class="navbar-brand" href="{{{ URL::route('home') }}}">VacStatus</a>
       </div>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
@@ -68,7 +68,7 @@
   </div>
   <div id="footer">
     <div class="container">
-      <p class="col-md-6 text-muted copyright">&copy; 2014 vBan Status &middot; <a href="https://github.com/jung3o/vBan-Status" target="_blank">Github</a> &middot; <a href="http://jung3o.com" target="_blank">Jung Oh</a> ( <a href="http://steamcommunity.com/id/Jung3o/" target="_blank">Steam</a> &middot; <a href="http://facepunch.com/member.php?u=451226" target="_blank">Facepunch</a> &middot; <a href="http://www.reddit.com/user/jung3o/" target="_blank">Reddit</a> )</p>
+      <p class="col-md-6 text-muted copyright">&copy; 2014 VacStatus &middot; <a href="https://github.com/jung3o/VacStatus" target="_blank">Github</a> &middot; <a href="http://jung3o.com" target="_blank">Jung Oh</a> ( <a href="http://steamcommunity.com/id/Jung3o/" target="_blank">Steam</a> &middot; <a href="http://facepunch.com/member.php?u=451226" target="_blank">Facepunch</a> &middot; <a href="http://www.reddit.com/user/jung3o/" target="_blank">Reddit</a> )</p>
       <p class="col-md-6 text-muted copyright text-right">
          <a href="/privacy">Privacy Policy</a> &middot; Powered By <a href="http://steampowered.com" target="_blank">Steam</a>
       </p>
@@ -82,7 +82,7 @@
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    ga('create', 'UA-26127712-1', 'jung3o.com');
+    ga('create', 'UA-50795838-1', 'vacstatus.com');
     ga('send', 'pageview');
   </script>
 

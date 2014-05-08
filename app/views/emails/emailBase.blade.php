@@ -466,7 +466,7 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateFooter">
                                         <tr>
                                             <td valign="top" class="footerContent" style="padding-top:20px;" mc:edit="footer_content01">
-                                                <em>&copy; 2014 vBanStatus<em>
+                                                <em>&copy; 2014 VacStatus<em>
                                             </td>
                                         </tr>
                                         <tr>

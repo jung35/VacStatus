@@ -80,7 +80,8 @@ class BaseController extends Controller {
         "steamUserId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
-        "controller" => "updateVBanUser@BaseController"
+        "controller" => "updateVBanUser@BaseController",
+        "line" => __LINE__
       ));
 
     if (!is_object($data))
@@ -89,7 +90,8 @@ class BaseController extends Controller {
         "steamUserId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
-        "controller" => "updateVBanUser@BaseController"
+        "controller" => "updateVBanUser@BaseController",
+        "line" => __LINE__
       ));
       return false;
     }
@@ -119,7 +121,8 @@ class BaseController extends Controller {
         "steamUserId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
-        "controller" => "updateVBanUser@BaseController"
+        "controller" => "updateVBanUser@BaseController",
+        "line" => __LINE__
       ));
 
     if(!is_object($getBanInfo))
@@ -128,7 +131,8 @@ class BaseController extends Controller {
         "steamUserId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
-        "controller" => "updateVBanUser@BaseController"
+        "controller" => "updateVBanUser@BaseController",
+        "line" => __LINE__
       ));
       return false;
     }
@@ -164,7 +168,8 @@ class BaseController extends Controller {
         "steamUserId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
-        "controller" => "updateVBanUser@BaseController"
+        "controller" => "updateVBanUser@BaseController",
+        "line" => __LINE__
       ));
 
     vBanUserAlias::where('v_ban_user_id', '=', $vBanUser->id)->delete();
