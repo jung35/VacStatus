@@ -163,25 +163,22 @@ class BaseController extends Controller {
     $vBanUser->market_banned = $userInfo->market_banned;
     $vBanUser->save();
 
-    $getUserAlias = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/ajaxaliases/?".time() ) or
-      $this->log->addError("fileLoad", array(
-        "steamUserId" => Session::get('user.id'),
-        "displayName" => Session::get('user.name'),
-        "ipAddress" => Request::getClientIp(),
-        "controller" => "updateVBanUser@BaseController",
-        "line" => __LINE__
-      ));
+    $getUserAlias = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/ajaxaliases/?".time() );
 
-    vBanUserAlias::where('v_ban_user_id', '=', $vBanUser->id)->delete();
-    $userAliasList = array();
-    foreach($getUserAlias as $userAlias) {
-      $vBanUserAlias = new vBanUserAlias;
-      $vBanUserAlias->v_ban_user_id = $vBanUser->id;
-      $vBanUserAlias->alias = $userAlias->newname;
-      $vBanUserAlias->time_used = explode("@", $userAlias->timechanged);
-      $vBanUserAlias->time_used = strtotime($vBanUserAlias->time_used[0]);
-      $vBanUserAlias->save();
-      $userAliasList[] = $vBanUserAlias;
+    if(is_object($getUserAlias)) {
+      vBanUserAlias::where('v_ban_user_id', '=', $vBanUser->id)->delete();
+      $userAliasList = array();
+      foreach($getUserAlias as $userAlias) {
+        $vBanUserAlias = new vBanUserAlias;
+        $vBanUserAlias->v_ban_user_id = $vBanUser->id;
+        $vBanUserAlias->alias = $userAlias->newname;
+        $vBanUserAlias->time_used = explode("@", $userAlias->timechanged);
+        $vBanUserAlias->time_used = strtotime($vBanUserAlias->time_used[0]);
+        $vBanUserAlias->save();
+        $userAliasList[] = $vBanUserAlias;
+      }
+    } else {
+      $userAliasList = $vBanUser->vBanUserAlias()->orderBy('time_used','desc')->get();
     }
     $userInfo->created_at = $vBanUser->created_at;
     $userInfo->updated_at = $vBanUser->updated_at;
