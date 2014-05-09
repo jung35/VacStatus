@@ -15,5 +15,5 @@
 /app/storage/*
 Thumbs.db
 
-!Steam.php
 /vendor
+!vendor/hybridauth/hybridauth/hybridauth/Hybrid/Providers/Steam.php
