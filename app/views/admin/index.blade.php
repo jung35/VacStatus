@@ -82,7 +82,7 @@
         </table>
       </div>
       <div class="col-md-4">
-        <h3 class="text-center">Test</h3>
+        <h3 class="text-center">Online Users</h3>
       </div>
     </div>
   </div>
