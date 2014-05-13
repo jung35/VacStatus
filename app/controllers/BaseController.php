@@ -63,7 +63,7 @@ class BaseController extends Controller {
     return $userInfo;
   }
 
-  private function updateVBanUser($vBanUser = null, $steamCommunityId)
+  public function updateVBanUser($vBanUser = null, $steamCommunityId)
   {
     if($vBanUser == null)
     {

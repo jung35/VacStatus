@@ -126,9 +126,13 @@ class MailController extends BaseController {
       $getLastCheckedUser = Cache::get('getLastCheckedUser');
       $getNewUser = mailList::whereRaw('id > ? and verify = ?', array($getLastCheckedUser, 'done'))->first();
 
-      if($getNewUser->id == null) {
-        Cache::set('getLastCheckedUser', -1);
+      if(!is_object($getNewUser)) {
+        Cache::forget('getLastCheckedUser');
+        Cache::forever('getLastCheckedUser', -1);
         return $this->getASubscribedUser();
+      } else {
+        Cache::forget('getLastCheckedUser');
+        Cache::forever('getLastCheckedUser', $getNewUser->id);
       }
 
       return $getNewUser;
@@ -149,15 +153,13 @@ class MailController extends BaseController {
 
     foreach($suspects as $suspect) {
 
-      $getBanInfo = $this->getFileURL( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$suspect->vBanUser->community_id}&".time() ) or
+      $getBanInfo = $this->cURLPage( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$suspect->vBanUser->community_id}&".time() ) or
       $this->log->addError("fileLoad", array(
         "steamId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
         "controller" => "checkUserList@MailController"
       ));
-
-      $getBanInfo = json_decode($getBanInfo);
       $getBanInfo = $getBanInfo->players[0];
 
       if(!is_object($getBanInfo))
