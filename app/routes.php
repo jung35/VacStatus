@@ -60,6 +60,7 @@ Route::get('resend', array('before' => 'steamAuth', 'as' => 'resendEmail', 'uses
 Route::controller('admin', 'AdminController',
   array(
       'getIndex'     => 'admin.index',
+      'getLog'     => 'admin.log',
   )
 );
 

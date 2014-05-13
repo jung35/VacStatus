@@ -1,3 +1,12 @@
 .admin-table {
   margin: 20px 0 0;
 }
+
+pre {
+  font-size: 13px;
+  line-height: 200%;
+}
+
+pre .label {
+  font-size: 15px !important;
+}

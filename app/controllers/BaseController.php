@@ -18,10 +18,6 @@ class BaseController extends Controller {
     DB::connection()->disableQueryLog();
 
     if(empty($this->steamAPI)) {
-      $this->log->addError("STEAMAPI", array(
-        "ipAddress" => Request::getClientIp(),
-        "controller" => "__construct@BaseController"
-      ));
       die('STEAMAPI MISSING');
     }
   }
