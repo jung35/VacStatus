@@ -12,14 +12,14 @@
 <div class="row">
   <ol class="breadcrumb">
     <li><a>Admin Panel</a></li>
+    @section('breadcrumb')
     <li class="active">Home</li>
+    @show
   </ol>
 </div>
 <div class="row">
   <ul class="col-md-2 nav nav-pills nav-stacked">
     <li><a href="{{{ URL::route('admin.index') }}}">Home</a></li>
-    <li><a href="#">Profile</a></li>
-    <li><a href="#">Messages</a></li>
   </ul>
   <div class="col-md-10">
     <div class="row">

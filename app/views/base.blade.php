@@ -102,5 +102,7 @@
       tab_inverted: false
     }]);
   </script>
+  @section('script')
+  @show
 </body>
 </html>
