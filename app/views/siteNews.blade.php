@@ -9,7 +9,7 @@
     @foreach($siteNewses as $siteNews)
     <div id="news-{{{ $siteNews->id }}}" class="news">
       <h3>{{{ $siteNews->title }}} <small>{{{ date('m/d/Y', strtotime($siteNews->created_at))}}}</small></h3>
-      <p class="news-pfont">{{{ $siteNews->news }}}</p>
+      <div class="news-pfont">{{ $siteNews->news }}</div>
     </div>
     @endforeach
     {{ $siteNewses->links() }}

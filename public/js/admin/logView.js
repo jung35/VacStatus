@@ -1,6 +1,5 @@
 $('.log').on('click', '.line', function() {
-  $('.log .debug').not($(this).next()).slideUp('fast');
-  $(this).next().slideDown('fast');
+  $(this).next().slideToggle('fast');
 });
 
 $('.log-settings').on('click', 'span', function() {
@@ -12,6 +11,5 @@ $('.log-settings').on('click', 'span', function() {
     $this.addClass('sel');
     $('.line.line-'+$this.attr('title')).addClass('hidden');
   }
-
-  $('.log .debug').slideUp('fast');
+  $('.log .debug').hide();
 });

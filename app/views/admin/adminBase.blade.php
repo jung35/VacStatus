@@ -20,6 +20,7 @@
 <div class="row">
   <ul class="col-md-2 nav nav-pills nav-stacked">
     <li><a href="{{{ URL::route('admin.index') }}}">Home</a></li>
+    <li><a href="{{{ URL::route('admin.news') }}}">News Management</a></li>
   </ul>
   <div class="col-md-10">
     <div class="row">

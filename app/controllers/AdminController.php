@@ -61,7 +61,8 @@ class AdminController extends BaseController {
     return View::make('admin.index', array('stats' => $stats, 'logs' => $logs));
   }
 
-  public function getLog($fileName) {
+  public function getLog($fileName)
+  {
 
     $logDir = __dir__.'/../storage/logs/';
     if(!file_exists($logDir.$fileName)) {
@@ -83,4 +84,32 @@ class AdminController extends BaseController {
     return View::make('admin.logView', array('info' => $info, 'log' => array_filter(array_reverse($parsedFile))));
   }
 
+  public function getNews()
+  {
+    $siteNewses = DB::table('siteNews')->orderBy('id', 'desc')->paginate(10);
+
+    return View::make('admin.newsView', array('siteNewses' => $siteNewses));
+  }
+
+  public function postNewNews()
+  {
+    $newsTitle = Input::get('form-title');
+    $newsNews = Input::get('form-news');
+
+    DB::table('siteNews')->insert(
+        array('title' => $newsTitle,
+              'news' => $newsNews)
+    );
+
+    return Redirect::route('admin.news');
+  }
+
+  public function postDelNews()
+  {
+    $newsId = Input::get('form-id');
+
+    DB::table('siteNews')->where('id', $newsId)->delete();
+
+    return Redirect::route('admin.news');
+  }
 }
