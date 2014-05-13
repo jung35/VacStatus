@@ -189,7 +189,7 @@ class MailController extends BaseController {
         Array('bannedUsers' => $bannedUsers),
         function($message) use ($userMail)
         {
-          $message->to($userMail->email)->subject('Hackers Found On vBanStatus!');
+          $message->to($userMail->email)->subject('Hackers Found On VacStatus!');
         }
       );
 
