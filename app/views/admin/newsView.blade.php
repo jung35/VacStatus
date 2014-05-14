@@ -28,10 +28,13 @@
         <td>{{{ date('m/d/Y', strtotime($siteNews->created_at))}}}</td>
         <td>{{{ date('m/d/Y', strtotime($siteNews->updated_at))}}}</td>
         <td>
-          <button type="button" class="btn btn-warning">Edit</button>
+          <a href="{{{ URL::route('admin.news.edit', $siteNews->id) }}}" class="btn btn-warning">Edit</a>
         </td>
         <td>
-          <button type="button" class="btn btn-danger">Delete</button>
+          {{ Form::open(array('route' => 'admin.news.del', 'class' => 'form-horizontal')) }}
+            {{ Form::hidden('form-id', $siteNews->id) }}
+            <input type="submit" value="Delete" class="btn btn-danger">
+          {{ Form::close() }}
         </td>
       </tr>
     @endforeach
@@ -41,7 +44,7 @@
 
   {{ $siteNewses->links() }}
   <h3>New News</h3>
-  {{ Form::open(array('route' => 'admin.news.new', 'class' => 'form-horizontal col-md-12')) }}
+  {{ Form::open(array('route' => 'admin.news.new', 'class' => 'col-md-12')) }}
     {{ Form::text('form-title', null, array('class' => 'form-control input-lg', 'placeholder' => 'Title')) }}
     <br>
     {{ Form::textArea('form-news', null, array('class' => 'form-control')) }}

@@ -1,4 +1,8 @@
 @extends('base')
+@section('head')
+<link rel="stylesheet" href="{{{ URL::route('home') }}}/css/news.css">
+@stop
+
 @section('title')
 &mdash; News
 @stop

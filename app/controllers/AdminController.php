@@ -112,4 +112,29 @@ class AdminController extends BaseController {
 
     return Redirect::route('admin.news');
   }
+
+  public function getEditNews($newsId)
+  {
+    $siteNews = DB::table('siteNews')->where('id', $newsId)->first();
+
+    if(!is_object($siteNews)) {
+      return Redirect::route('admin.news');
+    }
+
+    return View::make('admin.newsEdit', array('siteNews' => $siteNews));
+  }
+
+  public function postEditNews()
+  {
+    $newsId = Input::get('form-id');
+    $newsTitle = Input::get('form-title');
+    $newsNews = Input::get('form-news');
+
+    DB::table('siteNews')->where('id', $newsId)->update(array(
+      'title' => $newsTitle,
+      'news' => $newsNews
+    ));
+
+    return Redirect::route('admin.news');
+  }
 }

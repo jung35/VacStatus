@@ -62,7 +62,10 @@ Route::controller('admin', 'AdminController',
       'getIndex' => 'admin.index',
       'getLog' => 'admin.log',
       'getNews' => 'admin.news',
-      'postNewNews' => 'admin.news.new'
+      'postNewNews' => 'admin.news.new',
+      'postDelNews' => 'admin.news.del',
+      'getEditNews' => 'admin.news.edit',
+      'postEditNews' => 'admin.news.edit'
   )
 );
 
