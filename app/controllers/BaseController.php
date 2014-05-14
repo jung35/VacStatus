@@ -147,9 +147,9 @@ class BaseController extends Controller {
     $vBanUser->market_banned = $userInfo->market_banned;
     $vBanUser->save();
 
-    $getUserAlias = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/ajaxaliases/?".time() );
+    $getUserAlias = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/ajaxaliases/?".time());
 
-    if(is_object($getUserAlias)) {
+    if(isset($getUserAlias[0]) && !empty($getUserAlias[0])) {
       vBanUserAlias::where('v_ban_user_id', '=', $vBanUser->id)->delete();
       $userAliasList = array();
       foreach($getUserAlias as $userAlias) {
