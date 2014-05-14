@@ -16,6 +16,11 @@ Route::filter('steamAuth', function()
     if(!Session::get('user.in')) return View::make('noLogin');
 });
 
+Route::filter('siteAdmin', function()
+{
+    if(Session::get('user.admin', 0) <= 0) return View::make('noAdmin');
+});
+
 if(Session::get('user.in'))
 {
   Route::get('', array('as' => 'home', 'uses' => 'AppController@showIndex'));
@@ -57,15 +62,17 @@ Route::post('subscribe', array('before' => 'steamAuth', 'uses' => 'MailControlle
 
 Route::get('resend', array('before' => 'steamAuth', 'as' => 'resendEmail', 'uses' => 'MailController@sendVerification'));
 
-Route::controller('admin', 'AdminController',
-  array(
-      'getIndex' => 'admin.index',
-      'getLog' => 'admin.log',
-      'getNews' => 'admin.news',
-      'postNewNews' => 'admin.news.new',
-      'postDelNews' => 'admin.news.del',
-      'getEditNews' => 'admin.news.edit',
-      'postEditNews' => 'admin.news.edit'
-  )
-);
-
+Route::group(array('before' => 'siteAdmin'), function()
+{
+  Route::controller('admin', 'AdminController',
+    array(
+        'getIndex' => 'admin.index',
+        'getLog' => 'admin.log',
+        'getNews' => 'admin.news',
+        'postNewNews' => 'admin.news.new',
+        'postDelNews' => 'admin.news.del',
+        'getEditNews' => 'admin.news.edit',
+        'postEditNews' => 'admin.news.edit'
+    )
+  );
+});
