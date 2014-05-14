@@ -27,6 +27,13 @@ class MailController extends BaseController {
 
     $unsub = Input::get('unsub');
     if($unsub != null) {
+
+      $this->log->addInfo("UnSubscribe", array(
+        "steamUserId" => Session::get("user.id"),
+        "displayName" => Session::get("user.name"),
+        "ipAddress" => Request::getClientIp()
+      ));
+
       $userMail->delete();
       return Redirect::route('subscribe');
     }
@@ -48,6 +55,13 @@ class MailController extends BaseController {
 
     Session::remove('email.send');
 
+
+    $this->log->addInfo("Subscribe", array(
+      "steamUserId" => Session::get("user.id"),
+      "displayName" => Session::get("user.name"),
+      "ipAddress" => Request::getClientIp()
+    ));
+
     $this->sendVerification();
     return Redirect::route('subscribe');
   }
@@ -68,6 +82,12 @@ class MailController extends BaseController {
         $message->to($userMail->email)->subject('You\'re Almost Done!');
       });
 
+      $this->log->addInfo("SendVerification", array(
+        "steamUserId" => Session::get("user.id"),
+        "displayName" => Session::get("user.name"),
+        "ipAddress" => Request::getClientIp()
+      ));
+
       Session::put('email.send', time());
     }
 
@@ -82,6 +102,13 @@ class MailController extends BaseController {
     $find = mailList::whereVerify($verificationCode)->first();
 
     if($find != null) {
+
+      $this->log->addInfo("Finish Verification", array(
+        "steamUserId" => $find->steam_user_id,
+        "displayName" => Session::get("user.name"),
+        "ipAddress" => Request::getClientIp()
+      ));
+
       $find->verify = 'done';
       $find->save();
     }
@@ -99,9 +126,13 @@ class MailController extends BaseController {
       $getLastCheckedUser = Cache::get('getLastCheckedUser');
       $getNewUser = mailList::whereRaw('id > ? and verify = ?', array($getLastCheckedUser, 'done'))->first();
 
-      if($getNewUser->id == null) {
-        Cache::set('getLastCheckedUser', -1);
+      if(!is_object($getNewUser)) {
+        Cache::forget('getLastCheckedUser');
+        Cache::forever('getLastCheckedUser', -1);
         return $this->getASubscribedUser();
+      } else {
+        Cache::forget('getLastCheckedUser');
+        Cache::forever('getLastCheckedUser', $getNewUser->id);
       }
 
       return $getNewUser;
@@ -122,15 +153,13 @@ class MailController extends BaseController {
 
     foreach($suspects as $suspect) {
 
-      $getBanInfo = $this->getFileURL( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$suspect->vBanUser->community_id}&".time() ) or
+      $getBanInfo = $this->cURLPage( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$suspect->vBanUser->community_id}&".time() ) or
       $this->log->addError("fileLoad", array(
         "steamId" => Session::get('user.id'),
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
         "controller" => "checkUserList@MailController"
       ));
-
-      $getBanInfo = json_decode($getBanInfo);
       $getBanInfo = $getBanInfo->players[0];
 
       if(!is_object($getBanInfo))
@@ -160,7 +189,7 @@ class MailController extends BaseController {
         Array('bannedUsers' => $bannedUsers),
         function($message) use ($userMail)
         {
-          $message->to($userMail->email)->subject('Hackers Found On vBanStatus!');
+          $message->to($userMail->email)->subject('Hackers Found On VacStatus!');
         }
       );
 

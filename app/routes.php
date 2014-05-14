@@ -57,5 +57,15 @@ Route::post('subscribe', array('before' => 'steamAuth', 'uses' => 'MailControlle
 
 Route::get('resend', array('before' => 'steamAuth', 'as' => 'resendEmail', 'uses' => 'MailController@sendVerification'));
 
-Route::controller('admin', 'AdminController');
+Route::controller('admin', 'AdminController',
+  array(
+      'getIndex' => 'admin.index',
+      'getLog' => 'admin.log',
+      'getNews' => 'admin.news',
+      'postNewNews' => 'admin.news.new',
+      'postDelNews' => 'admin.news.del',
+      'getEditNews' => 'admin.news.edit',
+      'postEditNews' => 'admin.news.edit'
+  )
+);
 

@@ -2,7 +2,7 @@
 @include('user.search')
 
 @section('head')
-  <link rel="stylesheet" href="/css/user/user.css">
+  <link rel="stylesheet" href="{{{ URL::route('home') }}}/css/user/user.css">
 @stop
 
 @section('title')
@@ -102,7 +102,7 @@
   <script type="text/javascript">
     var disqus_shortname = 'vbanstatus';
     var disqus_identifier = '{{{ $userInfo->community_id }}}';
-    var disqus_title = 'vBan Status [{{{ $userInfo->community_id }}}]';
+    var disqus_title = 'VacStatus [{{{ $userInfo->community_id }}}]';
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {

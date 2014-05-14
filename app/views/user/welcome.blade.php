@@ -2,7 +2,7 @@
 @include('user.search')
 
 @section('head')
-  <link rel="stylesheet" href="/css/user/user.css">
+  <link rel="stylesheet" href="{{{ URL::route('home') }}}/css/user/user.css">
 @stop
 
 @section('title')
@@ -50,7 +50,7 @@
           @else
           <td class="text-success text-center"><span class="glyphicon glyphicon-remove"></span></td>
           @endif
-          <td class="text-center">{{{ vBanList::wherevBanUserId($vBanUser->vBanUser->id)->count()+($vBanUser->vBanUser->is_tracking ? -1: 0) }}}</td>
+          <td class="text-center">{{{ vBanList::wherevBanUserId($vBanUser->vBanUser->id)->count()+(isset($vBanUser->vBanUser->is_tracking) && $vBanUser->vBanUser->is_tracking ? -1: 0) }}}</td>
           <td><a href="{{ URL::route('user', array( $vBanUser->vBanUser->community_id )) }}" target="_blank" type="button" class="btn btn-info btn-sm">Info</a></td>
           <td>
             @if (Session::get('user.in'))

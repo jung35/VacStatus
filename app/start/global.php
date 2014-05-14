@@ -31,7 +31,7 @@ ClassLoader::addDirectories(array(
 |
 */
 
-Log::useFiles(storage_path().'/logs/laravel.log');
+Log::useDailyFiles(storage_path().'/logs/laravel.log');
 
 /*
 |--------------------------------------------------------------------------
@@ -106,15 +106,15 @@ App::error(function($exception, $code)
   );
 
 
-  Log::warning("errorPage", array(
+  Log::warning("errorPage$code", array(
     "steamId" => Session::get('user.id'),
     "displayName" => Session::get('user.name'),
     "ipAddress" => Request::getClientIp(),
     "data" => Array(
-      "code" => $code,
       "info" => $exception->getMessage(),
       "file" => $exception->getFile(),
-      "line" => $exception->getLine()
+      "line" => $exception->getLine(),
+      "uri" => $_SERVER['REQUEST_URI']
     )
   ));
 

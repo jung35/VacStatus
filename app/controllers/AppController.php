@@ -6,7 +6,10 @@ class AppController extends BaseController {
     $vBanList = vBanList::wheresteamUserId(Session::get('user.id'))->orderBy('id','desc')->paginate(20);
 
     foreach($vBanList as $key => $vBan) {
-      $vBanList[$key]->vBanUser = $this->getVBanUser($vBan->vBanUser->community_id);
+      $userInfo = $this->getVBanUser($vBan->vBanUser->community_id);
+      if($userInfo) {
+        $vBanList[$key]->vBanUser = $userInfo;
+      }
     }
 
     return View::make('user.welcome', array('vBanList' => $vBanList));
@@ -25,8 +28,12 @@ class AppController extends BaseController {
       {
         $searchData = $this->getSteamSearchCommunityId($oneSearch);
         if($searchData['type'] == 'success') {
-          $vBanList[$count] = new stdClass;
-          $vBanList[$count]->vBanUser = $this->getVBanUser($searchData['data']);
+          $userInfo = $this->getVBanUser($searchData['data']);
+
+          if($userInfo) {
+            $vBanList[$count] = new stdClass;
+            $vBanList[$count]->vBanUser = $userInfo;
+          }
           $count++;
         }
       }
@@ -37,7 +44,7 @@ class AppController extends BaseController {
     $searchData = $this->getSteamSearchCommunityId(Input::get('doSearch'));
 
     $this->log->addInfo("doSearch", array(
-      "steamId" => Session::get('user.id'),
+      "steamUserId" => Session::get('user.id'),
       "displayName" => Session::get('user.name'),
       "ipAddress" => Request::getClientIp(),
       "data" => Input::get('doSearch')
@@ -54,7 +61,7 @@ class AppController extends BaseController {
   {
 
     $this->log->addInfo("requestUser", array(
-      "steamId" => Session::get('user.id'),
+      "steamUserId" => Session::get('user.id'),
       "displayName" => Session::get('user.name'),
       "ipAddress" => Request::getClientIp(),
       "data" => $steamCommunityId
@@ -69,10 +76,10 @@ class AppController extends BaseController {
 
     if(!$userInfo)
     {
-      return Redirect::back()->withInput()->with('error', 'Unable to fetch data');
+      return Redirect::intended()->withInput()->with('error', 'Unable to fetch data');
     }
 
-    $userInfo->steamId = $this->getSteamId($steamCommunityId);
+    $userInfo->steamId = $this->convertSteamId($steamCommunityId);
 
     return View::make('user.user', array('userInfo' => $userInfo));
   }
@@ -83,7 +90,7 @@ class AppController extends BaseController {
     $searchData = Input::get('vBanUserId');
 
     $this->log->addInfo("addUser", array(
-      "steamId" => Session::get('user.id'),
+      "steamUserId" => Session::get('user.id'),
       "displayName" => Session::get('user.name'),
       "ipAddress" => Request::getClientIp(),
       "data" => $searchData
@@ -115,7 +122,7 @@ class AppController extends BaseController {
     $searchData = Input::get('vBanUserId');
 
     $this->log->addInfo("removeUser", array(
-      "steamId" => Session::get('user.id'),
+      "steamUserId" => Session::get('user.id'),
       "displayName" => Session::get('user.name'),
       "ipAddress" => Request::getClientIp(),
       "data" => $searchData
@@ -159,11 +166,13 @@ class AppController extends BaseController {
     $arrOfId = Array();
     $vBanUser = Array();
     if($arrCount > -1) {
-      for($x = $arrCount; $x > $arrCount-20; $x--)
+      for($x = $arrCount; $x > $arrCount-($arrCount - 20 >= 20 ? 20 : $arrCount+1); $x--)
       {
         $keyOfId = array_search($newCount[$x], $count);
         $vBanUser = $this->getVBanUser($community_id[$keyOfId]);
-        $vBanUsers[] = $vBanUser;
+        if($vBanUser) {
+          $vBanUsers[] = $vBanUser;
+        }
         unset($newCount[$x]);
         unset($count[$keyOfId]);
       }
@@ -177,7 +186,10 @@ class AppController extends BaseController {
     $vBanUsers = Array();
 
     foreach($vBanLists as $vBanList) {
-      $vBanUsers[] = $this->getVBanUser($vBanList->vBanUser->community_id);
+      $userInfo = $this->getVBanUser($vBanList->vBanUser->community_id);
+      if($userInfo) {
+        $vBanUsers[] = $userInfo;
+      }
     }
 
     return View::make('user.userList', array('latestUserAdded' => true, 'vBanUsers' => $vBanUsers));
@@ -224,10 +236,17 @@ class AppController extends BaseController {
         }
         else
         {
-          $xml = $this->getFileURL("http://steamcommunity.com/id/$data?xml=1");
-          $xml = simplexml_load_string($xml);
-          if(!is_object($xml)) return array('type' => 'error', 'data' => 'Invalid input');
-          $steamid64 = (string) $xml->steamID64;
+          $userInfo = $this->cURLPage("http://steamcommunity.com/id/{$data}/?xml=1&".time(), false);
+
+          try {
+            $userInfo = simplexml_load_string($userInfo);
+          } catch(Exception $ex) {
+            return array('type' => 'error', 'data' => 'Steam API error');
+          }
+
+          if(!is_object($userInfo)) return array('type' => 'error', 'data' => 'Invalid input');
+
+          $steamid64 = (string) $userInfo->steamID64;
           if (!preg_match('/7656119/', $steamid64)) return array('type' => 'error', 'data' => 'Invalid link');
           else return array('type' => 'success', 'data' => $steamid64);
         }
@@ -238,10 +257,17 @@ class AppController extends BaseController {
       }
       else
       {
-        $xml = $this->getFileURL("http://steamcommunity.com/id/$data?xml=1");
-        $xml = simplexml_load_string($xml);
-        if(!is_object($xml)) return array('type' => 'error', 'data' => 'Invalid input');
-        $steamid64 = (string) $xml->steamID64;
+        $userInfo = $this->cURLPage("http://steamcommunity.com/id/{$data}/?xml=1&".time(), false);
+
+        try {
+          $userInfo = simplexml_load_string($userInfo);
+        } catch(Exception $ex) {
+          return array('type' => 'error', 'data' => 'Steam API error');
+        }
+
+        if(!is_object($userInfo)) return array('type' => 'error', 'data' => 'Invalid input');
+
+        $steamid64 = (string) $userInfo->steamID64;
         if (!preg_match('/7656119/', $steamid64)) return array('type' => 'error', 'data' => 'Invalid input');
         else return array('type' => 'success', 'data' => $steamid64);
       }
