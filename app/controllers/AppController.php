@@ -69,7 +69,7 @@ class AppController extends BaseController {
 
     if(!is_numeric($steamCommunityId) || !preg_match('/7656119/', $steamCommunityId))
     {
-      return Redirect::back()->withInput()->with('error', 'Invalid ID');
+      return Redirect::route('home')->withInput()->with('error', 'Invalid ID');
     }
 
     $userInfo = $this->getVBanUser($steamCommunityId);
