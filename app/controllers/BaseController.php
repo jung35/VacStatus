@@ -71,14 +71,7 @@ class BaseController extends Controller {
     }
     $userInfo = new stdClass();
 
-    $data = $this->cURLPage( "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time()) or
-      $this->log->addError("fileLoad", array(
-        "steamUserId" => Session::get('user.id'),
-        "displayName" => Session::get('user.name'),
-        "ipAddress" => Request::getClientIp(),
-        "controller" => "updateVBanUser@BaseController",
-        "line" => __LINE__
-      ));
+    $data = $this->cURLPage( "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time());
 
     if (!is_object($data))
     {
@@ -87,7 +80,8 @@ class BaseController extends Controller {
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
         "controller" => "updateVBanUser@BaseController",
-        "line" => __LINE__
+        "line" => __LINE__,
+        "data" => $data
       ));
       return false;
     }
@@ -112,14 +106,7 @@ class BaseController extends Controller {
 
     $userInfo->steam_id = $this->convertSteamId($steamCommunityId);
 
-    $getBanInfo = $this->cURLPage( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time() ) or
-      $this->log->addError("fileLoad", array(
-        "steamUserId" => Session::get('user.id'),
-        "displayName" => Session::get('user.name'),
-        "ipAddress" => Request::getClientIp(),
-        "controller" => "updateVBanUser@BaseController",
-        "line" => __LINE__
-      ));
+    $getBanInfo = $this->cURLPage( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time());
 
     if(!is_object($getBanInfo))
     {
@@ -128,7 +115,8 @@ class BaseController extends Controller {
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
         "controller" => "updateVBanUser@BaseController",
-        "line" => __LINE__
+        "line" => __LINE__,
+        "data" => $data
       ));
       return false;
     }
