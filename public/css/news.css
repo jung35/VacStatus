@@ -3,7 +3,12 @@
 }
 
 .news-pfont {
-  color: #777;
+  color: #444;
   line-height: 1.5;
-  font-size: 13px;
+  font-size: 15px;
+}
+
+.news-pfont p {
+  padding: 5px 0;
+  margin: 0;
 }

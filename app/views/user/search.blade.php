@@ -1,11 +1,6 @@
 @section('search')
 {{ Form::open(array('route' => 'search', 'class' => 'form-horizontal col-md-6 col-md-offset-3')) }}
   <div class="form-group">
-  @if (Session::get('error'))
-    <p class="bg-danger search-error"><span class="text-danger">Error : </span>{{ Session::get('error') }}</p>
-  @elseif (Session::get('success'))
-    <p class="bg-success search-error"><span class="text-success">Success : </span>{{ Session::get('success') }}</p>
-  @endif
     {{ Form::label('doSearch', 'Search', array('class' => 'col-md-2 control-label')) }}
     <div class="col-md-10">
       <div class="input-group search-regular">

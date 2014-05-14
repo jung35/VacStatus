@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 
 class vBanListChecker extends Command {
+  protected $log;
 
 	/**
 	 * The console command name.
@@ -26,6 +27,7 @@ class vBanListChecker extends Command {
 	public function __construct()
 	{
 		parent::__construct();
+    $this->log = Log::getMonolog();
 	}
 
 	/**
@@ -40,6 +42,8 @@ class vBanListChecker extends Command {
 		$steamUser = steamUser::whereId($mailList->steam_user_id)->first();
 		$vBanUser = $steamUser->vBanUser;
 		$vBanList = $steamUser->vBanList;
+
+		$mailSent = false;
 
 		$this->info("");
 		$this->info("");
@@ -56,6 +60,7 @@ class vBanListChecker extends Command {
 			$this->info("");
 			$this->info("Email SENT!");
 			$this->info("");
+			$mailSent = true;
 		} else {
 			$this->info("");
 			$this->info("Email Wasn't needed!");
@@ -64,6 +69,13 @@ class vBanListChecker extends Command {
 		$this->info("========================================");
 		$this->info("");
 		$this->info("");
+
+    $this->log->addInfo("MailChecker", array(
+      "steamUserId" => $mailList->steam_user_id,
+      "displayName" => $vBanUser->display_name,
+      "email" => $mailList->email,
+      "mailSent" => $mailSent,
+    ));
 
 		return;
 	}
