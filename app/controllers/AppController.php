@@ -6,7 +6,8 @@ class AppController extends BaseController {
     $vBanList = vBanList::wheresteamUserId(Session::get('user.id'))->orderBy('id','desc')->paginate(20);
 
     foreach($vBanList as $key => $vBan) {
-      $userInfo = $this->getVBanUser($vBan->vBanUser->community_id);
+      $userInfo = $this->grabVBanUser($vBan->vBanUser->community_id);
+      $vBanList[$key]->vBanUser = $vBan->vBanUser->community_id;
       if($userInfo) {
         $vBanList[$key]->vBanUser = $userInfo;
       }
@@ -28,7 +29,8 @@ class AppController extends BaseController {
       {
         $searchData = $this->getSteamSearchCommunityId($oneSearch);
         if($searchData['type'] == 'success') {
-          $userInfo = $this->getVBanUser($searchData['data']);
+          $userInfo = $this->grabVBanUser($searchData['data']);
+          $vBanList[$key]->vBanUser = $searchData['data'];
 
           if($userInfo) {
             $vBanList[$count] = new stdClass;
@@ -72,11 +74,21 @@ class AppController extends BaseController {
       return Redirect::intended()->withInput()->with('error', 'Invalid ID');
     }
 
-    $userInfo = $this->getVBanUser($steamCommunityId);
+    $userInfo = $this->grabVBanUser($steamCommunityId);
 
     if(!$userInfo)
     {
-      return Redirect::intended()->withInput()->with('error', 'Unable to fetch data');
+      $userInfo = $this->updateVBanUser(null, $steamCommunityId);
+      if(!$userInfo) {
+        return Redirect::intended()->withInput()->with('error', 'Unable to fetch data');
+      }
+
+      $userInfo->get_num_tracking = vBanList::wherevBanUserId($userInfo->id)->count();
+
+      if(Session::get('user.in'))
+      {
+        $userInfo->is_tracking = isset(vBanList::whereRaw( "steam_user_id = {$sessionUserId} and v_ban_user_id = {$userInfo->id}" )->first()->id)? 1:0;
+      }
     }
 
     $userInfo->steamId = $this->convertSteamId($steamCommunityId);
@@ -169,9 +181,11 @@ class AppController extends BaseController {
       for($x = $arrCount; $x > $arrCount-($arrCount - 20 >= 20 ? 20 : $arrCount+1); $x--)
       {
         $keyOfId = array_search($newCount[$x], $count);
-        $vBanUser = $this->getVBanUser($community_id[$keyOfId]);
+        $vBanUser = $this->grabVBanUser($community_id[$keyOfId]);
         if($vBanUser) {
           $vBanUsers[] = $vBanUser;
+        } else {
+          $vBanUsers[] = $community_id[$keyOfId];
         }
         unset($newCount[$x]);
         unset($count[$keyOfId]);
@@ -186,9 +200,11 @@ class AppController extends BaseController {
     $vBanUsers = Array();
 
     foreach($vBanLists as $vBanList) {
-      $userInfo = $this->getVBanUser($vBanList->vBanUser->community_id);
+      $userInfo = $this->grabVBanUser($vBanList->vBanUser->community_id);
       if($userInfo) {
         $vBanUsers[] = $userInfo;
+      } else {
+        $vBanUsers[] = $vBanList->vBanUser->community_id;
       }
     }
 

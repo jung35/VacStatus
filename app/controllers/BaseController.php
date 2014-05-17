@@ -30,23 +30,14 @@ class BaseController extends Controller {
     }
   }
 
-  public function getVBanUser($steamCommunityId, $sessionUserId = null)
+  public function grabVBanUser($steamCommunityId, $sessionUserId = null)
   {
     if($sessionUserId == null) $sessionUserId = Session::get('user.id');
     $vBanUser = vBanUser::wherecommunityId($steamCommunityId)->first();
 
     if(!isset($vBanUser->id) || time() - strtotime($vBanUser->updated_at) > 3600 || $vBanUser->vac_banned == 0)
     {
-      $userInfo = $this->updateVBanUser($vBanUser, $steamCommunityId);
-      if(!$userInfo) {
-        if(!isset($vBanUser->id)) {
-          return false;
-        } else {
-          $userInfo = $vBanUser;
-          $userInfo->steam_id = $this->convertSteamId($userInfo->community_id);
-          $userInfo->user_alias = $vBanUser->vBanUserAlias()->orderBy('time_used','desc')->get();
-        }
-      }
+      return false;
     } else {
       $userInfo = $vBanUser;
       $userInfo->steam_id = $this->convertSteamId($userInfo->community_id);

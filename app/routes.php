@@ -13,12 +13,12 @@
 
 Route::filter('steamAuth', function()
 {
-    if(!Session::get('user.in')) return View::make('noLogin');
+  if(!Session::get('user.in')) return View::make('noLogin');
 });
 
 Route::filter('siteAdmin', function()
 {
-    if(Session::get('user.admin', 0) <= 0) return View::make('noAdmin');
+  if(Session::get('user.admin', 0) <= 0) return View::make('noAdmin');
 });
 
 if(Session::get('user.in'))
@@ -51,16 +51,19 @@ Route::get('privacy', function()
   return View::make('privacyPolicy');
 });
 
-Route::post('add', array('before' => 'steamAuth', 'uses' => 'AppController@addUser'));
-Route::post('remove', array('before' => 'steamAuth', 'uses' => 'AppController@removeUser'));
+Route::group(array('before' => 'steamAuth'), function()
+{
+  Route::post('add', array('uses' => 'AppController@addUser'));
+  Route::post('remove', array('uses' => 'AppController@removeUser'));
 
-Route::get('add', array('before' => 'steamAuth|csrf', 'as' => 'add', 'uses' => 'AppController@addUser'));
-Route::get('remove', array('before' => 'steamAuth|csrf', 'as' => 'remove', 'uses' => 'AppController@removeUser'));
+  Route::get('add', array('before' => 'csrf', 'as' => 'add', 'uses' => 'AppController@addUser'));
+  Route::get('remove', array('before' => 'csrf', 'as' => 'remove', 'uses' => 'AppController@removeUser'));
 
-Route::get('subscribe', array('before' => 'steamAuth', 'as' => 'subscribe', 'uses' => 'MailController@showSub'));
-Route::post('subscribe', array('before' => 'steamAuth', 'uses' => 'MailController@doSub'));
+  Route::get('subscribe', array('as' => 'subscribe', 'uses' => 'MailController@showSub'));
+  Route::post('subscribe', array('uses' => 'MailController@doSub'));
 
-Route::get('resend', array('before' => 'steamAuth', 'as' => 'resendEmail', 'uses' => 'MailController@sendVerification'));
+  Route::get('resend', array('as' => 'resendEmail', 'uses' => 'MailController@sendVerification'));
+});
 
 Route::group(array('before' => 'siteAdmin'), function()
 {
@@ -76,3 +79,5 @@ Route::group(array('before' => 'siteAdmin'), function()
     )
   );
 });
+
+Route::controller('json', 'JsonController');

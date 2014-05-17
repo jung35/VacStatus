@@ -64,7 +64,6 @@ class HomeController extends BaseController {
     }
     Session::regenerate();
 
-    $userInfo = $this->getVBanUser($steamCommunityId, $steamUser->id);
     Session::put('user.name', $steamUser->display_name);
     Session::put('user.communityId', $steamCommunityId);
     Session::put('user.id', $steamUser->id);
