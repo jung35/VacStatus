@@ -3,6 +3,7 @@
 
 @section('head')
   <link rel="stylesheet" href="{{{ URL::route('home') }}}/css/user/user.css">
+  <script>userLoad = [];</script>
 @stop
 
 @section('title')
@@ -39,41 +40,15 @@
       <tbody>
       @if ((isset($vBanCount) && $vBanCount > 0) || (method_exists($vBanList, 'count') && $vBanList->count() > 0))
         @foreach ($vBanList as $vBanUser)
+        @include('user.userSlide', array('vBanUser' => $vBanUser))
         <tr>
-          <td><img src="{{{ $vBanUser->vBanUser->steam_avatar_url_small }}}"></td>
-          <td>{{{ $vBanUser->vBanUser->display_name }}}</td>
-          @if (!isset($searching))
-          <td>{{{ date('m/d/Y', strtotime($vBanUser->created_at)) }}}</td>
-          @endif
-          @if($vBanUser->vBanUser->vac_banned > -1)
-          <td class="text-danger text-center"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;{{{ date('m/d/Y', time()-($vBanUser->vBanUser->vac_banned*86400)) }}}</td>
+          @if(!is_object($vBanUser))
+
+            <td colspan='7' id="user-{{{ $vBanUser }}}" class="text-muted text-center"><script>userLoad.push({{{ $vBanUser }}});</script><span class="icon-spin glyphicon glyphicon-refresh"></span> This user is currently loading</td>
           @else
-          <td class="text-success text-center"><span class="glyphicon glyphicon-remove"></span></td>
+            @section('userSlide')
+            @show
           @endif
-          <td class="text-center">{{{ vBanList::wherevBanUserId($vBanUser->vBanUser->id)->count()+(isset($vBanUser->vBanUser->is_tracking) && $vBanUser->vBanUser->is_tracking ? -1: 0) }}}</td>
-          <td><a href="{{ URL::route('user', array( $vBanUser->vBanUser->community_id )) }}" target="_blank" type="button" class="btn btn-info btn-sm">Info</a></td>
-          <td>
-            @if (Session::get('user.in'))
-              @if (isset($searching))
-                @if($vBanUser->vBanUser->is_tracking)
-                  {{ Form::open(array('route' => 'remove', 'target' => '_blank')) }}
-                  {{ Form::hidden('vBanUserId', $vBanUser->vBanUser->id) }}
-                  <input type="submit" class="btn btn-danger btn-sm" value="Delete">
-                  {{ Form::close() }}
-                @else
-                  {{ Form::open(array('route' => 'add', 'target' => '_blank')) }}
-                  {{ Form::hidden('vBanUserId', $vBanUser->vBanUser->id) }}
-                  <input type="submit" class="btn btn-info btn-sm" value="Add">
-                  {{ Form::close() }}
-                @endif
-              @else
-                {{ Form::open(array('route' => 'remove')) }}
-                  {{ Form::hidden('vBanUserId', $vBanUser->vBanUser->id) }}
-                  <input type="submit" class="btn btn-danger btn-sm" value="Delete">
-                {{ Form::close() }}
-              @endif
-            @endif
-          </td>
         </tr>
         @endforeach
       @else

@@ -35,7 +35,7 @@ class BaseController extends Controller {
     if($sessionUserId == null) $sessionUserId = Session::get('user.id');
     $vBanUser = vBanUser::wherecommunityId($steamCommunityId)->first();
 
-    if(!isset($vBanUser->id) || time() - strtotime($vBanUser->updated_at) > 3600 || $vBanUser->vac_banned == 0)
+    if(!isset($vBanUser->id) || time() - strtotime($vBanUser->updated_at) > 3600000 || $vBanUser->vac_banned == 0)
     {
       return false;
     } else {

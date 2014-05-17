@@ -7,9 +7,9 @@ class AppController extends BaseController {
 
     foreach($vBanList as $key => $vBan) {
       $userInfo = $this->grabVBanUser($vBan->vBanUser->community_id);
-      $vBanList[$key]->vBanUser = $vBan->vBanUser->community_id;
+      $vBanList[$key] = $vBan->vBanUser->community_id;
       if($userInfo) {
-        $vBanList[$key]->vBanUser = $userInfo;
+        $vBanList[$key] = $userInfo;
       }
     }
 
@@ -30,11 +30,10 @@ class AppController extends BaseController {
         $searchData = $this->getSteamSearchCommunityId($oneSearch);
         if($searchData['type'] == 'success') {
           $userInfo = $this->grabVBanUser($searchData['data']);
-          $vBanList[$key]->vBanUser = $searchData['data'];
+          $vBanList[$key] = $searchData['data'];
 
           if($userInfo) {
-            $vBanList[$count] = new stdClass;
-            $vBanList[$count]->vBanUser = $userInfo;
+            $vBanList[$count] = $userInfo;
           }
           $count++;
         }
