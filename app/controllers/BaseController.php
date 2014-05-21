@@ -12,7 +12,7 @@ class BaseController extends Controller {
    */
   public function __construct()
   {
-    $this->steamAPI = '6D66B62E8D6EB230551D63AC6640A965';
+    $this->steamAPI = '';
 
     $this->log = Log::getMonolog();
     DB::connection()->disableQueryLog();
