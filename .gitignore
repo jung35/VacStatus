@@ -9,8 +9,6 @@
 /app/config/mail.php
 /app/config/remote.php
 /app/config/session.php
-/bootstrap/compiled.php
-/bootstrap/start.php
 /composer.phar
 /app/storage/*
 Thumbs.db
