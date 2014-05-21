@@ -2,8 +2,13 @@
 @include('user.search')
 
 @section('head')
-  <link rel="stylesheet" href="{{{ URL::route('home') }}}/css/user/user.css">
-  <script>userLoad = [];</script>
+  {{ HTML::style('css/user/user.css') }}
+  <script>
+    @if(isset($displayAdded))
+    var dated = true;
+    @endif
+    var userLoad = [];
+  </script>
 @stop
 
 @section('title')
@@ -40,14 +45,11 @@
       <tbody>
       @if ((isset($vBanCount) && $vBanCount > 0) || (method_exists($vBanList, 'count') && $vBanList->count() > 0))
         @foreach ($vBanList as $vBanUser)
-        @include('user.userSlide', array('vBanUser' => $vBanUser))
         <tr>
           @if(!is_object($vBanUser))
-
-            <td colspan='7' id="user-{{{ $vBanUser }}}" class="text-muted text-center"><script>userLoad.push({{{ $vBanUser }}});</script><span class="icon-spin glyphicon glyphicon-refresh"></span> This user is currently loading</td>
+            <td colspan='7' id="user-{{{ bcsub($vBanUser, '76561197960265728') }}}" style="height: 49px" class="text-muted text-center"><script>userLoad.push({{{ bcsub($vBanUser, '76561197960265728') }}});</script><span class="icon-spin glyphicon glyphicon-refresh"></span> This user is currently loading</td>
           @else
-            @section('userSlide')
-            @show
+            @include('user.userSlide')
           @endif
         </tr>
         @endforeach
@@ -63,4 +65,8 @@
     {{ $vBanList->links() }}
   @endif
 </div>
+@stop
+
+@section('script')
+  {{ HTML::script('js/user/userLoad.js') }}
 @stop

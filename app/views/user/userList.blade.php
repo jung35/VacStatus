@@ -2,7 +2,8 @@
 @include('user.search')
 
 @section('head')
-  <link rel="stylesheet" href="{{{ URL::route('home') }}}/css/user/user.css">
+  {{ HTML::style('css/user/user.css') }}
+  <script>userLoad = [];</script>
 @stop
 
 @section('title')
@@ -32,35 +33,20 @@
       </thead>
       <tbody>
       @foreach ($vBanUsers as $vBanUser)
-      <tr>
-        <td><img src="{{{ $vBanUser->steam_avatar_url_small }}}"></td>
-        <td>{{{ $vBanUser->display_name }}}</td>
-        @if($vBanUser->vac_banned > -1)
-        <td class="text-danger text-center"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;{{{ date('m/d/Y', time()-($vBanUser->vac_banned*86400)) }}}</td>
-        @else
-        <td class="text-success text-center"><span class="glyphicon glyphicon-remove"></span></td>
-        @endif
-        <td class="text-center">{{{ $vBanUser->get_num_tracking }}}</td>
-        <td><a href="{{ URL::route('user', array( $vBanUser->community_id )) }}" target="_blank" type="button" class="btn btn-info btn-sm">Info</a></td>
-        <td>
-          @if (Session::get('user.in'))
-            @if($vBanUser->is_tracking)
-              {{ Form::open(array('route' => 'remove')) }}
-              {{ Form::hidden('vBanUserId', $vBanUser->id) }}
-              <input type="submit" class="btn btn-danger btn-sm" value="Delete">
-              {{ Form::close() }}
-            @else
-              {{ Form::open(array('route' => 'add')) }}
-              {{ Form::hidden('vBanUserId', $vBanUser->id) }}
-              <input type="submit" class="btn btn-info btn-sm" value="Add">
-              {{ Form::close() }}
-            @endif
+        <tr>
+          @if(!is_object($vBanUser))
+            <td colspan='7' id="user-{{{ bcsub($vBanUser, '76561197960265728') }}}" style="height: 49px" class="text-muted text-center"><script>userLoad.push({{{ bcsub($vBanUser, '76561197960265728') }}});</script><span class="icon-spin glyphicon glyphicon-refresh"></span> This user is currently loading</td>
+          @else
+            @include('user.userSlide', array('vBanUser' => $vBanUser))
           @endif
-        </td>
-      </tr>
+        </tr>
       @endforeach
       </tbody>
     </table>
   </div>
 </div>
+@stop
+
+@section('script')
+  {{ HTML::script('js/user/userLoad.js') }}
 @stop

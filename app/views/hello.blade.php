@@ -1,7 +1,7 @@
 @extends('base')
 
 @section('head')
-<link rel="stylesheet" href="{{{ URL::route('home') }}}/css/index.css">
+  {{ HTML::style('css/index.css') }}
 @stop
 
 @section('content')

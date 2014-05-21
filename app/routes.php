@@ -10,17 +10,6 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
-
-Route::filter('steamAuth', function()
-{
-  if(!Session::get('user.in')) return View::make('noLogin');
-});
-
-Route::filter('siteAdmin', function()
-{
-  if(Session::get('user.admin', 0) <= 0) return View::make('noAdmin');
-});
-
 if(Session::get('user.in'))
 {
   Route::get('', array('as' => 'home', 'uses' => 'AppController@showIndex'));

@@ -16,7 +16,7 @@ class VBanList extends Migration {
       $table->increments('id');
       $table->integer('steam_user_id');
       $table->integer('v_ban_user_id');
-      $table->integer('check_banned')->default(0);;
+      $table->integer('check_banned')->default(0);
       $table->timestamps();
     });
 	}

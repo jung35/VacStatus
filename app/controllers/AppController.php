@@ -13,7 +13,7 @@ class AppController extends BaseController {
       }
     }
 
-    return View::make('user.welcome', array('vBanList' => $vBanList));
+    return View::make('user.welcome', array('vBanList' => $vBanList, 'displayAdded' => true));
   }
 
   public function doSearch()
@@ -25,7 +25,7 @@ class AppController extends BaseController {
       $searchMany = explode("\n", $searchMany);
       $vBanList = array();
       $count = 0;
-      foreach($searchMany as $oneSearch)
+      foreach($searchMany as $key => $oneSearch)
       {
         $searchData = $this->getSteamSearchCommunityId($oneSearch);
         if($searchData['type'] == 'success') {
@@ -86,6 +86,7 @@ class AppController extends BaseController {
 
       if(Session::get('user.in'))
       {
+        $sessionUserId = Session::get('user.id');
         $userInfo->is_tracking = isset(vBanList::whereRaw( "steam_user_id = {$sessionUserId} and v_ban_user_id = {$userInfo->id}" )->first()->id)? 1:0;
       }
     }

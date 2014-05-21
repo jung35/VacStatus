@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link rel="stylesheet" href="{{{ URL::route('home') }}}/css/bootstrap.css">
-  <link rel="stylesheet" href="{{{ URL::route('home') }}}/css/global.css">
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+  {{ HTML::style('css/bootstrap.css') }}
+  {{ HTML::style('css/global.css') }}
+  {{ HTML::style('http://fonts.googleapis.com/css?family=Open+Sans:400,300,600') }}
 
   <title>
   VacStatus
@@ -74,9 +74,9 @@
       </p>
     </div>
   </div>
-  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script type="text/javascript" src="{{{ URL::route('home') }}}/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="{{{ URL::route('home') }}}/js/global.js"></script>
+  {{ HTML::script('//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js') }}
+  {{ HTML::script('js/bootstrap.min.js') }}
+  {{ HTML::script('js/global.js') }}
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

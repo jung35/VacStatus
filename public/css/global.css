@@ -183,3 +183,8 @@ p {
     transform: rotate(359deg);
   };
 }
+
+.userList-refreshing {
+  height: 49px;
+  width: 32px;
+}

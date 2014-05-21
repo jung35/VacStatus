@@ -78,3 +78,19 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+Route::filter('steamAuth', function()
+{
+  if(!Session::get('user.in'))
+  {
+    return View::make('noLogin');
+  }
+});
+
+Route::filter('siteAdmin', function()
+{
+  if(Session::get('user.admin', 0) <= 0)
+  {
+    return View::make('noAdmin');
+  }
+});
