@@ -86,10 +86,14 @@ App::bind('Hybrid_Auth', function() {
     "base_url" => url('')."/login/auth",
     "providers" => array (
       "OpenID" => array (
-              "enabled" => true
+        "enabled" => true
       ),
       "Steam" => array (
-        "enabled" => true
+        "enabled" => true,
+        "wrapper" => array(
+          'class'=>'Hybrid_Providers_Steam',
+          'path' => $_SERVER['DOCUMENT_ROOT'].'/../vendor/hybridauth/hybridauth/additional-providers/hybridauth-steam/Providers/Steam.php'
+        )
       )
     )
   ));
