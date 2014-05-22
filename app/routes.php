@@ -10,14 +10,8 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
-if(Session::has('user.in'))
-{
-  Route::get('', array('as' => 'home', 'uses' => 'AppController@showIndex'));
-}
-else
-{
-  Route::get('', array('as' => 'home', 'uses' => 'HomeController@showWelcome'));
-}
+
+Route::get('', array('as' => 'home', 'uses' => 'HomeController@showWelcome'));
 
 Route::get('search', array('as' => 'search', 'uses' => 'AppController@doSearch'));
 Route::post('search', 'AppController@doSearch');
@@ -35,8 +29,7 @@ Route::get('logout', array('as' => 'logout', 'uses' => 'HomeController@steamLogo
 
 Route::get('verify/{verificationCode}', array('as' => 'verify', 'uses' => 'MailController@verifyEmail'));
 
-Route::get('privacy', function()
-{
+Route::get('privacy', function() {
   return View::make('privacyPolicy');
 });
 
