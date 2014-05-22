@@ -14,11 +14,17 @@ class JsonController extends BaseController {
       $vBanUser = $this->updateVBanUser(null, $steamCommunityId);
 
       if(!is_object($vBanUser)) {
-        $vBanUser = array('status' => 'error');
+        $userInfo = array('status' => 'error');
       } else {
         unset($vBanUser->user_alias);
+
+        if(Session::has('user.in')) {
+          $sessionUserId = Session::get('user.in');
+          $vBanUser->is_tracking = isset(vBanList::whereRaw( "steam_user_id = {$sessionUserId} and v_ban_user_id = {$vBanUser->id}" )->first()->id)? 1:0;
+        }
+
         $userInfo = Array(
-          'html' => View::make('user.userSlide', array('vBanUser' => $vBanUser, 'displayAdded' => $dated, 'searching' => $searching))->render(),
+          'html' => View::make('user.userSlide')->with(array('vBanUser' => $vBanUser, 'displayAdded' => $dated, 'searching' => $searching))->render(),
           'status' => 'success');
       }
       return Response::json($userInfo);

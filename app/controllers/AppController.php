@@ -13,7 +13,7 @@ class AppController extends BaseController {
       }
     }
 
-    return View::make('user.welcome', array('vBanList' => $vBanList, 'displayAdded' => true));
+    return View::make('user.welcome')->with(array('vBanList' => $vBanList, 'displayAdded' => true, 'searching' => false));
   }
 
   public function doSearch()
@@ -93,7 +93,7 @@ class AppController extends BaseController {
 
     $userInfo->steamId = $this->convertSteamId($steamCommunityId);
 
-    return View::make('user.user', array('userInfo' => $userInfo));
+    return View::make('user.user', array('userInfo' => $userInfo, 'searching' => false));
   }
 
   public function addUser()
@@ -191,7 +191,7 @@ class AppController extends BaseController {
         unset($count[$keyOfId]);
       }
     }
-    return View::make('user.userList', array('hatedUsers' => true, 'vBanUsers' => $vBanUsers));
+    return View::make('user.userList', array('hatedUsers' => true, 'vBanUsers' => $vBanUsers, 'searching' => false));
   }
 
   public function showLatestUserAdded()
@@ -208,7 +208,7 @@ class AppController extends BaseController {
       }
     }
 
-    return View::make('user.userList', array('latestUserAdded' => true, 'vBanUsers' => $vBanUsers));
+    return View::make('user.userList', array('latestUserAdded' => true, 'vBanUsers' => $vBanUsers, 'searching' => false));
   }
 
   private function getSteamSearchCommunityId($data)

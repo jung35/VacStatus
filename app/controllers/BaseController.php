@@ -12,7 +12,7 @@ class BaseController extends Controller {
    */
   public function __construct()
   {
-    $this->steamAPI = 'FCB152DD0DF8097DD31E21234E07C5C4';
+    $this->steamAPI = '';
 
     $this->log = Log::getMonolog();
     DB::connection()->disableQueryLog();
@@ -81,6 +81,14 @@ class BaseController extends Controller {
     if(isset($data[0])) {
       $data = $data[0];
     } else {
+      $this->log->addWarning("unknownContent", array(
+        "steamUserId" => Session::get('user.id'),
+        "displayName" => Session::get('user.name'),
+        "ipAddress" => Request::getClientIp(),
+        "controller" => "updateVBanUser@BaseController",
+        "line" => __LINE__,
+        "data" => $data
+      ));
       return false;
     }
 

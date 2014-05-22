@@ -1,4 +1,4 @@
-@if(!empty($vBanUser) && is_object($vBanUser))
+@if(!empty($vBanUser) && is_object($vBanUser) && isset($searching))
   @if(time() - strtotime($vBanUser->updated_at) > 3600)
     <td class="userList-refreshing" id="user-{{{ bcsub($vBanUser->community_id, '76561197960265728') }}}"><span class="icon-spin glyphicon glyphicon-refresh"></span></td>
     <script>userLoad.push({{{ bcsub($vBanUser->community_id, '76561197960265728') }}});</script>
@@ -6,7 +6,7 @@
     <td id="user-{{{ bcsub($vBanUser->community_id, '76561197960265728') }}}"><img src="{{{ $vBanUser->steam_avatar_url_small }}}"></td>
   @endif
   <td>{{{ $vBanUser->display_name }}}</td>
-  @if ((!isset($searching) && !$searching) && isset($displayAdded) && $displayAdded)
+  @if (($searching == 'false' || $searching == false) && isset($displayAdded) && ($displayAdded != 'false' && $displayAdded != false))
   <td>{{{ date('m/d/Y', strtotime($vBanUser->created_at)) }}}</td>
   @endif
   @if($vBanUser->vac_banned > -1)
@@ -19,7 +19,7 @@
   <td>
     @if(Session::get('user.in'))
       @if(isset($vBanUser->is_tracking) && $vBanUser->is_tracking)
-        @if(isset($searching) && $searching)
+        @if($searching == 'true' || $searching)
           {{ Form::open(array('route' => 'remove', 'target' => '_blank', 'onclick' => 'javascript:changeFormButton(\''.bcsub($vBanUser->community_id, '76561197960265728').'\');')) }}
         @else
           {{ Form::open(array('route' => 'remove')) }}
@@ -28,7 +28,7 @@
         <input type="submit" class="btn btn-danger btn-sm" value="Delete">
         {{ Form::close() }}
       @else
-        @if(isset($searching) && $searching)
+        @if($searching == 'true' || $searching)
           {{ Form::open(array('route' => 'add', 'target' => '_blank', 'onclick' => 'javascript:changeFormButton(\''.bcsub($vBanUser->community_id, '76561197960265728').'\');')) }}
         @else
           {{ Form::open(array('route' => 'add')) }}

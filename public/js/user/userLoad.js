@@ -1,17 +1,18 @@
 function reqUser(communityId, dated, searching) {
+  jQuery.ajaxSetup({ jsonp: null, jsonpCallback: null});
   request = $.ajax({
     dataType: "json",
     type: "POST",
-    url: "/json/user/",
+    url: "/json/user",
     data: {communityId: communityId, dated: dated, searching: searching}
   }).done(function(data) {
     if(data.status == 'success') {
       $('#user-'+communityId).parent().html(data.html);
     } else {
-      $('#user-'+communityId).html('<span class="text-danger">Could not load user</span>');
+      $('#user-'+communityId).parent().html('<td colspan="7" class="text-danger text-center">Could not load user</td>');
     }
   }).fail(function() {
-      $('#user-'+communityId).html('<span class="text-danger">Could not load user</span>');
+      $('#user-'+communityId).parent().html('<td colspan="7" class="text-danger text-center">Could not load user</td>');
   });
 }
 

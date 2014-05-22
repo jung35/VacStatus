@@ -10,6 +10,9 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+
+Route::controller('json', 'JsonController');
+
 if(Session::has('user.in'))
 {
   Route::get('', array('as' => 'home', 'uses' => 'AppController@showIndex'));
@@ -67,5 +70,3 @@ Route::group(array('before' => 'siteAdmin'), function()
     )
   );
 });
-
-Route::controller('json', 'JsonController');

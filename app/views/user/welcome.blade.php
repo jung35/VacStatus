@@ -12,7 +12,7 @@
 @stop
 
 @section('title')
-@if(isset($searching))
+@if(!$searching)
 &mdash; Search
 @endif
 @stop
@@ -27,7 +27,7 @@
         <tr>
           <th></th>
           <th><span class="ttip cursor" data-toggle="tooltip" data-placement="top" title="Alias of user added">User</span></th>
-          @if (!isset($searching))
+          @if (empty($searching))
           <th>
             <span class="ttip cursor" data-toggle="tooltip" data-placement="top" title="Date added to list (mm/dd/yy)">Date</span>
           </th>
@@ -49,7 +49,9 @@
           @if(!is_object($vBanUser))
             <td colspan='7' id="user-{{{ bcsub($vBanUser, '76561197960265728') }}}" style="height: 49px" class="text-muted text-center"><script>userLoad.push({{{ bcsub($vBanUser, '76561197960265728') }}});</script><span class="icon-spin glyphicon glyphicon-refresh"></span> This user is currently loading</td>
           @else
-            @include('user.userSlide')
+
+
+            @include('user.userSlide', array('searching' => false))
           @endif
         </tr>
         @endforeach
@@ -61,7 +63,7 @@
       </tbody>
     </table>
   </div>
-  @if (!isset($searching))
+  @if (!$searching)
     {{ $vBanList->links() }}
   @endif
 </div>
