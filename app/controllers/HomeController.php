@@ -12,9 +12,6 @@ class HomeController extends BaseController {
 
   public function showWelcome()
   {
-    if(Session::has('user.in')) {
-      return AppController::showIndex();
-    }
     return View::make('hello');
   }
 

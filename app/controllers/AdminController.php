@@ -30,7 +30,7 @@ class AdminController extends BaseController {
           $i++;
         }
       }
-      Cache::add('admin-avgListedUsers', number_format((float)($sum / $i), 2, '.', ''), 1440);
+      Cache::add('admin-avgListedUsers', number_format((float)@($sum / $i), 2, '.', ''), 1440);
     }
 
     if(!Cache::has('admin-news')) {

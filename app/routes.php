@@ -10,8 +10,14 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
-
-Route::get('', array('as' => 'home', 'uses' => 'HomeController@showWelcome'));
+if(Session::has('user.in'))
+{
+  Route::get('', array('as' => 'home', 'uses' => 'AppController@showIndex'));
+}
+else
+{
+  Route::get('', array('as' => 'home', 'uses' => 'HomeController@showWelcome'));
+}
 
 Route::get('search', array('as' => 'search', 'uses' => 'AppController@doSearch'));
 Route::post('search', 'AppController@doSearch');
