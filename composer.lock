@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "1722efd57b54909930802c04f82a40b5",
+    "hash": "55bab639d5def502caf90df76e72a996",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -275,7 +275,7 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v4.1.29",
+            "version": "4.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
@@ -1688,6 +1688,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "laravel/framework": 20,
         "hybridauth/hybridauth": 20
     },
     "platform": [
