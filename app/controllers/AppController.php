@@ -6,13 +6,14 @@ class AppController extends BaseController {
     $vBanList = vBanList::wheresteamUserId(Session::get('user.id'))->orderBy('id','desc')->paginate(20);
 
     foreach($vBanList as $key => $vBan) {
-      $userInfo = $this->getVBanUser($vBan->vBanUser->community_id);
+      $userInfo = $this->grabVBanUser($vBan->vBanUser->community_id);
+      $vBanList[$key] = $vBan->vBanUser->community_id;
       if($userInfo) {
-        $vBanList[$key]->vBanUser = $userInfo;
+        $vBanList[$key] = $userInfo;
       }
     }
 
-    return View::make('user.welcome', array('vBanList' => $vBanList));
+    return View::make('user.welcome')->with(array('vBanList' => $vBanList, 'displayAdded' => true, 'searching' => false));
   }
 
   public function doSearch()
@@ -24,15 +25,15 @@ class AppController extends BaseController {
       $searchMany = explode("\n", $searchMany);
       $vBanList = array();
       $count = 0;
-      foreach($searchMany as $oneSearch)
+      foreach($searchMany as $key => $oneSearch)
       {
         $searchData = $this->getSteamSearchCommunityId($oneSearch);
         if($searchData['type'] == 'success') {
-          $userInfo = $this->getVBanUser($searchData['data']);
+          $userInfo = $this->grabVBanUser($searchData['data']);
+          $vBanList[$key] = $searchData['data'];
 
           if($userInfo) {
-            $vBanList[$count] = new stdClass;
-            $vBanList[$count]->vBanUser = $userInfo;
+            $vBanList[$count] = $userInfo;
           }
           $count++;
         }
@@ -69,19 +70,30 @@ class AppController extends BaseController {
 
     if(!is_numeric($steamCommunityId) || !preg_match('/7656119/', $steamCommunityId))
     {
-      return Redirect::back()->withInput()->with('error', 'Invalid ID');
+      return Redirect::intended()->withInput()->with('error', 'Invalid ID');
     }
 
-    $userInfo = $this->getVBanUser($steamCommunityId);
+    $userInfo = $this->grabVBanUser($steamCommunityId);
 
     if(!$userInfo)
     {
-      return Redirect::intended()->withInput()->with('error', 'Unable to fetch data');
+      $userInfo = $this->updateVBanUser(null, $steamCommunityId);
+      if(!$userInfo) {
+        return Redirect::intended()->withInput()->with('error', 'Unable to fetch data');
+      }
+
+      $userInfo->get_num_tracking = vBanList::wherevBanUserId($userInfo->id)->count();
+
+      if(Session::get('user.in'))
+      {
+        $sessionUserId = Session::get('user.id');
+        $userInfo->is_tracking = isset(vBanList::whereRaw( "steam_user_id = {$sessionUserId} and v_ban_user_id = {$userInfo->id}" )->first()->id)? 1:0;
+      }
     }
 
     $userInfo->steamId = $this->convertSteamId($steamCommunityId);
 
-    return View::make('user.user', array('userInfo' => $userInfo));
+    return View::make('user.user', array('userInfo' => $userInfo, 'searching' => false));
   }
 
   public function addUser()
@@ -169,15 +181,17 @@ class AppController extends BaseController {
       for($x = $arrCount; $x > $arrCount-($arrCount - 20 >= 20 ? 20 : $arrCount+1); $x--)
       {
         $keyOfId = array_search($newCount[$x], $count);
-        $vBanUser = $this->getVBanUser($community_id[$keyOfId]);
+        $vBanUser = $this->grabVBanUser($community_id[$keyOfId]);
         if($vBanUser) {
           $vBanUsers[] = $vBanUser;
+        } else {
+          $vBanUsers[] = $community_id[$keyOfId];
         }
         unset($newCount[$x]);
         unset($count[$keyOfId]);
       }
     }
-    return View::make('user.userList', array('hatedUsers' => true, 'vBanUsers' => $vBanUsers));
+    return View::make('user.userList', array('hatedUsers' => true, 'vBanUsers' => $vBanUsers, 'searching' => false));
   }
 
   public function showLatestUserAdded()
@@ -186,13 +200,15 @@ class AppController extends BaseController {
     $vBanUsers = Array();
 
     foreach($vBanLists as $vBanList) {
-      $userInfo = $this->getVBanUser($vBanList->vBanUser->community_id);
+      $userInfo = $this->grabVBanUser($vBanList->vBanUser->community_id);
       if($userInfo) {
         $vBanUsers[] = $userInfo;
+      } else {
+        $vBanUsers[] = $vBanList->vBanUser->community_id;
       }
     }
 
-    return View::make('user.userList', array('latestUserAdded' => true, 'vBanUsers' => $vBanUsers));
+    return View::make('user.userList', array('latestUserAdded' => true, 'vBanUsers' => $vBanUsers, 'searching' => false));
   }
 
   private function getSteamSearchCommunityId($data)

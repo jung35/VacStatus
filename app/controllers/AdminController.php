@@ -1,11 +1,6 @@
 <?php
 class AdminController extends BaseController {
 
-  public function __construct() {
-    parent::__construct();
-    if(Session::get('user.admin') <= 0) return View::make('noAdmin');
-  }
-
   public function getIndex()
   {
     // CACHE TIME
@@ -35,7 +30,7 @@ class AdminController extends BaseController {
           $i++;
         }
       }
-      Cache::add('admin-avgListedUsers', number_format((float)($sum / $i), 2, '.', ''), 1440);
+      Cache::add('admin-avgListedUsers', number_format((float)@($sum / $i), 2, '.', ''), 1440);
     }
 
     if(!Cache::has('admin-news')) {

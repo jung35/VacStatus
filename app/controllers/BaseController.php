@@ -30,23 +30,14 @@ class BaseController extends Controller {
     }
   }
 
-  public function getVBanUser($steamCommunityId, $sessionUserId = null)
+  public function grabVBanUser($steamCommunityId, $sessionUserId = null)
   {
     if($sessionUserId == null) $sessionUserId = Session::get('user.id');
     $vBanUser = vBanUser::wherecommunityId($steamCommunityId)->first();
 
-    if(!isset($vBanUser->id) || time() - strtotime($vBanUser->updated_at) > 3600 || $vBanUser->vac_banned == 0)
+    if(!isset($vBanUser->id) || $vBanUser->vac_banned == 0)
     {
-      $userInfo = $this->updateVBanUser($vBanUser, $steamCommunityId);
-      if(!$userInfo) {
-        if(!isset($vBanUser->id)) {
-          return false;
-        } else {
-          $userInfo = $vBanUser;
-          $userInfo->steam_id = $this->convertSteamId($userInfo->community_id);
-          $userInfo->user_alias = $vBanUser->vBanUserAlias()->orderBy('time_used','desc')->get();
-        }
-      }
+      return false;
     } else {
       $userInfo = $vBanUser;
       $userInfo->steam_id = $this->convertSteamId($userInfo->community_id);
@@ -71,14 +62,7 @@ class BaseController extends Controller {
     }
     $userInfo = new stdClass();
 
-    $data = $this->cURLPage( "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time()) or
-      $this->log->addError("fileLoad", array(
-        "steamUserId" => Session::get('user.id'),
-        "displayName" => Session::get('user.name'),
-        "ipAddress" => Request::getClientIp(),
-        "controller" => "updateVBanUser@BaseController",
-        "line" => __LINE__
-      ));
+    $data = $this->cURLPage( "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time());
 
     if (!is_object($data))
     {
@@ -87,7 +71,8 @@ class BaseController extends Controller {
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
         "controller" => "updateVBanUser@BaseController",
-        "line" => __LINE__
+        "line" => __LINE__,
+        "data" => $data
       ));
       return false;
     }
@@ -96,6 +81,14 @@ class BaseController extends Controller {
     if(isset($data[0])) {
       $data = $data[0];
     } else {
+      $this->log->addWarning("unknownContent", array(
+        "steamUserId" => Session::get('user.id'),
+        "displayName" => Session::get('user.name'),
+        "ipAddress" => Request::getClientIp(),
+        "controller" => "updateVBanUser@BaseController",
+        "line" => __LINE__,
+        "data" => $data
+      ));
       return false;
     }
 
@@ -112,14 +105,7 @@ class BaseController extends Controller {
 
     $userInfo->steam_id = $this->convertSteamId($steamCommunityId);
 
-    $getBanInfo = $this->cURLPage( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time() ) or
-      $this->log->addError("fileLoad", array(
-        "steamUserId" => Session::get('user.id'),
-        "displayName" => Session::get('user.name'),
-        "ipAddress" => Request::getClientIp(),
-        "controller" => "updateVBanUser@BaseController",
-        "line" => __LINE__
-      ));
+    $getBanInfo = $this->cURLPage( "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time());
 
     if(!is_object($getBanInfo))
     {
@@ -128,7 +114,8 @@ class BaseController extends Controller {
         "displayName" => Session::get('user.name'),
         "ipAddress" => Request::getClientIp(),
         "controller" => "updateVBanUser@BaseController",
-        "line" => __LINE__
+        "line" => __LINE__,
+        "data" => $data
       ));
       return false;
     }
@@ -159,9 +146,9 @@ class BaseController extends Controller {
     $vBanUser->market_banned = $userInfo->market_banned;
     $vBanUser->save();
 
-    $getUserAlias = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/ajaxaliases/?".time() );
+    $getUserAlias = $this->cURLPage( "http://steamcommunity.com/profiles/$steamCommunityId/ajaxaliases/?".time());
 
-    if(is_object($getUserAlias)) {
+    if(isset($getUserAlias[0]) && !empty($getUserAlias[0])) {
       vBanUserAlias::where('v_ban_user_id', '=', $vBanUser->id)->delete();
       $userAliasList = array();
       foreach($getUserAlias as $userAlias) {

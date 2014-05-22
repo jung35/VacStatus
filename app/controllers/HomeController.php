@@ -62,8 +62,8 @@ class HomeController extends BaseController {
         "ipAddress" => Request::getClientIp()
       ));
     }
+    Session::regenerate();
 
-    $userInfo = $this->getVBanUser($steamCommunityId, $steamUser->id);
     Session::put('user.name', $steamUser->display_name);
     Session::put('user.communityId', $steamCommunityId);
     Session::put('user.id', $steamUser->id);
@@ -86,12 +86,8 @@ class HomeController extends BaseController {
   {
     $steamUserId = Session::get("user.id");
     $steamUserDisplayName = Session::get("user.name");
-    Session::forget('user.name');
-    Session::forget('user.communityId');
-    Session::forget('user.id');
-    Session::forget('user.in');
-    Session::forget('user.admin');
-    Session::forget('email.send');
+
+    Session::flush();
     $this->hybridAuth->logoutAllProviders();
 
     $this->log->addInfo("Logout", array(

@@ -11,12 +11,9 @@
 |
 */
 
-Route::filter('steamAuth', function()
-{
-    if(!Session::get('user.in')) return View::make('noLogin');
-});
+Route::controller('json', 'JsonController');
 
-if(Session::get('user.in'))
+if(Session::has('user.in'))
 {
   Route::get('', array('as' => 'home', 'uses' => 'AppController@showIndex'));
 }
@@ -41,31 +38,35 @@ Route::get('logout', array('as' => 'logout', 'uses' => 'HomeController@steamLogo
 
 Route::get('verify/{verificationCode}', array('as' => 'verify', 'uses' => 'MailController@verifyEmail'));
 
-Route::get('privacy', function()
-{
+Route::get('privacy', function() {
   return View::make('privacyPolicy');
 });
 
-Route::post('add', array('before' => 'steamAuth', 'uses' => 'AppController@addUser'));
-Route::post('remove', array('before' => 'steamAuth', 'uses' => 'AppController@removeUser'));
+Route::group(array('before' => 'steamAuth'), function()
+{
+  Route::post('add', array('uses' => 'AppController@addUser'));
+  Route::post('remove', array('uses' => 'AppController@removeUser'));
 
-Route::get('add', array('before' => 'steamAuth|csrf', 'as' => 'add', 'uses' => 'AppController@addUser'));
-Route::get('remove', array('before' => 'steamAuth|csrf', 'as' => 'remove', 'uses' => 'AppController@removeUser'));
+  Route::get('add', array('before' => 'csrf', 'as' => 'add', 'uses' => 'AppController@addUser'));
+  Route::get('remove', array('before' => 'csrf', 'as' => 'remove', 'uses' => 'AppController@removeUser'));
 
-Route::get('subscribe', array('before' => 'steamAuth', 'as' => 'subscribe', 'uses' => 'MailController@showSub'));
-Route::post('subscribe', array('before' => 'steamAuth', 'uses' => 'MailController@doSub'));
+  Route::get('subscribe', array('as' => 'subscribe', 'uses' => 'MailController@showSub'));
+  Route::post('subscribe', array('uses' => 'MailController@doSub'));
 
-Route::get('resend', array('before' => 'steamAuth', 'as' => 'resendEmail', 'uses' => 'MailController@sendVerification'));
+  Route::get('resend', array('as' => 'resendEmail', 'uses' => 'MailController@sendVerification'));
+});
 
-Route::controller('admin', 'AdminController',
-  array(
-      'getIndex' => 'admin.index',
-      'getLog' => 'admin.log',
-      'getNews' => 'admin.news',
-      'postNewNews' => 'admin.news.new',
-      'postDelNews' => 'admin.news.del',
-      'getEditNews' => 'admin.news.edit',
-      'postEditNews' => 'admin.news.edit'
-  )
-);
-
+Route::group(array('before' => 'siteAdmin'), function()
+{
+  Route::controller('admin', 'AdminController',
+    array(
+        'getIndex' => 'admin.index',
+        'getLog' => 'admin.log',
+        'getNews' => 'admin.news',
+        'postNewNews' => 'admin.news.new',
+        'postDelNews' => 'admin.news.del',
+        'getEditNews' => 'admin.news.edit',
+        'postEditNews' => 'admin.news.edit'
+    )
+  );
+});

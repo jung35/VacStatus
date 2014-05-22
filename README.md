@@ -1,10 +1,9 @@
 VacStatus
 ===========
+[![Dependency Status](https://gemnasium.com/jung3o/VacStatus.svg)](https://gemnasium.com/jung3o/VacStatus)
+[![Build Status](https://travis-ci.org/jung3o/VacStatus.svg?branch=update-by-ajax)](https://travis-ci.org/jung3o/VacStatus)
 
 Keep track of people's VAC ban status in a list
-
-###Thanks
- - [lachy](http://www.reddit.com/user/lachy) &mdash; favicon
 
 Usage
 ------
