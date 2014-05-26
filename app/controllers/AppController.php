@@ -3,11 +3,14 @@ class AppController extends BaseController {
 
   public function showIndex()
   {
-    $vBanList = vBanList::wheresteamUserId(Session::get('user.id'))->orderBy('id','desc')->paginate(20);
+    $vBanList = vBanList::wheresteamUserId(Session::get('user.id'))
+      ->join('vBanUser', 'vBanList.v_ban_user_id', '=', 'vBanUser.id')
+      ->orderBy('vBanList.id','desc')
+      ->paginate(20);
 
     foreach($vBanList as $key => $vBan) {
-      $userInfo = $this->grabVBanUser($vBan->vBanUser->community_id);
-      $vBanList[$key] = $vBan->vBanUser->community_id;
+      $userInfo = $vBan;
+      $vBanList[$key] = $vBan->community_id;
       if($userInfo) {
         $vBanList[$key] = $userInfo;
       }
