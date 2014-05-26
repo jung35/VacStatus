@@ -44,8 +44,6 @@ class BaseController extends Controller {
       $userInfo->user_alias = $vBanUser->vBanUserAlias;
     }
 
-    $userInfo->get_num_tracking = vBanList::wherevBanUserId($userInfo->id)->count();
-
     if(Session::get('user.in'))
     {
       $userInfo->is_tracking = isset(vBanList::whereRaw( "steam_user_id = {$sessionUserId} and v_ban_user_id = {$userInfo->id}" )->first()->id)? 1:0;
@@ -167,6 +165,7 @@ class BaseController extends Controller {
     $userInfo->updated_at = $vBanUser->updated_at;
     $userInfo->user_alias  = $userAliasList;
     $userInfo->id = $vBanUser->id;
+    $userInfo->get_num_tracking = vBanList::wherevBanUserId($userInfo->id)->count();
 
     return $userInfo;
   }

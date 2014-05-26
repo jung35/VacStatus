@@ -105,7 +105,7 @@ class HomeController extends BaseController {
   }
 
   public function showNews() {
-    $siteNews = DB::table('siteNews')->orderBy('id','desc')->paginate(20);
+    $siteNews = DB::table('siteNews')->orderBy('id','desc')->paginate(5);
     return View::make('siteNews', array('siteNewses' => $siteNews));
   }
 

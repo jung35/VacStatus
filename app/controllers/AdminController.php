@@ -81,7 +81,7 @@ class AdminController extends BaseController {
 
   public function getNews()
   {
-    $siteNewses = DB::table('siteNews')->orderBy('id', 'desc')->paginate(10);
+    $siteNewses = siteNews::orderBy('id', 'desc')->paginate(10);
 
     return View::make('admin.newsView', array('siteNewses' => $siteNewses));
   }
@@ -91,10 +91,10 @@ class AdminController extends BaseController {
     $newsTitle = Input::get('form-title');
     $newsNews = Input::get('form-news');
 
-    DB::table('siteNews')->insert(
-        array('title' => $newsTitle,
-              'news' => $newsNews)
-    );
+    $siteNews = new siteNews;
+    $siteNews->title = $newsTitle;
+    $siteNews->news = $newsNews;
+    $siteNews->save();
 
     return Redirect::route('admin.news');
   }
@@ -103,14 +103,14 @@ class AdminController extends BaseController {
   {
     $newsId = Input::get('form-id');
 
-    DB::table('siteNews')->where('id', $newsId)->delete();
+    siteNews::whereId($newsId)->delete();
 
     return Redirect::route('admin.news');
   }
 
   public function getEditNews($newsId)
   {
-    $siteNews = DB::table('siteNews')->where('id', $newsId)->first();
+    $siteNews = siteNews::whereId($newsId)->first();
 
     if(!is_object($siteNews)) {
       return Redirect::route('admin.news');
@@ -125,10 +125,10 @@ class AdminController extends BaseController {
     $newsTitle = Input::get('form-title');
     $newsNews = Input::get('form-news');
 
-    DB::table('siteNews')->where('id', $newsId)->update(array(
-      'title' => $newsTitle,
-      'news' => $newsNews
-    ));
+    $siteNews = siteNews::whereId($newsId)->first();
+    $siteNews->title = $newsTitle;
+    $siteNews->news = $newsNews;
+    $siteNews->save();
 
     return Redirect::route('admin.news');
   }
