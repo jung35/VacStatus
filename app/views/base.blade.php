@@ -105,5 +105,9 @@
   </script>
   @section('script')
   @show
+  @if(Session::get('user.admin'))
+  {{-- */$queries = DB::getQueryLog(); /*--}}
+  {{ var_dump(count($queries), $queries) }}
+  @endif
 </body>
 </html>

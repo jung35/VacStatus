@@ -37,13 +37,18 @@ class HomeController extends BaseController {
     $steamUser = steamUser::wherecommunityId($steamCommunityId)->first();
 
     if(!isset($steamUser->id)) {
-      $steamUserGrab = $this->cURLPage("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time()) or
-        die($this->log->addError("fileLoad", array(
+      $steamUserGrab = $this->cURLPage("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$this->steamAPI}&steamids={$steamCommunityId}&".time());
+
+      if (!is_object($steamUserGrab)) {
+        $this->log->addError("fileLoad", array(
           "steamUserId" => Session::get('user.id'),
           "displayName" => Session::get('user.name'),
           "ipAddress" => Request::getClientIp(),
-          "controller" => "steamLogin@HomeController"
-        )));
+          "controller" => "steamLogin@HomeController",
+          "data" => $steamUserGrab
+        ));
+        return false;
+      }
 
       if(!$steamUserGrab) {
         return Redirect::to('/');

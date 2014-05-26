@@ -14,7 +14,7 @@
   @else
   <td class="text-success text-center"><span class="glyphicon glyphicon-remove"></span></td>
   @endif
-  <td class="text-center">{{{ vBanList::wherevBanUserId($vBanUser->id)->count()+(isset($vBanUser->is_tracking) && $vBanUser->is_tracking ? -1: 0) }}}</td>
+  <td class="text-center">{{{ $vBanUser->get_num_tracking - (isset($vBanUser->is_tracking) && $vBanUser->is_tracking ? 1: 0) }}}</td>
   <td><a href="{{ URL::route('user', array( $vBanUser->community_id )) }}" target="_blank" type="button" class="btn btn-info btn-sm">Info</a></td>
   <td>
     @if(Session::get('user.in'))

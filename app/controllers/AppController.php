@@ -25,6 +25,12 @@ class AppController extends BaseController {
       $searchMany = explode("\n", $searchMany);
       $vBanList = array();
       $count = 0;
+      $this->log->addInfo("doManySearch", array(
+        "steamUserId" => Session::get('user.id'),
+        "displayName" => Session::get('user.name'),
+        "ipAddress" => Request::getClientIp(),
+        "data" => $searchMany
+      ));
       foreach($searchMany as $key => $oneSearch)
       {
         $searchData = $this->getSteamSearchCommunityId($oneSearch);
@@ -153,7 +159,7 @@ class AppController extends BaseController {
 
   public function listMostUserTracked()
   {
-    $vBanLists = vBanList::all();
+    $vBanLists = vBanList::join('vBanUser', 'vBanList.v_ban_user_id', '=', 'vBanUser.id')->get();
 
     $count = Array();
     $community_id = Array();
@@ -165,7 +171,7 @@ class AppController extends BaseController {
         $count[$vBanList->v_ban_user_id] += 1;
       } else {
         $count[$vBanList->v_ban_user_id] = 1;
-        $community_id[$vBanList->v_ban_user_id] = $vBanList->vBanUser->community_id;
+        $community_id[$vBanList->v_ban_user_id] = $vBanList;
       }
     }
 
@@ -176,17 +182,22 @@ class AppController extends BaseController {
 
     $vBanUsers = Array();
     $arrOfId = Array();
-    $vBanUser = Array();
     if($arrCount > -1) {
       for($x = $arrCount; $x > $arrCount-($arrCount - 20 >= 20 ? 20 : $arrCount+1); $x--)
       {
         $keyOfId = array_search($newCount[$x], $count);
-        $vBanUser = $this->grabVBanUser($community_id[$keyOfId]);
+        $vBanUser = $community_id[$keyOfId];
+        $vBanUser->get_num_tracking = $count[$keyOfId];
+
+        if(Session::get('user.in'))
+        {
+          $vBanUser->is_tracking = isset($vBanList->whereSteamUserId(Session::get('user.id'))->first()->id)? 1:0;
+        }
+
         if($vBanUser) {
           $vBanUsers[] = $vBanUser;
-        } else {
-          $vBanUsers[] = $community_id[$keyOfId];
         }
+
         unset($newCount[$x]);
         unset($count[$keyOfId]);
       }
@@ -196,15 +207,22 @@ class AppController extends BaseController {
 
   public function showLatestUserAdded()
   {
-    $vBanLists = vBanList::all()->sortByDesc('id')->take(20);
+    $vBanLists = vBanList::join('vBanUser', 'vBanList.v_ban_user_id', '=', 'vBanUser.id')->get()->sortByDesc('id')->take(20);
     $vBanUsers = Array();
 
     foreach($vBanLists as $vBanList) {
-      $userInfo = $this->grabVBanUser($vBanList->vBanUser->community_id);
+      $userInfo = $vBanList;
+      $userInfo->get_num_tracking = $vBanList->count();
+
+      if(Session::get('user.in'))
+      {
+        $userInfo->is_tracking = isset($vBanList->whereSteamUserId(Session::get('user.id'))->first()->id)? 1:0;
+      }
+
       if($userInfo) {
         $vBanUsers[] = $userInfo;
       } else {
-        $vBanUsers[] = $vBanList->vBanUser->community_id;
+        $vBanUsers[] = $vBanList->community_id;
       }
     }
 

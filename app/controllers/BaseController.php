@@ -15,7 +15,7 @@ class BaseController extends Controller {
     $this->steamAPI = '';
 
     $this->log = Log::getMonolog();
-    DB::connection()->disableQueryLog();
+    // DB::connection()->disableQueryLog();
 
     if(empty($this->steamAPI)) {
       die('STEAMAPI MISSING');
@@ -33,15 +33,15 @@ class BaseController extends Controller {
   public function grabVBanUser($steamCommunityId, $sessionUserId = null)
   {
     if($sessionUserId == null) $sessionUserId = Session::get('user.id');
-    $vBanUser = vBanUser::wherecommunityId($steamCommunityId)->first();
+    $vBanUser = vBanUser::with('vBanUserAlias')->wherecommunityId($steamCommunityId)->first();
 
-    if(!isset($vBanUser->id) || $vBanUser->vac_banned == 0)
+    if(!isset($vBanUser->id))
     {
       return false;
     } else {
       $userInfo = $vBanUser;
       $userInfo->steam_id = $this->convertSteamId($userInfo->community_id);
-      $userInfo->user_alias = $vBanUser->vBanUserAlias()->orderBy('time_used','desc')->get();
+      $userInfo->user_alias = $vBanUser->vBanUserAlias;
     }
 
     $userInfo->get_num_tracking = vBanList::wherevBanUserId($userInfo->id)->count();
