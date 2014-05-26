@@ -9,8 +9,8 @@ class JsonController extends BaseController {
   {
     if(Request::wantsJson()) {
       $steamCommunityId = bcadd(Input::get('communityId'), '76561197960265728');
-      $dated = Input::get('dated');
-      $searching = Input::get('searching');
+      $displayAdded = Input::get('displayAdded') === 'true';
+      $searching = Input::get('searching') === 'true';
       $vBanUser = $this->updateVBanUser(null, $steamCommunityId);
 
       if(!is_object($vBanUser)) {
@@ -24,7 +24,7 @@ class JsonController extends BaseController {
         }
 
         $userInfo = Array(
-          'html' => View::make('user.userSlide')->with(array('vBanUser' => $vBanUser, 'displayAdded' => $dated, 'searching' => $searching))->render(),
+          'html' => View::make('user.userSlide')->with(array('vBanUser' => $vBanUser, 'displayAdded' => $displayAdded, 'searching' => $searching))->render(),
           'status' => 'success');
       }
       return Response::json($userInfo);

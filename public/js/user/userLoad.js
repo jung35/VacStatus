@@ -1,10 +1,10 @@
-function reqUser(communityId, dated, searching) {
+function reqUser(communityId, displayAdded, searching) {
   jQuery.ajaxSetup({ jsonp: null, jsonpCallback: null});
   request = $.ajax({
     dataType: "json",
     type: "POST",
     url: "/json/user",
-    data: {communityId: communityId, dated: dated, searching: searching}
+    data: {communityId: communityId, displayAdded: ''+displayAdded, searching: ''+searching}
   }).done(function(data) {
     if(data.status == 'success') {
       $('#user-'+communityId).parent().html(data.html);
@@ -29,16 +29,15 @@ function changeFormButton(communityId) {
 }
 
 $(window).load(function() {
-
-  if(typeof dated == 'undefined') {
-    var dated = false;
+  if(typeof window.displayAdded == 'undefined') {
+    window.displayAdded = false;
   }
 
   if(typeof searching == 'undefined') {
-    var searching = false;
+    window.searching = false;
   }
 
   for(var i = 0; i < userLoad.length; i++) {
-    reqUser(userLoad[i], dated, searching);
+    reqUser(userLoad[i], window.displayAdded, window.searching);
   }
 });

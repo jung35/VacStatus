@@ -6,7 +6,7 @@
     <td id="user-{{{ bcsub($vBanUser->community_id, '76561197960265728') }}}"><img src="{{{ $vBanUser->steam_avatar_url_small }}}"></td>
   @endif
   <td>{{{ $vBanUser->display_name }}}</td>
-  @if (($searching == 'false' || $searching == false) && isset($displayAdded) && ($displayAdded != 'false' && $displayAdded != false))
+  @if ($searching == false && isset($displayAdded) && $displayAdded == true)
   <td>{{{ date('m/d/Y', strtotime($vBanUser->created_at)) }}}</td>
   @endif
   @if($vBanUser->vac_banned > -1)

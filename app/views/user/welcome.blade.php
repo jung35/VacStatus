@@ -4,8 +4,8 @@
 @section('head')
   {{ HTML::style('css/user/user.css') }}
   <script>
-    @if(isset($displayAdded))
-    var dated = true;
+    @if(isset($displayAdded) && $displayAdded == true)
+    window.displayAdded = true;
     @endif
     var userLoad = [];
   </script>
@@ -51,7 +51,7 @@
           @else
 
 
-            @include('user.userSlide', array('searching' => false))
+            @include('user.userSlide')
           @endif
         </tr>
         @endforeach

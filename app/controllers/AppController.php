@@ -3,20 +3,27 @@ class AppController extends BaseController {
 
   public function showIndex()
   {
-    $vBanList = vBanList::wheresteamUserId(Session::get('user.id'))
+    $vBanLists = vBanList::wheresteamUserId(Session::get('user.id'))
       ->join('vBanUser', 'vBanList.v_ban_user_id', '=', 'vBanUser.id')
       ->orderBy('vBanList.id','desc')
       ->paginate(20);
 
-    foreach($vBanList as $key => $vBan) {
-      $userInfo = $vBan;
-      $vBanList[$key] = $vBan->community_id;
+    foreach($vBanLists as $key => $vBanList) {
+      $userInfo = $vBanList;
+      $userInfo->get_num_tracking = $vBanList->wherevBanUserId($userInfo->id)->count();
+
+      if(Session::get('user.in'))
+      {
+        $sessionUserId = Session::get('user.id');
+        $userInfo->is_tracking = isset(vBanList::whereRaw( "steam_user_id = {$sessionUserId} and v_ban_user_id = {$userInfo->id}" )->first()->id)? 1:0;
+      }
+      $vBanLists[$key] = $vBanList->community_id;
       if($userInfo) {
-        $vBanList[$key] = $userInfo;
+        $vBanLists[$key] = $userInfo;
       }
     }
 
-    return View::make('user.welcome')->with(array('vBanList' => $vBanList, 'displayAdded' => true, 'searching' => false));
+    return View::make('user.welcome')->with(array('vBanList' => $vBanLists, 'displayAdded' => true, 'searching' => false));
   }
 
   public function doSearch()
@@ -194,7 +201,8 @@ class AppController extends BaseController {
 
         if(Session::get('user.in'))
         {
-          $vBanUser->is_tracking = isset($vBanList->whereSteamUserId(Session::get('user.id'))->first()->id)? 1:0;
+          $sessionUserId = Session::get('user.id');
+          $vBanUser->is_tracking = isset(vBanList::whereRaw( "steam_user_id = {$sessionUserId} and v_ban_user_id = {$vBanUser->id}" )->first()->id)? 1:0;
         }
 
         if($vBanUser) {
@@ -210,16 +218,21 @@ class AppController extends BaseController {
 
   public function showLatestUserAdded()
   {
-    $vBanLists = vBanList::join('vBanUser', 'vBanList.v_ban_user_id', '=', 'vBanUser.id')->get()->sortByDesc('id')->take(20);
+    $vBanLists = vBanList::join('vBanUser', 'vBanList.v_ban_user_id', '=', 'vBanUser.id')
+      ->orderBy('vBanList.id','desc')
+      ->get()
+      ->take(20);
+
     $vBanUsers = Array();
 
     foreach($vBanLists as $vBanList) {
       $userInfo = $vBanList;
-      $userInfo->get_num_tracking = $vBanList->count();
+      $userInfo->get_num_tracking = $vBanList->wherevBanUserId($userInfo->id)->count();
 
       if(Session::get('user.in'))
       {
-        $userInfo->is_tracking = isset($vBanList->whereSteamUserId(Session::get('user.id'))->first()->id)? 1:0;
+        $sessionUserId = Session::get('user.id');
+        $userInfo->is_tracking = isset(vBanList::whereRaw( "steam_user_id = {$sessionUserId} and v_ban_user_id = {$userInfo->id}" )->first()->id)? 1:0;
       }
 
       if($userInfo) {
