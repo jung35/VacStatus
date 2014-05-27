@@ -3,7 +3,8 @@ class AppController extends BaseController {
 
   public function showIndex()
   {
-    $vBanLists = vBanList::wheresteamUserId(Session::get('user.id'))
+    $vBanLists = vBanList::select(DB::raw('*'))
+      ->wheresteamUserId(Session::get('user.id'))
       ->join('vBanUser', 'vBanList.v_ban_user_id', '=', 'vBanUser.id')
       ->orderBy('vBanList.id','desc')
       ->paginate(20);
@@ -12,11 +13,12 @@ class AppController extends BaseController {
       $userInfo = $vBanList;
       $userInfo->get_num_tracking = $vBanList->wherevBanUserId($userInfo->id)->count();
 
-      if(Session::get('user.in'))
+      if(!Session::get('user.in'))
       {
         $sessionUserId = Session::get('user.id');
         $userInfo->is_tracking = isset(vBanList::whereRaw( "steam_user_id = {$sessionUserId} and v_ban_user_id = {$userInfo->id}" )->first()->id)? 1:0;
       }
+
       $vBanLists[$key] = $vBanList->community_id;
       if($userInfo) {
         $vBanLists[$key] = $userInfo;
