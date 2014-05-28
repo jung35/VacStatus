@@ -93,7 +93,7 @@ class AppController extends BaseController {
 
     $userInfo = $this->grabVBanUser($steamCommunityId);
 
-    if(!$userInfo)
+    if(!$userInfo || time() - strtotime($userInfo->updated_at) > 3600)
     {
       $userInfo = $this->updateVBanUser(null, $steamCommunityId);
       if(!$userInfo) {
