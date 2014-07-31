@@ -13,10 +13,10 @@
 
 ClassLoader::addDirectories(array(
 
-  app_path().'/commands',
-  app_path().'/controllers',
-  app_path().'/models',
-  app_path().'/database/seeds',
+	app_path().'/commands',
+	app_path().'/controllers',
+	app_path().'/models',
+	app_path().'/database/seeds',
 
 ));
 
@@ -31,7 +31,7 @@ ClassLoader::addDirectories(array(
 |
 */
 
-Log::useDailyFiles(storage_path().'/logs/laravel.log');
+Log::useFiles(storage_path().'/logs/laravel.log');
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +48,7 @@ Log::useDailyFiles(storage_path().'/logs/laravel.log');
 
 App::error(function(Exception $exception, $code)
 {
-  Log::error($exception);
+	Log::error($exception);
 });
 
 /*
@@ -64,7 +64,7 @@ App::error(function(Exception $exception, $code)
 
 App::down(function()
 {
-  return Response::make("Be right back!", 503);
+	return Response::make("Be right back!", 503);
 });
 
 /*
@@ -79,50 +79,3 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
-
-App::bind('Hybrid_Auth', function() {
-  return new Hybrid_Auth(array(
-    // "base_url" => "http://vbanstatus.jung3o.com/login/auth",
-    "base_url" => url('')."/login/auth",
-    "providers" => array (
-      "OpenID" => array (
-        "enabled" => true
-      ),
-      "Steam" => array (
-        "enabled" => true,
-        "wrapper" => array(
-          'class'=>'Hybrid_Providers_Steam',
-          'path' => $_SERVER['DOCUMENT_ROOT'].'/../vendor/hybridauth/hybridauth/additional-providers/hybridauth-steam/Providers/Steam.php'
-        )
-      )
-    )
-  ));
-});
-
-App::error(function($exception, $code)
-{
-
-  $errorList = Array(
-    "default" => Array($code, "Sorry."),
-    403 => Array("Forbidden", "Sorry, you do not have access to this!"),
-    404 => Array("Not Found", "Sorry, whatever you were looking for was not found!"),
-    500 => Array("Server Error", "Something is wrong with the server. Please report this to Jung : jung3o@yahoo.com")
-  );
-
-
-  Log::warning("errorPage$code", array(
-    "steamId" => Session::get('user.id'),
-    "displayName" => Session::get('user.name'),
-    "ipAddress" => Request::getClientIp(),
-    "data" => Array(
-      "info" => $exception->getMessage(),
-      "file" => $exception->getFile(),
-      "line" => $exception->getLine(),
-      "uri" => $_SERVER['REQUEST_URI']
-    )
-  ));
-
-  $message = isset($errorList[$code]) ? $errorList[$code] : $errorList["default"];
-
-  return Response::view('error', array('type' => $code, 'message' => $message), $code);
-});

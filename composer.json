@@ -4,8 +4,7 @@
 	"keywords": ["framework", "laravel"],
 	"license": "MIT",
 	"require": {
-		"laravel/framework": "4.1.*@dev",
-		"hybridauth/hybridauth": "dev-master"
+		"laravel/framework": "4.2.*"
 	},
 	"autoload": {
 		"classmap": [

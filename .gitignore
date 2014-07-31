@@ -1,11 +1,8 @@
-.DS_Store
-.env.local.php
-.env.php
-.sqlite
-/app/config/app.php
-/app/config/database.php
-/app/config/mail.php
-/composer.phar
-/app/storage/*
+/bootstrap/compiled.php
 /vendor
+composer.phar
+composer.lock
+.env.*.php
+.env.php
+.DS_Store
 Thumbs.db

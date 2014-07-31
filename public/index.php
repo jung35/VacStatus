@@ -47,7 +47,3 @@ $app = require_once __DIR__.'/../bootstrap/start.php';
 */
 
 $app->run();
-
-
-// $query = DB::getQueryLog();
-// var_dump(end($query));

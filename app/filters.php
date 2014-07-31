@@ -35,7 +35,17 @@ App::after(function($request, $response)
 
 Route::filter('auth', function()
 {
-	if (Auth::guest()) return Redirect::guest('login');
+	if (Auth::guest())
+	{
+		if (Request::ajax())
+		{
+			return Response::make('Unauthorized', 401);
+		}
+		else
+		{
+			return Redirect::guest('login');
+		}
+	}
 });
 
 
@@ -77,20 +87,4 @@ Route::filter('csrf', function()
 	{
 		throw new Illuminate\Session\TokenMismatchException;
 	}
-});
-
-Route::filter('steamAuth', function()
-{
-  if(!Session::get('user.in'))
-  {
-    return View::make('noLogin');
-  }
-});
-
-Route::filter('siteAdmin', function()
-{
-  if(Session::get('user.admin', 0) <= 0)
-  {
-    return View::make('noAdmin');
-  }
 });
