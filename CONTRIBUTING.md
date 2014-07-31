@@ -8,7 +8,7 @@ Download [Composer][gc] and run `composer install` or `php composer.phar install
 
 [gc]: http://getComposer.org
 
-Make sure no errors
+Add your changes and make sure there are no error of any sort.
 
 Push to your fork and [submit a pull request][pr].
 
