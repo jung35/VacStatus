@@ -79,3 +79,8 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+App::bind('steam', function()
+{
+    return new \Steam\Steam;
+});
