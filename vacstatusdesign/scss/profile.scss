@@ -1,0 +1,78 @@
+.vacstatus-profile {
+  .avatar {
+    & > img {
+      &.online {
+        // border: 5px solid #85c3f2;
+      }
+      border: 5px solid #888;
+      width: 128px;
+    }
+    text-align: center;
+    vertical-align: middle;
+  }
+  .basic {
+    h3 {
+      margin-top: 0px;
+      display: inline-block;
+      overflow: hidden;
+      max-width: calc(100% - 70px);
+      vertical-align: middle;
+    }
+    .user-flag {
+      img {
+        vertical-align: top;
+      }
+      vertical-align: middle;
+      display: block;
+      font-size: 13px;
+    }
+    .profile-privacy {
+      display: inline-block;
+      margin: 0 0 8px;
+      vertical-align: middle;
+      font-size: inherit;
+    }
+    .detailed {
+      margin: 10px 0 0;
+    }
+  }
+  .detailed {
+    ul {
+      list-style: none;
+    }
+    .profile-detail {
+      .profile-type {
+        font-weight: bold;
+        text-align: right;
+      }
+      margin: 0 0 10px;
+    }
+  }
+
+  & > .detailed {
+    li {
+      line-height: 200% !important;
+      font-size: 15px !important;
+    }
+  }
+  padding: 20px 0 0;
+}
+
+.big-steam {
+  a {
+    color: #222;
+  }
+  .status {
+    color: #888;
+  }
+  display: block;
+  text-align: center;
+  font-size: 5em;
+  vertical-align: middle;
+}
+
+dl {
+  dt, dd {
+    display: inline-block;
+  }
+}

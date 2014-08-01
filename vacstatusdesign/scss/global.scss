@@ -1,0 +1,84 @@
+.top-bar {
+  .title-area {
+    .name {
+      h1 {
+        small {
+          font-size: .5em;
+          color: #fefefe !important;
+        }
+      }
+    }
+  }
+  section {
+    & > .left {
+      margin: 0 0 0 10px;
+    }
+    .has-form {
+      & > div {
+        margin: 7px 0 0;
+      }
+      min-width: 300px;
+      // width: 100%;
+      background: rgba(0, 0, 0, .02); // 3D403F
+      margin: 0 auto;
+    }
+    .has-dropdown {
+      .dropdown {
+        li > a {
+          i {
+            margin: 0 15px 0 0;
+          }
+          padding: 0 20px !important;
+          line-height: 50px !important;
+          text-align: left;
+        }
+        min-width: 150px;
+        font-size: 13px
+      }
+    }
+    .alert {
+      background: #f04124 !important;
+      &:hover {
+        background: #b3240c !important;
+      }
+    }
+  }
+}
+
+.reveal-modal {
+  width: 100%;
+}
+
+.content-start {
+  min-height: calc(100% - 5px);
+  margin: 5px auto 0;
+  padding-bottom: 70px;
+}
+
+.text-success {
+  color: #43AC6A;
+}
+
+.text-alert {
+  color: #f04124;
+}
+
+.footer {
+  p {
+    font-size: 13px;
+    color: #999;
+    background: #eee;
+  }
+  background: #eee;
+  position: relative;
+  margin-top: -70px;
+  padding: 25px 0 0;
+  min-height: 70px;
+  clear: both;
+}
+
+#advSearchModal {
+  textarea {
+    height: 200px;
+  }
+}
