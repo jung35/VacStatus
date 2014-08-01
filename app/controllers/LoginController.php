@@ -26,20 +26,23 @@ class LoginController extends \BaseController {
     // Get user profile information
     $hybridAuthUserProfile = $hybridAuthProvider->getUserProfile();
     // Get Community ID
-    $steamCommunityId = str_replace( "http://steamcommunity.com/openid/id/", "", $hybridAuthUserProfile->identifier );
+    $steam3Id = str_replace( "http://steamcommunity.com/openid/id/", "", $hybridAuthUserProfile->identifier );
 
-    $user = User::wherecommunityId($steamCommunityId)->first();
+    // Try to grab user if it exists
+    $user = User::wheresmallId(Steam\Steam::toSmallId($steam3Id))->first();
 
     if(!isset($user->id)) {
 
-      if(!$userGrab) {
+      $userGrab = Steam\Steam::cURLSteamAPI('info', $steam3Id);
+
+      if($userGrab->type == 'error') {
         return Redirect::home();
       }
 
       $userGrab = $userGrab->response->players[0];
 
       $user = new User;
-      $user->community_id = (string) $userGrab->steamid;
+      $user->small_id = (string) $userGrab->steamid;
       $user->display_name = (string) $userGrab->personaname;
       $user->save();
 
@@ -52,7 +55,7 @@ class LoginController extends \BaseController {
     Session::regenerate();
 
     Session::put('user.name', $user->display_name);
-    Session::put('user.communityId', $steamCommunityId);
+    Session::put('user.communityId', $steam3Id);
     Session::put('user.id', $user->id);
     Session::put('user.in', true);
 

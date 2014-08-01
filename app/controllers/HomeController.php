@@ -17,7 +17,7 @@ class HomeController extends BaseController {
 
   public function showWelcome()
   {
-
+    var_dump(\Steam\Steam::toSmallId('76561198020317127'));
     return View::make('hello');
   }
 
