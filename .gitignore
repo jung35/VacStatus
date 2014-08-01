@@ -1,8 +1,11 @@
 /bootstrap/compiled.php
 /vendor
+/bower_components/*
+/.sass-cache/*
+/public/css/*
 composer.phar
 composer.lock
 .env.*.php
 .env.php
-.DS_Store
 Thumbs.db
+*.DS_Store
