@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateProfileOldAliasTable extends Migration {
+class CreateProfileBanTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,13 +12,16 @@ class CreateProfileOldAliasTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('profile_old_alias', function(Blueprint $table)
+		Schema::create('profile_ban', function(Blueprint $table)
 		{
 			$table->increments('id');
       $table->unsignedInteger('profile_id');
       $table->foreign('profile_id')->references('id')->on('profile');
-      $table->text('seen');
-      $table->text('seen_alias');
+      $table->boolean('community');
+      $table->boolean('vac');
+      $table->integer('vac_days');
+      $table->boolean('trade');
+      $table->tinyInteger('unban');
 			$table->timestamps();
 		});
 	}
@@ -31,7 +34,7 @@ class CreateProfileOldAliasTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('profile_old_alias');
+		Schema::drop('profile_ban');
 	}
 
 }

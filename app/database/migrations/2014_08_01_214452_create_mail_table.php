@@ -15,6 +15,10 @@ class CreateMailTable extends Migration {
 		Schema::create('mail', function(Blueprint $table)
 		{
 			$table->increments('id');
+      $table->unsignedInteger('user_id');
+      $table->foreign('user_id')->references('id')->on('users');
+      $table->text('email');
+      $table->text('verify');
 			$table->timestamps();
 		});
 	}

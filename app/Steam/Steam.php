@@ -96,7 +96,7 @@ Class Steam {
       // Get list of friends (Profile must not be private)
       case 'friends':
         if(is_array($value)) {
-          $value = implode(',', $value);
+          $value = $value[0];
         }
         $url = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key={$steamAPI}&steamid={$value}&relationship=friend&".time();
         break;
@@ -104,7 +104,7 @@ Class Steam {
       // Get more detailed information about this person's ban status
       case 'ban':
         if(is_array($value)) {
-          $value = $value[0];
+          $value = implode(',', $value);
         }
         $url = "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$steamAPI}&steamids={$value}&".time();
         break;

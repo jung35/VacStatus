@@ -16,7 +16,11 @@ class CreateProfileTable extends Migration {
     {
       $table->increments('id');
       $table->integer('steam3_id')->unique();
-      $table->string('personaname', 32);
+      $table->string('display_name', 32);
+      $table->tinyInteger('privacy');
+      $table->text('avatar_thumb');
+      $table->text('avatar');
+      $table->integer('profile_created')->nullable();
       $table->timestamps();
     });
   }
