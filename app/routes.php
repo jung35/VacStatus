@@ -11,7 +11,11 @@
 |
 */
 
-Route::get('', Array('as' => 'home', 'uses' => 'HomeController@showWelcome'));
+Route::get('/', Array('as' => 'home', 'uses' => 'HomeController@indexAction'));
 
-Route::get('login/{action?}', Array('as' => 'login', 'uses' => 'LoginController@loginAction'));
-Route::get('logout', Array('as' => 'logout', 'uses' => 'LoginController@logoutAction'));
+Route::get('/login/{action?}', Array('as' => 'login', 'uses' => 'LoginController@loginAction'));
+Route::get('/logout', Array('as' => 'logout', 'uses' => 'LoginController@logoutAction'));
+
+Route::get('/u/{steam3Id?}', Array('as' => 'profile', 'uses' => 'ProfileController@profileAction'));
+
+Route::post('/u/update/single/{steam3Id}', array('before' => 'csrf', 'uses' => 'ProfileController@updateSingleProfileAction'));
