@@ -1,5 +1,7 @@
 <?php
 
+use Steam\Steam as Steam;
+
 class Profile extends \Eloquent {
 
   /**
@@ -11,5 +13,16 @@ class Profile extends \Eloquent {
 
   public function ProfileOldAlias() {
     return $this->hasMany('profile_old_alias');
+  }
+
+  public function updateSingleProfile($steam3Id = null) {
+
+    if($steam3Id) {
+      Steam::cURLSteamAPI('info', )
+      $profile = Profile::whereSteam3Id($steam3Id);
+
+      if(isset())
+      return 'hi';
+    }
   }
 }

@@ -39,7 +39,7 @@ class LoginController extends \BaseController {
     $steam3Id = str_replace( "http://steamcommunity.com/openid/id/", "", $hybridAuthUserProfile->identifier );
 
     // Try to grab user if it exists
-    $user = User::wheresteam3Id(Steam::toSmallId($steam3Id))->first();
+    $user = User::whereSmallId(Steam::toSmallId($steam3Id))->first();
 
     if(!isset($user->id)) {
 
@@ -52,7 +52,7 @@ class LoginController extends \BaseController {
       $userGrab = $userGrab->response->players[0];
 
       $user = new User;
-      $user->steam3_id = (string) Steam::toSmallId($userGrab->steamid);
+      $user->small_id = (string) Steam::toSmallId($userGrab->steamid);
       $user->display_name = (string) $userGrab->personaname;
       $user->save();
     }

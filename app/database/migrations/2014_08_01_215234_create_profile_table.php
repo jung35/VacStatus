@@ -15,7 +15,7 @@ class CreateProfileTable extends Migration {
     Schema::create('profile', function(Blueprint $table)
     {
       $table->increments('id');
-      $table->integer('steam3_id')->unique();
+      $table->integer('small_id')->unique();
       $table->string('display_name', 32);
       $table->tinyInteger('privacy');
       $table->text('avatar_thumb');

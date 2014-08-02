@@ -15,7 +15,7 @@ class CreateUsersTable extends Migration {
 		Schema::create('users', function(Blueprint $table)
 		{
 			$table->increments('id');
-      $table->integer('steam3_id')->unique();
+      $table->integer('small_id')->unique();
       $table->string('display_name', 32);
       $table->boolean('site_admin')->default(0);
       $table->rememberToken();

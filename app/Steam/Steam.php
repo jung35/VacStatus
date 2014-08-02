@@ -9,9 +9,24 @@ namespace Steam;
 Class Steam {
   /**
    * Valve's Steam Web API. Register for one at http://steamcommunity.com/dev/apikey
-   * @var string
+   * @var String
    */
-  protected static $steam_api = "663AC74877143A29025C4675567263EB";
+  protected static $API = "05F6C841BF378CA11A60B3BF1F6AA8D5";
+
+  /**
+   * Time in seconds before profile is called to an update
+   * @var Integer
+   */
+  protected static $UPDATE_TIME = 3600; // 1 HOUR
+
+  /**
+   * Check to see if the profile's last update was long enough for new update
+   * @param  Integer $updated_at last time updated
+   * @return Boolean
+   */
+  public static function canUpdate($updated_at) {
+    return $updated_at < time() + self::$UPDATE_TIME;
+  }
 
   /**
    * Conversion of Steam3 ID to smaller number to work easier with
@@ -80,7 +95,7 @@ Class Steam {
     if($type == null || $value == null) return false;
 
     $json = true;
-    $steamAPI = self::$steam_api;
+    $steamAPI = self::$API;
 
     // So this url doesn't float in some files as many different url's
     // keeping them in one place
