@@ -16,4 +16,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
    */
   protected $table = 'users';
 
+  public function getUserName() {
+    return $this->display_name;
+  }
+
 }

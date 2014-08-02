@@ -84,3 +84,22 @@ App::bind('steam', function()
 {
     return new \Steam\Steam;
 });
+
+App::bind('Hybrid_Auth', function() {
+  return new Hybrid_Auth(array(
+    // "base_url" => "http://vbanstatus.jung3o.com/login/auth",
+    "base_url" => url('')."/login/auth",
+    "providers" => array (
+      "OpenID" => array (
+        "enabled" => true
+      ),
+      "Steam" => array (
+        "enabled" => true,
+        "wrapper" => array(
+          'class'=>'Hybrid_Providers_Steam',
+          'path' => __DIR__.'/../../vendor/hybridauth/hybridauth/additional-providers/hybridauth-steam/Providers/Steam.php'
+        )
+      )
+    )
+  ));
+});

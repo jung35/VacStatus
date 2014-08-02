@@ -96,6 +96,14 @@
 }
 
 .f-dropdown {
+  &:before {
+    left: auto;
+    right: 11px;
+  }
+  &:after{
+    left: auto;
+    right: 10px;
+  }
   .divider {
     border-bottom: 1px solid #ccc;
   }
@@ -107,6 +115,7 @@
     font-size: 13px !important;
   }
 }
+
 .dispblock {
   display: block;
 }

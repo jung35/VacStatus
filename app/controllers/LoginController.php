@@ -1,6 +1,16 @@
 <?php
 
+use Steam\Steam as Steam;
+
 class LoginController extends \BaseController {
+
+  private $hybridAuth;
+
+  function __construct(Hybrid_Auth $hybridAuth) {
+    // parent::__construct();
+
+    $this->hybridAuth = $hybridAuth;
+  }
 
   /**
    * Auth user using hybridauth to steam
@@ -29,45 +39,25 @@ class LoginController extends \BaseController {
     $steam3Id = str_replace( "http://steamcommunity.com/openid/id/", "", $hybridAuthUserProfile->identifier );
 
     // Try to grab user if it exists
-    $user = User::wheresmallId(Steam\Steam::toSmallId($steam3Id))->first();
+    $user = User::wheresteam3Id(Steam::toSmallId($steam3Id))->first();
 
     if(!isset($user->id)) {
 
-      $userGrab = Steam\Steam::cURLSteamAPI('info', $steam3Id);
+      $userGrab = Steam::cURLSteamAPI('info', $steam3Id);
 
-      if($userGrab->type == 'error') {
+      if(isset($userGrab->type) && $userGrab->type == 'error') {
         return Redirect::home();
       }
 
       $userGrab = $userGrab->response->players[0];
 
       $user = new User;
-      $user->small_id = (string) $userGrab->steamid;
+      $user->steam3_id = (string) Steam::toSmallId($userGrab->steamid);
       $user->display_name = (string) $userGrab->personaname;
       $user->save();
-
-      $this->log->addInfo("newAccount", array(
-        "UserId" => $user->id,
-        "displayName" => $user->display_name,
-        "ipAddress" => Request::getClientIp()
-      ));
-    }
-    Session::regenerate();
-
-    Session::put('user.name', $user->display_name);
-    Session::put('user.communityId', $steam3Id);
-    Session::put('user.id', $user->id);
-    Session::put('user.in', true);
-
-    if(isset($user->site_admin) && $user->site_admin > 0) {
-      Session::put('user.admin', $user->site_admin);
     }
 
-    $this->log->addInfo("Login", array(
-      "UserId" => $user->id,
-      "displayName" => $user->display_name,
-      "ipAddress" => Request::getClientIp()
-    ));
+    Auth::login($user, true);
 
     return Redirect::home();
     //
@@ -81,7 +71,11 @@ class LoginController extends \BaseController {
    */
   public function logoutAction()
   {
-    //
+    Hybrid_Auth::logoutAllProviders();
+    Auth::logout();
+
+    return Redirect::home();
+
   }
 
 }

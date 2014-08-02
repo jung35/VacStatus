@@ -1,5 +1,7 @@
 <?php
 
+use Steam\Steam as Steam;
+
 class HomeController extends BaseController {
 
   /*
@@ -17,8 +19,9 @@ class HomeController extends BaseController {
 
   public function showWelcome()
   {
-    var_dump(\Steam\Steam::toSmallId('76561198020317127'));
-    return View::make('hello');
+    // var_dump(Steam::toBigId(Steam::toSmallId('76561198020317127')));
+    // var_dump(Steam::cURLSteamAPI('info', array('76561198020317127'))->response->players);
+    return View::make('main/index');
   }
 
 }

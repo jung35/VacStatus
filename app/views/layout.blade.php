@@ -12,14 +12,15 @@
     <meta name="robots" content="All" />
     <meta name="revisit-after" content="1 DAYS" />
 
+    <link rel="stylesheet" href="{{ url('') }}/css/app.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.3.1/js/vendor/modernizr.min.js"></script>
+
     <title>
       VacStatus &mdash;
       @section('title')
       Keep track of people's VAC status in a list
       @show
     </title>
-    <link rel="stylesheet" href="stylesheets/app.css" />
-    <script src="bower_components/modernizr/modernizr.js"></script>
   </head>
   <body>
     <div id="advSearchModal" class="reveal-modal tiny" data-reveal>
@@ -78,16 +79,19 @@
               </li>
             </ul>
             <ul class="right">
+              @if(Auth::check())
               <li class="has-dropdown">
-                <a href="#">Jung</a>
+                <a>{{{ Auth::user()->getUserName() }}}</a>
                 <ul class="dropdown">
                   <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
                   <li><a href="#"><i class="fa fa-cog"></i> User CP</a></li>
                   <li class="divider"></li>
-                  <li><a class="alert" href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                  <li><a class="alert" href="{{ URL::route('logout') }}"><i class="fa fa-power-off"></i> Logout</a></li>
                 </ul>
               </li>
-              <!-- <li><a href="#"><img src="http://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_small.png"></a></li> -->
+              @else
+              <li><a href="{{ URL::route('login') }}"><img src="http://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_small.png"></a></li>
+              @endif
             </ul>
           </section>
         </nav>
@@ -95,7 +99,8 @@
     </div>
 
     <div class="row content-start">
-
+    @section('content')
+    @show
     </div>
 
     <div class="footer">
@@ -118,8 +123,8 @@
       </div>
     </div>
 
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/foundation/js/foundation.min.js"></script>
-    <script src="js/app.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.3.1/js/foundation.min.js"></script>
+    <script type="text/javascript" src="{{ url('') }}/js/app.js"></script>
   </body>
 </html>

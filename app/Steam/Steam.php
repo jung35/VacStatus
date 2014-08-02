@@ -11,7 +11,8 @@ Class Steam {
    * Valve's Steam Web API. Register for one at http://steamcommunity.com/dev/apikey
    * @var string
    */
-  protected static $steam_api = "";
+  protected static $steam_api = "663AC74877143A29025C4675567263EB";
+
   /**
    * Conversion of Steam3 ID to smaller number to work easier with
    * @param Integer $steam3Id
@@ -22,6 +23,22 @@ Class Steam {
   {
     if($steam3Id && is_numeric($steam3Id)) {
       return bcsub($steam3Id,'76561197960265728');
+    }
+
+    return Array('type' => 'error',
+                 'data' => 'Parameter was empty or NaN');
+  }
+
+  /**
+   * Conversion of smaller steam3 ID to its regular number to work easier with
+   * @param Integer $steam3Id
+   *
+   * @return Integer/Array
+   */
+  public static function toBigId($steam3Id = null)
+  {
+    if($steam3Id && is_numeric($steam3Id)) {
+      return bcadd($steam3Id,'76561197960265728');
     }
 
     return Array('type' => 'error',
@@ -52,7 +69,7 @@ Class Steam {
 
   /**
    * Using cURL to request to Steam API Servers
-   * @param  String $type
+   * @param  String $type ('info', 'friends', 'ban', 'alias', 'xmlInfo')
    * @param  String/Array $value
    *
    * @return Object
@@ -63,6 +80,7 @@ Class Steam {
     if($type == null || $value == null) return false;
 
     $json = true;
+    $steamAPI = self::$steam_api;
 
     // So this url doesn't float in some files as many different url's
     // keeping them in one place
@@ -70,26 +88,40 @@ Class Steam {
       // Get most of all public information about this steam user
       case 'info':
         if(is_array($value)) {
-          $value = explode(',', $value);
+          $value = implode(',', $value);
         }
-        $url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={parent::$steamAPI}&steamids={$value}&".time();
+        $url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$steamAPI}&steamids={$value}&".time();
         break;
-      // Get more detailed information about this person's ban status
 
+      // Get list of friends (Profile must not be private)
+      case 'friends':
+        if(is_array($value)) {
+          $value = implode(',', $value);
+        }
+        $url = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key={$steamAPI}&steamid={$value}&relationship=friend&".time();
+        break;
+
+      // Get more detailed information about this person's ban status
       case 'ban':
         if(is_array($value)) {
-          $value = explode(',', $value);
+          $value = $value[0];
         }
-        $url = "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={parent::$steamAPI}&steamids={$value}&".time();
+        $url = "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$steamAPI}&steamids={$value}&".time();
         break;
 
       // Get list of usernames this user has used
       case 'alias':
+        if(is_array($value)) {
+          $value = $value[0];
+        }
         $url = "http://steamcommunity.com/profiles/{$value}/ajaxaliases/?".time();
         break;
 
       // For checking to make sure a user exists by this profile name
       case 'xmlInfo':
+        if(is_array($value)) {
+          $value = $value[0];
+        }
         $url = "http://steamcommunity.com/id/{$value}/?xml=1&".time();
         $json = false;
         break;

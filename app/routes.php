@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'HomeController@showWelcome');
+Route::get('', Array('as' => 'home', 'uses' => 'HomeController@showWelcome'));
 
-Route::get('/login', 'LoginController@loginAction');
-Route::get('/logout', 'LoginController@logoutAction');
+Route::get('login/{action?}', Array('as' => 'login', 'uses' => 'LoginController@loginAction'));
+Route::get('logout', Array('as' => 'logout', 'uses' => 'LoginController@logoutAction'));
