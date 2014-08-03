@@ -135,31 +135,19 @@
           <li class="medium-6 columns text-right profile-type small-only-text-center">First Checked</li>
           <li class="medium-6 columns">Jul 20 2014</li>
         </ul>
-        <ul class="row">
-          <li class="medium-6 columns text-right profile-type small-only-text-center">First Added</li>
-          <li class="medium-6 columns">Jul 26 2014</li>
-        </ul>
       </li>
 
       <li class="large-4 medium-6 small-6 columns profile-detail small-only-text-center">
         <ul class="row">
           <li class="medium-6 columns text-right profile-type small-only-text-center">Times Checked</li>
-          <li class="medium-6 columns">4 <small>(Jul 1 2014)</small></li>
-        </ul>
-        <ul class="row">
-          <li class="medium-6 columns text-right profile-type small-only-text-center">Times Added</li>
-          <li class="medium-6 columns">4 <small>(Jul 21 2014)</small></li>
+          <li class="medium-6 columns">{{{ $old_check[0] }}} <small>({{{ $old_check[1] ? date('M j Y', $old_check[1]) : 'NEVER'}}})</small></li>
         </ul>
       </li>
 
-      <li class="large-4 medium-6 columns profile-detail small-only-text-center">
+      <li class="large-4 medium-6 small-6 columns profile-detail small-only-text-center">
         <ul class="row">
-          <li class="medium-6 columns text-right profile-type small-only-text-center">Last Checked</li>
-          <li class="medium-6 columns">Jul 20 2014</li>
-        </ul>
-        <ul class="row">
-          <li class="medium-6 columns text-right profile-type small-only-text-center">Last Updated</li>
-          <li class="medium-6 columns">Just Now</li>
+          <li class="medium-6 columns text-right profile-type small-only-text-center">Times Added</li>
+          <li class="medium-6 columns">4 <small>(Jul 21 2014)</small></li>
         </ul>
       </li>
 

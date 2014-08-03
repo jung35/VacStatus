@@ -1,6 +1,6 @@
 @extends('layout')
 @section('content')
-  @include('profile/profileSkeleton', array('profile' => $profile))
+  @include('profile/profileSkeleton', array('profile' => $profile, 'old_check' => $old_check))
 @stop
 
 
