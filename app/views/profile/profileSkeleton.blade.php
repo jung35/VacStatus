@@ -203,8 +203,8 @@
     <br><!--lol this line break-->
     <script type="text/javascript">
       var disqus_shortname = 'vbanstatus';
-      var disqus_identifier = '';
-      var disqus_title = 'VacStatus []';
+      var disqus_identifier = '{{{ $profile->getSteam3Id() }}}';
+      var disqus_title = 'VacStatus [{{{ $profile->getSteam3Id() }}}]';
 
       /* * * DON'T EDIT BELOW THIS LINE * * */
       (function() {
