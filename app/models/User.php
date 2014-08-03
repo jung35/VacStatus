@@ -16,6 +16,13 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
    */
   protected $table = 'users';
 
+  /**
+   * Connect to the old aliases that this user was seen with
+   */
+  public function UserList() {
+    return $this->hasMany('UserList');
+  }
+
   public function getUserName() {
     return $this->display_name;
   }

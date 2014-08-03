@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateUsersFriendsTable extends Migration {
+class CreateNewsTable extends Migration {
 
   /**
    * Run the migrations.
@@ -12,12 +12,11 @@ class CreateUsersFriendsTable extends Migration {
    */
   public function up()
   {
-    Schema::create('users_friends', function(Blueprint $table)
+    Schema::create('news', function(Blueprint $table)
     {
       $table->increments('id');
-      $table->unsignedInteger('user_id');
-      $table->foreign('user_id')->references('id')->on('users');
-      $table->text('friend_ids');
+      $table->string('title');
+      $table->text('body');
       $table->timestamps();
     });
   }
@@ -30,7 +29,7 @@ class CreateUsersFriendsTable extends Migration {
    */
   public function down()
   {
-    Schema::drop('users_friends');
+    Schema::drop('news');
   }
 
 }

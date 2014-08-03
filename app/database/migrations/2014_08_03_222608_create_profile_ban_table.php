@@ -5,16 +5,16 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateProfileBanTable extends Migration {
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('profile_ban', function(Blueprint $table)
-		{
-			$table->increments('id');
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Schema::create('profile_ban', function(Blueprint $table)
+    {
+      $table->increments('id');
       $table->unsignedInteger('profile_id');
       $table->foreign('profile_id')->references('id')->on('profile');
       $table->boolean('community');
@@ -22,19 +22,19 @@ class CreateProfileBanTable extends Migration {
       $table->integer('vac_days');
       $table->boolean('trade');
       $table->boolean('unban');
-			$table->timestamps();
-		});
-	}
+      $table->timestamps();
+    });
+  }
 
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('profile_ban');
-	}
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    Schema::drop('profile_ban');
+  }
 
 }

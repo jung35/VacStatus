@@ -54,6 +54,7 @@
     <ul class="tabs" data-tab>
       <li class="tab-title active"><a href="#panel-1">Most Tracked</a></li>
       <li class="tab-title"><a href="#panel-2">Latest Added</a></li>
+      @if(!Auth::check())
       <li class="tab-title">
         <a data-dropdown="personalList">Personal List <i class="fa fa-caret-down"></i></a>
         <ul id="personalList" class="f-dropdown" data-dropdown-content>
@@ -72,6 +73,7 @@
           <li><a href="#">Yet another</a></li>
         </ul>
       </li>
+      @endif
     </ul>
     <div class="tabs-content">
       <div class="content active" id="panel-1">
@@ -124,15 +126,6 @@
 
           </tbody>
         </table>
-      </div>
-      <div class="content" id="panel-2">
-        <p>Second panel content goes here...</p>
-      </div>
-      <div class="content" id="panel-3">
-        <p>Third panel content goes here...</p>
-      </div>
-      <div class="content" id="panel-4">
-        <p>Fourth panel content goes here...</p>
       </div>
     </div>
   </div>

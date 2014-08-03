@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateMailTable extends Migration {
+class CreateProfileOldAliasTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,13 +12,9 @@ class CreateMailTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('mail', function(Blueprint $table)
+		Schema::create('profile_old_alias', function(Blueprint $table)
 		{
 			$table->increments('id');
-      $table->unsignedInteger('user_id');
-      $table->foreign('user_id')->references('id')->on('users');
-      $table->text('email');
-      $table->text('verify');
 			$table->timestamps();
 		});
 	}
@@ -31,7 +27,7 @@ class CreateMailTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('mail');
+		Schema::drop('profile_old_alias');
 	}
 
 }
