@@ -9,7 +9,7 @@
     <h3>{{{ $profile->getDisplayName() }}}<!-- <small>&nbsp;</small> --></h3>
     <div class="row">
       <div class="medium-2 columns">
-        <span class="big-steam"><a href="http://steamcommunity.com/profiles/{{{ $profile->getSteam3Id() }}}"><i class="fa fa-steam"></i></a></span>
+        <span class="big-steam"><a href="http://steamcommunity.com/profiles/{{{ $profile->getSteam3Id() }}}" target="_blank"><i class="fa fa-steam"></i></a></span>
       </div>
       <div class="medium-5 columns detailed">
         <div class="row profile-detail">
@@ -28,15 +28,15 @@
       <div class="medium-5 columns detailed">
         <div class="row profile-detail">
           <div class="medium-6 columns profile-type small-only-text-center">VAC / Overwatch</div>
-          <div class="medium-6 columns text-alert">Banned</div>
+          <div class="medium-6 columns {{{ $profile->ProfileBan->isVacBanned() ? 'text-alert' : 'text-success' }}}">{{{ $profile->ProfileBan->isVacBanned() ? 'Banned' : 'Normal' }}}</div>
         </div>
         <div class="row profile-detail">
           <div class="medium-6 columns profile-type small-only-text-center">Market</div>
-          <div class="medium-6 columns text-success">Normal</div>
+          <div class="medium-6 columns {{{ $profile->ProfileBan->isTradeBanned() ? 'text-alert' : 'text-success' }}}">{{{ $profile->ProfileBan->isTradeBanned() ? 'Banned' : 'Normal' }}}</div>
         </div>
         <div class="row profile-detail">
           <div class="medium-6 columns profile-type small-only-text-center">Community</div>
-          <div class="medium-6 columns text-success">Normal</div>
+          <div class="medium-6 columns {{{ $profile->ProfileBan->isCommunityBanned() ? 'text-alert' : 'text-success' }}}">{{{ $profile->ProfileBan->isCommunityBanned() ? 'Banned' : 'Normal' }}}</div>
         </div>
       </div>
       <!-- <div class="medium-5 columns"></div> -->
@@ -54,18 +54,18 @@
       <li class="large-4 medium-6 columns profile-detail small-only-text-center">
         <ul class="row">
           <li class="medium-6 columns text-right profile-type small-only-text-center"># of Bans</li>
-          <li class="medium-6 columns">3</li>
+          <li class="medium-6 columns">{{{ $profile->ProfileBan->getVac() }}}</li>
         </ul>
         <ul class="row">
           <li class="medium-6 columns text-right profile-type small-only-text-center">Last Ban</li>
-          <li class="medium-6 columns">Jul 26 2014</li>
+          <li class="medium-6 columns">{{{ $profile->ProfileBan->getVacDays() }}}</li>
         </ul>
       </li>
 
       <li class="large-8 medium-6 columns profile-detail small-only-text-center">
         <ul class="row">
           <li class="medium-2 columns text-right profile-type small-only-text-center">Note</li>
-          <li class="medium-10 columns">This user was previously banned. This could mean that this person had a temperary ban and/or was unbanned.</li>
+          <li class="medium-10 columns">{{{ $profile->ProfileBan->getNote() }}}</li>
         </ul>
       </li>
 
@@ -125,26 +125,12 @@
           </tr>
         </thead>
         <tbody>
+          @foreach($profile->getAlias() as $alias)
           <tr>
-            <td>2014-07-12 16:36:45</td>
-            <td>みどりフェゲット</td>
+            <td>{{{ date('M j Y, g:i a', strtotime(str_replace("@", "", $alias->timechanged))) }}}</td>
+            <td>{{{ $alias->newname }}}</td>
           </tr>
-          <tr>
-            <td>2014-05-21 05:47:12</td>
-            <td>Jung - VacStatus.com</td>
-          </tr>
-          <tr>
-            <td>2013-09-06 21:22:57</td>
-            <td>juanDEAG</td>
-          </tr>
-          <tr>
-            <td>2012-09-09 04:37:21</td>
-            <td>Jung</td>
-          </tr>
-          <tr>
-            <td>2012-05-03 02:05:06</td>
-            <td>Jung3o</td>
-          </tr>
+          @endforeach
         </tbody>
       </table>
     </div>

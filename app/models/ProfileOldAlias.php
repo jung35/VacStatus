@@ -10,6 +10,6 @@ class ProfileOldAlias extends \Eloquent {
   protected $table = 'profile_old_alias';
 
   public function Profile() {
-      return $this->belongsTo('profile');
+      return $this->belongsTo('Profile');
   }
 }

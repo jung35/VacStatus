@@ -6,7 +6,7 @@
 
 @section('javascript')
   @if(isset($update) && $update)
-  <div id="loader">Loading Profile... <i class="fa fa-refresh fa-spin"></i></div>
+  <div id="loader">Updating Profile... <i class="fa fa-refresh fa-spin"></i></div>
   <script>
     $.ajax({
       url: '{{ url('') }}/u/update/single/{{{ $steam3Id }}}',
@@ -19,7 +19,7 @@
       $('.content-start').html(data);
     }).error(function() {
       $('#loader').fadeOut(function() {
-        alert('Sorry, there is an error with Steam API');
+        alert("Sorry, there is an error with Steam API.\nPlease try refreshing again in few seconds.");
       });
     });
   </script>

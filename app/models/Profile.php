@@ -12,10 +12,27 @@ class Profile extends \Eloquent {
    */
   protected $table = 'profile';
 
+  /**
+   * Connect to the old aliases that this user was seen with
+   */
   public function ProfileOldAlias() {
-    return $this->hasMany('profile_old_alias');
+    return $this->hasMany('ProfileOldAlias');
   }
 
+  /**
+   * Connect to the bans that this user was seen with
+   */
+  public function ProfileBan() {
+    return $this->hasOne('ProfileBan');
+  }
+
+  /**
+   * Updates single profile in mysql DB
+   * It does not check if the profile should be allowed to update or not
+   * @param  Integer $steam3Id
+   *
+   * @return Object
+   */
   public static function updateSingleProfile($steam3Id = null) {
 
     if($steam3Id) {
@@ -37,6 +54,10 @@ class Profile extends \Eloquent {
       usort($steamAPI_alias, array('Steam\SteamUser', 'aliasSort'));
 
       $profile = self::whereSmallId(Steam::toSmallId($steam3Id))->first();
+
+      /*
+      Start updating the user profile with new data from Steam Web API
+       */
 
       if(!isset($profile->id)) {
         $profile = new self;
@@ -61,6 +82,44 @@ class Profile extends \Eloquent {
 
       $profile->save();
 
+      /*
+      Grab information about ban
+       */
+
+      // Grab user detailed ban info
+      $steamAPI_Ban = Steam::cURLSteamAPI('ban', $steam3Id);
+      if(isset($steamAPI_Ban->type) && $steamAPI_Ban->type == 'error') {
+        return $steamAPI_Ban->type;
+      }
+
+      $steamAPI_Ban = $steamAPI_Ban->players[0];
+
+      /*
+      Start updating Ban / Create if not already exist under user
+       */
+
+      $profileBan = $profile->ProfileBan ?: new ProfileBan;
+
+      if(!isset($profileBan->id)) {
+        $profileBan->profile_id = $profile->id;
+        $profileBan->unban = false;
+      } else {
+        if($profileBan->vac > $steamAPI_Ban->NumberOfVACBans) {
+          $profileBan->unban = true;
+        }
+      }
+
+      $profileBan->vac = $steamAPI_Ban->NumberOfVACBans;
+      $profileBan->community = $steamAPI_Ban->CommunityBanned;
+      $profileBan->trade = $steamAPI_Ban->EconomyBan != 'none';
+      $profileBan->vac_days = $steamAPI_Ban->DaysSinceLastBan;
+
+      $profile->ProfileBan()->save($profileBan);
+
+      /*
+      Tell cache that steam profile has been updated
+       */
+
       Steam::setUpdate(Steam::toSmallId($steam3Id));
 
       return $profile;
@@ -71,6 +130,11 @@ class Profile extends \Eloquent {
     return $this->display_name;
   }
 
+  /**
+   * SteamAPI says 3 is public and everything else is private
+   *
+   * @return boolean
+   */
   public function isPrivate() {
     return $this->privacy != 3;
   }
@@ -92,5 +156,9 @@ class Profile extends \Eloquent {
 
   public function getAvatar() {
     return $this->avatar;
+  }
+
+  public function getAlias() {
+    return json_decode($this->alias);
   }
 }

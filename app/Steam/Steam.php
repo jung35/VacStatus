@@ -4,7 +4,6 @@ namespace Steam;
 use \Cache as Cache;
 /**
  * Steam Class
- *
  * Handles all of interactions with STEAM API except for login
  */
 Class Steam {
@@ -18,11 +17,12 @@ Class Steam {
    * Time in seconds before profile is called to an update
    * @var Integer
    */
-  protected static $UPDATE_TIME = 3600; // 1 HOUR
+  protected static $UPDATE_TIME = 0; // 1 HOUR
 
   /**
    * Check to see if the profile's last update was long enough for new update
    * @param  Integer $updated_at last time updated
+   *
    * @return Boolean
    */
   public static function canUpdate($smallId) {
@@ -34,6 +34,12 @@ Class Steam {
     return true;
   }
 
+  /**
+   * Instead of using db to see when the profile has been last updated, use cache
+   * @param Integer $smallId
+   *
+   * @return Void
+   */
   public static function setUpdate($smallId) {
     Cache::put("profile_$smallId", time(), self::$UPDATE_TIME / 60);
     return;
@@ -53,7 +59,7 @@ Class Steam {
     }
 
     return Array('type' => 'error',
-                 'data' => 'Parameter was empty or NaN');
+                 'data' => 'nan');
   }
 
   /**
@@ -70,7 +76,7 @@ Class Steam {
     }
 
     return Array('type' => 'error',
-                 'data' => 'Parameter was empty or NaN');
+                 'data' => 'nan');
   }
 
   /**
@@ -92,7 +98,7 @@ Class Steam {
     }
 
     return Array('type' => 'error',
-                 'data' => 'Parameter was empty or NaN');
+                 'data' => 'nan');
   }
 
   /**

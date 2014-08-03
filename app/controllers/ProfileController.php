@@ -34,6 +34,8 @@ class ProfileController extends BaseController {
       $profile = Profile::updateSingleProfile($steam3Id);
 
       if($profile == 'error') {
+
+        // not stable connection to steam
         return App::abort(500);
       }
 
