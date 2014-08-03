@@ -122,6 +122,29 @@
     }
     font-size: 13px !important;
   }
+  .has-dropdown {
+    & > ul {
+      position: absolute;
+      list-style: none;
+      width: 100%;
+      margin: 0;
+      display: none;
+      background: #fff;
+      border: 1px solid #ddd;
+      left: 100%;
+      top: 0;
+    }
+    &:hover > ul,
+    & > ul:hover {
+      display: block;
+      text-align: right;
+    }
+    li {
+      width: 100%;
+    }
+    position: relative;
+  }
+  // position: relative;
 }
 
 .dispblock {
