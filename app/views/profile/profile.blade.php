@@ -1,6 +1,6 @@
 @extends('layout')
 @section('content')
-  @include('profile/profileSkeleton')
+  @include('profile/profileSkeleton', array('profile' => $profile))
 @stop
 
 
@@ -12,11 +12,15 @@
       url: '{{ url('') }}/u/update/single/{{{ $steam3Id }}}',
       type: "POST",
       data: {
-        '_token': '{{{ csrf_token() }}}'
+        '_token': _token
       }
     }).done(function(data) {
       $('#loader').fadeOut();
       $('.content-start').html(data);
+    }).error(function() {
+      $('#loader').fadeOut(function() {
+        alert('Sorry, there is an error with Steam API');
+      });
     });
   </script>
   @endif

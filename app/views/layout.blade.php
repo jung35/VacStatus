@@ -14,6 +14,7 @@
 
     <link rel="stylesheet" href="{{ url('') }}/css/app.css" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.3.1/js/vendor/modernizr.min.js"></script>
+    <script>var _token = '{{{ csrf_token() }}}';</script>
 
     <title>
       VacStatus &mdash;
@@ -122,6 +123,12 @@
         </p>
       </div>
     </div>
+
+
+  {{-- */$queries = DB::getQueryLog(); /*--}}
+  {{ var_dump(count($queries), $queries) }}
+
+
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.3.1/js/foundation.min.js"></script>
     <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>

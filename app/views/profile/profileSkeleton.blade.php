@@ -3,24 +3,26 @@
     <img class="online" src="http://media.steampowered.com/steamcommunity/public/images/avatars/04/045e340a97cb883eda0c68a6e35afe9a621124fe_full.jpg">
   </div>
   <div class="medium-10 small-12 columns basic small-only-text-center">
+    @if($profile->isPrivate())
     <h3 class="label alert profile-privacy">Private</h3>
-    <h3>Jung<small>&nbsp;Jung</small></h3>
+    @endif
+    <h3>{{{ $profile->getDisplayName() }}}<!-- <small>&nbsp;</small> --></h3>
     <div class="row">
       <div class="medium-2 columns">
-        <span class="big-steam"><a href="#"><i class="fa fa-steam"></i></a></span>
+        <span class="big-steam"><a href="http://steamcommunity.com/profiles/{{{ $profile->getSteam3Id() }}}"><i class="fa fa-steam"></i></a></span>
       </div>
       <div class="medium-5 columns detailed">
         <div class="row profile-detail">
           <div class="medium-5 columns profile-type small-only-text-center">Creation</div>
-          <div class="medium-7 columns">Jan 24 2010</div>
+          <div class="medium-7 columns">{{{ $profile->getSteamCreation() }}}</div>
         </div>
         <div class="row profile-detail">
           <div class="medium-5 columns profile-type small-only-text-center">STEAM2 ID</div>
-          <div class="medium-7 columns">STEAM_0:1:30025699</div>
+          <div class="medium-7 columns">{{{ $profile->getSteam2Id() }}}</div>
         </div>
         <div class="row profile-detail">
           <div class="medium-5 columns profile-type small-only-text-center">STEAM3 ID</div>
-          <div class="medium-7 columns">76561198020317127</div>
+          <div class="medium-7 columns">{{{ $profile->getSteam3Id() }}}</div>
         </div>
       </div>
       <div class="medium-5 columns detailed">

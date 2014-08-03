@@ -1,6 +1,7 @@
 <?php
-
 namespace Steam;
+
+use \Cache as Cache;
 /**
  * Steam Class
  *
@@ -24,8 +25,18 @@ Class Steam {
    * @param  Integer $updated_at last time updated
    * @return Boolean
    */
-  public static function canUpdate($updated_at) {
-    return $updated_at < time() + self::$UPDATE_TIME;
+  public static function canUpdate($smallId) {
+    if(Cache::has("profile_$smallId")) {
+      if(Cache::get("profile_$smallId") + self::$UPDATE_TIME > time()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static function setUpdate($smallId) {
+    Cache::put("profile_$smallId", time(), self::$UPDATE_TIME / 60);
+    return;
   }
 
   /**
@@ -37,6 +48,7 @@ Class Steam {
   public static function toSmallId($steam3Id = null)
   {
     if($steam3Id && is_numeric($steam3Id)) {
+      $steam3Id .= '';
       return bcsub($steam3Id,'76561197960265728');
     }
 
@@ -46,14 +58,15 @@ Class Steam {
 
   /**
    * Conversion of smaller steam3 ID to its regular number to work easier with
-   * @param Integer $steam3Id
+   * @param Integer $smallId
    *
    * @return Integer/Array
    */
-  public static function toBigId($steam3Id = null)
+  public static function toBigId($smallId = null)
   {
-    if($steam3Id && is_numeric($steam3Id)) {
-      return bcadd($steam3Id,'76561197960265728');
+    if($smallId && is_numeric($smallId)) {
+      $smallId .= '';
+      return explode('.', bcadd($smallId,'76561197960265728'))[0];
     }
 
     return Array('type' => 'error',
@@ -74,7 +87,7 @@ Class Steam {
       if (bccomp($steamIdPartTwo,'0') == 1) {
         $steamIdPartTwo = bcsub($steamIdPartTwo, $steamIdPartOne);
         $steamIdPartTwo = bcdiv($steamIdPartTwo, 2);
-        return "STEAM_0:$steamIdPartOne:$steamIdPartTwo";
+        return "STEAM_0:$steamIdPartOne:".explode('.', $steamIdPartTwo)[0];
       }
     }
 
@@ -129,7 +142,7 @@ Class Steam {
         if(is_array($value)) {
           $value = $value[0];
         }
-        $url = "http://steamcommunity.com/profiles/{$value}/ajaxaliases/?".time();
+        $url = "http://steamcommunity.com/profiles/{$value}/ajaxaliases?".time();
         break;
 
       // For checking to make sure a user exists by this profile name
@@ -155,15 +168,15 @@ Class Steam {
       $data = curl_exec($ch);
     } catch(Exception $e) {
       return (object) array('type' => 'error',
-                            'data' => 'Trouble connecting to steam API');
+                            'data' => 'api_conn_err');
     }
     curl_close($ch);
 
     if($json) {
       $data = json_decode($data);
-      if(!is_object($data)) {
+      if(!is_object($data) && !is_array($data)) {
         return (object) array('type' => 'error',
-                              'data' => 'Steam API error');
+                              'data' => 'api_data_err');
       }
     } else {
       // Still not possible to send request to valve to check by steam profile id via Steam web API :'(
@@ -171,13 +184,10 @@ Class Steam {
         $data = simplexml_load_string($data);
       } catch(Exception $e) {
         return (object) array('type' => 'error',
-                              'data' => 'Steam API error');
+                              'data' => 'api_data_err');
       }
     }
-
-
     return $data;
-
   }
 
 }

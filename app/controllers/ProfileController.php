@@ -7,16 +7,22 @@ class ProfileController extends BaseController {
   public function profileAction($steam3Id = null)
   {
     if($steam3Id) {
-      $profile = Profile::whereSteam3Id(Steam::toSmallId($steam3Id));
+      $profile = Profile::whereSmallId(Steam::toSmallId($steam3Id))->first();
       if(!isset($profile->id)) {
-        return View::make('profile/blankProfile', array('steam3Id' => $steam3Id));
+        return View::make('profile/blankProfile')
+        ->with('steam3Id', $steam3Id);
       }
 
-      if(Steam::canUpdate(strtotime($profile->updated_at))) {
-        return View::make('profile/profile', Array('update', true));
+      if(Steam::canUpdate(Steam::toSmallId($steam3Id))) {
+        return View::make('profile/profile')
+        ->with('steam3Id', $steam3Id)
+        ->with('profile', $profile)
+        ->with('update', true);
       }
 
-      return View::make('profile/profile');
+      return View::make('profile/profile')
+      ->with('steam3Id', $steam3Id)
+      ->with('profile', $profile);
     }
 
     return Redirect::home();
@@ -25,11 +31,16 @@ class ProfileController extends BaseController {
   public function updateSingleProfileAction($steam3Id = null) {
 
     if($steam3Id) {
-      $profile = new Profile;
-      var_dump($profile->updateSingleProfile($steam3Id));
-      return View::make('profile/profileSkeleton');
+      $profile = Profile::updateSingleProfile($steam3Id);
+
+      if($profile == 'error') {
+        return App::abort(500);
+      }
+
+      return View::make('profile/profileSkeleton')
+      ->with('profile', $profile);
     }
-    return "";
+    return App::abort(500);
   }
 
 }
