@@ -89,4 +89,8 @@ class Profile extends \Eloquent {
   public function getSteam2Id() {
     return Steam::toSteam2Id($this->getSteam3Id($this->small_id));
   }
+
+  public function getAvatar() {
+    return $this->avatar;
+  }
 }

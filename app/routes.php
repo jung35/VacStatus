@@ -12,6 +12,7 @@
 */
 
 Route::get('/', Array('as' => 'home', 'uses' => 'HomeController@indexAction'));
+Route::post('/search', Array('as' => 'search_single', 'uses' => 'HomeController@searchSingleAction'));
 
 Route::get('/login/{action?}', Array('as' => 'login', 'uses' => 'LoginController@loginAction'));
 Route::get('/logout', Array('as' => 'logout', 'uses' => 'LoginController@logoutAction'));

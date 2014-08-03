@@ -182,6 +182,10 @@ Class Steam {
       // Still not possible to send request to valve to check by steam profile id via Steam web API :'(
       try {
         $data = simplexml_load_string($data);
+        if(!is_object($data) && !is_array($data)) {
+          return (object) array('type' => 'error',
+                                'data' => 'api_data_err');
+        }
       } catch(Exception $e) {
         return (object) array('type' => 'error',
                               'data' => 'api_data_err');

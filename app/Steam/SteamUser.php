@@ -22,4 +22,77 @@ Class SteamUser extends Steam {
   public static function aliasTimeConvert($time) {
     return strtotime(str_replace("@", "", $time));
   }
+
+  public static function findSteam3IdUser($data)
+  {
+    $data = strtolower(trim($data));
+    if (!empty($data))
+    {
+      if (strlen($data) > 100) return (object) array('type' => 'error', 'data' => 'Field too long');
+
+      if (substr($data, 0, 6) == 'steam_')
+      {
+        $tmp = explode(':',$data);
+        if ((count($tmp) == 3) && is_numeric($tmp[1]) && is_numeric($tmp[2]))
+        {
+          $steam3Id = bcadd(($tmp[2] * 2) + $tmp[1], '76561197960265728');
+          return (object) array('type' => 'success','data' => $steam3Id);
+        }
+        else
+        {
+          return (object) array('type' => 'error', 'data' => 'Invalid Steam ID');
+        }
+
+      }
+      else if ($p = strrpos($data, '/'))
+      {
+        $tmp = explode('/',$data);
+        $a = null;
+        foreach ($tmp as $key => $item)
+        {
+          if (is_numeric($item))
+          {
+            $a = $item;
+            break;
+          } else if ($item == 'id') {
+            $data = $tmp[$key+1];
+          }
+        }
+        if (is_numeric($a) && preg_match('/7656119/', $a))
+        {
+          return (object) array('type' => 'success', 'data' => $a);
+        }
+        else
+        {
+          $steamAPI_xmlInfo = parent::cURLSteamAPI('xmlInfo', $data);
+          if(isset($steamAPI_Info->type) && $steamAPI_Info->type == 'error') {
+            return (object) array('type' => $steamAPI_Info->type,
+                         'data' => $steamAPI_Info->data);
+          }
+
+          $steamid64 = (string) $steamAPI_xmlInfo->steamID64;
+          if (!preg_match('/7656119/', $steamid64)) return (object) array('type' => 'error', 'data' => 'Invalid link');
+          else return (object) array('type' => 'success', 'data' => $steamid64);
+        }
+      }
+      else if (is_numeric($data) && preg_match('/7656119/', $data))
+      {
+        return (object) array('type' => 'success', 'data' => $data);
+      }
+      else
+      {
+        $steamAPI_xmlInfo = parent::cURLSteamAPI('xmlInfo', $data);
+        if(isset($steamAPI_Info->type) && $steamAPI_Info->type == 'error') {
+          return (object) array('type' => $steamAPI_Info->type,
+                       'data' => $steamAPI_Info->data);
+        }
+
+        $steamid64 = (string) $steamAPI_xmlInfo->steamID64;
+        if (!preg_match('/7656119/', $steamid64)) return (object) array('type' => 'error', 'data' => 'Invalid input');
+        else return (object) array('type' => 'success', 'data' => $steamid64);
+      }
+    }
+
+    return (object) array('type' => 'error', 'data' => 'Invalid or empty input');
+  }
 }

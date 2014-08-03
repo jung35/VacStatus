@@ -65,19 +65,22 @@
 
           <section class="top-bar-section">
             <ul class="left">
-              <li class="has-form">
-                <div class="row collapse">
-                  <div class="large-9 small-7 columns">
-                    <input type="text" placeholder="Quick User Search">
+              <form action="{{{ URL::route('search_single') }}}" method="POST">
+                <li class="has-form">
+                  <div class="row collapse">
+                    <div class="large-9 small-7 columns">
+                      <input name="search" type="text" placeholder="Quick User Search">
+                    </div>
+                    <div class="large-2 small-3 columns">
+                      <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
+                      <button type="submit" class="button expand" title="Quick Search"><i class="fa fa-search"></i></button>
+                    </div>
+                    <div class="large-1 small-2 columns">
+                      <button type="button" class="button expand" title="Advanced Search" data-reveal-id="advSearchModal"><i class="fa fa-bars"></i></button>
+                    </div>
                   </div>
-                  <div class="large-2 small-3 columns">
-                    <a href="#" class="button expand" title="Quick Search"><i class="fa fa-search"></i></a>
-                  </div>
-                  <div class="large-1 small-2 columns">
-                    <a href="#" class="button expand" title="Advanced Search" data-reveal-id="advSearchModal"><i class="fa fa-bars"></i></a>
-                  </div>
-                </div>
-              </li>
+                </li>
+              </form>
             </ul>
             <ul class="right">
               @if(Auth::check())

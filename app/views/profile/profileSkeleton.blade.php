@@ -1,6 +1,6 @@
 <div class="vacstatus-profile">
   <div class="medium-2 small-12 columns avatar">
-    <img class="online" src="http://media.steampowered.com/steamcommunity/public/images/avatars/04/045e340a97cb883eda0c68a6e35afe9a621124fe_full.jpg">
+    <img class="online" src="{{{ $profile->getAvatar() }}}">
   </div>
   <div class="medium-10 small-12 columns basic small-only-text-center">
     @if($profile->isPrivate())
