@@ -28,10 +28,10 @@
       }
     }).done(function(data) {
       $('#loader').fadeOut();
-      $('.content-start').html(data);
+      $('.vacstatus-profile').html(data);
     }).error(function() {
       $('#loader').fadeOut(function() {
-        alert("Sorry, there is an error with Steam API.\nPlease try refreshing again in few seconds.");
+        $('.error-notification').html("Sorry, there is an error with Steam API.\nPlease try refreshing again in few minutes.").fadeIn('slow');
       });
     });;
   </script>

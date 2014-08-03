@@ -33,7 +33,8 @@
       font-size: inherit;
     }
     .detailed {
-      margin: 10px 0 0;
+      margin: 0;
+      line-height: 125% !important;
     }
   }
   .detailed {
@@ -60,7 +61,10 @@
 
 .big-steam {
   a {
-    color: #222;
+    &:hover {
+      color: #222;
+    }
+    color: #777;
   }
   .status {
     color: #888;

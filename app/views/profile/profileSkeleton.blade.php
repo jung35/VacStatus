@@ -90,26 +90,12 @@
           </tr>
         </thead>
         <tbody>
+        @foreach($profile->ProfileOldAlias as $alias)
           <tr>
-            <td>2014-07-12 16:36:45</td>
-            <td>みどりフェゲット</td>
+            <td>{{{ date('M j Y, g:i a', $alias->getTime()) }}}</td>
+            <td>{{{ $alias->getAlias() }}}</td>
           </tr>
-          <tr>
-            <td>2014-05-21 05:47:12</td>
-            <td>Jung - VacStatus.com</td>
-          </tr>
-          <tr>
-            <td>2013-09-06 21:22:57</td>
-            <td>juanDEAG</td>
-          </tr>
-          <tr>
-            <td>2012-09-09 04:37:21</td>
-            <td>Jung</td>
-          </tr>
-          <tr>
-            <td>2012-05-03 02:05:06</td>
-            <td>Jung3o</td>
-          </tr>
+        @endforeach
         </tbody>
       </table>
     </div>
@@ -127,7 +113,7 @@
         <tbody>
           @foreach($profile->getAlias() as $alias)
           <tr>
-            <td>{{{ date('M j Y, g:i a', strtotime(str_replace("@", "", $alias->timechanged))) }}}</td>
+            <td>{{{ Steam\SteamUser::cleanAliasDate($alias->timechanged) }}}</td>
             <td>{{{ $alias->newname }}}</td>
           </tr>
           @endforeach
@@ -200,5 +186,4 @@
       })();
     </script>
   </div>
-
 </div>

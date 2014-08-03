@@ -17,7 +17,7 @@ class CreateProfileOldAliasTable extends Migration {
 			$table->increments('id');
       $table->unsignedInteger('profile_id');
       $table->foreign('profile_id')->references('id')->on('profile');
-      $table->text('seen');
+      $table->integer('seen');
       $table->text('seen_alias');
 			$table->timestamps();
 		});

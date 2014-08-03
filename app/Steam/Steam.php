@@ -17,7 +17,7 @@ Class Steam {
    * Time in seconds before profile is called to an update
    * @var Integer
    */
-  protected static $UPDATE_TIME = 0; // 1 HOUR
+  public static $UPDATE_TIME = 3600; // 1 HOUR
 
   /**
    * Check to see if the profile's last update was long enough for new update
@@ -55,7 +55,7 @@ Class Steam {
   {
     if($steam3Id && is_numeric($steam3Id)) {
       $steam3Id .= '';
-      return bcsub($steam3Id,'76561197960265728');
+      return explode('.', bcsub($steam3Id,'76561197960265728'))[0];
     }
 
     return Array('type' => 'error',

@@ -34,20 +34,23 @@ class ProfileBan extends \Eloquent {
   }
 
   public function getNote() {
-    $note = "";
     if($this->isVacBanned()) {
-      if($this->getVacDays() < 8) {
-        $note .= "This user's ban is still new. It may just be a cooldown. ";
+      if($this->vac_days < 8) {
+        return "This user's ban is still new. It may just be a cooldown. ";
+      } else if($this->vac_days < 90) {
+        return "There is nothing to say about this user except the fact that this person got rekt. Volvo OP";
+      } else if($this->vac_days > 365) {
+        return "There is nothing to say about this user except the fact that this person has an old ban.";
+      } else {
+        return "There is nothing to say about this user except the fact that this person has a ban.";
       }
     } else {
       if($this->isUnbanned()) {
-        $note .= "This user was previously banned. This could mean that this person had a temperary ban and/or was unbanned. ";
+        return "This user was previously banned. This could mean that this person had a temperary ban and/or was unbanned. ";
       } else {
-        $note .= "There is nothing to say about this user. ";
+        return "There is nothing to say about this user. ";
       }
     }
-
-    return $note;
   }
 
   public function isUnbanned() {

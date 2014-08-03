@@ -23,6 +23,10 @@ Class SteamUser extends Steam {
     return strtotime(str_replace("@", "", $time));
   }
 
+  public static function cleanAliasDate($time) {
+    return date('M j Y, g:i a', strtotime(str_replace("@", "", $time)));
+  }
+
   public static function findSteam3IdUser($data)
   {
     $data = strtolower(trim($data));

@@ -98,9 +98,10 @@ class Profile extends \Eloquent {
       Start updating Ban / Create if not already exist under user
        */
 
-      $profileBan = $profile->ProfileBan ?: new ProfileBan;
+      $profileBan = $profile->ProfileBan;
 
       if(!isset($profileBan->id)) {
+        $profileBan = new ProfileBan;
         $profileBan->profile_id = $profile->id;
         $profileBan->unban = false;
       } else {
@@ -115,6 +116,36 @@ class Profile extends \Eloquent {
       $profileBan->vac_days = $steamAPI_Ban->DaysSinceLastBan;
 
       $profile->ProfileBan()->save($profileBan);
+      $profile->ProfileBan = $profileBan;
+
+      /*
+      Grab & Update Old Alias
+       */
+      $profileOldAlias = $profile->ProfileOldAlias;
+      $profileOldAlias = $profileOldAlias->count() ? $profileOldAlias : new ProfileOldAlias;
+
+      if($profileOldAlias->count() === 0) {
+        $profileOldAlias->addAlias($profile);
+      } else {
+        $match = false;
+        $recent = 0;
+        foreach($profileOldAlias as $oldAlias) {
+          if($oldAlias->getAlias() == $profile->getDisplayName()) {
+            $match = true;
+            break;
+          }
+
+          $recent = $oldAlias->compareTime($recent);
+        }
+
+        if(!$match && $recent + Steam::$UPDATE_TIME < time() ) {
+          $newAlias = new ProfileOldAlias;
+          $newAlias->profile_id = $profile->getId();
+          $newAlias->seen = time();
+          $newAlias->seen_alias = $profile->getDisplayName();
+          $profile->ProfileOldAlias()->save($newAlias);
+        }
+      }
 
       /*
       Tell cache that steam profile has been updated
@@ -137,6 +168,10 @@ class Profile extends \Eloquent {
    */
   public function isPrivate() {
     return $this->privacy != 3;
+  }
+
+  public function getId() {
+    return $this->id;
   }
 
   public function getSteamCreation() {

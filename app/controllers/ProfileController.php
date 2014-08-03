@@ -8,6 +8,7 @@ class ProfileController extends BaseController {
   {
     if($steam3Id) {
       $profile = Profile::whereSmallId(Steam::toSmallId($steam3Id))->first();
+
       if(!isset($profile->id)) {
         return View::make('profile/blankProfile')
         ->with('steam3Id', $steam3Id);
@@ -34,7 +35,6 @@ class ProfileController extends BaseController {
       $profile = Profile::updateSingleProfile($steam3Id);
 
       if($profile == 'error') {
-
         // not stable connection to steam
         return App::abort(500);
       }
