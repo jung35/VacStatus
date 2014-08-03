@@ -121,24 +121,25 @@ class Profile extends \Eloquent {
       /*
       Grab & Update Old Alias
        */
-      $profileOldAlias = $profile->ProfileOldAlias;
+      $profileOldAlias = $profile->ProfileOldAlias()->where('profile_id', '=', $profile->id);
       $profileOldAlias = $profileOldAlias->count() ? $profileOldAlias : new ProfileOldAlias;
 
-      if($profileOldAlias->count() === 0) {
+      if($profileOldAlias->count() == 0) {
         $profileOldAlias->addAlias($profile);
       } else {
         $match = false;
         $recent = 0;
         foreach($profileOldAlias as $oldAlias) {
-          if($oldAlias->getAlias() == $profile->getDisplayName()) {
-            $match = true;
-            break;
+          if(is_object($oldAlias)) {
+            if($oldAlias->getAlias() == $profile->getDisplayName()) {
+              $match = true;
+              break;
+            }
+            $recent = $oldAlias->compareTime($recent);
           }
-
-          $recent = $oldAlias->compareTime($recent);
         }
 
-        if(!$match && $recent + Steam::$UPDATE_TIME < time() ) {
+        if(!$match && $recent + Steam::$UPDATE_TIME < time()) {
           $newAlias = new ProfileOldAlias;
           $newAlias->profile_id = $profile->getId();
           $newAlias->seen = time();
