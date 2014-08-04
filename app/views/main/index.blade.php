@@ -139,7 +139,13 @@
               <td class="vacstatus-list-button">
                 <a data-dropdown="edit1" class="button tiny"><i class="fa fa-caret-down"></i></a>
                 <ul id="edit1" class="f-dropdown" data-dropdown-content>
-                  <li><a href="#"><i class="fa fa-plus"></i> Add</a></li>
+                  <li class="has-dropdown" ><a href="#"><i class="fa fa-plus"></i> Add</a></a>
+                      <ul class="dropdown" >
+                          <li class="right"><a href="#">This is a link</a></li>
+                          <li class="right"><a href="#">This is another</a></li>
+                          <li class="right"><a href="#">Yet another</a></li>
+                      </ul>
+                  </li>
                   <li><a href="#"><i class="fa fa-info"></i> Info</a></li>
                 </ul>
               </td>
@@ -157,7 +163,13 @@
               <td class="vacstatus-list-button">
                 <a data-dropdown="edit2" class="button tiny"><i class="fa fa-caret-down"></i></a>
                 <ul id="edit2" class="f-dropdown" data-dropdown-content>
-                  <li><a href="#"><i class="fa fa-plus"></i> Add</a></li>
+                  <li class="has-dropdown" ><a href="#"><i class="fa fa-plus"></i> Add</a></a>
+                      <ul class="dropdown" >
+                          <li class="right"><a href="#">This is a link</a></li>
+                          <li class="right"><a href="#">This is another</a></li>
+                          <li class="right"><a href="#">Yet another</a></li>
+                      </ul>
+                  </li>
                   <li><a href="#"><i class="fa fa-info"></i> Info</a></li>
                 </ul>
               </td>

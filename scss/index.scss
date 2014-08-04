@@ -88,6 +88,13 @@
         & > a {
           text-align: center;
         }
+        .f-dropdown {
+          width: 100px;
+          & ul {
+            text-align: left;
+            width: 200px;
+          }
+        }
         width: 62px;
       }
       width: 100%;
