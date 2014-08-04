@@ -19,4 +19,6 @@ Route::get('/logout', Array('as' => 'logout', 'uses' => 'LoginController@logoutA
 
 Route::get('/u/{steam3Id?}', Array('as' => 'profile', 'uses' => 'ProfileController@profileAction'));
 
-Route::post('/u/update/single/{steam3Id}', array('before' => 'csrf', 'uses' => 'ProfileController@updateSingleProfileAction'));
+Route::post('/u/update/single/{steam3Id}', Array('before' => 'csrf', 'uses' => 'ProfileController@updateSingleProfileAction'));
+
+Route::post('/list/add', Array('before' => 'csrf', 'as' => 'user_list_add', 'uses' => 'ListController@createAction'));

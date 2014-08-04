@@ -1,4 +1,36 @@
 @extends('layout')
+
+@section('modal')
+  <div id="addList" class="reveal-modal tiny" data-reveal>
+    <h2 class="text-center">Add List <small>(Limit {{{ Steam\Steam::$LIST_LIMIT }}})</small></h2>
+    <form action="{{ URL::route('user_list_add') }}">
+      <div class="row">
+        <div class="large-12 columns">
+          <label><strong>List Privacy</strong>
+            <select>
+              <option value="1">Public</option>
+              <option value="2">Friends Only</option>
+              <option value="3">Private</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns">
+          <label><strong>List Title</strong>
+            <input type="text" placeholder="Fancy Title">
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns">
+          <button type="button" class="button expand">Add List</button>
+        </div>
+      </div>
+    </form>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+@show
 @section('content')
 
   <div class="large-12 columns">
@@ -49,140 +81,140 @@
   @endif
   </div>
 
+  <div class="row index-wrapper" data-equalizer>
 
-  <div class="large-8 medium-8 columns vacstatus-multilist">
-    <ul class="tabs" data-tab>
-      <li class="tab-title active"><a href="#panel-1">Most Tracked</a></li>
-      <li class="tab-title"><a href="#panel-2">Latest Added</a></li>
-      @if(Auth::check())
-      <li class="tab-title">
-        <a data-dropdown="personalList">Personal List <i class="fa fa-caret-down"></i></a>
-        <ul id="personalList" class="f-dropdown" data-dropdown-content>
-          <li><a href="#">This is a link</a></li>
-          <li><a href="#">This is another</a></li>
-          <li><a href="#">Yet another</a></li>
-          <li class="divider"></li>
-          <li><a href="#">New List</a></li>
-        </ul>
-      </li>
-      <li class="tab-title">
-        <a data-dropdown="friendsList">Friends' List <i class="fa fa-caret-down"></i></a>
-        <ul id="friendsList" class="f-dropdown" data-dropdown-content>
-          <li class="has-dropdown" ><a href="#">Share</a>
-              <ul class="dropdown" >
-                  <li class="right"><a href="#">This is a link</a></li>
-                  <li class="right"><a href="#">This is another</a></li>
-                  <li class="right"><a href="#">Yet another</a></li>
-              </ul>
-          </li>
-          <li class="has-dropdown" ><a href="#">Share</a>
-              <ul class="dropdown" >
-                  <li class="right"><a href="#">This is a link</a></li>
-                  <li class="right"><a href="#">This is another</a></li>
-                  <li class="right"><a href="#">Yet another</a></li>
-              </ul>
-          </li>
-          <li class="has-dropdown" ><a href="#">Share</a>
-              <ul class="dropdown" >
-                  <li class="right"><a href="#">This is a link</a></li>
-                  <li class="right"><a href="#">This is another</a></li>
-                  <li class="right"><a href="#">Yet another</a></li>
-              </ul>
-          </li>
-          <li class="has-dropdown" ><a href="#">Share</a>
-              <ul class="dropdown" >
-                  <li class="right"><a href="#">This is a link</a></li>
-                  <li class="right"><a href="#">This is another</a></li>
-                  <li class="right"><a href="#">Yet another</a></li>
-              </ul>
-          </li>
-          <li class="has-dropdown" ><a href="#">Share</a>
-              <ul class="dropdown" >
-                  <li class="right"><a href="#">This is a link</a></li>
-                  <li class="right"><a href="#">This is another</a></li>
-                  <li class="right"><a href="#">Yet another</a></li>
-              </ul>
-          </li>
-          <li class="has-dropdown" ><a href="#">Share</a>
-              <ul class="dropdown" >
-                  <li class="right"><a href="#">This is a link</a></li>
-                  <li class="right"><a href="#">This is another</a></li>
-                  <li class="right"><a href="#">Yet another</a></li>
-              </ul>
-          </li>
-        </ul>
-      </li>
-      @endif
-    </ul>
-    <div class="tabs-content">
-      <div class="content active" id="panel-1">
-        <table>
-          <thead>
-            <tr>
-              <th class="vacstatus-list-avatar"></th>
-              <th class="vacstatus-list-user">User</th>
-              <th class="vacstatus-list-status">VAC / Overwatch</th>
-              <th class="vacstatus-list-tracker">Tracked</th>
-              <th class="vacstatus-list-button"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="vacstatus-list-avatar">
-                <img src="http://media.steampowered.com/steamcommunity/public/images/avatars/0b/0b4c44093b7d018f5aba3ee18ab79b78d5baf7b4.jpg">
-              </td>
-              <td class="vacstatus-list-user">Tw33k</td>
-              <td class="vacstatus-list-status text-alert">
-                <span class="fa fa-check"></span>&nbsp;&nbsp;03/19/2014
-              </td>
-              <td class="vacstatus-list-tracker">21</td>
-              <td class="vacstatus-list-button">
-                <a data-dropdown="edit1" class="button tiny"><i class="fa fa-caret-down"></i></a>
-                <ul id="edit1" class="f-dropdown" data-dropdown-content>
-                  <li class="has-dropdown" ><a href="#"><i class="fa fa-plus"></i> Add</a></a>
-                      <ul class="dropdown" >
-                          <li class="right"><a href="#">This is a link</a></li>
-                          <li class="right"><a href="#">This is another</a></li>
-                          <li class="right"><a href="#">Yet another</a></li>
-                      </ul>
-                  </li>
-                  <li><a href="#"><i class="fa fa-info"></i> Info</a></li>
+    <div class="large-8 medium-8 columns vacstatus-multilist" data-equalizer-watch>
+      <ul class="tabs" data-tab>
+        <li class="tab-title active"><a href="#panel-1">Most Tracked</a></li>
+        <li class="tab-title"><a href="#panel-2">Latest Added</a></li>
+        @if(Auth::check())
+        <li class="tab-title">
+          <a data-dropdown="personalList">Personal List <i class="fa fa-caret-down"></i></a>
+          <ul id="personalList" class="f-dropdown" data-dropdown-content>
+            <li><a href="#">This is a link</a></li>
+            <li><a href="#">This is another</a></li>
+            <li><a href="#">Yet another</a></li>
+            <li class="divider"></li>
+            <li><a data-reveal-id="addList">New List</a></li>
+          </ul>
+        </li>
+        <li class="tab-title">
+          <a data-dropdown="friendsList">Friends' List <i class="fa fa-caret-down"></i></a>
+          <ul id="friendsList" class="f-dropdown" data-dropdown-content>
+            <li class="has-dropdown" ><a href="#">Share</a>
+                <ul class="dropdown" >
+                    <li class="right"><a href="#">This is a link</a></li>
+                    <li class="right"><a href="#">This is another</a></li>
+                    <li class="right"><a href="#">Yet another</a></li>
                 </ul>
-              </td>
-            </tr>
-
-            <tr>
-              <td class="vacstatus-list-avatar">
-                <img src="http://media.steampowered.com/steamcommunity/public/images/avatars/0b/0b4c44093b7d018f5aba3ee18ab79b78d5baf7b4.jpg">
-              </td>
-              <td class="vacstatus-list-user">Tw33k</td>
-              <td class="vacstatus-list-status text-success">
-                <span class="fa fa-times"></span>
-              </td>
-              <td class="vacstatus-list-tracker">21</td>
-              <td class="vacstatus-list-button">
-                <a data-dropdown="edit2" class="button tiny"><i class="fa fa-caret-down"></i></a>
-                <ul id="edit2" class="f-dropdown" data-dropdown-content>
-                  <li class="has-dropdown" ><a href="#"><i class="fa fa-plus"></i> Add</a></a>
-                      <ul class="dropdown" >
-                          <li class="right"><a href="#">This is a link</a></li>
-                          <li class="right"><a href="#">This is another</a></li>
-                          <li class="right"><a href="#">Yet another</a></li>
-                      </ul>
-                  </li>
-                  <li><a href="#"><i class="fa fa-info"></i> Info</a></li>
+            </li>
+            <li class="has-dropdown" ><a href="#">Share</a>
+                <ul class="dropdown" >
+                    <li class="right"><a href="#">This is a link</a></li>
+                    <li class="right"><a href="#">This is another</a></li>
+                    <li class="right"><a href="#">Yet another</a></li>
                 </ul>
-              </td>
-            </tr>
+            </li>
+            <li class="has-dropdown" ><a href="#">Share</a>
+                <ul class="dropdown" >
+                    <li class="right"><a href="#">This is a link</a></li>
+                    <li class="right"><a href="#">This is another</a></li>
+                    <li class="right"><a href="#">Yet another</a></li>
+                </ul>
+            </li>
+            <li class="has-dropdown" ><a href="#">Share</a>
+                <ul class="dropdown" >
+                    <li class="right"><a href="#">This is a link</a></li>
+                    <li class="right"><a href="#">This is another</a></li>
+                    <li class="right"><a href="#">Yet another</a></li>
+                </ul>
+            </li>
+            <li class="has-dropdown" ><a href="#">Share</a>
+                <ul class="dropdown" >
+                    <li class="right"><a href="#">This is a link</a></li>
+                    <li class="right"><a href="#">This is another</a></li>
+                    <li class="right"><a href="#">Yet another</a></li>
+                </ul>
+            </li>
+            <li class="has-dropdown" ><a href="#">Share</a>
+                <ul class="dropdown" >
+                    <li class="right"><a href="#">This is a link</a></li>
+                    <li class="right"><a href="#">This is another</a></li>
+                    <li class="right"><a href="#">Yet another</a></li>
+                </ul>
+            </li>
+          </ul>
+        </li>
+        @endif
+      </ul>
+      <div class="tabs-content">
+        <div class="content active" id="panel-1">
+          <table>
+            <thead>
+              <tr>
+                <th class="vacstatus-list-avatar"></th>
+                <th class="vacstatus-list-user">User</th>
+                <th class="vacstatus-list-status">VAC / Overwatch</th>
+                <th class="vacstatus-list-tracker">Tracked</th>
+                <th class="vacstatus-list-button"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="vacstatus-list-avatar">
+                  <img src="http://media.steampowered.com/steamcommunity/public/images/avatars/0b/0b4c44093b7d018f5aba3ee18ab79b78d5baf7b4.jpg">
+                </td>
+                <td class="vacstatus-list-user">Tw33k</td>
+                <td class="vacstatus-list-status text-alert">
+                  <span class="fa fa-check"></span>&nbsp;&nbsp;03/19/2014
+                </td>
+                <td class="vacstatus-list-tracker">21</td>
+                <td class="vacstatus-list-button">
+                  <a data-dropdown="edit1" class="button tiny"><i class="fa fa-caret-down"></i></a>
+                  <ul id="edit1" class="f-dropdown" data-dropdown-content>
+                    <li class="has-dropdown" ><a href="#"><i class="fa fa-plus"></i> Add</a></a>
+                        <ul class="dropdown" >
+                            <li class="right"><a href="#">This is a link</a></li>
+                            <li class="right"><a href="#">This is another</a></li>
+                            <li class="right"><a href="#">Yet another</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><i class="fa fa-info"></i> Info</a></li>
+                  </ul>
+                </td>
+              </tr>
 
-          </tbody>
-        </table>
+              <tr>
+                <td class="vacstatus-list-avatar">
+                  <img src="http://media.steampowered.com/steamcommunity/public/images/avatars/0b/0b4c44093b7d018f5aba3ee18ab79b78d5baf7b4.jpg">
+                </td>
+                <td class="vacstatus-list-user">Tw33k</td>
+                <td class="vacstatus-list-status text-success">
+                  <span class="fa fa-times"></span>
+                </td>
+                <td class="vacstatus-list-tracker">21</td>
+                <td class="vacstatus-list-button">
+                  <a data-dropdown="edit2" class="button tiny"><i class="fa fa-caret-down"></i></a>
+                  <ul id="edit2" class="f-dropdown" data-dropdown-content>
+                    <li class="has-dropdown" ><a href="#"><i class="fa fa-plus"></i> Add</a></a>
+                        <ul class="dropdown" >
+                            <li class="right"><a href="#">This is a link</a></li>
+                            <li class="right"><a href="#">This is another</a></li>
+                            <li class="right"><a href="#">Yet another</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><i class="fa fa-info"></i> Info</a></li>
+                  </ul>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="large-4 medium-4 columns vacstatus-news">
-    <div class="panel">
+    <div class="large-4 medium-4 columns vacstatus-news" data-equalizer-watch>
       <h5>News &amp; Updates</h5>
       <ul>
         <li> <span>05/26/2014&nbsp;&mdash;</span>&nbsp;<a href="#">Less requests to the database</a></li>

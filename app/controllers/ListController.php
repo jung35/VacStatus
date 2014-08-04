@@ -10,11 +10,15 @@ class ListController extends BaseController {
     $title = Input::get('title') ?: 'My List';
     $privacy = Input::get('privacy') ?: 2;
 
-    $userList = new UserList;
-    $userList->user_id = Auth::User()->getId();
-    $userList->title = $title;
-    $userList->privacy = $privacy;
-    $userList->save();
+    $userId = Auth::User()->getId();
+
+    if(UserList::whereUserId($userId)->count() < Steam::$LIST_LIMIT) {
+      $userList = new UserList;
+      $userList->user_id = $userId;
+      $userList->title = $title;
+      $userList->privacy = $privacy;
+      $userList->save();
+    }
 
     return Redirect::home();
   }

@@ -1,3 +1,7 @@
+html, body {
+  height: 100%;
+}
+
 a {
   transition: color .3s;
   -moz-transition: color .3s;
@@ -84,7 +88,7 @@ a {
 }
 
 .content-start {
-  min-height: calc(100% - 5px);
+  height: calc(100% - 5px);
   margin: 5px auto 0;
   padding-bottom: 70px;
 }

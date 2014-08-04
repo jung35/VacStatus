@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
-    <meta name="author" content="Jung Oh">
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"/>
+    <meta name="author" content="Jung Oh"/>
     <meta itemprop="name" content="VacStatus" />
-    <meta name="description" itemprop="description" content="In a game like Counter-Strike: Global Offensive, you do not get a notification of some sort when the hacker gets banned. With VacStatus, you can now can keep in check of the possible hacker you reported and when that hacker gets banned, you can even recieve an email notification!">
+    <meta name="description" itemprop="description" content="In a game like Counter-Strike: Global Offensive, you do not get a notification of some sort when the hacker gets banned. With VacStatus, you can now can keep in check of the possible hacker you reported and when that hacker gets banned, you can even recieve an email notification!"/>
     <meta itemprop=image content="http://vacstatus.com/favicon.png"/>
     <meta name="keywords" content="vac, status, vacstatus, vban, vbanstatus, vb, vs, vacstatus.com, vac.com, vban.com, vbanstatus.com, vac status, vban status, list, vac list, vac ban list, ban list, steam, cs, csgo, cs go, tf2 , tf, css, valve, hl, hl2, steam ban, steam ban list, valve anti-cheat, anti cheat, anti-cheat, valve cheat"/>
     <meta name="robots" content="All" />
@@ -52,6 +52,9 @@
       </form>
       <a class="close-reveal-modal">&#215;</a>
     </div>
+
+    @section('modal')
+    @show
 
     <div class="sticky">
       <div class="contain-to-grid fixed">

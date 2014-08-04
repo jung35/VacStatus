@@ -19,6 +19,8 @@ Class Steam {
    */
   public static $UPDATE_TIME = 3600; // 1 HOUR
 
+  public static $LIST_LIMIT = 5;
+
   /**
    * Check to see if the profile's last update was long enough for new update
    * @param  Integer $updated_at last time updated
