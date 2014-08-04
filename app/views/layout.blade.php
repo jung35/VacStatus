@@ -24,6 +24,30 @@
     </title>
   </head>
   <body>
+    @if(Auth::check())
+    <div id="addProfileUser" class="reveal-modal tiny" data-reveal>
+      <h2 class="text-center">Select List</h2>
+      <form action="" method="POST">
+        <div class="row">
+          <div class="large-12 columns">
+            <label>
+              <select>
+                @foreach(Auth::User()->UserList()->orderBy('id', 'DESC')->get() as $UserList)
+                <option value="{{{ $UserList->getId() }}}">{{{ $UserList->getTitle() }}}</option>
+                @endforeach
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+            <button type="button" class="button expand">Add To List</button>
+          </div>
+        </div>
+      </form>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+    @endif
     <div id="advSearchModal" class="reveal-modal tiny" data-reveal>
       <h2 class="text-center">Advanced Search</h2>
       <form>

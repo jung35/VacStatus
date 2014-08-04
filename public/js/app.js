@@ -15,3 +15,7 @@ $('.vacstatus-alert-box').on('close.fndtn.alert-box', function(event) {
     localStorage.setItem('vacstatusAlertBox', 'true');
   }
 });
+
+function addUserList($smallId) {
+
+}

@@ -182,6 +182,10 @@ class Profile extends \Eloquent {
     return "Unknown";
   }
 
+  public function getSmallId() {
+    return $this->small_id;
+  }
+
   public function getSteam3Id() {
     return Steam::toBigId($this->small_id);
   }

@@ -173,7 +173,7 @@
                 <td class="vacstatus-list-tracker">21</td>
                 <td class="vacstatus-list-button">
                   @if(Auth::check())
-                  <a data-dropdown="edit1" class="button tiny"><i class="fa fa-plus"></i></a>
+                  <a class="button tiny" onClick="javascript:addUserList(76561198020317127);"><i class="fa fa-plus"></i></a>
                   @endif
                 </td>
               </tr>
@@ -189,7 +189,7 @@
                 <td class="vacstatus-list-tracker">21</td>
                 <td class="vacstatus-list-button">
                   @if(Auth::check())
-                  <a data-dropdown="edit1" class="button tiny"><i class="fa fa-plus"></i></a>
+                  <a class="button tiny" onClick="javascript:addUserList(76561198020317127);"><i class="fa fa-plus"></i></a>
                   </ul>
                   @endif
                 </td>

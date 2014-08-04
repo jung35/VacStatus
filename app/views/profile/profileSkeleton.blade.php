@@ -1,29 +1,7 @@
 <div class="vacstatus-profile">
   <div class="medium-2 small-12 columns avatar">
     @if(Auth::check())
-    <div id="addProfileUser" class="reveal-modal tiny" data-reveal>
-      <h2 class="text-center">Select List</h2>
-      <form>
-        <div class="row">
-          <div class="large-12 columns">
-            <label>
-              <select>
-                @foreach(Auth::User()->UserList()->orderBy('id', 'DESC')->get() as $UserList)
-                <option value="{{{ $UserList->getId() }}}">{{{ $UserList->getTitle() }}}</option>
-                @endforeach
-              </select>
-            </label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="large-12 columns">
-            <button type="button" class="button expand">Add To List</button>
-          </div>
-        </div>
-      </form>
-      <a class="close-reveal-modal">&#215;</a>
-    </div>
-    <a class="profile-adduser" data-reveal-id="addProfileUser"><i class="fa fa-plus"></i></a>
+    <a class="profile-adduser" onClick="javascript:addUserList({{{ $profile->getSmallId() }}});"><i class="fa fa-plus"></i></a>
     @endif
     <img class="online" src="{{{ $profile->getAvatar() }}}">
   </div>
