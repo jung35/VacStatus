@@ -97,7 +97,11 @@
                 </ul>
               </li>
               @else
-              <li><a href="{{ URL::route('login') }}"><img src="http://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_small.png"></a></li>
+              <li>
+                <a href="{{ URL::route('login') }}">
+                  <img src="http://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_small.png">
+                </a>
+              </li>
               @endif
             </ul>
           </section>

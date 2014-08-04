@@ -10,6 +10,14 @@ class UserList extends \Eloquent {
   protected $table = 'user_list';
 
   public function User() {
-      return $this->belongsTo('User', 'user_id', 'id');
+    return $this->belongsTo('User', 'user_id', 'id');
+  }
+
+  public function getId() {
+    return $this->id;
+  }
+
+  public function getTitle() {
+    return $this->title;
   }
 }

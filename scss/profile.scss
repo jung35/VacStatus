@@ -1,5 +1,20 @@
 .vacstatus-profile {
   .avatar {
+    .profile-adduser {
+      &:hover {
+        background: rgba(0, 0, 0, .4);
+        color: rgba(255, 255, 255, .9);
+      }
+      position: absolute;
+      padding: 2px 0 0;
+      top: 5px;
+      bottom: 5px;
+      left: 24px;
+      right: 24px;
+      font-size: 128px;
+      background: rgba(0, 0, 0, .2);
+      color: rgba(255, 255, 255, .2);
+    }
     & > img {
       &.online {
         // border: 5px solid #85c3f2;
@@ -7,6 +22,7 @@
       border: 5px solid #888;
       width: 128px;
     }
+    position: relative;
     text-align: center;
     vertical-align: middle;
   }

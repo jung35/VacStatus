@@ -31,6 +31,10 @@ class LoginController extends \BaseController {
       return;
     }
 
+    if(Auth::viaRemember()) {
+      return Redirect::home();
+    }
+
     // Authenticate with Steam (using the details from our IoC Container).
     $hybridAuthProvider = $this->hybridAuth->authenticate( "Steam" );
     // Get user profile information

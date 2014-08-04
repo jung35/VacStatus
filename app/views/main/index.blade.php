@@ -3,11 +3,11 @@
 @section('modal')
   <div id="addList" class="reveal-modal tiny" data-reveal>
     <h2 class="text-center">Add List <small>(Limit {{{ Steam\Steam::$LIST_LIMIT }}})</small></h2>
-    <form action="{{ URL::route('user_list_add') }}">
+    <form action="{{ URL::route('user_list_add') }}" method="POST">
       <div class="row">
         <div class="large-12 columns">
           <label><strong>List Privacy</strong>
-            <select>
+            <select name="privacy">
               <option value="1">Public</option>
               <option value="2">Friends Only</option>
               <option value="3">Private</option>
@@ -18,19 +18,21 @@
       <div class="row">
         <div class="large-12 columns">
           <label><strong>List Title</strong>
-            <input type="text" placeholder="Fancy Title">
+            <input type="text" placeholder="Fancy Title" name="title">
           </label>
         </div>
       </div>
       <div class="row">
         <div class="large-12 columns">
-          <button type="button" class="button expand">Add List</button>
+          <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
+          <button type="submit" class="button expand">Add List</button>
         </div>
       </div>
     </form>
     <a class="close-reveal-modal">&#215;</a>
   </div>
-@show
+@stop
+
 @section('content')
 
   <div class="large-12 columns">
@@ -91,9 +93,9 @@
         <li class="tab-title">
           <a data-dropdown="personalList">Personal List <i class="fa fa-caret-down"></i></a>
           <ul id="personalList" class="f-dropdown" data-dropdown-content>
-            <li><a href="#">This is a link</a></li>
-            <li><a href="#">This is another</a></li>
-            <li><a href="#">Yet another</a></li>
+            @foreach(Auth::User()->UserList()->orderBy('id', 'DESC')->get() as $UserList)
+            <li><a href="#">{{{ $UserList->getTitle() }}}</a></li>
+            @endforeach
             <li class="divider"></li>
             <li><a data-reveal-id="addList">New List</a></li>
           </ul>
@@ -164,23 +166,15 @@
                 <td class="vacstatus-list-avatar">
                   <img src="http://media.steampowered.com/steamcommunity/public/images/avatars/0b/0b4c44093b7d018f5aba3ee18ab79b78d5baf7b4.jpg">
                 </td>
-                <td class="vacstatus-list-user">Tw33k</td>
+                <td class="vacstatus-list-user"><a href="#" target="_blank">Tw33k</a></td>
                 <td class="vacstatus-list-status text-alert">
                   <span class="fa fa-check"></span>&nbsp;&nbsp;03/19/2014
                 </td>
                 <td class="vacstatus-list-tracker">21</td>
                 <td class="vacstatus-list-button">
-                  <a data-dropdown="edit1" class="button tiny"><i class="fa fa-caret-down"></i></a>
-                  <ul id="edit1" class="f-dropdown" data-dropdown-content>
-                    <li class="has-dropdown" ><a href="#"><i class="fa fa-plus"></i> Add</a></a>
-                        <ul class="dropdown" >
-                            <li class="right"><a href="#">This is a link</a></li>
-                            <li class="right"><a href="#">This is another</a></li>
-                            <li class="right"><a href="#">Yet another</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#"><i class="fa fa-info"></i> Info</a></li>
-                  </ul>
+                  @if(Auth::check())
+                  <a data-dropdown="edit1" class="button tiny"><i class="fa fa-plus"></i></a>
+                  @endif
                 </td>
               </tr>
 
@@ -188,23 +182,16 @@
                 <td class="vacstatus-list-avatar">
                   <img src="http://media.steampowered.com/steamcommunity/public/images/avatars/0b/0b4c44093b7d018f5aba3ee18ab79b78d5baf7b4.jpg">
                 </td>
-                <td class="vacstatus-list-user">Tw33k</td>
+                <td class="vacstatus-list-user"><a href="#" target="_blank">Tw33k</a></td>
                 <td class="vacstatus-list-status text-success">
                   <span class="fa fa-times"></span>
                 </td>
                 <td class="vacstatus-list-tracker">21</td>
                 <td class="vacstatus-list-button">
-                  <a data-dropdown="edit2" class="button tiny"><i class="fa fa-caret-down"></i></a>
-                  <ul id="edit2" class="f-dropdown" data-dropdown-content>
-                    <li class="has-dropdown" ><a href="#"><i class="fa fa-plus"></i> Add</a></a>
-                        <ul class="dropdown" >
-                            <li class="right"><a href="#">This is a link</a></li>
-                            <li class="right"><a href="#">This is another</a></li>
-                            <li class="right"><a href="#">Yet another</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#"><i class="fa fa-info"></i> Info</a></li>
+                  @if(Auth::check())
+                  <a data-dropdown="edit1" class="button tiny"><i class="fa fa-plus"></i></a>
                   </ul>
+                  @endif
                 </td>
               </tr>
 
