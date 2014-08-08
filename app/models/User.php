@@ -18,6 +18,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
    */
   protected $table = 'users';
 
+  public function isAdmin() {
+    return $this->site_admin == 1;
+  }
+
   /**
    * Connect to the old aliases that this user was seen with
    */

@@ -68,13 +68,13 @@ Class SteamUser extends Steam {
         }
         else
         {
-          $steamAPI_xmlInfo = parent::cURLSteamAPI('xmlInfo', $data);
-          if(isset($steamAPI_Info->type) && $steamAPI_Info->type == 'error') {
+          $steamAPI_vanityUrl = parent::cURLSteamAPI('vanityUrl', $data);
+          if(isset($steamAPI_Info->type) && $steamAPI_Info->type == 'error' && !isset($steamAPI_vanityUrl->response->steamid) && $steamAPI_vanityUrl->response->success == 42) {
             return (object) array('type' => $steamAPI_Info->type,
                          'data' => $steamAPI_Info->data);
           }
 
-          $steamid64 = (string) $steamAPI_xmlInfo->steamID64;
+          $steamid64 = (string) $steamAPI_vanityUrl->response->steamid;
           if (!preg_match('/7656119/', $steamid64)) return (object) array('type' => 'error', 'data' => 'Invalid link');
           else return (object) array('type' => 'success', 'data' => $steamid64);
         }
@@ -85,13 +85,13 @@ Class SteamUser extends Steam {
       }
       else
       {
-        $steamAPI_xmlInfo = parent::cURLSteamAPI('xmlInfo', $data);
-        if(isset($steamAPI_Info->type) && $steamAPI_Info->type == 'error') {
+        $steamAPI_vanityUrl = parent::cURLSteamAPI('vanityUrl', $data);
+        if(isset($steamAPI_Info->type) && $steamAPI_Info->type == 'error' && !isset($steamAPI_vanityUrl->response->steamid) && $steamAPI_vanityUrl->response->success == 42) {
           return (object) array('type' => $steamAPI_Info->type,
                        'data' => $steamAPI_Info->data);
         }
 
-        $steamid64 = (string) $steamAPI_xmlInfo->steamID64;
+        $steamid64 = (string) $steamAPI_vanityUrl->response->steamid;
         if (!preg_match('/7656119/', $steamid64)) return (object) array('type' => 'error', 'data' => 'Invalid input');
         else return (object) array('type' => 'success', 'data' => $steamid64);
       }

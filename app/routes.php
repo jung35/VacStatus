@@ -13,6 +13,8 @@
 
 Route::get('/', Array('as' => 'home', 'uses' => 'HomeController@indexAction'));
 
+Route::get('/logout', Array('before' => 'auth', 'as' => 'logout', 'uses' => 'LoginController@logoutAction'));
+
 Route::post('/search', Array('as' => 'search_single', 'uses' => 'HomeController@searchSingleAction'));
 
 Route::get('/login/{action?}', Array('as' => 'login', 'uses' => 'LoginController@loginAction'));
@@ -22,8 +24,6 @@ Route::get('/u/{steam3Id?}', Array('as' => 'profile', 'uses' => 'ProfileControll
 Route::post('/u/update/single', Array('before' => 'csrf', 'uses' => 'ProfileController@updateSingleProfileAction'));
 
 Route::group(array('before' => 'auth|csrf'), function() {
-
-  Route::get('/logout', Array('before' => 'auth', 'as' => 'logout', 'uses' => 'LoginController@logoutAction'));
 
   Route::post('/list/add', Array('as' => 'list_add', 'uses' => 'ListController@createAction'));
   Route::post('/list/user/add', Array('as' => 'list_user_add', 'uses' => 'ListController@addUserAction'));

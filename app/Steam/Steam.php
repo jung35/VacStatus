@@ -115,7 +115,6 @@ Class Steam {
     // Maybe it should have default type...?
     if($type == null || $value == null) return false;
 
-    $json = true;
     $steamAPI = self::$API;
 
     // So this url doesn't float in some files as many different url's
@@ -154,12 +153,11 @@ Class Steam {
         break;
 
       // For checking to make sure a user exists by this profile name
-      case 'xmlInfo':
+      case 'vanityUrl':
         if(is_array($value)) {
           $value = $value[0];
         }
-        $url = "http://steamcommunity.com/id/{$value}/?xml=1&".time();
-        $json = false;
+        $url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={$steamAPI}&vanityurl={$value}&".time();
         break;
     }
 
@@ -180,24 +178,10 @@ Class Steam {
     }
     curl_close($ch);
 
-    if($json) {
-      $data = json_decode($data);
-      if(!is_object($data) && !is_array($data)) {
-        return (object) array('type' => 'error',
-                              'data' => 'api_data_err');
-      }
-    } else {
-      // Still not possible to send request to valve to check by steam profile id via Steam web API :'(
-      try {
-        $data = simplexml_load_string($data);
-        if(!is_object($data) && !is_array($data)) {
-          return (object) array('type' => 'error',
-                                'data' => 'api_data_err');
-        }
-      } catch(Exception $e) {
-        return (object) array('type' => 'error',
-                              'data' => 'api_data_err');
-      }
+    $data = json_decode($data);
+    if(!is_object($data) && !is_array($data)) {
+      return (object) array('type' => 'error',
+                            'data' => 'api_data_err');
     }
     return $data;
   }

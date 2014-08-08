@@ -158,6 +158,31 @@ class Profile extends \Eloquent {
     }
   }
 
+  public function updateMulitipleProfile($steam3Ids) {
+    if($steam3Ids && is_array($steam3Ids)) {
+      // Grab user info using steam API and since this is only updating single user, just get to the key -> 0
+      $steamAPI_Info = Steam::cURLSteamAPI('info', $steam3Ids);
+      // Steam web api sux m8
+      if(isset($steamAPI_Info->type) && $steamAPI_Info->type == 'error') {
+        return $steamAPI_Info->type;
+      }
+
+      $steamAPI_Info = $steamAPI_Info->response->players; // multiple profiles
+
+      foreach($steamAPI_Info as $steamAPI_Info_user) { // sort multiple profiles at once (should I allow this)
+        // Grab user's recent aliases that were used. Then sort them by time because steam gives weird timestamp
+        $steamAPI_alias = Steam::cURLSteamAPI('alias', $steamAPI_Info_user->steamid);
+        if(isset($steamAPI_alias->type) && $steamAPI_alias->type == 'error') {
+          break;
+        }
+        usort($steamAPI_alias, array('Steam\SteamUser', 'aliasSort'));
+      }
+
+
+      $profile = self::whereSmallId(Steam::toSmallId($steam3Id))->first();
+    }
+  }
+
   public function getDisplayName() {
     return $this->display_name;
   }

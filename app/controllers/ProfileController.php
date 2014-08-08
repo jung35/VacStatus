@@ -72,4 +72,17 @@ class ProfileController extends BaseController {
     return App::abort(500);
   }
 
+  public function updateMultipleProfileAction() {
+    $steam3Ids = Input::get('steam3Ids');
+
+    if($steam3Ids && is_array($steam3Ids)) {
+      $profiles = Profile::updateMulitipleProfile($steam3Ids);
+      if($profiles == 'error') {
+        // not stable connection to steam
+        return App::abort(500);
+      }
+    }
+    return App::abort(500);
+  }
+
 }
