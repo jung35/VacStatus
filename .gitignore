@@ -9,3 +9,7 @@ composer.lock
 .env.php
 Thumbs.db
 *.DS_Store
+
+/app/config/app.php
+/app/config/database.php
+/app/config/mail.php
