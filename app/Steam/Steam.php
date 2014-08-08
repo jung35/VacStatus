@@ -17,7 +17,7 @@ Class Steam {
    * Time in seconds before profile is called to an update
    * @var Integer
    */
-  public static $UPDATE_TIME = 3600; // 1 HOUR
+  public static $UPDATE_TIME = 0; // 1 HOUR = 3600
 
   public static $LIST_LIMIT = 5;
 

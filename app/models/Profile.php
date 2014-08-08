@@ -121,7 +121,7 @@ class Profile extends \Eloquent {
       /*
       Grab & Update Old Alias
        */
-      $profileOldAlias = $profile->ProfileOldAlias()->where('profile_id', '=', $profile->id);
+      $profileOldAlias = $profile->ProfileOldAlias()->where('profile_id', '=', $profile->id)->get();
       $profileOldAlias = $profileOldAlias->count() ? $profileOldAlias : new ProfileOldAlias;
 
       if($profileOldAlias->count() == 0) {

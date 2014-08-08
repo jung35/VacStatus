@@ -16,7 +16,7 @@
       }
     }).done(function(data) {
       $('#loader').fadeOut();
-      $('.vacstatus-profile').html(data);
+      $('.content-start').html(data);
     }).error(function() {
       $('#loader').fadeOut(function() {
         $('.error-notification').html("Sorry, there is an error with Steam API.\nPlease try refreshing again in few minutes.").fadeIn('slow');
