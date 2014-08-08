@@ -55,9 +55,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'vacstatus',
-			'username'  => 'root',
-			'password'  => '',
+			'database'  => $_ENV['DATABASE_TABLE'],
+			'username'  => $_ENV['DATABASE_USER'],
+			'password'  => $_ENV['DATABASE_PASS'],
 			'charset'   => 'utf8mb4',
 			'collation' => 'utf8mb4_unicode_ci',
 			'prefix'    => '',

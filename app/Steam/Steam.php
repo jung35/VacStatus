@@ -8,18 +8,16 @@ use \Cache as Cache;
  */
 Class Steam {
   /**
-   * Valve's Steam Web API. Register for one at http://steamcommunity.com/dev/apikey
-   * @var String
-   */
-  protected static $API = "05F6C841BF378CA11A60B3BF1F6AA8D5";
-
-  /**
    * Time in seconds before profile is called to an update
    * @var Integer
    */
   public static $UPDATE_TIME = 3600; // 1 HOUR = 3600
 
   public static $LIST_LIMIT = 5;
+
+  public static function getAPI() {
+    return $_ENV['STEAM_API'];
+  }
 
   /**
    * Check to see if the profile's last update was long enough for new update
@@ -115,7 +113,7 @@ Class Steam {
     // Maybe it should have default type...?
     if($type == null || $value == null) return false;
 
-    $steamAPI = self::$API;
+    $steamAPI = self::getAPI();
 
     // So this url doesn't float in some files as many different url's
     // keeping them in one place
