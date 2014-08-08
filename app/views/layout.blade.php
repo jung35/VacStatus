@@ -200,7 +200,7 @@
     <div class="loader"><span></span>... <i class="fa fa-refresh fa-spin"></i></div>
     <div class="error-notification">Something Terrible Happened!</div>
     <div class="success-notification">Something Terrible Happened!</div>
-    @if(Auth::check() && Auth::user()->isAdmin())
+    @if(Auth::check() && Auth::user()->isAdmin() && App::environment() == 'local')
     {{-- */$queries = DB::getQueryLog(); /*--}}
     {{ var_dump(count($queries), $queries) }}
     @endif
