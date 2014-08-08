@@ -27,7 +27,7 @@ $app = new Illuminate\Foundation\Application;
 $env = $app->detectEnvironment(array(
 
   'local' => array('idea-PC'),
-  'server' => array('Jung3o'),
+  'server' => array('Jung3o.com'),
 
 ));
 
