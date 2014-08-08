@@ -14,7 +14,9 @@
 
     <link rel="stylesheet" href="{{ url('') }}/css/app.css" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.3.1/js/vendor/modernizr.min.js"></script>
-    <script>var _token = '{{{ csrf_token() }}}';</script>
+    <script>
+      var _token = '{{{ csrf_token() }}}';
+    </script>
 
     <title>
       VacStatus &mdash;
@@ -26,12 +28,12 @@
   <body>
     @if(Auth::check())
     <div id="addProfileUser" class="reveal-modal tiny" data-reveal>
-      <h2 class="text-center">Select List</h2>
-      <form action="" method="POST">
+      <h2 class="text-center">Add User to List</h2>
+      <form action="/list/user/add" method="POST">
         <div class="row">
           <div class="large-12 columns">
-            <label>
-              <select>
+            <label><strong>Add User into:</strong>
+              <select name="list_id">
                 @foreach(Auth::User()->UserList()->orderBy('id', 'DESC')->get() as $UserList)
                 <option value="{{{ $UserList->getId() }}}">{{{ $UserList->getTitle() }}}</option>
                 @endforeach
@@ -41,7 +43,44 @@
         </div>
         <div class="row">
           <div class="large-12 columns">
-            <button type="button" class="button expand">Add To List</button>
+            <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
+            <input type="hidden" name="profile_id" id="profile_id">
+            <button type="submit" class="button expand">Add To List</button>
+          </div>
+        </div>
+        <div class="row">
+          <p class="large-12 columns">
+            <a data-reveal-id="addList">Create a List</a>
+          </p>
+        </div>
+      </form>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+    <div id="addList" class="reveal-modal tiny" data-reveal>
+      <h2 class="text-center">Add List <small>(Limit {{{ Steam\Steam::$LIST_LIMIT }}})</small></h2>
+      <form action="{{ URL::route('list_add') }}" method="POST">
+        <div class="row">
+          <div class="large-12 columns">
+            <label><strong>List Privacy</strong>
+              <select name="privacy">
+                <option value="1">Public</option>
+                <option value="2">Friends Only</option>
+                <option value="3">Private</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+            <label><strong>List Title</strong>
+              <input type="text" placeholder="Fancy Title" name="title">
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+            <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
+            <button type="submit" class="button expand">Add List</button>
           </div>
         </div>
       </form>
@@ -114,7 +153,7 @@
               <li class="has-dropdown">
                 <a>{{{ Auth::user()->getUserName() }}}</a>
                 <ul class="dropdown">
-                  <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
+                  <li><a href="{{ URL::route('profile', Array('steam3Id'=> Auth::user()->getSteam3Id() )) }}"><i class="fa fa-user"></i> Profile</a></li>
                   <li><a href="#"><i class="fa fa-cog"></i> User CP</a></li>
                   <li class="divider"></li>
                   <li><a class="alert" href="{{ URL::route('logout') }}"><i class="fa fa-power-off"></i> Logout</a></li>
@@ -158,7 +197,9 @@
       </div>
     </div>
 
+    <div class="loader"><span></span>... <i class="fa fa-refresh fa-spin"></i></div>
     <div class="error-notification">Something Terrible Happened!</div>
+    <div class="success-notification">Something Terrible Happened!</div>
 
     {{-- */$queries = DB::getQueryLog(); /*--}}
     {{ var_dump(count($queries), $queries) }}
@@ -169,5 +210,14 @@
     <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
     @section('javascript')
     @show
+    <script>
+      @if(Session::has('error'))
+      fadInOutAlert('{{ Session::get('error') }}', 2);
+      @endif
+
+      @if(Session::has('success'))
+      fadInOutSuccess('{{ Session::get('success') }}', 2);
+      @endif
+    </script>
   </body>
 </html>

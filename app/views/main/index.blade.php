@@ -1,38 +1,5 @@
 @extends('layout')
 
-@section('modal')
-  <div id="addList" class="reveal-modal tiny" data-reveal>
-    <h2 class="text-center">Add List <small>(Limit {{{ Steam\Steam::$LIST_LIMIT }}})</small></h2>
-    <form action="{{ URL::route('user_list_add') }}" method="POST">
-      <div class="row">
-        <div class="large-12 columns">
-          <label><strong>List Privacy</strong>
-            <select name="privacy">
-              <option value="1">Public</option>
-              <option value="2">Friends Only</option>
-              <option value="3">Private</option>
-            </select>
-          </label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-12 columns">
-          <label><strong>List Title</strong>
-            <input type="text" placeholder="Fancy Title" name="title">
-          </label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-12 columns">
-          <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
-          <button type="submit" class="button expand">Add List</button>
-        </div>
-      </div>
-    </form>
-    <a class="close-reveal-modal">&#215;</a>
-  </div>
-@stop
-
 @section('content')
 
   <div class="large-12 columns">
@@ -65,7 +32,7 @@
         </div>
         <div class="large-3 medium-3 columns" data-equalizer-watch>
           <h2><i class="fa fa-list"></i></h2>
-          <p><b>Create Multiple Lists</b><br>One list isn't enough? Well, you can create up to # lists!</p>
+          <p><b>Create Multiple Lists</b><br>One list isn't enough? Well, you can donate to create more than 1 list!</p>
         </div>
         <div class="large-3 medium-3 columns" data-equalizer-watch>
           <h2><i class="fa fa-users"></i></h2>
@@ -173,7 +140,7 @@
                 <td class="vacstatus-list-tracker">21</td>
                 <td class="vacstatus-list-button">
                   @if(Auth::check())
-                  <a class="button tiny" onClick="javascript:addUserList(76561198020317127);"><i class="fa fa-plus"></i></a>
+                  <a class="button tiny" onClick="javascript:addUserList(60051399);"><i class="fa fa-plus"></i></a>
                   @endif
                 </td>
               </tr>
@@ -189,7 +156,7 @@
                 <td class="vacstatus-list-tracker">21</td>
                 <td class="vacstatus-list-button">
                   @if(Auth::check())
-                  <a class="button tiny" onClick="javascript:addUserList(76561198020317127);"><i class="fa fa-plus"></i></a>
+                  <a class="button tiny" onClick="javascript:addUserList(60051399);"><i class="fa fa-plus"></i></a>
                   </ul>
                   @endif
                 </td>

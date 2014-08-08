@@ -9,6 +9,10 @@ class UserList extends \Eloquent {
    */
   protected $table = 'user_list';
 
+  public function UserListProfile() {
+    return $this->hasMany('UserListProfile');
+  }
+
   public function User() {
     return $this->belongsTo('User', 'user_id', 'id');
   }

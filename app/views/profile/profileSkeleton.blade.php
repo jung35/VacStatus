@@ -1,7 +1,7 @@
 <div class="vacstatus-profile">
   <div class="medium-2 small-12 columns avatar">
     @if(Auth::check())
-    <a class="profile-adduser" onClick="javascript:addUserList({{{ $profile->getSmallId() }}});"><i class="fa fa-plus"></i></a>
+    <a class="profile-adduser" onClick="javascript:addUserList({{{ $profile->getId() }}});"><i class="fa fa-plus"></i></a>
     @endif
     <img class="online" src="{{{ $profile->getAvatar() }}}">
   </div>

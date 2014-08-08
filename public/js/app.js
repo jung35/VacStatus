@@ -16,6 +16,40 @@ $('.vacstatus-alert-box').on('close.fndtn.alert-box', function(event) {
   }
 });
 
-function addUserList($smallId) {
+/**
+ * Fades alert in and out based on time
+ * @param  String  message alert message
+ * @param  Integer time    Fade in and out time in seconds
+ * @return void
+ */
+function fadInOutAlert(message, time) {
+  $('.error-notification').html(message).fadeIn('slow', function() {
+    setTimeout(function() {
+      $('.error-notification').fadeOut('slow');
+    }, time * 1000);
+  });
+}
 
+function fadInOutSuccess(message, time) {
+  $('.success-notification').html(message).fadeIn('slow', function() {
+    setTimeout(function() {
+      $('.success-notification').fadeOut('slow');
+    }, time * 1000);
+  });
+}
+
+var $loader = $('.loader');
+function fadeInLoader(message) {
+  $loader.find('span').html(message);
+  $loader.fadeIn('slow');
+}
+
+function fadeOutLoader(callback) {
+  $loader.fadeOut('slow', callback);
+}
+
+var $addProfileUser = $('#addProfileUser');
+function addUserList(smallId) {
+  $addProfileUser.find('#profile_id').val(smallId);
+  $addProfileUser.foundation('reveal', 'open');
 }

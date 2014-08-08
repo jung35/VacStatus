@@ -5,6 +5,8 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 
+use Steam\Steam as Steam;
+
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
   use UserTrait, RemindableTrait;
@@ -29,6 +31,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
   public function getUserName() {
     return $this->display_name;
+  }
+
+  public function getSteam3Id() {
+    return Steam::toBigId($this->small_id);
   }
 
 }

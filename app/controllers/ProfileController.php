@@ -45,7 +45,9 @@ class ProfileController extends BaseController {
     return Redirect::home();
   }
 
-  public function updateSingleProfileAction($steam3Id = null) {
+  public function updateSingleProfileAction() {
+
+    $steam3Id = Input::get('steam3Id');
 
     if($steam3Id) {
       $profile = Profile::updateSingleProfile($steam3Id);
