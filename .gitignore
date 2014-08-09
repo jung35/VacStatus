@@ -11,3 +11,4 @@ Thumbs.db
 *.DS_Store
 
 .env.*.php
+.env.php
