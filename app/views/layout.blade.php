@@ -212,11 +212,11 @@
     @show
     <script>
       @if(Session::has('error'))
-      fadInOutAlert('{{ Session::get('error') }}', 2);
+      fadInOutAlert('<strong>Error</strong> {{ Session::get('error') }}', 2);
       @endif
 
       @if(Session::has('success'))
-      fadInOutSuccess('{{ Session::get('success') }}', 2);
+      fadInOutSuccess('<strong>Success</strong> {{ Session::get('success') }}', 2);
       @endif
     </script>
   </body>

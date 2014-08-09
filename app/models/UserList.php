@@ -37,7 +37,7 @@ class UserList extends \Eloquent {
     {
       if(isset($count[$userListProfile->profile_id]))
       {
-        $count[$userListProfile->profile_id] += 1;
+        $count[$userListProfile->profile_id]++;
       } else {
         $count[$userListProfile->profile_id] = 1;
         $profiles[$userListProfile->profile_id] = $userListProfile;
@@ -67,5 +67,35 @@ class UserList extends \Eloquent {
       }
     }
     return $userListProfiles;
+  }
+
+  public static function getLastAdded($limit = 20) {
+    $userListProfiles = UserListProfile::join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
+      ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
+      ->orderBy('user_list_profile.id','desc')
+      ->get();
+
+    $count = Array();
+
+    foreach($userListProfiles as $userListProfile)
+    {
+      if(isset($count[$userListProfile->profile_id]))
+      {
+        $count[$userListProfile->profile_id]++;
+      } else {
+        $count[$userListProfile->profile_id] = 1;
+      }
+    }
+
+    $lastAddedProfiles = Array();
+
+    // need to check if the latest has less than 20 people
+    for($i = 0; $i < ($limit > $userListProfiles->count() ? $userListProfiles->count() : $limit) ; $i++) {
+      $userListProfile = $userListProfiles[$i];
+      $userListProfile->get_num_tracking = $count[$userListProfile->profile_id];
+      $lastAddedProfiles[] = $userListProfile;
+    }
+
+    return $lastAddedProfiles;
   }
 }

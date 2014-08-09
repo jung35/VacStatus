@@ -54,14 +54,14 @@
 
     <div class="large-8 medium-8 columns vacstatus-multilist" data-equalizer-watch>
       <ul class="tabs" data-tab>
-        <li class="tab-title active"><a onClick="javascript:showList('most');">Most Tracked</a></li>
+        <li class="tab-title"><a onClick="javascript:showList('most');">Most Tracked</a></li>
         <li class="tab-title"><a onClick="javascript:showList('last');">Latest Added</a></li>
         @if(Auth::check())
         <li class="tab-title">
           <a data-dropdown="personalList">Personal List <i class="fa fa-caret-down"></i></a>
           <ul id="personalList" class="f-dropdown" data-dropdown-content>
             @foreach(Auth::User()->UserList()->orderBy('id', 'DESC')->get() as $UserList)
-            <li><a href="#">{{{ $UserList->getTitle() }}}</a></li>
+            <li><a onClick="javascript:showList({{ $UserList->getId() }});">{{{ $UserList->getTitle() }}}</a></li>
             @endforeach
             <li class="divider"></li>
             <li><a data-reveal-id="addList">New List</a></li>
@@ -80,7 +80,7 @@
         @endif
       </ul>
       <div class="tabs-content">
-        <div class="content active">
+        <div class="list-display content active">
           @include('list/listTable', array('userList' => $mostAdded))
         </div>
       </div>

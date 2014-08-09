@@ -53,3 +53,22 @@ function addUserList(smallId) {
   $addProfileUser.find('#profile_id').val(smallId);
   $addProfileUser.foundation('reveal', 'open');
 }
+
+function showList(req) {
+  $.ajax({
+    url: '/list/fetch',
+    type: "POST",
+    data: {
+      'req': req,
+      '_token': _token
+    },
+    beforeSend: fadeInLoader('Loading List')
+  }).done(function(data) {
+    fadeOutLoader();
+    $('.list-display').html(data);
+  }).error(function() {
+    fadeOutLoader(function() {
+      fadInOutAlert("<strong>Error</strong> There was an error loading list. Please try again soon", 2);
+    });
+  });
+}
