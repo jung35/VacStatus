@@ -88,7 +88,7 @@
             <th colspan="2" class="text-center">Alias History</th>
           </tr>
           <tr>
-            <th width="160px">Used On</th>
+            <th width="170px">Used On</th>
             <th>Username</th>
           </tr>
         </thead>
@@ -109,7 +109,7 @@
             <th colspan="2" class="text-center">Recent Aliases</th>
           </tr>
           <tr>
-            <th width="160px">Used On</th>
+            <th width="170px">Used On</th>
             <th>Username</th>
           </tr>
         </thead>
