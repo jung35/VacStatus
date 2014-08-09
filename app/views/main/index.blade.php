@@ -89,9 +89,7 @@
     <div class="large-4 medium-4 columns vacstatus-news" data-equalizer-watch>
       <h5>News &amp; Updates</h5>
       <ul>
-        <li> <span>05/26/2014&nbsp;&mdash;</span>&nbsp;<a href="#">Less requests to the database</a></li>
-        <li> <span>05/21/2014&nbsp;&mdash;</span>&nbsp;<a href="#">Ajax Update</a></li>
-        <li> <span>05/03/2014&nbsp;&mdash;</span>&nbsp;<a href="#">Mail Notification added!</a></li>
+        <li><span>MM/DD/YYYY&nbsp;&mdash;</span>&nbsp;<a href="#">HIHIHIHI</a></li>
       </ul>
     </div>
   </div>
