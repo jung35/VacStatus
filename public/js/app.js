@@ -62,9 +62,7 @@ function showList(req) {
       'req': req,
       '_token': _token
     },
-    beforeSend: fadeInLoader('Loading List')
   }).done(function(data) {
-    fadeOutLoader();
     $('.list-display').html(data);
   }).error(function() {
     fadeOutLoader(function() {

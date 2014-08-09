@@ -15,9 +15,11 @@ class DisplayListController extends \BaseController {
       } else {
         switch($req) {
           case "most":
+            $title = "Most Tracked";
             $userList = UserList::getMostAdded();
             break;
           case "last":
+            $title = "Latest Added";
             $userList = UserList::getLastAdded();
             break;
         }
@@ -27,6 +29,6 @@ class DisplayListController extends \BaseController {
     if($userList == null) {
       return App::abort(500);
     }
-    return View::make('list/listTable', array('userList' => $userList));
+    return View::make('list/listTable', array('title' => $title, 'userList' => $userList));
   }
 }

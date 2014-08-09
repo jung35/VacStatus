@@ -81,7 +81,7 @@
       </ul>
       <div class="tabs-content">
         <div class="list-display content active">
-          @include('list/listTable', array('userList' => $mostAdded))
+          @include('list/listTable', array('title' => 'Most Tracked', 'userList' => $mostAdded))
         </div>
       </div>
     </div>
