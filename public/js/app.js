@@ -58,6 +58,7 @@ function showList(req) {
   $.ajax({
     url: '/list/fetch',
     type: "POST",
+    async: false,
     data: {
       'req': req,
       '_token': _token
