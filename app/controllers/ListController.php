@@ -17,6 +17,8 @@ class ListController extends BaseController {
       $userList->title = $title;
       $userList->privacy = $privacy;
       $userList->save();
+    } else {
+      return Redirect::back()->with('error', 'Sorry, you have hit the maximum list creation.');
     }
 
     return Redirect::back()->with('success', 'List has been created.');

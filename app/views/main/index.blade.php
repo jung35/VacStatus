@@ -54,8 +54,8 @@
 
     <div class="large-8 medium-8 columns vacstatus-multilist" data-equalizer-watch>
       <ul class="tabs" data-tab>
-        <li class="tab-title active"><a href="#panel-1">Most Tracked</a></li>
-        <li class="tab-title"><a href="#panel-2">Latest Added</a></li>
+        <li class="tab-title active"><a onClick="javascript:showList('most');">Most Tracked</a></li>
+        <li class="tab-title"><a onClick="javascript:showList('last');">Latest Added</a></li>
         @if(Auth::check())
         <li class="tab-title">
           <a data-dropdown="personalList">Personal List <i class="fa fa-caret-down"></i></a>
@@ -70,46 +70,9 @@
         <li class="tab-title">
           <a data-dropdown="friendsList">Friends' List <i class="fa fa-caret-down"></i></a>
           <ul id="friendsList" class="f-dropdown" data-dropdown-content>
-            <li class="has-dropdown" ><a href="#">Share</a>
+            <li class="has-dropdown" ><a>Dickbutt</a>
                 <ul class="dropdown" >
-                    <li class="right"><a href="#">This is a link</a></li>
-                    <li class="right"><a href="#">This is another</a></li>
-                    <li class="right"><a href="#">Yet another</a></li>
-                </ul>
-            </li>
-            <li class="has-dropdown" ><a href="#">Share</a>
-                <ul class="dropdown" >
-                    <li class="right"><a href="#">This is a link</a></li>
-                    <li class="right"><a href="#">This is another</a></li>
-                    <li class="right"><a href="#">Yet another</a></li>
-                </ul>
-            </li>
-            <li class="has-dropdown" ><a href="#">Share</a>
-                <ul class="dropdown" >
-                    <li class="right"><a href="#">This is a link</a></li>
-                    <li class="right"><a href="#">This is another</a></li>
-                    <li class="right"><a href="#">Yet another</a></li>
-                </ul>
-            </li>
-            <li class="has-dropdown" ><a href="#">Share</a>
-                <ul class="dropdown" >
-                    <li class="right"><a href="#">This is a link</a></li>
-                    <li class="right"><a href="#">This is another</a></li>
-                    <li class="right"><a href="#">Yet another</a></li>
-                </ul>
-            </li>
-            <li class="has-dropdown" ><a href="#">Share</a>
-                <ul class="dropdown" >
-                    <li class="right"><a href="#">This is a link</a></li>
-                    <li class="right"><a href="#">This is another</a></li>
-                    <li class="right"><a href="#">Yet another</a></li>
-                </ul>
-            </li>
-            <li class="has-dropdown" ><a href="#">Share</a>
-                <ul class="dropdown" >
-                    <li class="right"><a href="#">This is a link</a></li>
-                    <li class="right"><a href="#">This is another</a></li>
-                    <li class="right"><a href="#">Yet another</a></li>
+                    <li class="right"><a>List1</a></li>
                 </ul>
             </li>
           </ul>
