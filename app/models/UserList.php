@@ -25,6 +25,51 @@ class UserList extends \Eloquent {
     return $this->title;
   }
 
+  public static function getCount($userListProfiles = null) {
+    $count = Array();
+
+    if($userListProfiles == null) {
+      $userListProfiles = UserListProfile::all();
+    }
+
+    foreach($userListProfiles as $userListProfile)
+    {
+      if(isset($count[$userListProfile->profile_id]))
+      {
+        $count[$userListProfile->profile_id]++;
+      } else {
+        $count[$userListProfile->profile_id] = 1;
+      }
+    }
+
+    return $count;
+  }
+
+  public static function getMyList($listId) {
+    if($listId && is_numeric($listId)) {
+      $userList = UserList::whereRaw('id = ? and user_id = ?', Array($listId, Auth::user()->getId()))->first();
+
+      if(isset($userList->id)) {
+        $userListProfiles = UserListProfile::where('user_list_id', $listId)
+          ->join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
+          ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
+          ->orderBy('user_list_profile.id','desc')
+          ->get();
+
+        $count = self::getCount();
+
+        foreach($userListProfiles as $key => $obj) {
+          $userListProfiles[$key]->get_num_tracking = $count[$obj->profile_id];
+        }
+
+        $userListProfiles->title = $userList->getTitle();
+
+        return $userListProfiles;
+      }
+    }
+    return null;
+  }
+
   public static function getMostAdded($limit = 20) {
     $userListProfiles = UserListProfile::join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
       ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
@@ -75,17 +120,7 @@ class UserList extends \Eloquent {
       ->orderBy('user_list_profile.id','desc')
       ->get();
 
-    $count = Array();
-
-    foreach($userListProfiles as $userListProfile)
-    {
-      if(isset($count[$userListProfile->profile_id]))
-      {
-        $count[$userListProfile->profile_id]++;
-      } else {
-        $count[$userListProfile->profile_id] = 1;
-      }
-    }
+    $count = self::getCount($userListProfiles);
 
     $lastAddedProfiles = Array();
 

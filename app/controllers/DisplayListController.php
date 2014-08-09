@@ -9,7 +9,8 @@ class DisplayListController extends \BaseController {
 
     if($req) {
       if(is_numeric($req)) { // requesting for self created list
-
+        $userList = UserList::getMyList($req);
+        $title = $userList->title;
       } elseif(is_array($req)) { // requesting for friend's list (cannot be private)
 
       } else {

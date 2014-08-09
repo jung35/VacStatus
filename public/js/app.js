@@ -65,6 +65,9 @@ function showList(req) {
     },
   }).done(function(data) {
     $('.list-display').html(data);
+    $('.list-display-wrapper').animate({
+      height : $(".list-display").height() + 100
+    },600);
   }).error(function() {
     fadeOutLoader(function() {
       fadInOutAlert("<strong>Error</strong> There was an error loading list. Please try again soon", 2);

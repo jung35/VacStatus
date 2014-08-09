@@ -52,7 +52,7 @@
 
   <div class="row index-wrapper" data-equalizer>
 
-    <div class="large-8 medium-8 columns vacstatus-multilist" data-equalizer-watch>
+    <div class="large-8 medium-8 columns vacstatus-multilist list-display-wrapper" data-equalizer-watch>
       <ul class="tabs" data-tab>
         <li class="tab-title"><a onClick="javascript:showList('most');">Most Tracked</a></li>
         <li class="tab-title"><a onClick="javascript:showList('last');">Latest Added</a></li>
