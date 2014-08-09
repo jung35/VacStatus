@@ -158,6 +158,11 @@ class Profile extends \Eloquent {
     }
   }
 
+  /**
+   * Almost like the single update, but with ability to update many. And only shows list
+   * @param  Array $steam3Ids Array of steam 3 ids
+   * @return View List
+   */
   public function updateMulitipleProfile($steam3Ids) {
     if($steam3Ids && is_array($steam3Ids)) {
       // Grab user info using steam API and since this is only updating single user, just get to the key -> 0
@@ -179,7 +184,7 @@ class Profile extends \Eloquent {
       }
 
 
-      $profile = self::whereSmallId(Steam::toSmallId($steam3Id))->first();
+      $profile = self::whereIn('small_id', Steam::toSmallId($steam3Ids))->get();
     }
   }
 

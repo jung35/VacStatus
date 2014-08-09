@@ -10,6 +10,8 @@
     </tr>
   </thead>
   <tbody>
-    <!-- @include// -->
+    @foreach($userList as $UserListProfile)
+      @include('list/listRow', array('UserListProfile' => $UserListProfile))
+    @endforeach
   </tbody>
 </table>

@@ -54,6 +54,13 @@ Class Steam {
   public static function toSmallId($steam3Id = null)
   {
     if($steam3Id && is_numeric($steam3Id)) {
+      if(is_array($steam3Id)) {
+        $smallIds = Array();
+        foreach($steam3Id as $key => $value) {
+          $smallIds[$key] = explode('.', bcsub($value,'76561197960265728'))[0];
+        }
+        return $smallIds;
+      }
       $steam3Id .= '';
       return explode('.', bcsub($steam3Id,'76561197960265728'))[0];
     }

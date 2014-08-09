@@ -80,7 +80,8 @@
         @endif
       </ul>
       <div class="tabs-content">
-        <div class="content active" id="panel-1">
+        <div class="content active">
+          @include('list/listTable', array('userList' => $mostAdded))
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@
 |
 */
 
+// Route::get('/', Array('as' => 'home', 'uses' => 'DisplayListController@mostListedAction'));
 Route::get('/', Array('as' => 'home', 'uses' => 'HomeController@indexAction'));
 
 Route::get('/logout', Array('before' => 'auth', 'as' => 'logout', 'uses' => 'LoginController@logoutAction'));
