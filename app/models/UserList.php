@@ -54,7 +54,7 @@ class UserList extends \Eloquent {
           ->join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
           ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
           ->orderBy('user_list_profile.id','desc')
-          ->paginate(2);
+          ->get();
 
         $count = self::getCount();
 

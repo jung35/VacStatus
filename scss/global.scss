@@ -90,9 +90,13 @@ a {
   }
 }
 
-.list-display .button {
-  font-size: 1rem;
-  margin: 0;
+.list-display .vacstatus-list-button {
+  .button {
+    font-size: 0.8rem;
+    margin: 0 auto;
+    padding: 8px 15px;
+  }
+  text-align: center;
 }
 
 .reveal-modal {

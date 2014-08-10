@@ -19,6 +19,3 @@
     @endforeach
   </tbody>
 </table>
-@if(method_exists($userList, 'links'))
-  {{ with(new ZurbPresenter($userList))->render(); }}
-@endif
