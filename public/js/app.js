@@ -49,9 +49,13 @@ function fadeOutLoader(callback) {
 }
 
 var $addProfileUser = $('#addProfileUser');
-function addUserList(smallId) {
-  $addProfileUser.find('#profile_id').val(smallId);
+function addUserList(profileId) {
+  $addProfileUser.find('#profile_id').val(profileId);
   $addProfileUser.foundation('reveal', 'open');
+}
+
+function deleteUserList(listId, profileId) {
+
 }
 
 function showList(req) {

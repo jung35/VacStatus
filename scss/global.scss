@@ -32,6 +32,14 @@ a {
   background: rgba(67, 172, 106, .8);
 }
 
+.alert-bg {
+  &:hover, &:focus {
+    background-color: #b3240c !important;
+    border-color: #b3240c !important;
+  }
+  background-color: #f04124;
+}
+
 .top-bar {
   .title-area {
     .name {
@@ -80,6 +88,11 @@ a {
       }
     }
   }
+}
+
+.list-display .button {
+  font-size: 1rem;
+  margin: 0;
 }
 
 .reveal-modal {

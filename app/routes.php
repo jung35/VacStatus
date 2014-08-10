@@ -27,6 +27,7 @@ Route::group(array('before' => 'auth|csrf'), function() {
 
   Route::post('/list/add', Array('as' => 'list_add', 'uses' => 'ListController@createAction'));
   Route::post('/list/user/add', Array('as' => 'list_user_add', 'uses' => 'ListController@addUserAction'));
+  Route::post('/list/user/delete', Array('as' => 'list_user_delete', 'uses' => 'ListController@deleteUserAction'));
 
   Route::post('/list/fetch', Array('as' => 'list_fetch', 'uses' => 'DisplayListController@fetchListAction'));
 

@@ -43,4 +43,21 @@ class ListController extends BaseController {
     }
     return Redirect::back()->with('error', 'Invalid list or profile.');
   }
+
+  public function deleteUserAction() {
+    $listId = Input::get('list_id');
+    $profileId = Input::get('profile_id');
+    $userId = Auth::User()->getId();
+
+    $userList = UserList::whereRaw('id = ? and user_id = ?', array($listId, $userId))->first();
+    if(isset($userList->id)) {
+      $userListProfile = UserListProfile::whereRaw('user_list_id = ? and profile_id = ?', array($listId, $profileId))->first();
+      if(isset($userListProfile->id)) {
+        $userListProfile->delete();
+        return Redirect::back()->with('success', 'The user has been deleted from the list.');
+      }
+      return Redirect::back()->with('error', 'This user is not on the list.');
+    }
+    return Redirect::back()->with('error', 'Invalid list or profile.');
+  }
 }

@@ -11,7 +11,14 @@
   </thead>
   <tbody>
     @foreach($userList as $UserListProfile)
-      @include('list/listRow', array('UserListProfile' => $UserListProfile))
+      @if(isset($userList->personal) && $userList->personal)
+        @include('list/listRow', array('UserListProfile' => $UserListProfile, 'personal' => true))
+      @else
+        @include('list/listRow', array('UserListProfile' => $UserListProfile))
+      @endif
     @endforeach
   </tbody>
 </table>
+@if(method_exists($userList, 'links'))
+  {{ with(new ZurbPresenter($userList))->render(); }}
+@endif

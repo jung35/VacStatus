@@ -16,7 +16,11 @@
   <td class="vacstatus-list-tracker">{{ $UserListProfile->get_num_tracking }}</td>
   <td class="vacstatus-list-button">
     @if(Auth::check())
-    <a class="button tiny" onClick="javascript:addUserList({{ $UserListProfile->profile_id }});"><i class="fa fa-plus"></i></a>
+      @if(isset($personal) && $personal)
+        <button class="button tiny alert-bg" onClick="javascript:deleteUserList({{ $UserListProfile->user_list_id }}, {{ $UserListProfile->profile_id }});"><i class="fa fa-minus"></i></button>
+      @else
+        <button class="button tiny" onClick="javascript:addUserList({{ $UserListProfile->profile_id }});"><i class="fa fa-plus"></i></button>
+      @endif
     @endif
   </td>
 </tr>
