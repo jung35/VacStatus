@@ -23,12 +23,13 @@ Route::get('/u/{steam3Id?}', Array('as' => 'profile', 'uses' => 'ProfileControll
 
 Route::post('/u/update/single', Array('before' => 'csrf', 'uses' => 'ProfileController@updateSingleProfileAction'));
 
+Route::post('/list/fetch', Array('before' => 'csrf', 'as' => 'list_fetch', 'uses' => 'DisplayListController@fetchListAction'));
+
 Route::group(array('before' => 'auth|csrf'), function() {
 
   Route::post('/list/add', Array('as' => 'list_add', 'uses' => 'ListController@createAction'));
   Route::post('/list/user/add', Array('as' => 'list_user_add', 'uses' => 'ListController@addUserAction'));
   Route::post('/list/user/delete', Array('as' => 'list_user_delete', 'uses' => 'ListController@deleteUserAction'));
 
-  Route::post('/list/fetch', Array('as' => 'list_fetch', 'uses' => 'DisplayListController@fetchListAction'));
 
 });
