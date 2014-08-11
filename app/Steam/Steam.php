@@ -178,6 +178,7 @@ Class Steam {
     try {
       $data = curl_exec($ch);
     } catch(Exception $e) {
+      dd('this sux m8');
       return (object) array('type' => 'error',
                             'data' => 'api_conn_err');
     }

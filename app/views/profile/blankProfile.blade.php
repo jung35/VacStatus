@@ -19,20 +19,22 @@
 
 @section('javascript')
   <script>
-    $.ajax({
-      url: '/u/update/single',
-      type: "POST",
-      data: {
-        'steam3Id': '{{{ $steam3Id }}}',
-        '_token': _token
-      },
-      beforeSend: fadeInLoader('Loading Profile')
-    }).done(function(data) {
-      fadeOutLoader();
-      $('.content-start').html(data);
-    }).error(function() {
-      fadeOutLoader(function() {
-        fadInOutAlert("<strong>Error</strong> Steam API error. Please try refreshing again in few minutes.", 2);
+    $(window).load(function() {
+      $.ajax({
+        url: '/u/update/single',
+        type: "POST",
+        data: {
+          'steam3Id': '{{{ $steam3Id }}}',
+          '_token': _token
+        },
+        beforeSend: fadeInLoader('Loading Profile')
+      }).done(function(data) {
+        fadeOutLoader();
+        $('.content-start').html(data);
+      }).error(function() {
+        fadeOutLoader(function() {
+          fadInOutAlert("<strong>Error</strong> Steam API error. Please try refreshing again in few minutes.", 2);
+        });
       });
     });
   </script>

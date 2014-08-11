@@ -10,10 +10,16 @@ class ProfileController extends BaseController {
 
       $profile = Profile::whereSmallId(Steam::toSmallId($steam3Id))->first();
 
-      if(!isset($profile->id)) {
+      /*
+        Check if all db exists (just incase when it page was canceled when trying to load)
+       */
+      if(!isset($profile->id) ||
+         !is_object($profile->ProfileBan) ||
+         !is_object($profile->ProfileOldAlias)) {
         return View::make('profile/blankProfile')
         ->with('steam3Id', $steam3Id);
       }
+
 
       $old = Array(1, 0);
       if(Cache::has("checked_$steam3Id")) {
