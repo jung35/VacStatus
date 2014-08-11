@@ -13,7 +13,7 @@ Class Steam {
    */
   public static $UPDATE_TIME = 3600; // 1 HOUR = 3600
 
-  public static $LIST_LIMIT = 1;
+  public static $LIST_LIMIT = 5;
 
   public static function getAPI() {
     return $_ENV['STEAM_API'];
