@@ -61,7 +61,7 @@
           <div data-dropdown="personalList">Personal List <i class="fa fa-caret-down"></i></div>
           <ul id="personalList" class="f-dropdown" data-dropdown-content>
             @foreach(Auth::User()->UserList()->orderBy('id', 'DESC')->get() as $UserList)
-            <li><a onClick="javascript:showList({{ $UserList->getId() }});">{{{ $UserList->getTitle() }}}</a></li>
+            <li><a onClick="javascript:showList({{{ $UserList->getId() }}});">{{{ $UserList->getTitle() }}}</a></li>
             @endforeach
             <li class="divider"></li>
             <li><a data-reveal-id="addList">New List</a></li>

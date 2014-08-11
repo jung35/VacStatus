@@ -3,7 +3,7 @@
     @if(Auth::check())
     <a class="profile-adduser" onClick="javascript:addUserList({{{ $profile->getId() }}});"><i class="fa fa-plus"></i></a>
     @endif
-    <img class="online" src="{{{ $profile->getAvatar() }}}">
+    <img src="{{{ $profile->getAvatar() }}}">
   </div>
   <div class="medium-10 small-12 columns basic small-only-text-center">
     @if($profile->isPrivate())
