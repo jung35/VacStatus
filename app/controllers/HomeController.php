@@ -11,10 +11,14 @@ class HomeController extends BaseController {
    */
   public function indexAction($uorl = 'most', $list = null)
   {
-    Profile::updateMulitipleProfile(array(
-      '76561198000575974',
-      '76561198020317127'
-    ));
+    /*
+      Updates multiple profile with the most efficiently way possible (I hope)
+
+      Use strings because with int, it rounds early and string seems like easy fix.
+     */
+    // Profile::updateMulitipleProfile(array(
+    //   '76561198020317127'
+    // ));
     if($list == null) {
       $req = $uorl;
     } else {
