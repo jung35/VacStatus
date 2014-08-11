@@ -45,6 +45,31 @@ class UserList extends \Eloquent {
     return $count;
   }
 
+  public static function getListType($req) {
+    $userList = null;
+
+    if($req) {
+      if(is_numeric($req)) { // requesting for self created list
+        $userList = self::getMyList($req);
+      } elseif(is_array($req)) { // requesting for friend's list (cannot be private)
+
+      } else {
+        switch($req) {
+          case "most":
+            $userList = self::getMostAdded();
+            $userList->title = "Most Tracked";
+            break;
+          case "last":
+            $userList = self::getLastAdded();
+            $userList->title = "Latest Added";
+            break;
+        }
+      }
+    }
+
+    return $userList;
+  }
+
   public static function getMyList($listId) {
     if($listId && is_numeric($listId)) {
       $userList = UserList::whereRaw('id = ? and user_id = ?', Array($listId, Auth::user()->getId()))->first();
@@ -112,7 +137,7 @@ class UserList extends \Eloquent {
         unset($count[$keyOfId]);
       }
     }
-    return $userListProfiles;
+    return (object) $userListProfiles;
   }
 
   public static function getLastAdded($limit = 20) {
@@ -132,6 +157,6 @@ class UserList extends \Eloquent {
       $lastAddedProfiles[] = $userListProfile;
     }
 
-    return $lastAddedProfiles;
+    return (object) $lastAddedProfiles;
   }
 }

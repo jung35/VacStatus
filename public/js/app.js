@@ -54,10 +54,6 @@ function addUserList(profileId) {
   $addProfileUser.foundation('reveal', 'open');
 }
 
-function deleteUserList(listId, profileId) {
-
-}
-
 function showList(req) {
   $.ajax({
     url: '/list/fetch',
@@ -72,6 +68,7 @@ function showList(req) {
     $('.list-display-wrapper').animate({
       height : $(".list-display").height() + 100
     },600);
+    history.pushState('', '', '/l/'+req);
   }).error(function() {
     fadeOutLoader(function() {
       fadInOutAlert("<strong>Error</strong> There was an error loading list. Please try again soon", 2);

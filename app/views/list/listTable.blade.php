@@ -1,4 +1,4 @@
-<h3>{{{ $title }}}</h3>
+<h3>{{{ $userList->title }}}</h3>
 <table>
   <thead>
     <tr>
@@ -11,10 +11,12 @@
   </thead>
   <tbody>
     @foreach($userList as $UserListProfile)
-      @if(isset($userList->personal) && $userList->personal)
-        @include('list/listRow', array('UserListProfile' => $UserListProfile, 'personal' => true))
-      @else
-        @include('list/listRow', array('UserListProfile' => $UserListProfile))
+      @if(is_object($UserListProfile))
+        @if(isset($userList->personal) && $userList->personal)
+          @include('list/listRow', array('UserListProfile' => $UserListProfile, 'personal' => true))
+        @else
+          @include('list/listRow', array('UserListProfile' => $UserListProfile))
+        @endif
       @endif
     @endforeach
   </tbody>

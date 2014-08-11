@@ -17,7 +17,12 @@
   <td class="vacstatus-list-button">
     @if(Auth::check())
       @if(isset($personal) && $personal)
-        <button class="button tiny alert-bg" onClick="javascript:deleteUserList({{{ $UserListProfile->user_list_id }}}, {{{ $UserListProfile->profile_id }}});"><i class="fa fa-minus"></i></button>
+        <form action="{{{ URL::route('list_user_delete') }}}" method="POST">
+          <input type="hidden" name="list_id" value="{{{ $UserListProfile->user_list_id }}}">
+          <input type="hidden" name="profile_id" value="{{{ $UserListProfile->profile_id }}}">
+          <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
+          <button type="submit" class="button tiny alert-bg"><i class="fa fa-minus"></i></button>
+        </form>
       @else
         <button class="button tiny" onClick="javascript:addUserList({{{ $UserListProfile->profile_id }}});"><i class="fa fa-plus"></i></button>
       @endif
