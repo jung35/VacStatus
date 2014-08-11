@@ -53,14 +53,14 @@ Class Steam {
    */
   public static function toSmallId($steam3Id = null)
   {
-    if($steam3Id && is_numeric($steam3Id)) {
-      if(is_array($steam3Id)) {
-        $smallIds = Array();
-        foreach($steam3Id as $key => $value) {
+    if(is_array($steam3Id)) {
+      $smallIds = Array();
+      foreach($steam3Id as $key => $value) {
           $smallIds[$key] = explode('.', bcsub($value,'76561197960265728'))[0];
-        }
-        return $smallIds;
       }
+      return $smallIds;
+    }
+    if($steam3Id && is_numeric($steam3Id)) {
       $steam3Id .= '';
       return explode('.', bcsub($steam3Id,'76561197960265728'))[0];
     }
@@ -115,7 +115,7 @@ Class Steam {
    *
    * @return Object
    */
-  public static function cURLSteamAPI($type = null, $value = null) {
+  public static function cURLSteamAPI($type = null, $value = null, $try = true) {
 
     // Maybe it should have default type...?
     if($type == null || $value == null) return false;
@@ -174,11 +174,15 @@ Class Steam {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,0);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 7);
 
     try {
       $data = curl_exec($ch);
     } catch(Exception $e) {
-      dd('this sux m8');
+      if($try) {
+        return self::cURLSteamAPI($type, $value, false);
+      }
       return (object) array('type' => 'error',
                             'data' => 'api_conn_err');
     }
