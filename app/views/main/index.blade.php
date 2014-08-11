@@ -70,12 +70,15 @@
         <li class="tab-title">
           <div data-dropdown="friendsList">Friends' List <i class="fa fa-caret-down"></i></div>
           <ul id="friendsList" class="f-dropdown" data-dropdown-content>
-            <li class="has-dropdown">
+          <li class="has-dropdown">
+            <em>Under Construction</em>
+          </li>
+<!--             <li class="has-dropdown">
               <a>Dickbutt</a>
               <ul class="dropdown">
                 <li class="right"><a>List1</a></li>
               </ul>
-            </li>
+            </li> -->
           </ul>
         </li>
         @endif

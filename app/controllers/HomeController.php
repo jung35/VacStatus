@@ -9,8 +9,13 @@ class HomeController extends BaseController {
    * Main page display
    * @return View index page
    */
-  public function indexAction($req = 'most')
+  public function indexAction($uorl = 'most', $list = null)
   {
+    if($list == null) {
+      $req = $uorl;
+    } else {
+      $req = array($uorl, $list);
+    }
     $userList = UserList::getListType($req);
     // var_dump(Steam::toBigId(Steam::toSmallId('76561198020317127')));
     // var_dump(Steam::cURLSteamAPI('ban', array('76561198020317127','76561198047414609')));

@@ -12,7 +12,7 @@
 */
 
 Route::get('/', Array('as' => 'home', 'uses' => 'HomeController@indexAction'));
-Route::get('/l/{req?}', Array('as' => 'home', 'uses' => 'HomeController@indexAction'));
+Route::get('/l/{uorl?}/{list?}', Array('as' => 'home', 'uses' => 'HomeController@indexAction'));
 
 Route::get('/logout', Array('before' => 'auth', 'as' => 'logout', 'uses' => 'LoginController@logoutAction'));
 
