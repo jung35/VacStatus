@@ -54,11 +54,11 @@
 
     <div class="large-8 medium-8 columns vacstatus-multilist list-display-wrapper" data-equalizer-watch>
       <ul class="tabs" data-tab>
-        <li class="tab-title"><a onClick="javascript:showList('most');">Most Tracked</a></li>
-        <li class="tab-title"><a onClick="javascript:showList('last');">Latest Added</a></li>
+        <li class="tab-title"><div onClick="javascript:showList('most');">Most Tracked</div></li>
+        <li class="tab-title"><div onClick="javascript:showList('last');">Latest Added</div></li>
         @if(Auth::check())
         <li class="tab-title">
-          <a data-dropdown="personalList">Personal List <i class="fa fa-caret-down"></i></a>
+          <div data-dropdown="personalList">Personal List <i class="fa fa-caret-down"></i></div>
           <ul id="personalList" class="f-dropdown" data-dropdown-content>
             @foreach(Auth::User()->UserList()->orderBy('id', 'DESC')->get() as $UserList)
             <li><a onClick="javascript:showList({{ $UserList->getId() }});">{{{ $UserList->getTitle() }}}</a></li>
@@ -68,12 +68,13 @@
           </ul>
         </li>
         <li class="tab-title">
-          <a data-dropdown="friendsList">Friends' List <i class="fa fa-caret-down"></i></a>
+          <div data-dropdown="friendsList">Friends' List <i class="fa fa-caret-down"></i></div>
           <ul id="friendsList" class="f-dropdown" data-dropdown-content>
-            <li class="has-dropdown" ><a>Dickbutt</a>
-                <ul class="dropdown" >
-                    <li class="right"><a>List1</a></li>
-                </ul>
+            <li class="has-dropdown">
+              <a>Dickbutt</a>
+              <ul class="dropdown">
+                <li class="right"><a>List1</a></li>
+              </ul>
             </li>
           </ul>
         </li>
