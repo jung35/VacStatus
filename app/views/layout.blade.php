@@ -12,7 +12,7 @@
     <meta name="robots" content="All" />
     <meta name="revisit-after" content="1 DAYS" />
 
-    <link rel="stylesheet" href="{{ url('') }}/css/app.css" />
+    <link rel="stylesheet" href="/css/app.css" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.3.1/js/vendor/modernizr.min.js"></script>
     <script>
       var _token = '{{{ csrf_token() }}}';
@@ -58,7 +58,7 @@
     </div>
     <div id="addList" class="reveal-modal tiny" data-reveal>
       <h2 class="text-center">Add List <small>(Limit {{{ Steam\Steam::$LIST_LIMIT }}})</small></h2>
-      <form action="{{ URL::route('list_add') }}" method="POST">
+      <form action="{{{ URL::route('list_add') }}}" method="POST">
         <div class="row">
           <div class="large-12 columns">
             <label><strong>List Privacy</strong>
@@ -153,15 +153,15 @@
               <li class="has-dropdown">
                 <a>{{{ Auth::user()->getUserName() }}}</a>
                 <ul class="dropdown">
-                  <li><a href="{{ URL::route('profile', Array('steam3Id'=> Auth::user()->getSteam3Id() )) }}"><i class="fa fa-user"></i> Profile</a></li>
+                  <li><a href="{{{ URL::route('profile', Array('steam3Id'=> Auth::user()->getSteam3Id() )) }}}"><i class="fa fa-user"></i> Profile</a></li>
                   <li><a href="#"><i class="fa fa-cog"></i> User CP</a></li>
                   <li class="divider"></li>
-                  <li><a class="alert" href="{{ URL::route('logout') }}"><i class="fa fa-power-off"></i> Logout</a></li>
+                  <li><a class="alert" href="{{{ URL::route('logout') }}}"><i class="fa fa-power-off"></i> Logout</a></li>
                 </ul>
               </li>
               @else
               <li>
-                <a href="{{ URL::route('login') }}">
+                <a href="{{{ URL::route('login') }}}">
                   <img src="http://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_small.png">
                 </a>
               </li>
@@ -207,16 +207,16 @@
 
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.3.1/js/foundation.min.js"></script>
-    <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+    <script type="text/javascript" src="{{{ asset('js/app.js') }}}"></script>
     @section('javascript')
     @show
     <script>
       @if(Session::has('error'))
-      fadInOutAlert('<strong>Error</strong> {{ Session::get('error') }}', 2);
+      fadInOutAlert('<strong>Error</strong> {{{ Session::get('error') }}}', 2);
       @endif
 
       @if(Session::has('success'))
-      fadInOutSuccess('<strong>Success</strong> {{ Session::get('success') }}', 2);
+      fadInOutSuccess('<strong>Success</strong> {{{ Session::get('success') }}}', 2);
       @endif
     </script>
   </body>
