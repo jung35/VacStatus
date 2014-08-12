@@ -151,7 +151,10 @@
             <ul class="right">
               @if(Auth::check())
               <li class="has-dropdown">
-                <a>{{{ Auth::user()->getUserName() }}}</a>
+                <a>{{{ Auth::user()->getUserName() }}}
+                @if(Auth::check() && Auth::user()->isAdmin() && Cache::has('steamAPICalls_'.date('M_j_Y')))
+               ( {{{ Cache::get('steamAPICalls_'.date('M_j_Y')) }}} )
+                @endif</a>
                 <ul class="dropdown">
                   <li><a href="{{{ URL::route('profile', Array('steam3Id'=> Auth::user()->getSteam3Id() )) }}}"><i class="fa fa-user"></i> Profile</a></li>
                   <li><a href="#"><i class="fa fa-cog"></i> User CP</a></li>

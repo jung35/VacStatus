@@ -136,7 +136,7 @@
       <li class="large-4 medium-6 small-6 columns profile-detail small-only-text-center">
         <ul class="row">
           <li class="medium-6 columns text-right profile-type small-only-text-center">First Checked</li>
-          <li class="medium-6 columns">Jul 20 2014</li>
+          <li class="medium-6 columns">{{{ date('M j Y', strtotime($profile->created_at)) }}}</li>
         </ul>
       </li>
 

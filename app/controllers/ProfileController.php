@@ -29,8 +29,9 @@ class ProfileController extends BaseController {
         ->orderBy('id','desc')
         ->get();
 
-      $profile->getCount = UserList::getCount($gettingCount)[$profile->id];
-      $profile->lastCount = strtotime($gettingCount[0]->created_at);
+      $profile->getCount = UserList::getCount($gettingCount);
+      $profile->getCount = isset($profile->getCount[$profile->id])? $profile->getCount[$profile->id] : 0;
+      $profile->lastCount = isset($gettingCount[0]) ? strtotime($gettingCount[0]->created_at) : 0;
 
       if(Steam::canUpdate(Steam::toSmallId($steam3Id))) {
         return View::make('profile/profile')

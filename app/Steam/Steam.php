@@ -120,6 +120,13 @@ Class Steam {
     // Maybe it should have default type...?
     if($type == null || $value == null) return false;
 
+    $cache_name = 'steamAPICalls_'.(date('M_j_Y'));
+
+    if(!Cache::has($cache_name)) {
+      Cache::forever($cache_name, 0);
+    }
+    Cache::forever($cache_name, Cache::get($cache_name)+1);
+
     $steamAPI = self::getAPI();
 
     // So this url doesn't float in some files as many different url's
