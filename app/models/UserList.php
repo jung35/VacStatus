@@ -52,7 +52,9 @@ class UserList extends \Eloquent {
       if(is_numeric($req)) { // requesting for self created list
         $userList = self::getMyList($req);
       } elseif(is_array($req)) { // requesting for friend's list (cannot be private)
-
+        $userId = $req[0];
+        $listId = $req[1];
+        $userList = self::getUserList($userId, $listId);
       } else {
         switch($req) {
           case "most":
@@ -91,6 +93,34 @@ class UserList extends \Eloquent {
         $userListProfiles->personal = true;
 
         return $userListProfiles;
+      }
+    }
+    return null;
+  }
+
+  public static function getUserList($userId, $listId) {
+    if($listId && is_numeric($listId)) {
+      $userList = UserList::whereRaw('id = ? and user_id = ?', Array($listId, $userId))->first();
+
+      if(isset($userList->id)) {
+        if($userList->privacy == 1) {
+          $userListProfiles = UserListProfile::where('user_list_id', $listId)
+            ->join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
+            ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
+            ->orderBy('user_list_profile.id','desc')
+            ->get();
+
+          $count = self::getCount();
+
+          foreach($userListProfiles as $key => $obj) {
+            $userListProfiles[$key]->get_num_tracking = $count[$obj->profile_id];
+          }
+
+          $userListProfiles->title = $userList->getTitle();
+          $userListProfiles->personal = true;
+
+          return $userListProfiles;
+        }
       }
     }
     return null;
