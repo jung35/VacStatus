@@ -80,3 +80,15 @@ function showListLink(userId, listId) {
   url = "http://test.VacStatus.com/l/"+userId+"/"+listId;
   window.prompt("Here's the link to the list", url);
 }
+
+var $editList = $('#editList');
+function showEditForm(listId, privacy) {
+  var listTitle = $('.list-title').text();
+
+  $editList.find('.editList_id_element').html(listId);
+  $editList.find('.editList_privacy').val(privacy);
+  $editList.find('.editList_title').val(listTitle);
+  $editList.find('.editList_id').val(listId);
+
+  $editList.foundation('reveal','open');
+}

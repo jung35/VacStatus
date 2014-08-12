@@ -36,7 +36,7 @@ class ProfileBan extends \Eloquent {
   public function getNote() {
     if($this->isVacBanned()) {
       if($this->vac_days < 8) {
-        return "This user's ban is still new. It may just be a cooldown. ";
+        return "This user's ban is still new. It may just be a cooldown. You can confirm it by checking the user's profile. If they have VAC Ban displayed, then they're banned.";
       } else if($this->vac_days < 90) {
         return "There is nothing to say about this user except the fact that this person got rekt. Volvo OP";
       } else if($this->vac_days > 365) {

@@ -1,7 +1,12 @@
-<h3 class="small-6 columns">{{{ $userList->title }}}</h3>
+<h3 class="small-6 columns list-title">{{{ $userList->title }}}</h3>
+<h3 class="small-6 columns text-right list-options">
 @if(isset($userList->custom) && $userList->custom && isset($userList->privacy) && $userList->privacy == 1)
-<h3 class="small-6 columns text-right"><a onClick="javascript:showListLink({{{ $userList->user_id }}}, {{{ $userList->list_id }}})"><i class="fa fa-link"></i></a></h3>
+  <a onClick="javascript:showListLink({{{ $userList->user_id }}}, {{{ $userList->list_id }}});"><i class="fa fa-link"></i></a>
 @endif
+@if(isset($userList->personal) && $userList->personal)
+  <a onClick="javascript:showEditForm({{{ $userList->list_id }}}, {{{ $userList->privacy }}});"><i class="fa fa-pencil text-success"></i></a>
+@endif
+</h3>
 <table>
   <thead>
     <tr>

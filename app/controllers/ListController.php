@@ -24,6 +24,34 @@ class ListController extends BaseController {
     return Redirect::back()->with('success', 'List has been created.');
   }
 
+  public function editAction()
+  {
+    $listId = Input::get('list_id');
+    $title = Input::get('title') ?: 'My List';
+    $privacy = Input::get('privacy') ?: 1;
+    $userId = Auth::User()->getId();
+
+    $userList = UserList::whereRaw('id = ? and user_id = ?', array($listId, $userId))->first();
+
+    if(isset($userList->id)) {
+      $userList->title = $title;
+      $userList->privacy = $privacy;
+      $userList->save();
+    } else {
+      return Redirect::back()->with('error', 'Sorry, the list does not exist.');
+    }
+
+    return Redirect::back()->with('success', 'Changes on the list has saved.');
+  }
+
+  public function deleteAction()
+  {
+    $listId = Input::get('list_id');
+    UserListProfile::whereUserListId($listId)->delete();
+    UserList::find($listId)->delete();
+    return Redirect::home()->with('success', 'List & its content has been deleted.');
+  }
+
   public function addUserAction() {
     $listId = Input::get('list_id');
     $profileId = Input::get('profile_id');

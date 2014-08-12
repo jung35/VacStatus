@@ -112,7 +112,7 @@
   }
   margin-top: -18px;
   padding-top: 18px;
-  }
+}
 
 .f-dropdown {
   &:before {
@@ -168,4 +168,11 @@
 
 .dispblock {
   display: block;
+}
+
+.list-options {
+  a {
+    display: inline-block;
+    margin: 0 0 0 10px;
+  }
 }

@@ -86,6 +86,46 @@
       </form>
       <a class="close-reveal-modal">&#215;</a>
     </div>
+    <div id="editList" class="reveal-modal tiny" data-reveal>
+      <h2 class="text-center">Edit List <small>(ID: <span class="editList_id_element"></span>)</small></h2>
+      <form action="{{{ URL::route('list_edit') }}}" method="POST">
+        <div class="row">
+          <div class="large-12 columns">
+            <label><strong>List Privacy</strong>
+              <select name="privacy" class="editList_privacy">
+                <option value="1">Public</option>
+                <option value="2">Friends Only</option>
+                <option value="3">Private</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+            <label><strong>List Title</strong>
+              <input class="editList_title" type="text" placeholder="Fancy Title" name="title">
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+            <input type="hidden" name="list_id" class="editList_id">
+            <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
+            <button type="submit" class="button expand">Save List</button>
+          </div>
+        </div>
+      </form>
+      <form action="{{{ URL::route('list_delete') }}}" method="POST">
+        <div class="row">
+          <div class="large-12 columns">
+            <input type="hidden" name="list_id" class="editList_id">
+            <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
+            <button type="submit" class="button tiny alert expand">Delete List</button>
+          </div>
+        </div>
+      </form>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
     @endif
     <div id="advSearchModal" class="reveal-modal tiny" data-reveal>
       <h2 class="text-center">Advanced Search</h2>

@@ -12,7 +12,7 @@
 */
 
 Route::get('/', Array('as' => 'home', 'uses' => 'HomeController@indexAction'));
-Route::get('/l/{uorl?}/{list?}', Array('as' => 'home', 'uses' => 'HomeController@indexAction'));
+Route::get('/l/{uorl?}/{list?}', Array('uses' => 'HomeController@indexAction'));
 
 Route::get('/logout', Array('before' => 'auth', 'as' => 'logout', 'uses' => 'LoginController@logoutAction'));
 
@@ -29,8 +29,10 @@ Route::post('/list/fetch', Array('before' => 'csrf', 'as' => 'list_fetch', 'uses
 Route::group(array('before' => 'auth|csrf'), function() {
 
   Route::post('/list/add', Array('as' => 'list_add', 'uses' => 'ListController@createAction'));
+  Route::post('/list/edit', Array('as' => 'list_edit', 'uses' => 'ListController@editAction'));
+  Route::post('/list/delete', Array('as' => 'list_delete', 'uses' => 'ListController@deleteAction'));
+
   Route::post('/list/user/add', Array('as' => 'list_user_add', 'uses' => 'ListController@addUserAction'));
   Route::post('/list/user/delete', Array('as' => 'list_user_delete', 'uses' => 'ListController@deleteUserAction'));
-
 
 });
