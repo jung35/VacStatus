@@ -25,6 +25,12 @@ class ProfileController extends BaseController {
       if(Cache::has("checked_$steam3Id")) {
         $old = Array(Cache::get("checked_$steam3Id"), Cache::get("checked_time_$steam3Id"));
       }
+      $gettingCount = UserListProfile::whereProfileId($profile->id)
+        ->orderBy('id','desc')
+        ->get();
+
+      $profile->getCount = UserList::getCount($gettingCount)[$profile->id];
+      $profile->lastCount = strtotime($gettingCount[0]->created_at);
 
       if(Steam::canUpdate(Steam::toSmallId($steam3Id))) {
         return View::make('profile/profile')

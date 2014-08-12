@@ -150,7 +150,7 @@
       <li class="large-4 medium-6 small-6 columns profile-detail small-only-text-center">
         <ul class="row">
           <li class="medium-6 columns text-right profile-type small-only-text-center">Times Added</li>
-          <li class="medium-6 columns">4 <small>(Jul 21 2014)</small></li>
+          <li class="medium-6 columns">{{{ $profile->getCount }}} <small>({{{ date('M j Y', $profile->lastCount) }}})</small></li>
         </ul>
       </li>
 

@@ -153,6 +153,16 @@ class Profile extends \Eloquent {
       }
 
       /*
+      get the counts
+       */
+      $gettingCount = UserListProfile::whereProfileId($profile->id)
+        ->orderBy('id','desc')
+        ->get();
+
+      $profile->getCount = UserList::getCount($gettingCount)[$profile->id];
+      $profile->lastCount = strtotime($gettingCount[0]->created_at);
+
+      /*
       Tell cache that steam profile has been updated
        */
 
