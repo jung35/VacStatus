@@ -2,16 +2,16 @@
   @if(is_object($UserListProfile))
   <table class="for_profileId_{{{ $UserListProfile->id }}}">
   <tr>
-    <td class="vacstatus-list-avatar">
+    <td class="vacstatus-list-avatar list-replaceable">
       <img src="{{{ $UserListProfile->avatar_thumb }}}">
     </td>
-    <td class="vacstatus-list-user"><a href="{{{ URL::route('profile', Array('steam3Id'=> Steam\Steam::toBigId($UserListProfile->small_id) )) }}}" target="_blank">{{{ $UserListProfile->display_name }}}</a></td>
+    <td class="vacstatus-list-user list-replaceable"><a href="{{{ URL::route('profile', Array('steam3Id'=> Steam\Steam::toBigId($UserListProfile->small_id) )) }}}" target="_blank">{{{ $UserListProfile->display_name }}}</a></td>
     @if($UserListProfile->vac > 0)
-    <td class="vacstatus-list-status text-alert">
+    <td class="vacstatus-list-status list-replaceable text-alert">
       <span class="fa fa-check"></span>&nbsp;&nbsp;03/19/2014
     </td>
     @else
-    <td class="vacstatus-list-status text-success">
+    <td class="vacstatus-list-status list-replaceable text-success">
       <span class="fa fa-times"></span>
     </td>
     @endif
