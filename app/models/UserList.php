@@ -91,6 +91,10 @@ class UserList extends \Eloquent {
 
         $userListProfiles->title = $userList->getTitle();
         $userListProfiles->personal = true;
+        $userListProfiles->custom = true;
+        $userListProfiles->privacy = $userList->privacy;
+        $userListProfiles->list_id = $listId;
+        $userListProfiles->user_id = Auth::user()->getId();
 
         return $userListProfiles;
       }
@@ -117,7 +121,14 @@ class UserList extends \Eloquent {
           }
 
           $userListProfiles->title = $userList->getTitle();
-          $userListProfiles->personal = true;
+
+          if($userId == Auth::user()->getId()) {
+            $userListProfiles->personal = true;
+          }
+          $userListProfiles->privacy = $userList->privacy;
+          $userListProfiles->custom = true;
+          $userListProfiles->list_id = $listId;
+          $userListProfiles->user_id = $userId;
 
           return $userListProfiles;
         }

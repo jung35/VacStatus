@@ -1,4 +1,7 @@
-<h3>{{{ $userList->title }}}</h3>
+<h3 class="small-6 columns">{{{ $userList->title }}}</h3>
+@if(isset($userList->custom) && $userList->custom && isset($userList->privacy) && $userList->privacy == 1)
+<h3 class="small-6 columns text-right"><a onClick="javascript:showListLink({{{ $userList->user_id }}}, {{{ $userList->list_id }}})"><i class="fa fa-link"></i></a></h3>
+@endif
 <table>
   <thead>
     <tr>
