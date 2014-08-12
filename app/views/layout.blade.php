@@ -205,7 +205,7 @@
               @else
               <li>
                 <a href="{{{ URL::route('login') }}}">
-                  <img src="http://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_small.png">
+                  <img src="{{{ asset('img/steamlogin.png') }}}">
                 </a>
               </li>
               @endif
