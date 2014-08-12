@@ -1,7 +1,7 @@
 
 <tr>
   <td class="vacstatus-list-avatar">
-    <img src="{{{ $UserListProfile->avatar }}}">
+    <img src="{{{ $UserListProfile->avatar_thumb }}}">
   </td>
   <td class="vacstatus-list-user"><a href="{{{ URL::route('profile', Array('steam3Id'=> Steam\Steam::toBigId($UserListProfile->small_id) )) }}}" target="_blank">{{{ $UserListProfile->display_name }}}</a></td>
   @if($UserListProfile->vac > 0)
