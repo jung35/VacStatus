@@ -77,6 +77,6 @@ function showList(req) {
 }
 
 function showListLink(userId, listId) {
-  url = "http://test.VacStatus.com/l"+userId+"/"+listId;
+  url = "http://test.VacStatus.com/l/"+userId+"/"+listId;
   window.prompt("Here's the link to the list", url);
 }
