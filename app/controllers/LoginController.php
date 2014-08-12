@@ -44,22 +44,22 @@ class LoginController extends \BaseController {
 
     // Try to grab user if it exists
     $user = User::whereSmallId(Steam::toSmallId($steam3Id))->first();
+    $userGrab = Steam::cURLSteamAPI('info', $steam3Id);
+
+    if(isset($userGrab->type) && $userGrab->type == 'error') {
+      return Redirect::home();
+    }
+
+    $userGrab = $userGrab->response->players[0];
 
     if(!isset($user->id)) {
 
-      $userGrab = Steam::cURLSteamAPI('info', $steam3Id);
-
-      if(isset($userGrab->type) && $userGrab->type == 'error') {
-        return Redirect::home();
-      }
-
-      $userGrab = $userGrab->response->players[0];
-
       $user = new User;
       $user->small_id = (string) Steam::toSmallId($userGrab->steamid);
-      $user->display_name = (string) $userGrab->personaname;
-      $user->save();
     }
+
+    $user->display_name = (string) $userGrab->personaname;
+    $user->save();
 
     Auth::login($user, true);
 
