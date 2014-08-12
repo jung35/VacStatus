@@ -33,3 +33,9 @@
     @endforeach
   </tbody>
 </table>
+<script>
+  var userToUpdate = [{{ implode(',', $userList->update) }}];
+  if(typeof userMultiUpdate != 'undefined') {
+    userMultiUpdate(userToUpdate);
+  }
+</script>

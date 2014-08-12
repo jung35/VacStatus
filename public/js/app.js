@@ -80,9 +80,7 @@ function showList(uori,list) {
       history.pushState('', '', '/l/'+uori+'/'+list);
     }
   }).error(function() {
-    fadeOutLoader(function() {
-      fadInOutAlert("<strong>Error</strong> There was an error loading list. Please try again soon", 2);
-    });
+    fadInOutAlert("<strong>Error</strong> There was an error loading list. Please try again soon", 2);
   });
 }
 
@@ -102,3 +100,39 @@ function showEditForm(listId, privacy) {
 
   $editList.foundation('reveal','open');
 }
+
+function userMultiUpdate(list) {
+  if(list.length == 0 || typeof list != 'object') {
+    return;
+  }
+  $.ajax({
+    url: '/list/update',
+    type: "POST",
+    data: {
+      'list': list,
+      '_token': _token
+    },
+    beforeSend: fadeInLoader('Updating Profiles')
+  }).done(function(data) {
+    fadeOutLoader();
+    var $data = $(data);
+    var $e;
+    $data.each(function(k, e) {
+      $e = $(e);
+      if($e.html() != undefined) {
+        var profileId = $e.attr('class').split('_')[2];
+        var profileContent = $e.find('tr').html();
+        $('.profileId_'+profileId).find('.list-replaceable').remove();
+        $('.profileId_'+profileId).prepend(profileContent);
+      }
+    });
+  }).error(function() {
+    fadeOutLoader(function() {
+      fadInOutAlert("<strong>Error</strong> There was an error updating the list. Please try again soon", 2);
+    });
+  });
+}
+
+$(window).load(function() {
+  userMultiUpdate(userToUpdate);
+});

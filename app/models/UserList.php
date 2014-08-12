@@ -1,5 +1,7 @@
 <?php
 
+use Steam\Steam as Steam;
+
 class UserList extends \Eloquent {
 
   /**
@@ -85,7 +87,12 @@ class UserList extends \Eloquent {
 
         $count = self::getCount();
 
+        $findUpdateFor = array();
+
         foreach($userListProfiles as $key => $obj) {
+          if(Steam::canUpdate($obj->small_id)) {
+            $findUpdateFor[] = $obj->small_id;
+          }
           $userListProfiles[$key]->get_num_tracking = $count[$obj->profile_id];
         }
 
@@ -95,6 +102,7 @@ class UserList extends \Eloquent {
         $userListProfiles->privacy = $userList->privacy;
         $userListProfiles->list_id = $listId;
         $userListProfiles->user_id = Auth::user()->getId();
+        $userListProfiles->update = $findUpdateFor;
 
         return $userListProfiles;
       }
@@ -125,7 +133,12 @@ class UserList extends \Eloquent {
 
           $count = self::getCount();
 
+          $findUpdateFor = array();
+
           foreach($userListProfiles as $key => $obj) {
+            if(Steam::canUpdate($obj->small_id)) {
+              $findUpdateFor[] = $obj->small_id;
+            }
             $userListProfiles[$key]->get_num_tracking = $count[$obj->profile_id];
           }
 
@@ -138,6 +151,7 @@ class UserList extends \Eloquent {
           $userListProfiles->list_id = $listId;
           $userListProfiles->user_id = $userId;
           $userListProfiles->user_name = $stranger->getUserName();
+          $userListProfiles->update = $findUpdateFor;
 
           return $userListProfiles;
         }
@@ -169,12 +183,12 @@ class UserList extends \Eloquent {
     sort($newCount);
 
     $arrCount = count($newCount)-1;
+    $findUpdateFor = array();
 
     $userListProfiles = Array();
     $arrOfId = Array();
     if($arrCount > -1) {
-      for($x = $arrCount; $x > $arrCount-($arrCount - $limit >= $limit ? $limit : $arrCount+1); $x--)
-      {
+      for($x = $arrCount; $x > $arrCount-($arrCount - $limit >= $limit ? $limit : $arrCount+1); $x--) {
         $keyOfId = array_search($newCount[$x], $count);
         $userListProfile = $profiles[$keyOfId];
         $userListProfile->get_num_tracking = $count[$keyOfId];
@@ -183,9 +197,15 @@ class UserList extends \Eloquent {
           $userListProfiles[] = $userListProfile;
         }
 
+        if(Steam::canUpdate($userListProfile->small_id)) {
+          $findUpdateFor[] = $userListProfile->small_id;
+        }
+
         unset($newCount[$x]);
         unset($count[$keyOfId]);
       }
+      $userListProfiles = (object) $userListProfiles;
+      $userListProfiles->update = $findUpdateFor;
     }
     return (object) $userListProfiles;
   }
@@ -198,15 +218,21 @@ class UserList extends \Eloquent {
 
     $count = self::getCount($userListProfiles);
 
-    $lastAddedProfiles = Array();
+    $lastAddedProfiles = array();
+    $findUpdateFor = array();
 
     // need to check if the latest has less than 20 people
     for($i = 0; $i < ($limit > $userListProfiles->count() ? $userListProfiles->count() : $limit) ; $i++) {
       $userListProfile = $userListProfiles[$i];
       $userListProfile->get_num_tracking = $count[$userListProfile->profile_id];
       $lastAddedProfiles[] = $userListProfile;
+      if(Steam::canUpdate($userListProfile->small_id)) {
+        $findUpdateFor[] = $userListProfile->small_id;
+      }
     }
+    $lastAddedProfiles = (object) $lastAddedProfiles;
+    $lastAddedProfiles->update = $findUpdateFor;
 
-    return (object) $lastAddedProfiles;
+    return $lastAddedProfiles;
   }
 }

@@ -16,9 +16,6 @@ class HomeController extends BaseController {
 
       Use strings because with int, it rounds early and string seems like easy fix.
      */
-    // Profile::updateMulitipleProfile(array(
-    //   '76561198020317127'
-    // ));
     if($list == null) {
       $req = $uorl;
     } else {

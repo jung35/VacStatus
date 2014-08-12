@@ -200,7 +200,6 @@ class Profile extends \Eloquent {
 
       $steamAPI_Bans = $steamAPI_Bans->players;
 
-
       // Grabbed everything from api except alias
 
       $arrBySmallId = array();
@@ -231,7 +230,10 @@ class Profile extends \Eloquent {
         $arrBySmallId[Steam::toSmallId($steamAPI_Ban->SteamId)]['ban'] = $steamAPI_Ban;
       }
 
-      $profiles = (object) self::whereIn('small_id', Steam::toSmallId($steam3Ids))->get();
+      $profiles = (object) self::whereIn('small_id', Steam::toSmallId($steam3Ids))
+          ->join('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
+          ->get();
+
       /*
       Start updating the user profile with new data from Steam Web API
        */
@@ -315,6 +317,17 @@ class Profile extends \Eloquent {
             $profile->ProfileOldAlias()->save($newAlias);
           }
         }
+
+        /*
+        get the counts
+         */
+        $gettingCount = UserListProfile::whereProfileId($profile->id)
+          ->orderBy('id','desc')
+          ->get();
+
+        $profile->getCount = UserList::getCount($gettingCount);
+        $profile->get_num_tracking = isset($profile->getCount[$profile->id])? $profile->getCount[$profile->id] : 0;
+        $profile->lastCount = isset($gettingCount[0]) ? strtotime($gettingCount[0]->created_at) : 0;
 
         /*
         Tell cache that steam profile has been updated

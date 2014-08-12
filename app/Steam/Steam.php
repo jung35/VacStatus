@@ -11,7 +11,7 @@ Class Steam {
    * Time in seconds before profile is called to an update
    * @var Integer
    */
-  public static $UPDATE_TIME = 0; // 1 HOUR = 3600
+  public static $UPDATE_TIME = 0; // 1 HOUR = 3600 seconds
 
   public static $LIST_LIMIT = 5;
 
@@ -77,6 +77,13 @@ Class Steam {
    */
   public static function toBigId($smallId = null)
   {
+    if(is_array($smallId)) {
+      $steam3Ids = Array();
+      foreach($smallId as $key => $value) {
+        $steam3Ids[$key] = explode('.', bcadd($value,'76561197960265728'))[0];
+      }
+      return $steam3Ids;
+    }
     if($smallId && is_numeric($smallId)) {
       $smallId .= '';
       return explode('.', bcadd($smallId,'76561197960265728'))[0];
@@ -153,6 +160,7 @@ Class Steam {
         if(is_array($value)) {
           $value = implode(',', $value);
         }
+
         $url = "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$steamAPI}&steamids={$value}&".time();
         break;
 
