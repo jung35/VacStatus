@@ -24,8 +24,18 @@ class HomeController extends BaseController {
     } else {
       $req = array($uorl, $list);
     }
+
     $userList = UserList::getListType($req);
-    return View::make('main/index', array('userList' => $userList));
+
+    $friendsList = array();
+
+    if(Auth::check()) {
+      if(Session::has('friendsList') && count(Session::get('friendsList')) != 0) {
+        $friendsList = User::whereIn('small_id', Session::get('friendsList'))->get();
+      }
+    }
+
+    return View::make('main/index', array('userList' => $userList, 'friendsList' => $friendsList));
   }
 
   public function searchSingleAction() {

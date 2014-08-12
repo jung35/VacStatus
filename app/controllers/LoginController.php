@@ -32,7 +32,7 @@ class LoginController extends \BaseController {
     }
 
     if(Auth::viaRemember()) {
-      return Redirect::home();
+      return Redirect::home()->with('success','You have Successfully logged in.');
     }
 
     // Authenticate with Steam (using the details from our IoC Container).
@@ -47,7 +47,7 @@ class LoginController extends \BaseController {
     $userGrab = Steam::cURLSteamAPI('info', $steam3Id);
 
     if(isset($userGrab->type) && $userGrab->type == 'error') {
-      return Redirect::home();
+      return Redirect::home()->with('error', 'There was an error trying to communicate with Steam Server.');
     }
 
     $userGrab = $userGrab->response->players[0];
@@ -61,9 +61,26 @@ class LoginController extends \BaseController {
     $user->display_name = (string) $userGrab->personaname;
     $user->save();
 
+    $steamAPI_friends = Steam::cURLSteamAPI('friends', $steam3Id);
+
+    if(isset($userGrab->type) && $userGrab->type == 'error') {
+      return Redirect::home()->with('error', 'There was an error trying to communicate with Steam Server.');
+    }
+
+    $simpleFriends = array();
+
+    if(isset($steamAPI_friends->friendslist)) {
+      $steamAPI_friends = $steamAPI_friends->friendslist->friends;
+
+      foreach($steamAPI_friends as $steamAPI_friend) {
+        $simpleFriends[] = Steam::toSmallId($steamAPI_friend->steamid);
+      }
+    }
+    Session::put('friendsList', $simpleFriends);
+
     Auth::login($user, true);
 
-    return Redirect::home();
+    return Redirect::home()->with('success','You have Successfully logged in.');
     //
   }
 

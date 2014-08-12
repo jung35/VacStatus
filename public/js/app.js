@@ -54,7 +54,13 @@ function addUserList(profileId) {
   $addProfileUser.foundation('reveal', 'open');
 }
 
-function showList(req) {
+function showList(uori,list) {
+  var req;
+  if(list == null || list == undefined) {
+    req = uori;
+  } else {
+    req = [uori, list];
+  }
   $.ajax({
     url: '/list/fetch',
     type: "POST",
@@ -68,7 +74,11 @@ function showList(req) {
     $('.list-display-wrapper').animate({
       height : $(".list-display").height() + 100
     },600);
-    history.pushState('', '', '/l/'+req);
+    if(list == null || list == undefined) {
+      history.pushState('', '', '/l/'+uori);
+    } else {
+      history.pushState('', '', '/l/'+uori+'/'+list);
+    }
   }).error(function() {
     fadeOutLoader(function() {
       fadInOutAlert("<strong>Error</strong> There was an error loading list. Please try again soon", 2);

@@ -107,7 +107,16 @@ class UserList extends \Eloquent {
       $userList = UserList::whereRaw('id = ? and user_id = ?', Array($listId, $userId))->first();
 
       if(isset($userList->id)) {
-        if($userList->privacy == 1) {
+        if($userList->privacy != 3) {
+          $stranger = User::whereId($userId)->first();
+          if($userList->privacy == 2) {
+            if(!Auth::check()) {
+              return null;
+            }
+            if(!in_array($stranger->small_id, Session::get('friendsList'))) {
+              return null;
+            }
+          }
           $userListProfiles = UserListProfile::where('user_list_id', $listId)
             ->join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
             ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
@@ -128,6 +137,7 @@ class UserList extends \Eloquent {
           $userListProfiles->custom = true;
           $userListProfiles->list_id = $listId;
           $userListProfiles->user_id = $userId;
+          $userListProfiles->user_name = $stranger->getUserName();
 
           return $userListProfiles;
         }

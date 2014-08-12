@@ -70,15 +70,18 @@
         <li class="tab-title">
           <div data-dropdown="friendsList">Friends' List <i class="fa fa-caret-down"></i></div>
           <ul id="friendsList" class="f-dropdown" data-dropdown-content>
-          <li class="has-dropdown">
-            <em>Under Construction</em>
-          </li>
-<!--             <li class="has-dropdown">
-              <a>Dickbutt</a>
+            @foreach($friendsList as $friends)
+            @if($friends->UserList()->count() > 0)
+            <li class="has-dropdown">
+              <a>{{{ $friends->getUserName() }}} <i class="fa fa-caret-down right"></i></a>
               <ul class="dropdown">
-                <li class="right"><a>List1</a></li>
+                @foreach($friends->UserList()->where('privacy','!=','3')->orderBy('id', 'DESC')->get() as $friendsList)
+                <li class="right"><a onClick="javascript:showList({{{ $friendsList->user_id }}}, {{{ $friendsList->getId() }}});">{{{ $friendsList->getTitle() }}}</a></li>
+                @endforeach
               </ul>
-            </li> -->
+            </li>
+            @endif
+            @endforeach
           </ul>
         </li>
         @endif

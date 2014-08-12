@@ -4,7 +4,6 @@ class DisplayListController extends \BaseController {
 
   public function fetchListAction() {
     $req = Input::get('req');
-    $title = null;
     $userList = null;
 
     if($req) {
