@@ -30,7 +30,7 @@
       </div>
       <div class="medium-5 columns detailed">
         <div class="row profile-detail">
-          <div class="medium-6 columns profile-type small-only-text-center">VAC / Overwatch</div>
+          <div class="medium-6 columns profile-type small-only-text-center">VAC</div>
           <div class="medium-6 columns {{{ $profile->ProfileBan->isVacBanned() ? 'text-alert' : 'text-success' }}}">{{{ $profile->ProfileBan->isVacBanned() ? 'Banned' : 'Normal' }}}</div>
         </div>
         <div class="row profile-detail">
@@ -51,24 +51,19 @@
   </div>
 
   <div class="medium-12 columns detailed">
-    <h4 class="small-only-text-center">Vac / Overwatch Ban</h4>
-    <ul class="row">
+    <h4 class="small-only-text-center">VAC Ban</h4>
+    <ul class="large-6 large-centered columns">
 
-      <li class="large-4 medium-6 columns profile-detail small-only-text-center">
+      <li class="large-6 medium-6 columns profile-detail small-only-text-center">
         <ul class="row">
           <li class="medium-6 columns text-right profile-type small-only-text-center"># of Bans</li>
           <li class="medium-6 columns">{{{ $profile->ProfileBan->getVac() }}}</li>
         </ul>
+      </li>
+      <li class="large-6 medium-6 columns profile-detail small-only-text-center">
         <ul class="row">
           <li class="medium-6 columns text-right profile-type small-only-text-center">Last Ban</li>
           <li class="medium-6 columns">{{{ $profile->ProfileBan->getVacDays() }}}</li>
-        </ul>
-      </li>
-
-      <li class="large-8 medium-6 columns profile-detail small-only-text-center">
-        <ul class="row">
-          <li class="medium-2 columns text-right profile-type small-only-text-center">Note</li>
-          <li class="medium-10 columns">{{{ $profile->ProfileBan->getNote() }}}</li>
         </ul>
       </li>
 
