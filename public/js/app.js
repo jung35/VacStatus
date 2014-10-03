@@ -134,5 +134,7 @@ function userMultiUpdate(list) {
 }
 
 $(window).load(function() {
-  userMultiUpdate(userToUpdate);
+  if(typeof userToUpdate != "undefined") {
+    userMultiUpdate(userToUpdate);
+  }
 });
