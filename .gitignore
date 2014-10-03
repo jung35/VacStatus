@@ -9,5 +9,3 @@ composer.lock
 .env.php
 Thumbs.db
 *.DS_Store
-
-.env.*.php
