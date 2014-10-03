@@ -11,9 +11,7 @@ VacStatus is currently using `` Laravel `` and is currently maintained by [Jung3
 1. Install dependencies using [Composer][composer] `composer install`
 2. edit [.env.php][env] to your own settings
 3. Run `php artisan migrate` to run migration
-3. Install all the requirements for [Foundation][foundation]
-  * Bower
-  * Compass (Ruby IS required)
+3. Install the requirements for [Foundation][foundation]
 4. Run `compass watch` to compile style sheets
 5. Finished!
 
