@@ -15,6 +15,11 @@ VacStatus is currently using `` Laravel `` and is currently maintained by [Jung3
 4. Run `compass watch` to compile style sheets
 5. Finished!
 
+To untrack `.env.php` you can do
+
+    git update-index --assume-unchanged .env.php
+If there is a better way to include and untrack, PLEASE send me a message or a pull request!
+
 [jung]: https://github.com/jung3o
 [composer]: http://daringfireball.net/projects/markdown/syntax#list
 [env]: .env.php
