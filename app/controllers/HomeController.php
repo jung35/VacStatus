@@ -41,9 +41,25 @@ class HomeController extends BaseController {
     $steam3Id = SteamUser::findSteam3IdUser($search);
 
     if($steam3Id->type == 'error') {
-      return Redirect::home();
+      return Redirect::home()->with('error', 'Could not find a user based on given information.');
     }
 
     return Redirect::route('profile', array('steam3Id' => $steam3Id->data));
+  }
+
+  public function searchMultipleAction() {
+    /*
+      1 - Default
+      2 - 'status' from console paste
+     */
+    $searchType = Input::get('search_type');
+
+    $search = Input::get('search');
+
+    if(!isset($searchType) || !isset($search)) {
+      return Redirect::home()->with('error', 'Invalid fields.');
+    }
+
+    dd(explode("\n", $search));
   }
 }

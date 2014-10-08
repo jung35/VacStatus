@@ -16,7 +16,8 @@ Route::get('/l/{uorl?}/{list?}', Array('uses' => 'HomeController@indexAction'));
 
 Route::get('/logout', Array('before' => 'auth', 'as' => 'logout', 'uses' => 'LoginController@logoutAction'));
 
-Route::post('/search', Array('as' => 'search_single', 'uses' => 'HomeController@searchSingleAction'));
+Route::post('/profile_lookup', Array('as' => 'search_single', 'uses' => 'HomeController@searchSingleAction'));
+Route::post('/search', Array('as' => 'search_multi', 'uses' => 'HomeController@searchMultipleAction'));
 
 Route::get('/login/{action?}', Array('as' => 'login', 'uses' => 'LoginController@loginAction'));
 

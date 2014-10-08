@@ -129,11 +129,11 @@
     @endif
     <div id="advSearchModal" class="reveal-modal tiny" data-reveal>
       <h2 class="text-center">Advanced Search</h2>
-      <form>
+      <form action="{{{ URL::route('search_multi') }}}" method="POST">
         <div class="row">
           <div class="large-12 columns">
             <label>
-              <select>
+              <select name="search_type">
                 <option value="1">URL / STEAM2 ID / STEAM3 ID (64bit)</option>
                 <option value="2">"Status" Paste from Developer Console</option>
               </select>
@@ -143,13 +143,14 @@
         <div class="row">
           <div class="large-12 columns">
             <label>
-              <textarea placeholder="User Info Here"></textarea>
+              <textarea name="search" placeholder="User Info Here (New Line per User)"></textarea>
             </label>
           </div>
         </div>
         <div class="row">
           <div class="large-12 columns">
-            <button type="button" class="button expand">Search</button>
+            <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
+            <button type="submit" class="button expand">Search</button>
           </div>
         </div>
       </form>

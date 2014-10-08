@@ -39,8 +39,8 @@
           <p><b>Comment System</b><br>Found a hacker or a scammer? Leave a comment to warn others!</p>
         </div>
         <div class="large-3 medium-3 columns" data-equalizer-watch>
-          <h2><i class="fa fa-envelope"></i></h2>
-          <p><b>Get Notified</b><br>Recieve an email notice whenever a hacker has been banned!</p>
+          <h2><i class="fa fa-book"></i></h2>
+          <p><b>Simple to Use</b><br>Login and start putting people on the list to track right away!</p>
         </div>
       </div>
       <!-- <a href="#" class="close">&times;</a> -->
