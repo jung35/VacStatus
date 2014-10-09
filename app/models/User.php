@@ -37,6 +37,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     return $this->display_name;
   }
 
+  public function getSmallId() {
+    return $this->small_id;
+  }
+
   public function getSteam3Id() {
     return Steam::toBigId($this->small_id);
   }

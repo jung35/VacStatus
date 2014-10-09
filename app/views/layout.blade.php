@@ -234,6 +234,7 @@
           ]
         </p>
         <p class="large-5 medium-4 columns text-right">
+          <a href="{{{ URL::route('donation') }}}">Donate</a> &middot;
           <a href="#">FAQ</a> &middot;
           <a href="#">Privacy Policy</a> &middot;
           Powered By <a href="http://steampowered.com" target="_blank">Steam</a>

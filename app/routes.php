@@ -29,7 +29,7 @@ Route::post('/list/fetch', Array('before' => 'csrf', 'as' => 'list_fetch', 'uses
 Route::post('/list/update', Array('before' => 'csrf', 'as' => 'list_update', 'uses' => 'DisplayListController@updateListAction'));
 
 Route::any('/ipn', Array('uses' => 'DonationController@IPNAction'));
-Route::any('/donation', Array('uses' => 'DonationController@DonationAction'));
+Route::any('/donation', Array('as' => 'donation', 'uses' => 'DonationController@DonationAction'));
 
 Route::group(array('before' => 'auth|csrf'), function() {
 
