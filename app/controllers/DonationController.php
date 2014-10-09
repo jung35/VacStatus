@@ -29,6 +29,7 @@ class DonationController extends \BaseController {
       $report = $listener->getReport();
       $resp = $listener->getVerifier()->getVerificationResponse();
       var_dump(false,$resp, $report);
+      print_r($report);
       dd();
     });
   }
