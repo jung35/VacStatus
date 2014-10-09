@@ -22,14 +22,14 @@ class DonationController extends \BaseController {
     $listener->listen(function() use ($listener) {
         // on verified IPN (everything is good!)
       $resp = $listener->getVerifier()->getVerificationResponse();
-      var_dump(true,$resp);
+      var_dump(true,$resp,$ipnMessage);
+      Log::info($ipnMessage);
       dd();
     }, function() use ($listener) {
         // on invalid IPN (somethings not right!)
       $report = $listener->getReport();
       $resp = $listener->getVerifier()->getVerificationResponse();
-      var_dump(false,$resp, $report);
-      print_r($report);
+      var_dump(false,$resp);
       dd();
     });
   }
