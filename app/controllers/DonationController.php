@@ -7,6 +7,11 @@ class DonationController extends \BaseController {
 
   public function DonationAction() {
 
+      return View::make('donation/donation');
+  }
+
+  public function latestDonation($lastId = null) {
+
   }
 
   public function IPNAction() {
@@ -22,14 +27,17 @@ class DonationController extends \BaseController {
     $listener->listen(function() use ($listener, $ipnMessage) {
         // on verified IPN (everything is good!)
       $resp = $listener->getVerifier()->getVerificationResponse();
-      Log::info('stuff123', (array) $ipnMessage);
-      dd();
+      if($ipnMessage['payment_status'] == 'Completed') {
+        $amount = $ipnMessage['mc_gross'];
+
+        $smallId = $ipnMessage['custom'];
+
+        User::whereSmallId($smallId)->first();
+      }
     }, function() use ($listener, $ipnMessage) {
         // on invalid IPN (somethings not right!)
       $report = $listener->getReport();
       $resp = $listener->getVerifier()->getVerificationResponse();
-      Log::info('stuff boo', (array) $ipnMessage);
-      dd();
     });
   }
 
