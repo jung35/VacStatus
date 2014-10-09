@@ -28,6 +28,8 @@ Route::post('/u/update/single', Array('before' => 'csrf', 'uses' => 'ProfileCont
 Route::post('/list/fetch', Array('before' => 'csrf', 'as' => 'list_fetch', 'uses' => 'DisplayListController@fetchListAction'));
 Route::post('/list/update', Array('before' => 'csrf', 'as' => 'list_update', 'uses' => 'DisplayListController@updateListAction'));
 
+Route::all('/ipn', Array('uses' => 'DonationController@IPNAction'));
+
 Route::group(array('before' => 'auth|csrf'), function() {
 
   Route::post('/list/add', Array('as' => 'list_add', 'uses' => 'ListController@createAction'));
