@@ -18,12 +18,8 @@ class CreateUsersTable extends Migration {
       $table->integer('small_id')->unique();
       $table->string('display_name', 32);
 
-      /**
-       * Tour Guide - Each # that is seperated by comma represents tours completed
-       * 0 - Index
-       * 1 - Profile
-       */
-      $table->text('tour')->nullable();
+      $table->float('donation')->default(0); // spesul ppl
+
       $table->boolean('site_admin')->default(0);
       $table->rememberToken();
 			$table->timestamps();

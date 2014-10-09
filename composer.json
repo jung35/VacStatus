@@ -5,7 +5,8 @@
   "license": "MIT",
   "require": {
     "laravel/framework": "4.2.*",
-    "hybridauth/hybridauth": "dev-master"
+    "hybridauth/hybridauth": "dev-master",
+    "mike182uk/paypal-ipn-listener" : "v2.0.0"
   },
   "require-dev": {
     "way/generators": "2.*"

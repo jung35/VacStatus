@@ -60,6 +60,10 @@ class HomeController extends BaseController {
       return Redirect::home()->with('error', 'Invalid fields.');
     }
 
-    dd(explode("\n", $search));
+    $search = explode("\n", $search);
+
+    if(count($search) > 40) {
+      return Redirect::home()->with('error', 'Too many profiles listed in search box.');
+    }
   }
 }
