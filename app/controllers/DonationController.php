@@ -10,10 +10,6 @@ class DonationController extends \BaseController {
       return View::make('donation/donation');
   }
 
-  public function latestDonation($lastId = null) {
-
-  }
-
   public function IPNAction() {
     $listener = new Listener;
     $verifier = new CurlVerifier;
@@ -27,13 +23,27 @@ class DonationController extends \BaseController {
     $listener->listen(function() use ($listener, $ipnMessage) {
         // on verified IPN (everything is good!)
       $resp = $listener->getVerifier()->getVerificationResponse();
+      $amount = $ipnMessage['mc_gross'];
+      $smallId = $ipnMessage['custom'];
+
       if($ipnMessage['payment_status'] == 'Completed') {
-        $amount = $ipnMessage['mc_gross'];
 
-        $smallId = $ipnMessage['custom'];
-
-        User::whereSmallId($smallId)->first();
+        if(is_numeric($smallId)) {
+          $user = User::whereSmallId($smallId)->first();
+          $user->addDonation($amount);
+          $user->save();
+        }
       }
+
+      $donationLog = new DonationLog;
+      $donationLog->status = $ipnMessage['payment_status'];
+      $donationLog->amount = $amount - $ipnMessage['mc_fee '];
+      $donationLog->original_amount = $amount;
+      if(is_numeric($smallId) && isset($user) && $user->getId()) {
+        $donationLog->small_id = $smallId;
+      }
+      $donationLog->save();
+
     }, function() use ($listener, $ipnMessage) {
         // on invalid IPN (somethings not right!)
       $report = $listener->getReport();

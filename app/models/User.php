@@ -49,4 +49,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     return $this->donation;
   }
 
+  public function addDonation($amount) {
+    $this->donation += $amount;
+  }
+
 }

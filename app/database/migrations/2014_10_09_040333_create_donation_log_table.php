@@ -17,6 +17,7 @@ class CreateDonationLogTable extends Migration {
 			$table->increments('id');
       $table->integer('small_id')->nullable();
       $table->string('status',18);
+      $table->float('original_amount');
       $table->float('amount');
 			$table->timestamps();
 		});

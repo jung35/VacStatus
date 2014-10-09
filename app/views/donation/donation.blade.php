@@ -81,6 +81,7 @@
           </tr>
         </tbody>
       </table>
+      <p style="line-height:0%; font-size: 12px">* Donations do add up.</p>
       <p style="line-height:0%; font-size: 12px">* You can also donate as guest by logging off, but no perks will be given.</p>
     </div>
   </div>
