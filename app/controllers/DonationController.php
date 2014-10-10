@@ -7,7 +7,7 @@ class DonationController extends \BaseController {
 
   public function DonationAction() {
 
-    $latestDonation = DonationLog::
+    // $latestDonation = DonationLog::
 
     return View::make('donation/donation');
   }
