@@ -7,7 +7,9 @@ class DonationController extends \BaseController {
 
   public function DonationAction() {
 
-      return View::make('donation/donation');
+    $latestDonation = DonationLog::
+
+    return View::make('donation/donation');
   }
 
   public function IPNAction() {
