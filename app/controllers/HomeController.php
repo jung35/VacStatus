@@ -65,5 +65,37 @@ class HomeController extends BaseController {
     if(count($search) > 40) {
       return Redirect::home()->with('error', 'Too many profiles listed in search box.');
     }
+
+    switch($searchType) {
+      case 1:
+        $this->searchMutlipleDefault($search);
+        break;
+      case 2:
+        break;
+    }
+
+    return Redirect::home()->with('error', 'Invalid Search Option');
+  }
+
+  private function searchMutlipleDefault($search) {
+    if(!is_array($search)) {
+      return;
+    }
+
+    $validProfile = Array();
+    $invalidProfile = Array();
+
+    foreach($search as $potentialProfile) {
+      $steam3Id = SteamUser::findSteam3IdUser($potentialProfile);
+
+      if($steam3Id->type == 'error') {
+        $invalidProfile[] = $potentialProfile;
+      } else {
+        $validProfile[] = $steam3Id->data;
+      }
+    }
+
+    dd($validProfile,
+       $invalidProfile);
   }
 }
