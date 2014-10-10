@@ -68,7 +68,7 @@
             <td>$2.50</td>
           </tr>
           <tr>
-            <td>Change User Limit to 50</td>
+            <td>Change User Limit to 30</td>
             <td>$5.00</td>
           </tr>
           <tr>

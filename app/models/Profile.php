@@ -230,9 +230,30 @@ class Profile extends \Eloquent {
         $arrBySmallId[Steam::toSmallId($steamAPI_Ban->SteamId)]['ban'] = $steamAPI_Ban;
       }
 
-      $profiles = (object) self::whereIn('small_id', Steam::toSmallId($steam3Ids))
-          ->join('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
-          ->get();
+      $profiles = (object) self::whereIn('profile.small_id', Steam::toSmallId($steam3Ids))
+        ->join('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
+        ->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
+        ->get([
+          'profile.id',
+          'profile.small_id',
+          'profile.display_name',
+          'profile.privacy',
+          'profile.avatar_thumb',
+          'profile.avatar',
+          'profile.profile_created',
+          'profile.alias',
+          'profile.created_at',
+          'profile.updated_at',
+
+          'profile_ban.community',
+          'profile_ban.vac',
+          'profile_ban.vac_days',
+          'profile_ban.trade',
+          'profile_ban.unban',
+
+          'users.donation',
+          'users.site_admin',
+        ]);
 
       /*
       Start updating the user profile with new data from Steam Web API

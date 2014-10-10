@@ -49,6 +49,20 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     return $this->donation;
   }
 
+  public function unlockList() {
+    if($this->donation >= 2.5) {
+      return 10;
+    }
+    return 1;
+  }
+
+  public function unlockUser() {
+    if($this->donation >= 5) {
+      return 30;
+    }
+    return 10;
+  }
+
   public function addDonation($amount) {
     if(is_numeric($this->donation)) {
       $this->donation += $amount;

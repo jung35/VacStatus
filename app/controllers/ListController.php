@@ -11,7 +11,7 @@ class ListController extends BaseController {
     $privacy = Input::get('privacy') ?: 2;
     $userId = Auth::User()->getId();
 
-    if(UserList::whereUserId($userId)->count() < Steam::$LIST_LIMIT) {
+    if(UserList::whereUserId($userId)->count() < Auth::User()->unlockList()) {
       $userList = new UserList;
       $userList->user_id = $userId;
       $userList->title = $title;
@@ -61,11 +61,15 @@ class ListController extends BaseController {
     if(isset($userList->id)) {
       $userListProfile = UserListProfile::whereRaw('user_list_id = ? and profile_id = ?', array($listId, $profileId))->first();
       if(!isset($userListProfile->id)) {
-        $userListProfile = new UserListProfile;
-        $userListProfile->user_list_id = $listId;
-        $userListProfile->profile_id = $profileId;
-        $userListProfile->save();
-        return Redirect::back()->with('success', 'The user has been added to list.');
+        $count = UserListProfile::whereUserListId($listId)->count();
+        if($count < Auth::User()->unlockUser()) {
+          $userListProfile = new UserListProfile;
+          $userListProfile->user_list_id = $listId;
+          $userListProfile->profile_id = $profileId;
+          $userListProfile->save();
+          return Redirect::back()->with('success', 'The user has been added to list.');
+        }
+        return Redirect::back()->with('error', 'Sorry, you have hit the maximum amount of users per list allowed.');
       }
       return Redirect::back()->with('error', 'This user is already in the list.');
     }

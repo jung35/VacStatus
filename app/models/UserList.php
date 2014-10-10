@@ -82,7 +82,7 @@ class UserList extends \Eloquent {
         $userListProfiles = UserListProfile::where('user_list_id', $listId)
           ->join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
           ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
-          ->join('users', 'profile.small_id', '=', 'users.small_id')
+          ->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
           ->orderBy('user_list_profile.id','desc')
           ->get([
             'user_list_profile.id',
@@ -152,7 +152,7 @@ class UserList extends \Eloquent {
           $userListProfiles = UserListProfile::where('user_list_id', $listId)
             ->join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
             ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
-            ->join('users', 'profile.small_id', '=', 'users.small_id')
+            ->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
             ->orderBy('user_list_profile.id','desc')
             ->get([
               'user_list_profile.id',
@@ -211,7 +211,7 @@ class UserList extends \Eloquent {
   public static function getMostAdded($limit = 20) {
     $userListProfiles = UserListProfile::join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
       ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
-      ->join('users', 'profile.small_id', '=', 'users.small_id')
+      ->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
       ->get([
         'user_list_profile.id',
         'user_list_profile.profile_id',
@@ -285,7 +285,7 @@ class UserList extends \Eloquent {
   public static function getLastAdded($limit = 20) {
     $userListProfiles = UserListProfile::join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
       ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
-      ->join('users', 'profile.small_id', '=', 'users.small_id')
+      ->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
       ->orderBy('user_list_profile.id','desc')
       ->get([
         'user_list_profile.id',

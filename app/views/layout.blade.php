@@ -57,7 +57,7 @@
       <a class="close-reveal-modal">&#215;</a>
     </div>
     <div id="addList" class="reveal-modal tiny" data-reveal>
-      <h2 class="text-center">Add List <small>(Limit {{{ Steam\Steam::$LIST_LIMIT }}})</small></h2>
+      <h2 class="text-center">Add List <small>(Limit {{{ Auth::User()->unlockList() }}})</small></h2>
       <form action="{{{ URL::route('list_add') }}}" method="POST">
         <div class="row">
           <div class="large-12 columns">
@@ -228,6 +228,7 @@
           <a href="https://github.com/jung3o/VacStatus" target="_blank">Github</a> &middot;
           <a href="http://jung3o.com" target="_blank">Jung Oh</a>
           [
+          <a href="mailto:jung3o@yahoo.com">Email</a> &middot;
           <a href="http://steamcommunity.com/id/Jung3o/" target="_blank">Steam</a> &middot;
           <a href="http://facepunch.com/member.php?u=451226" target="_blank">Facepunch</a> &middot;
           <a href="http://www.reddit.com/user/jung3o/" target="_blank">Reddit</a>
@@ -235,7 +236,6 @@
         </p>
         <p class="large-5 medium-4 columns text-right">
           <a href="{{{ URL::route('donation') }}}">Donate</a> &middot;
-          <a href="#">FAQ</a> &middot;
           <a href="#">Privacy Policy</a> &middot;
           Powered By <a href="http://steampowered.com" target="_blank">Steam</a>
         </p>
