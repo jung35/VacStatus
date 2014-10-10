@@ -7,8 +7,22 @@ class ProfileController extends BaseController {
   public function profileAction($steam3Id = null)
   {
     if($steam3Id) {
-
-      $profile = Profile::whereSmallId(Steam::toSmallId($steam3Id))->first();
+      $profile = Profile::where('profile.small_id',Steam::toSmallId($steam3Id))
+        ->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
+        ->first([
+          'profile.id',
+          'profile.small_id',
+          'profile.display_name',
+          'profile.privacy',
+          'profile.avatar_thumb',
+          'profile.avatar',
+          'profile.profile_created',
+          'profile.alias',
+          'profile.created_at',
+          'profile.updated_at',
+          'users.donation',
+          'users.site_admin',
+        ]);
 
       /*
         Check if all db exists (just incase when it page was canceled when trying to load)

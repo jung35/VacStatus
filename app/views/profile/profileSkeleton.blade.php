@@ -6,8 +6,14 @@
     <img src="{{{ $profile->getAvatar() }}}">
   </div>
   <div class="medium-10 small-12 columns basic small-only-text-center">
+    @if($profile->site_admin)
+    <div class="label warning profile-label">Superstar</div>
+    @endif
     @if($profile->isPrivate())
-    <h3 class="label alert profile-privacy">Private</h3>
+    <div class="label alert profile-label">Private</div>
+    @endif
+    @if(is_numeric($profile->donation) && $profile->donation >= 1)
+    <div class="label success profile-label">Donator</div>
     @endif
     <h3>{{{ $profile->getDisplayName() }}}<!-- <small>&nbsp;</small> --></h3>
     <div class="row">
