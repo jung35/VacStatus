@@ -1,4 +1,4 @@
-<tr class="profileId_{{{ $UserListProfile->id }}}">
+<tr class="profileId_{{{ $UserListProfile->profile_id }}}">
   <td class="vacstatus-list-avatar list-replaceable">
     <img src="{{{ $UserListProfile->avatar_thumb }}}">
   </td>

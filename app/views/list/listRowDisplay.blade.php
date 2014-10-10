@@ -1,6 +1,6 @@
 @foreach($userList as $UserListProfile)
   @if(is_object($UserListProfile))
-  <table class="for_profileId_{{{ $UserListProfile->id }}}">
+  <table class="for_profileId_{{{ $UserListProfile->profile_id }}}">
   <tr>
     <td class="vacstatus-list-avatar list-replaceable">
       <img src="{{{ $UserListProfile->avatar_thumb }}}">
