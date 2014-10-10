@@ -153,6 +153,28 @@ class Profile extends \Eloquent {
       }
 
       /*
+      Call profile again because I'm currently too tired to think of
+      a good way to join the users table together.
+       */
+
+      $profile = Profile::where('profile.small_id',Steam::toSmallId($steam3Id))
+        ->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
+        ->first([
+          'profile.id',
+          'profile.small_id',
+          'profile.display_name',
+          'profile.privacy',
+          'profile.avatar_thumb',
+          'profile.avatar',
+          'profile.profile_created',
+          'profile.alias',
+          'profile.created_at',
+          'profile.updated_at',
+          'users.donation',
+          'users.site_admin',
+        ]);
+
+      /*
       get the counts
        */
       $gettingCount = UserListProfile::whereProfileId($profile->id)
