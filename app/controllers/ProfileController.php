@@ -108,6 +108,7 @@ class ProfileController extends BaseController {
         // not stable connection to steam
         return App::abort(500);
       }
+      return $profiles;
     }
     return App::abort(500);
   }

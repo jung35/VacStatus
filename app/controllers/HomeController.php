@@ -60,15 +60,36 @@ class HomeController extends BaseController {
       return Redirect::home()->with('error', 'Invalid fields.');
     }
 
-    $search = explode("\n", $search);
+    $search = array_filter(explode("\n", $search));
 
-    if(count($search) > 40) {
+    if(count($search) > 20) {
       return Redirect::home()->with('error', 'Too many profiles listed in search box.');
     }
 
     switch($searchType) {
       case 1:
-        $this->searchMutlipleDefault($search);
+        if(is_array($search)) {
+          $validProfile = Array();
+          $invalidProfile = Array();
+
+          foreach($search as $potentialProfile) {
+            $steam3Id = SteamUser::findSteam3IdUser($potentialProfile);
+
+            if($steam3Id->type == 'error') {
+              $invalidProfile[] = $potentialProfile;
+            } else {
+              $validProfile[] = $steam3Id->data;
+            }
+          }
+
+          $userList = Profile::updateMulitipleProfile($validProfile);
+          $userList->title = "Search";
+
+          return View::make('main/search', array('userList' => $userList, 'invalidProfile' => implode(", ", $invalidProfile)));
+
+          dd($validProfile,
+             $invalidProfile);
+        }
         break;
       case 2:
         break;
@@ -78,24 +99,5 @@ class HomeController extends BaseController {
   }
 
   private function searchMutlipleDefault($search) {
-    if(!is_array($search)) {
-      return;
-    }
-
-    $validProfile = Array();
-    $invalidProfile = Array();
-
-    foreach($search as $potentialProfile) {
-      $steam3Id = SteamUser::findSteam3IdUser($potentialProfile);
-
-      if($steam3Id->type == 'error') {
-        $invalidProfile[] = $potentialProfile;
-      } else {
-        $validProfile[] = $steam3Id->data;
-      }
-    }
-
-    dd($validProfile,
-       $invalidProfile);
   }
 }

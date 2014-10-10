@@ -202,6 +202,14 @@ class Profile extends \Eloquent {
    */
   public static function updateMulitipleProfile($steam3Ids) {
     if($steam3Ids && is_array($steam3Ids)) {
+
+      /*
+      Some kids like to smash their forehead on keyboard and make same requests more than once
+       */
+      $steam3Ids = array_unique($steam3Ids);
+
+      $originalSteam3Ids = $steam3Ids;
+
       // Grab user info using steam API and since this is only updating single user, just get to the key -> 0
       $steamAPI_Info = Steam::cURLSteamAPI('info', $steam3Ids);
       // Steam web api sux m8
@@ -281,21 +289,20 @@ class Profile extends \Eloquent {
       Start updating the user profile with new data from Steam Web API
        */
       foreach($profiles as $profile) {
+        /*
+        Make note that the following profile was found under steamid
+         */
+        unset($steam3Ids[array_search(Steam::toBigId($profile->small_id), $steam3Ids)]);
+
         $profile_Info = $arrBySmallId[$profile->small_id]['user'];
         $profile_Alias = $arrBySmallId[$profile->small_id]['alias'];
         $profile_Ban = $arrBySmallId[$profile->small_id]['ban'];
 
-        if(!isset($profile->id)) {
-          $profile = new self;
-          $profile->small_id = Steam::toSmallId($profile_Info->steamid);
-          if(isset($profile_Info->timecreated)) {
-            $profile->profile_created = $profile_Info->timecreated;
-          }
-        } else {
-          // Make sure to update if this was private and now suddenly public
-          if(empty($profile->profile_created) && isset($profile_Info->timecreated)) {
-            $profile->profile_created = $profile_Info->timecreated;
-          }
+        // Assuming profile exists because it wouldnt go here if it doesnt
+
+        // Make sure to update if this was private and now suddenly public
+        if(empty($profile->profile_created) && isset($profile_Info->timecreated)) {
+          $profile->profile_created = $profile_Info->timecreated;
         }
 
         $profile->display_name = $profile_Info->personaname;
@@ -376,11 +383,144 @@ class Profile extends \Eloquent {
         Tell cache that steam profile has been updated
          */
 
+        Steam::setUpdate($profile->small_id);
+      }
+
+      /*
+      Creating new profiles because they dont exist in the database
+       */
+
+      foreach($steam3Ids as $newSteamId) {
+        $smallId = Steam::toSmallId($newSteamId);
+
+        $profile_Info = $arrBySmallId[$smallId]['user'];
+        $profile_Alias = $arrBySmallId[$smallId]['alias'];
+        $profile_Ban = $arrBySmallId[$smallId]['ban'];
+
+        $profile = new self;
+        $profile->small_id = Steam::toSmallId($profile_Info->steamid);
+
+        /*
+        Sometimes people like to have their profiles private.
+        Why? I have no clue
+         */
+        if(isset($profile_Info->timecreated)) {
+          $profile->profile_created = $profile_Info->timecreated;
+        }
+
+        $profile->display_name = $profile_Info->personaname;
+        $profile->privacy = $profile_Info->communityvisibilitystate;
+        $profile->avatar_thumb = $profile_Info->avatar;
+        $profile->avatar = $profile_Info->avatarfull;
+
+        $profile->alias = json_encode($profile_Alias);
+
+        $profile->save();
+
+        /*
+        Start updating Ban / Create if not already exist under user
+         */
+
+        $profileBan = $profile->ProfileBan;
+
+        if(!isset($profileBan->id)) {
+          $profileBan = new ProfileBan;
+          $profileBan->profile_id = $profile->id;
+          $profileBan->unban = false;
+        } else {
+          if($profileBan->vac > $profile_Ban->NumberOfVACBans) {
+            $profileBan->unban = true;
+          }
+        }
+
+        $profileBan->vac = $profile_Ban->NumberOfVACBans;
+        $profileBan->community = $profile_Ban->CommunityBanned;
+        $profileBan->trade = $profile_Ban->EconomyBan != 'none';
+        $profileBan->vac_days = $profile_Ban->DaysSinceLastBan;
+
+        $profile->ProfileBan()->save($profileBan);
+        $profile->ProfileBan = $profileBan;
+
+        /*
+        Grab & Update Old Alias
+         */
+        $profileOldAlias = $profile->ProfileOldAlias()->where('profile_id', '=', $profile->id)->get();
+        $profileOldAlias = $profileOldAlias->count() ? $profileOldAlias : new ProfileOldAlias;
+
+        if($profileOldAlias->count() == 0) {
+          $profileOldAlias->addAlias($profile);
+        } else {
+          $match = false;
+          $recent = 0;
+          foreach($profileOldAlias as $oldAlias) {
+            if(is_object($oldAlias)) {
+              if($oldAlias->getAlias() == $profile->getDisplayName()) {
+                $match = true;
+                break;
+              }
+              $recent = $oldAlias->compareTime($recent);
+            }
+          }
+
+          if(!$match && $recent + Steam::$UPDATE_TIME < time()) {
+            $newAlias = new ProfileOldAlias;
+            $newAlias->profile_id = $profile->getId();
+            $newAlias->seen = time();
+            $newAlias->seen_alias = $profile->getDisplayName();
+            $profile->ProfileOldAlias()->save($newAlias);
+          }
+        }
+
+        /*
+        get the counts
+         */
+        $gettingCount = UserListProfile::whereProfileId($profile->id)
+          ->orderBy('id','desc')
+          ->get();
+
+        $profile->getCount = UserList::getCount($gettingCount);
+        $profile->get_num_tracking = isset($profile->getCount[$profile->id])? $profile->getCount[$profile->id] : 0;
+        $profile->lastCount = isset($gettingCount[0]) ? strtotime($gettingCount[0]->created_at) : 0;
+
+        /*
+        Tell cache that steam profile has been updated
+         */
 
         Steam::setUpdate($profile->small_id);
       }
+
+      /*
+      Call it again beacuse seems like the only way to do this.
+       */
+
+      $profiles = (object) self::whereIn('profile.small_id', Steam::toSmallId($originalSteam3Ids))
+        ->join('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
+        ->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
+        ->get([
+          'profile.id',
+          'profile.small_id',
+          'profile.display_name',
+          'profile.privacy',
+          'profile.avatar_thumb',
+          'profile.avatar',
+          'profile.profile_created',
+          'profile.alias',
+          'profile.created_at',
+          'profile.updated_at',
+
+          'profile_ban.community',
+          'profile_ban.vac',
+          'profile_ban.vac_days',
+          'profile_ban.trade',
+          'profile_ban.unban',
+
+          'users.donation',
+          'users.site_admin',
+        ]);
+
+      return $profiles;
     }
-    return $profiles;
+    return false;
   }
 
   public function getDisplayName() {

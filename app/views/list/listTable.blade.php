@@ -11,7 +11,7 @@
   <a onClick="javascript:showEditForm({{{ $userList->list_id }}}, {{{ $userList->privacy }}});"><i class="fa fa-pencil text-success"></i></a>
 @endif
 </h3>
-<table>
+<table width="100%">
   <thead>
     <tr>
       <th class="vacstatus-list-avatar"></th>
