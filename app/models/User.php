@@ -50,7 +50,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
   }
 
   public function addDonation($amount) {
-    $this->donation += $amount;
+    if(is_numeric($this->donation)) {
+      $this->donation += $amount;
+    } else {
+      $this->donation = $amount;
+    }
   }
 
 }

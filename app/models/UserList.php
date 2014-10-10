@@ -82,8 +82,32 @@ class UserList extends \Eloquent {
         $userListProfiles = UserListProfile::where('user_list_id', $listId)
           ->join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
           ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
+          ->join('users', 'profile.small_id', '=', 'users.small_id')
           ->orderBy('user_list_profile.id','desc')
-          ->get();
+          ->get([
+            'user_list_profile.id',
+            'user_list_profile.profile_id',
+            'user_list_profile.user_list_id',
+
+            'profile.small_id',
+            'profile.display_name',
+            'profile.privacy',
+            'profile.avatar_thumb',
+            'profile.avatar',
+            'profile.profile_created',
+            'profile.alias',
+            'profile.created_at',
+            'profile.updated_at',
+
+            'profile_ban.community',
+            'profile_ban.vac',
+            'profile_ban.vac_days',
+            'profile_ban.trade',
+            'profile_ban.unban',
+
+            'users.donation',
+            'users.site_admin',
+          ]);
 
         $count = self::getCount();
 
@@ -128,8 +152,32 @@ class UserList extends \Eloquent {
           $userListProfiles = UserListProfile::where('user_list_id', $listId)
             ->join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
             ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
+            ->join('users', 'profile.small_id', '=', 'users.small_id')
             ->orderBy('user_list_profile.id','desc')
-            ->get();
+            ->get([
+              'user_list_profile.id',
+              'user_list_profile.profile_id',
+              'user_list_profile.user_list_id',
+
+              'profile.small_id',
+              'profile.display_name',
+              'profile.privacy',
+              'profile.avatar_thumb',
+              'profile.avatar',
+              'profile.profile_created',
+              'profile.alias',
+              'profile.created_at',
+              'profile.updated_at',
+
+              'profile_ban.community',
+              'profile_ban.vac',
+              'profile_ban.vac_days',
+              'profile_ban.trade',
+              'profile_ban.unban',
+
+              'users.donation',
+              'users.site_admin',
+            ]);
 
           $count = self::getCount();
 
@@ -163,7 +211,31 @@ class UserList extends \Eloquent {
   public static function getMostAdded($limit = 20) {
     $userListProfiles = UserListProfile::join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
       ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
-      ->get();
+      ->join('users', 'profile.small_id', '=', 'users.small_id')
+      ->get([
+        'user_list_profile.id',
+        'user_list_profile.profile_id',
+        'user_list_profile.user_list_id',
+
+        'profile.small_id',
+        'profile.display_name',
+        'profile.privacy',
+        'profile.avatar_thumb',
+        'profile.avatar',
+        'profile.profile_created',
+        'profile.alias',
+        'profile.created_at',
+        'profile.updated_at',
+
+        'profile_ban.community',
+        'profile_ban.vac',
+        'profile_ban.vac_days',
+        'profile_ban.trade',
+        'profile_ban.unban',
+
+        'users.donation',
+        'users.site_admin',
+      ]);
 
     $count = Array();
     $profiles = Array();
@@ -213,8 +285,33 @@ class UserList extends \Eloquent {
   public static function getLastAdded($limit = 20) {
     $userListProfiles = UserListProfile::join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
       ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
+      ->join('users', 'profile.small_id', '=', 'users.small_id')
       ->orderBy('user_list_profile.id','desc')
-      ->get();
+      ->get([
+        'user_list_profile.id',
+        'user_list_profile.profile_id',
+        'user_list_profile.user_list_id',
+
+        'profile.small_id',
+        'profile.display_name',
+        'profile.privacy',
+        'profile.avatar_thumb',
+        'profile.avatar',
+        'profile.profile_created',
+        'profile.alias',
+        'profile.created_at',
+        'profile.updated_at',
+
+        'profile_ban.community',
+        'profile_ban.vac',
+        'profile_ban.vac_days',
+        'profile_ban.trade',
+        'profile_ban.unban',
+
+        'users.donation',
+        'users.site_admin',
+      ]);
+
 
     $count = self::getCount($userListProfiles);
 

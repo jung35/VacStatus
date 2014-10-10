@@ -49,8 +49,8 @@
     <div class="large-6 medium-7 columns">
       <h4>As a Thank you.</h4>
       <p style="line-height:200%; font-size: 14px">Following are some "perks" you will recieve when you donate.
-      <br>If you donate more than some of the "perks" listed,
-      <br>you will receive the ones below that donation.</p>
+      <br>If you donate more than some of the "perks" listed, *
+      <br>you will receive the ones below that donation. **</p>
       <table width="100%">
         <thead>
           <tr>
@@ -75,14 +75,10 @@
             <td>Green Username</td>
             <td>$7.50</td>
           </tr>
-          <tr>
-            <td>Icon infront of Username</td>
-            <td>$10.00</td>
-          </tr>
         </tbody>
       </table>
       <p style="line-height:0%; font-size: 12px">* Donations do add up.</p>
-      <p style="line-height:0%; font-size: 12px">* You can also donate as guest by logging off, but no perks will be given.</p>
+      <p style="line-height:0%; font-size: 12px">** You can also donate as guest by logging off, but no perks will be given.</p>
     </div>
   </div>
   <div class="row">

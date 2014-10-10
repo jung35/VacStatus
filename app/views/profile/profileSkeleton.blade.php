@@ -15,7 +15,7 @@
     @if(is_numeric($profile->donation) && $profile->donation >= 1)
     <div class="label success profile-label">Donator</div>
     @endif
-    <h3>{{{ $profile->getDisplayName() }}}<!-- <small>&nbsp;</small> --></h3>
+    <h3 {{ (is_numeric($profile->donation) && $profile->donation >= 7.5) ? "class='text-success'" : '' }}>{{{ $profile->getDisplayName() }}}<!-- <small>&nbsp;</small> --></h3>
     <div class="row">
       <div class="medium-2 columns">
         <span class="big-steam"><a href="http://steamcommunity.com/profiles/{{{ $profile->getSteam3Id() }}}" target="_blank"><i class="fa fa-steam"></i></a></span>
