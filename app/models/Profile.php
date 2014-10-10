@@ -376,7 +376,8 @@ class Profile extends \Eloquent {
         Tell cache that steam profile has been updated
          */
 
-        Steam::setUpdate(Steam::toSmallId($steamAPI_Info_user->steamid));
+
+        Steam::setUpdate($profile->small_id);
       }
     }
     return $profiles;

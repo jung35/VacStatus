@@ -276,6 +276,7 @@ class UserList extends \Eloquent {
         unset($newCount[$x]);
         unset($count[$keyOfId]);
       }
+
       $userListProfiles = (object) $userListProfiles;
       $userListProfiles->update = $findUpdateFor;
     }

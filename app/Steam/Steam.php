@@ -29,6 +29,7 @@ Class Steam {
         return false;
       }
     }
+    var_dump($smallId, Cache::get("profile_$smallId"));
     return true;
   }
 
