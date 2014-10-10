@@ -55,7 +55,7 @@
         <thead>
           <tr>
             <th>Perk</th>
-            <th><div>Amount</div></th>
+            <th width="90px">Amount</th>
           </tr>
         </thead>
         <tbody>
