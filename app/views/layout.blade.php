@@ -191,9 +191,16 @@
             </ul>
             <ul class="right">
               @if(Auth::check())
+              @if(Auth::User()->isAdmin())
+              <li>
+                <a class="alert" href="#">
+                  Admin CP
+                </a>
+              </li>
+              @endif
               <li class="has-dropdown">
                 <a>{{{ Auth::user()->getUserName() }}}
-                @if(Auth::check() && Auth::user()->isAdmin() && Cache::has('steamAPICalls_'.date('M_j_Y')))
+                @if(Auth::User()->isAdmin() && Cache::has('steamAPICalls_'.date('M_j_Y')))
                ( {{{ Cache::get('steamAPICalls_'.date('M_j_Y')) }}} )
                 @endif</a>
                 <ul class="dropdown">
