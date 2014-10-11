@@ -48,6 +48,11 @@ function fadeOutLoader(callback) {
   $loader.fadeOut('slow', callback);
 }
 
+function disableFormButton(form) {
+  $(form.button).prop("disabled",true);
+  form.submit();
+}
+
 var $addProfileUser = $('#addProfileUser');
 function addUserList(profileId) {
   $addProfileUser.find('#profile_id').val(profileId);

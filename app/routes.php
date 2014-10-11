@@ -42,3 +42,8 @@ Route::group(array('before' => 'auth|csrf'), function() {
   Route::post('/list/user/delete', Array('as' => 'list_user_delete', 'uses' => 'ListController@deleteUserAction'));
 
 });
+
+Route::get('/privacy', function()
+{
+    return View::make('main/privacy');
+});

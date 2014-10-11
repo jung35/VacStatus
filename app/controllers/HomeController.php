@@ -83,12 +83,12 @@ class HomeController extends BaseController {
           }
 
           $userList = Profile::updateMulitipleProfile($validProfile);
+          if(!is_object($userList)) {
+            return Redirect::home()->with('error', 'None of the users exist');
+          }
           $userList->title = "Search";
 
           return View::make('main/search', array('userList' => $userList, 'invalidProfile' => implode(", ", $invalidProfile)));
-
-          dd($validProfile,
-             $invalidProfile);
         }
         break;
       case 2:

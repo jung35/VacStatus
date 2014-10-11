@@ -6,7 +6,7 @@
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"/>
     <meta name="author" content="Jung Oh"/>
     <meta itemprop="name" content="VacStatus" />
-    <meta name="description" itemprop="description" content="In a game like Counter-Strike: Global Offensive, you do not get a notification of some sort when the hacker gets banned. With VacStatus, you can now can keep in check of the possible hacker you reported and when that hacker gets banned, you can even recieve an email notification!"/>
+    <meta name="description" itemprop="description" content="In a game like Counter-Strike: Global Offensive, you do not get a notification of some sort when the hacker gets banned. With VacStatus, you can now can keep in check of the possible hacker you reported!"/>
     <meta itemprop=image content="http://vacstatus.com/favicon.png"/>
     <meta name="keywords" content="vac, status, vacstatus, vban, vbanstatus, vb, vs, vacstatus.com, vac.com, vban.com, vbanstatus.com, vac status, vban status, list, vac list, vac ban list, ban list, steam, cs, csgo, cs go, tf2 , tf, css, valve, hl, hl2, steam ban, steam ban list, valve anti-cheat, anti cheat, anti-cheat, valve cheat"/>
     <meta name="robots" content="All" />
@@ -150,7 +150,7 @@
         <div class="row">
           <div class="large-12 columns">
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
-            <button type="submit" class="button expand">Search</button>
+            <button onClick="javascript:disableFormButton(this.form);" name="<button></button>" type="submit" class="button expand">Search</button>
           </div>
         </div>
       </form>
@@ -236,7 +236,7 @@
         </p>
         <p class="large-5 medium-4 columns text-right">
           <a href="{{{ URL::route('donation') }}}">Donate</a> &middot;
-          <a href="#">Privacy Policy</a> &middot;
+          <a href="/privacy">Privacy Policy</a> &middot;
           Powered By <a href="http://steampowered.com" target="_blank">Steam</a>
         </p>
       </div>
