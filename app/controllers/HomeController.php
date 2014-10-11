@@ -62,7 +62,7 @@ class HomeController extends BaseController {
 
     $search = array_filter(explode("\n", $search));
 
-    if(count($search) > 20) {
+    if(count($search) > Auth::User()->unlockSearch()) {
       return Redirect::home()->with('error', 'Too many profiles listed in search box.');
     }
 

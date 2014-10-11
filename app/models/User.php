@@ -46,21 +46,43 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
   }
 
   public function getDonation() {
-    return $this->donation;
+    return number_format($this->donation, 2, '.', '');
   }
 
   public function unlockList() {
-    if($this->donation >= 2.5) {
+    if($this->donation >= DonationPerk::getPerkAmount('list_10')) {
       return 10;
     }
+
+    if($this->beta == 1) {
+      return 3;
+    }
+
     return 1;
   }
 
   public function unlockUser() {
-    if($this->donation >= 5) {
+    if($this->donation >= DonationPerk::getPerkAmount('user_30')) {
       return 30;
     }
+
+    if($this->beta == 1) {
+      return 20;
+    }
+
     return 10;
+  }
+
+  public function unlockSearch() {
+    if($this->donation >= DonationPerk::getPerkAmount('search_50')) {
+      return 50;
+    }
+
+    if($this->beta == 1) {
+      return 25;
+    }
+
+    return 15;
   }
 
   public function addDonation($amount) {

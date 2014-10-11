@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration {
       $table->float('donation')->default(0); // spesul ppl
 
       $table->boolean('site_admin')->default(0);
+      $table->boolean('beta')->default(0);
       $table->rememberToken();
 			$table->timestamps();
 		});

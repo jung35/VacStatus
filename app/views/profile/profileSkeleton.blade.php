@@ -9,13 +9,18 @@
     @if($profile->site_admin)
     <div class="label warning profile-label">Superstar</div>
     @endif
+    @if($profile->beta)
+    <div class="label profile-label">Beta</div>
+    @endif
     @if($profile->isPrivate())
     <div class="label alert profile-label">Private</div>
     @endif
-    @if(is_numeric($profile->donation) && $profile->donation >= 1)
+    @if(is_numeric($profile->donation) && $profile->donation >= DonationPerk::getPerkAmount('donor_label'))
     <div class="label success profile-label">Donator</div>
     @endif
-    <h3 {{ (is_numeric($profile->donation) && $profile->donation >= 7.5) ? "class='text-success'" : '' }}>{{{ $profile->getDisplayName() }}}<!-- <small>&nbsp;</small> --></h3>
+    <h3 {{ (is_numeric($profile->donation) && $profile->donation >= DonationPerk::getPerkAmount('green_name')) ? "class='text-success'" : '' }}>
+      {{{ $profile->getDisplayName() }}}
+    </h3>
     <div class="row">
       <div class="medium-2 columns">
         <span class="big-steam"><a href="http://steamcommunity.com/profiles/{{{ $profile->getSteam3Id() }}}" target="_blank"><i class="fa fa-steam"></i></a></span>

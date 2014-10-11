@@ -59,22 +59,12 @@
           </tr>
         </thead>
         <tbody>
+        @foreach($donationPerk as $perk)
           <tr>
-            <td>Donor Label on Profile</td>
-            <td>$1.00</td>
+            <td>{{{ $perk->getDesc() }}}</td>
+            <td>${{{ $perk->getAmount() }}}</td>
           </tr>
-          <tr>
-            <td>Change List Limit to 10</td>
-            <td>$2.50</td>
-          </tr>
-          <tr>
-            <td>Change User Limit to 30</td>
-            <td>$5.00</td>
-          </tr>
-          <tr>
-            <td>Green Username</td>
-            <td>$7.50</td>
-          </tr>
+        @endforeach
         </tbody>
       </table>
       <p style="line-height:0%; font-size: 12px">* Donations do add up.</p>
@@ -93,21 +83,19 @@
           </tr>
         </thead>
         <tbody>
+        @foreach($latestDonation as $key => $donator)
           <tr>
-            <td class="text-center">1</td>
-            <td><a href="#">Jung3o</a></td>
-            <td class="text-center">$100.00</td>
+            <td class="text-center">{{{ $key + 1 }}}</td>
+            <td>
+              <a href="{{{ $donator->small_id == null ? '#': URL::route('profile', Array('steam3Id'=> Steam\Steam::toBigId($donator->small_id))) }}}">
+                <span {{ (is_numeric($donator->donation) && $donator->donation >= DonationPerk::getPerkAmount('green_name')) ? "class='text-success'" : '' }}>
+                {{{ $donator->display_name == null ? 'Anonymous': $donator->display_name }}}
+                </span>
+              </a>
+            </td>
+            <td class="text-center">${{{ number_format($donator->original_amount, 2, '.', '') }}}</td>
           </tr>
-          <tr>
-            <td class="text-center">2</td>
-            <td><a href="#">Jung3o</a></td>
-            <td class="text-center">$10.00</td>
-          </tr>
-          <tr>
-            <td class="text-center">10</td>
-            <td><a href="#">Jung3o</a></td>
-            <td class="text-center">$10.00</td>
-          </tr>
+          @endforeach
         </tbody>
       </table>
     </div>
@@ -122,21 +110,19 @@
           </tr>
         </thead>
         <tbody>
+        @foreach($mostDonation as $key => $donator)
           <tr>
-            <td class="text-center">1</td>
-            <td><a href="#">Jung3o</a></td>
-            <td class="text-center">$100.00</td>
+            <td class="text-center">{{{ $key + 1 }}}</td>
+            <td>
+              <a href="{{{ URL::route('profile', Array('steam3Id'=> $donator->getSteam3Id())) }}}">
+                <span {{ (is_numeric($donator->donation) && $donator->donation >= DonationPerk::getPerkAmount('green_name')) ? "class='text-success'" : '' }}>
+                {{{ $donator->getUserName() }}}
+                </span>
+              </a>
+            </td>
+            <td class="text-center">${{{ $donator->getDonation() }}}</td>
           </tr>
-          <tr>
-            <td class="text-center">2</td>
-            <td><a href="#">Jung3o</a></td>
-            <td class="text-center">$10.00</td>
-          </tr>
-          <tr>
-            <td class="text-center">10</td>
-            <td><a href="#">Jung3o</a></td>
-            <td class="text-center">$10.00</td>
-          </tr>
+          @endforeach
         </tbody>
       </table>
     </div>

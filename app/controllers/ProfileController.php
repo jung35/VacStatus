@@ -20,8 +20,10 @@ class ProfileController extends BaseController {
           'profile.alias',
           'profile.created_at',
           'profile.updated_at',
+
           'users.donation',
           'users.site_admin',
+          'users.beta',
         ]);
 
       /*

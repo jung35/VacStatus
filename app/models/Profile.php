@@ -170,8 +170,10 @@ class Profile extends \Eloquent {
           'profile.alias',
           'profile.created_at',
           'profile.updated_at',
+
           'users.donation',
           'users.site_admin',
+          'users.beta',
         ]);
 
       /*
@@ -283,6 +285,7 @@ class Profile extends \Eloquent {
 
           'users.donation',
           'users.site_admin',
+          'users.beta',
         ]);
 
       /*
@@ -516,6 +519,7 @@ class Profile extends \Eloquent {
 
           'users.donation',
           'users.site_admin',
+          'users.beta',
         ]);
 
       return $profiles;

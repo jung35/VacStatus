@@ -7,9 +7,30 @@ class DonationController extends \BaseController {
 
   public function DonationAction() {
 
-    // $latestDonation = DonationLog::
+    $latestDonation = DonationLog::whereStatus('Completed')
+      ->leftjoin('users', 'donation_log.small_id', '=', 'users.small_id')
+      ->orderBy('donation_log.id', 'desc')
+      ->take(10)
+      ->get([
+        'donation_log.original_amount',
+        'users.display_name',
+        'users.small_id',
+        'users.donation',
+        ]);
 
-    return View::make('donation/donation');
+    $mostDonation = User::where('donation', '>', '0')
+      ->orderBy('donation', 'desc')
+      ->take(10)
+      ->get();
+
+    $donationPerk = DonationPerk::orderBy('id', 'asc')
+      ->get();
+
+    return View::make('donation/donation', Array(
+                      'latestDonation' => $latestDonation,
+                      'mostDonation' => $mostDonation,
+                      'donationPerk' => $donationPerk
+                      ));
   }
 
   public function IPNAction() {
