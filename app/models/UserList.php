@@ -27,6 +27,10 @@ class UserList extends \Eloquent {
     return $this->title;
   }
 
+  public function getPrivacy() {
+    return $this->privacy;
+  }
+
   public static function getCount($userListProfiles = null) {
     $count = Array();
 

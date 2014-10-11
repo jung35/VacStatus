@@ -79,10 +79,12 @@ function doAddUserList(form) {
     }
     fadeOutLoader();
     $(form.submit).prop("disabled", false);
+    $addProfileUser.foundation('reveal', 'close');
   }).error(function() {
     fadeOutLoader();
     fadInOutAlert("<strong>Error</strong> There was an error adding this user to the list.", 2);
     $(form.submit).prop("disabled", false);
+    $addProfileUser.foundation('reveal', 'close');
   });
 }
 
@@ -119,6 +121,47 @@ function doDeleteUserList(form) {
     fadeOutLoader();
     fadInOutAlert("<strong>Error</strong> There was an error removing this user from the list.", 2);
     $(form.submit).prop("disabled", false);
+  });
+}
+
+function doCreateList(form) {
+  var action = form.action,
+    privacy = form.privacy.value,
+    title = form.title.value,
+    _token = form._token.value;
+
+  $(form.submit).prop("disabled",true);
+
+  $.ajax({
+    url: action,
+    type: "POST",
+    data: {
+      'privacy': privacy,
+      'title': title,
+      '_token': _token
+    },
+    beforeSend: fadeInLoader('Creating List')
+  }).done(function(data) {
+    if(data != 'success') {
+      fadInOutAlert("<strong>Error</strong> "+data, 2);
+    } else {
+      fadInOutSuccess("<strong>Success</strong> List has been created.", 2);
+      $.ajax({
+        url: '/list/get',
+        type: "GET",
+        beforeSend: fadeInLoader('Fetching List')
+      }).done(function(data) {
+
+      });
+    }
+    fadeOutLoader();
+    $(form.submit).prop("disabled", false);
+    $addProfileUser.foundation('reveal', 'close');
+  }).error(function() {
+    fadeOutLoader();
+    fadInOutAlert("<strong>Error</strong> There was an error adding this user to the list.", 2);
+    $(form.submit).prop("disabled", false);
+    $addProfileUser.foundation('reveal', 'close');
   });
 }
 

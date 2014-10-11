@@ -5,6 +5,22 @@ use Steam\SteamUser as SteamUser;
 
 class ListController extends BaseController {
 
+  public function getAction() {
+    $userId = Auth::User()->getId();
+    $userList = UserList::whereRaw('user_id = ?', array($userId))->get();
+
+    $simpleList = array();
+    foreach($userList as $list) {
+      $simpleList[] = array(
+        'id' => $list->getId(),
+        'title' => $list->getTitle(),
+        'privacy' => $list->getPrivacy()
+      );
+    }
+
+    return $simpleList;
+  }
+
   public function createAction()
   {
     $title = Input::get('title') ?: 'My List';
@@ -18,10 +34,10 @@ class ListController extends BaseController {
       $userList->privacy = $privacy;
       $userList->save();
     } else {
-      return Redirect::back()->with('error', 'Sorry, you have hit the maximum list creation.');
+      return Response::make('Sorry, you have hit the maximum list creation.');
     }
 
-    return Redirect::back()->with('success', 'List has been created.');
+    return Response::make('success');
   }
 
   public function editAction()

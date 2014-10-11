@@ -33,6 +33,7 @@ Route::any('/donation', Array('as' => 'donation', 'uses' => 'DonationController@
 
 Route::group(array('before' => 'auth|csrf'), function() {
 
+  Route::any( '/list/get', Array('as' => 'list_get', 'uses' => 'ListController@getAction'));
   Route::post('/list/add', Array('as' => 'list_add', 'uses' => 'ListController@createAction'));
   Route::post('/list/edit', Array('as' => 'list_edit', 'uses' => 'ListController@editAction'));
   Route::post('/list/delete', Array('as' => 'list_delete', 'uses' => 'ListController@deleteAction'));

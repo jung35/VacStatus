@@ -29,7 +29,7 @@
     @if(Auth::check())
     <div id="addProfileUser" class="reveal-modal tiny" data-reveal>
       <h2 class="text-center">Add User to List</h2>
-      <form action="/list/user/add" method="POST">
+      <form action="{{{ URL::route('list_user_add') }}}" method="POST">
         <div class="row">
           <div class="large-12 columns">
             <label><strong>Add User into:</strong>
@@ -80,7 +80,7 @@
         <div class="row">
           <div class="large-12 columns">
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
-            <button type="submit" class="button expand">Add List</button>
+            <button type="button" name="submit" onClick="javascript:doCreateList(this.form);" class="button expand">Add List</button>
           </div>
         </div>
       </form>
