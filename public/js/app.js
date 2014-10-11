@@ -148,10 +148,32 @@ function doCreateList(form) {
       fadInOutSuccess("<strong>Success</strong> List has been created.", 2);
       $.ajax({
         url: '/list/get',
-        type: "GET",
+        type: "POST",
+        data: {
+          '_token':_token
+        },
         beforeSend: fadeInLoader('Fetching List')
       }).done(function(data) {
+        var listList = $('#addProfileUser').find('select'),
+          personalList = $('#personalList');
 
+        // Clear list
+        listList.html("");
+        personalList.html("");
+        // append update list
+        $.each(data, function(k, list) {
+          console.log(list);
+          listList.append('<option value="'+ list.id +'">'+ list.title +'</option>');
+          personalList.prepend('<li><a onclick="javascript:showList('+ list.id +');">'+ list.title +'</a></li>');
+        });
+        personalList.append('<li class="divider"></li>');
+        personalList.append('<li><a data-reveal-id="addList">New List</a></li>');
+
+        fadInOutSuccess("<strong>Success</strong Updated List", 2);
+        fadeOutLoader();
+      }).error(function() {
+        fadInOutAlert("<strong>Error</strong> Could not update list.", 2);
+        fadeOutLoader();
       });
     }
     fadeOutLoader();

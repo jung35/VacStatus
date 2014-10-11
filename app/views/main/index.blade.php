@@ -73,7 +73,7 @@
             @foreach($friendsList as $friends)
             @if($friends->UserList()->count() > 0)
             <li class="has-dropdown">
-              <a>{{{ $friends->getUserName() }}} <i class="fa fa-caret-down right"></i></a>
+              <a>{{{ $friends->getUserName() }}}</a>
               <ul class="dropdown">
                 @foreach($friends->UserList()->where('privacy','!=','3')->orderBy('id', 'DESC')->get() as $friendsList)
                 <li class="right"><a onClick="javascript:showList({{{ $friendsList->user_id }}}, {{{ $friendsList->getId() }}});">{{{ $friendsList->getTitle() }}}</a></li>
