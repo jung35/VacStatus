@@ -54,6 +54,74 @@ function addUserList(profileId) {
   $addProfileUser.foundation('reveal', 'open');
 }
 
+function doAddUserList(form) {
+  var action = form.action,
+    list_id = form.list_id.value,
+    profile_id = form.profile_id.value,
+    _token = form._token.value;
+
+  $(form.submit).prop("disabled",true);
+
+  $.ajax({
+    url: action,
+    type: "POST",
+    data: {
+      'list_id': list_id,
+      'profile_id': profile_id,
+      '_token': _token
+    },
+    beforeSend: fadeInLoader('Adding user to list')
+  }).done(function(data) {
+    if(data != 'success') {
+      fadInOutAlert("<strong>Error</strong> "+data, 2);
+    } else {
+      fadInOutSuccess("<strong>Success</strong> The user has been added to list.", 2);
+    }
+    fadeOutLoader();
+    $(form.submit).prop("disabled", false);
+  }).error(function() {
+    fadeOutLoader();
+    fadInOutAlert("<strong>Error</strong> There was an error adding this user to the list.", 2);
+    $(form.submit).prop("disabled", false);
+  });
+}
+
+function doDeleteUserList(form) {
+  var action = form.action,
+    list_id = form.list_id.value,
+    profile_id = form.profile_id.value,
+    _token = form._token.value;
+
+  $(form.submit).prop("disabled",true);
+
+  $.ajax({
+    url: action,
+    type: "POST",
+    data: {
+      'list_id': list_id,
+      'profile_id': profile_id,
+      '_token': _token
+    },
+    beforeSend: fadeInLoader('Removing user from list')
+  }).done(function(data) {
+    if(data != 'success') {
+      fadInOutAlert("<strong>Error</strong> "+data, 2);
+    } else {
+      var thisData = $(this)[0].data.split('&'),
+        thisProfileId = thisData[1].split('=')[1];
+
+      $('.vacstatus-multilist').find('.profileId_'+thisProfileId).remove();
+      fadInOutSuccess("<strong>Success</strong> The user has been deleted from the list.", 2);
+    }
+    fadeOutLoader();
+    $(form.submit).prop("disabled", false);
+  }).error(function() {
+    fadeOutLoader();
+    fadInOutAlert("<strong>Error</strong> There was an error removing this user from the list.", 2);
+    $(form.submit).prop("disabled", false);
+  });
+}
+
 function showList(uori,list) {
   var req;
   if(list == null || list == undefined) {

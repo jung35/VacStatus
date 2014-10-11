@@ -45,7 +45,7 @@
           <div class="large-12 columns">
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
             <input type="hidden" name="profile_id" id="profile_id">
-            <button type="submit" class="button expand">Add To List</button>
+            <button type="button" name="submit" onClick="javascript:doAddUserList(this.form);" class="button expand">Add To List</button>
           </div>
         </div>
         <div class="row">

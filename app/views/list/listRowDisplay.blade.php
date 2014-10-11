@@ -1,7 +1,15 @@
+<table>
 @foreach($userList as $UserListProfile)
   @if(is_object($UserListProfile))
-  <table class="for_profileId_{{{ $UserListProfile->profile_id }}}">
-  <tr>
+    @include('list/listRow', array('UserListProfile' => $UserListProfile))
+  @endif
+@endforeach
+</table>
+
+{{--
+
+
+  <tr class="for_profileId_{{{ $UserListProfile->profile_id }}}">
     <td class="vacstatus-list-avatar list-replaceable">
       <img src="{{{ $UserListProfile->avatar_thumb }}}">
     </td>
@@ -21,6 +29,5 @@
     @endif
     <td class="vacstatus-list-tracker">{{{ $UserListProfile->get_num_tracking }}}</td>
   </tr>
-  </table>
-  @endif
-@endforeach
+
+  --}}

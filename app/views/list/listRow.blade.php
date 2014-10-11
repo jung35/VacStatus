@@ -1,4 +1,4 @@
-<tr class="profileId_{{{ $UserListProfile->profile_id }}}">
+<tr class="profileId_{{{ $UserListProfile->profile_id ?:$UserListProfile->id }}}">
   <td class="vacstatus-list-avatar list-replaceable">
     <img src="{{{ $UserListProfile->avatar_thumb }}}">
   </td>
@@ -26,10 +26,10 @@
           <input type="hidden" name="list_id" value="{{{ $UserListProfile->user_list_id }}}">
           <input type="hidden" name="profile_id" value="{{{ $UserListProfile->profile_id }}}">
           <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
-          <button type="submit" class="button tiny alert-bg"><i class="fa fa-minus"></i></button>
+          <button onClick="javascript:doDeleteUserList(this.form);" name="submit" type="button" class="button tiny alert-bg"><i class="fa fa-minus"></i></button>
         </form>
       @else
-        <button class="button tiny" onClick="javascript:addUserList({{{ $UserListProfile->profile_id }}});"><i class="fa fa-plus"></i></button>
+        <button class="button tiny" onClick="javascript:addUserList({{{ $UserListProfile->profile_id ?:$UserListProfile->id }}});"><i class="fa fa-plus"></i></button>
       @endif
     @endif
   </td>

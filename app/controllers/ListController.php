@@ -67,13 +67,13 @@ class ListController extends BaseController {
           $userListProfile->user_list_id = $listId;
           $userListProfile->profile_id = $profileId;
           $userListProfile->save();
-          return Redirect::back()->with('success', 'The user has been added to list.');
+          return Response::make('success');
         }
-        return Redirect::back()->with('error', 'Sorry, you have hit the maximum amount of users per list allowed.');
+        return Response::make('Sorry, you have hit the maximum amount of users per list allowed.');
       }
-      return Redirect::back()->with('error', 'This user is already in the list.');
+      return Response::make('This user is already in the list.');
     }
-    return Redirect::back()->with('error', 'Invalid list or profile.');
+    return Response::make('Invalid list or profile.');
   }
 
   public function deleteUserAction() {
@@ -86,10 +86,10 @@ class ListController extends BaseController {
       $userListProfile = UserListProfile::whereRaw('user_list_id = ? and profile_id = ?', array($listId, $profileId))->first();
       if(isset($userListProfile->id)) {
         $userListProfile->delete();
-        return Redirect::back()->with('success', 'The user has been deleted from the list.');
+        return Response::make('success');
       }
-      return Redirect::back()->with('error', 'This user is not on the list.');
+      return Response::make('This user is not on the list.');
     }
-    return Redirect::back()->with('error', 'Invalid list or profile.');
+    return Response::make('Invalid list or profile.');
   }
 }

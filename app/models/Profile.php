@@ -289,6 +289,13 @@ class Profile extends \Eloquent {
         ]);
 
       /*
+      We want to include the # of people tracking and it's not on the db.
+      Can't just take it out like magic. So, insert the new and updated array of profile
+      into here while under forloop
+       */
+      $newProfile = array();
+
+      /*
       Start updating the user profile with new data from Steam Web API
        */
       foreach($profiles as $profile) {
@@ -385,8 +392,12 @@ class Profile extends \Eloquent {
         /*
         Tell cache that steam profile has been updated
          */
-
         Steam::setUpdate($profile->small_id);
+
+        /*
+        Add profile to new profiles variable so the # of tracking can be used
+         */
+        $newProfile[] = $profile;
       }
 
       /*
@@ -490,39 +501,14 @@ class Profile extends \Eloquent {
          */
 
         Steam::setUpdate($profile->small_id);
+
+        /*
+        Add profile to new profiles variable so the # of tracking can be used
+         */
+        $newProfile[] = $profile;
       }
 
-      /*
-      Call it again beacuse seems like the only way to do this.
-       */
-
-      $profiles = (object) self::whereIn('profile.small_id', Steam::toSmallId($originalSteam3Ids))
-        ->join('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
-        ->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
-        ->get([
-          'profile.id',
-          'profile.small_id',
-          'profile.display_name',
-          'profile.privacy',
-          'profile.avatar_thumb',
-          'profile.avatar',
-          'profile.profile_created',
-          'profile.alias',
-          'profile.created_at',
-          'profile.updated_at',
-
-          'profile_ban.community',
-          'profile_ban.vac',
-          'profile_ban.vac_days',
-          'profile_ban.trade',
-          'profile_ban.unban',
-
-          'users.donation',
-          'users.site_admin',
-          'users.beta',
-        ]);
-
-      return $profiles;
+      return (object)$newProfile;
     }
     return false;
   }

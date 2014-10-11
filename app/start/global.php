@@ -103,3 +103,19 @@ App::bind('Hybrid_Auth', function() {
     )
   ));
 });
+
+App::error(function(Exception $exception, $code)
+{
+    $pathInfo = Request::getPathInfo();
+    $message = $exception->getMessage() ?: 'Exception';
+    Log::error("$code - $message @ $pathInfo\r\n$exception");
+
+    if (Config::get('app.debug')) {
+        return;
+    }
+
+    /*
+    For now, it redirects to index page, but create a better one later...
+     */
+    return Redirect::home();
+});
