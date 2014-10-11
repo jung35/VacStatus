@@ -27,8 +27,9 @@ class HomeController extends BaseController {
     $friendsList = array();
 
     if(Auth::check()) {
-      if(Session::has('friendsList') && count(Session::get('friendsList')) != 0) {
-        $friendsList = User::whereIn('small_id', Session::get('friendsList'))->get();
+      $userId = Auth::User()->getId();
+      if(Cache::has('friendsList_'.$userId) && count(Cache::get('friendsList_'.$userId)) != 0) {
+        $friendsList = User::whereIn('small_id', Cache::get('friendsList_'.$userId))->get();
       }
     }
 

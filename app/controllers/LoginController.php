@@ -76,9 +76,9 @@ class LoginController extends \BaseController {
         $simpleFriends[] = Steam::toSmallId($steamAPI_friend->steamid);
       }
     }
-    Session::put('friendsList', $simpleFriends);
 
     Auth::login($user, true);
+    Cache::forever('friendsList_'. Auth::User()->getId(), $simpleFriends);
 
     return Redirect::home()->with('success','You have Successfully logged in.');
     //
