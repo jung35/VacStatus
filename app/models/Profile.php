@@ -91,8 +91,12 @@ class Profile extends \Eloquent {
 
       $profile->display_name = $steamAPI_Info->personaname;
       $profile->privacy = $steamAPI_Info->communityvisibilitystate;
-      $profile->avatar_thumb = $steamAPI_Info->avatar;
-      $profile->avatar = $steamAPI_Info->avatarfull;
+
+      $httpsURL = 'https://store.steampowered.com/avatar/';
+      $httpURL = 'http://media.steampowered.com/steamcommunity/public/images/avatars/';
+
+      $profile->avatar_thumb = str_replace($httpURL, $httpsURL, $profile_Info->avatar);
+      $profile->avatar = str_replace($httpURL, $httpsURL, $profile_Info->avatarfull);
 
       $profile->alias = json_encode($steamAPI_alias);
 
@@ -317,8 +321,12 @@ class Profile extends \Eloquent {
 
         $profile->display_name = $profile_Info->personaname;
         $profile->privacy = $profile_Info->communityvisibilitystate;
-        $profile->avatar_thumb = $profile_Info->avatar;
-        $profile->avatar = $profile_Info->avatarfull;
+
+        $httpsURL = 'https://store.steampowered.com/avatar/';
+        $httpURL = 'http://media.steampowered.com/steamcommunity/public/images/avatars/';
+
+        $profile->avatar_thumb = str_replace($httpURL, $httpsURL, $profile_Info->avatar);
+        $profile->avatar = str_replace($httpURL, $httpsURL, $profile_Info->avatarfull);
 
         $profile->alias = json_encode($profile_Alias);
 
@@ -424,8 +432,12 @@ class Profile extends \Eloquent {
 
         $profile->display_name = $profile_Info->personaname;
         $profile->privacy = $profile_Info->communityvisibilitystate;
-        $profile->avatar_thumb = $profile_Info->avatar;
-        $profile->avatar = $profile_Info->avatarfull;
+
+        $httpsURL = 'https://store.steampowered.com/avatar/';
+        $httpURL = 'http://media.steampowered.com/steamcommunity/public/images/avatars/';
+
+        $profile->avatar_thumb = str_replace($httpURL, $httpsURL, $profile_Info->avatar);
+        $profile->avatar = str_replace($httpURL, $httpsURL, $profile_Info->avatarfull);
 
         $profile->alias = json_encode($profile_Alias);
 
