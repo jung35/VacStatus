@@ -71,7 +71,6 @@
       <p style="line-height:0%; font-size: 12px">** You can also donate as guest by logging off, but no perks will be given.</p>
     </div>
   </div>
-  @if(count($latestDonation) > 1)
   <div class="row">
     <div class="medium-6 columns">
       <h4>Recent Donations</h4>
@@ -128,7 +127,6 @@
       </table>
     </div>
   </div>
-  @endiff
 </div>
 
 @stop
