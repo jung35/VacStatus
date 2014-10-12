@@ -135,7 +135,7 @@
             <label>
               <select name="search_type">
                 <option value="1">URL / STEAM2 ID / STEAM3 ID (64bit)</option>
-                <option value="2">"Status" Paste from Developer Console</option>
+                <option value="2" disabled>"Status" Paste from Developer Console</option>
               </select>
             </label>
           </div>
@@ -193,7 +193,7 @@
               @if(Auth::check())
               @if(Auth::User()->isAdmin())
               <li>
-                <a class="alert" href="#">
+                <a class="alert" href="{{{ URL::route('admin_home') }}}">
                   Admin CP
                 </a>
               </li>

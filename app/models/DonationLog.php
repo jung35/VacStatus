@@ -8,4 +8,16 @@ class DonationLog extends \Eloquent {
    * @var string
    */
   protected $table = 'donation_log';
+
+  public function isValid(){
+    return $this->status == 'Completed';
+  }
+
+  public function getOriginalAmount() {
+    return $this->original_amount;
+  }
+
+  public function getAmount() {
+    return $this->amount;
+  }
 }

@@ -31,6 +31,8 @@ Route::post('/list/update', Array('before' => 'csrf', 'as' => 'list_update', 'us
 Route::any('/ipn', Array('uses' => 'DonationController@IPNAction'));
 Route::any('/donation', Array('as' => 'donation', 'uses' => 'DonationController@DonationAction'));
 
+Route::get('/news/{newsId?}', Array('as' => 'news', 'uses' => 'HomeController@newsAction'));
+
 Route::group(array('before' => 'auth|csrf'), function() {
 
   Route::any( '/list/get', Array('as' => 'list_get', 'uses' => 'ListController@getAction'));
@@ -41,6 +43,26 @@ Route::group(array('before' => 'auth|csrf'), function() {
   Route::post('/list/user/add', Array('as' => 'list_user_add', 'uses' => 'ListController@addUserAction'));
   Route::post('/list/user/delete', Array('as' => 'list_user_delete', 'uses' => 'ListController@deleteUserAction'));
 
+});
+
+Route::filter('admin', function()
+{
+  if(!Auth::check() || !Auth::User()->isAdmin()) {
+    return Redirect::home();
+  }
+});
+
+Route::group(array('prefix' => 'admin', 'before' => 'admin'), function()
+{
+  Route::get('/', Array('as' => 'admin_home', 'uses' => 'AdminController@indexAction'));
+
+  Route::get('/news', Array('as' => 'admin_news', 'uses' => 'AdminController@newsAction'));
+  Route::post('/news/create', Array('before' => 'csrf', 'as' => 'admin_news_create', 'uses' => 'AdminController@newsCreateAction'));
+
+  Route::get('/news/edit/{newsId?}', Array('as' => 'admin_news_edit', 'uses' => 'AdminController@newsEditAction'));
+  Route::post('/news/edit', Array('before' => 'csrf', 'as' => 'admin_news_post_edit', 'uses' => 'AdminController@newsPostEditAction'));
+
+  Route::post('/news/delete', Array('before' => 'csrf', 'as' => 'admin_news_delete', 'uses' => 'AdminController@newsDeleteAction'));
 });
 
 Route::get('/privacy', function()

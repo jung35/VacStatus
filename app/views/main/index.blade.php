@@ -96,7 +96,9 @@
     <div class="large-4 medium-4 columns vacstatus-news" data-equalizer-watch>
       <h5>News &amp; Updates</h5>
       <ul>
-        <li><span>MM/DD/YYYY&nbsp;&mdash;</span>&nbsp;<a href="#">HIHIHIHI</a></li>
+      @foreach($news as $article)
+        <li><span>{{{ date('m/d/Y', strtotime($article->created_at)) }}}&nbsp;&mdash;</span>&nbsp;<a href="{{{ URL::route('news', $article->id) }}}">{{{ $article->title }}}</a></li>
+      @endforeach
       </ul>
     </div>
   </div>

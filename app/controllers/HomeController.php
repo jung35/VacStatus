@@ -23,6 +23,7 @@ class HomeController extends BaseController {
     }
 
     $userList = UserList::getListType($req);
+    $news = DB::table('news')->orderBy('id','desc')->take(10)->get();
 
     $friendsList = array();
 
@@ -33,7 +34,10 @@ class HomeController extends BaseController {
       }
     }
 
-    return View::make('main/index', array('userList' => $userList, 'friendsList' => $friendsList));
+    return View::make('main/index', array(
+                      'userList' => $userList,
+                      'friendsList' => $friendsList,
+                      'news' => $news));
   }
 
   public function searchSingleAction() {
@@ -100,5 +104,15 @@ class HomeController extends BaseController {
   }
 
   private function searchMutlipleDefault($search) {
+  }
+
+  public function newsAction($newsId) {
+    $news = News::whereId($newsId)->first();
+
+    if(!is_object($news)) {
+      return Redirect::home()->with('error', 'Could not find news.');
+    }
+
+    return View::make('main/news', array('news' => $news));
   }
 }

@@ -91,12 +91,13 @@ a {
 }
 
 .list-display .vacstatus-list-button {
-  .button {
-    font-size: 0.8rem;
-    margin: 0 auto;
-    padding: 8px 15px;
-  }
   text-align: center;
+}
+
+table .button {
+  font-size: 0.8rem;
+  margin: 0 auto;
+  padding: 8px 15px;
 }
 
 .reveal-modal {
