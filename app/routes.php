@@ -69,3 +69,7 @@ Route::get('/privacy', function()
 {
     return View::make('main/privacy');
 });
+
+
+
+Route::get('/old', Array('before' => 'auth', 'as' => 'old_data', 'uses' => 'OldDataController@indexAction'));
