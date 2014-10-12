@@ -62,15 +62,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
   }
 
   public function unlockUser() {
-    if($this->donation >= DonationPerk::getPerkAmount('user_30')) {
-      return 30;
+    if($this->donation >= DonationPerk::getPerkAmount('user_50')) {
+      return 50;
     }
 
     if($this->beta == 1) {
-      return 20;
+      return 35;
     }
 
-    return 10;
+    return 30;
   }
 
   public function unlockSearch() {
