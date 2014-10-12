@@ -10,12 +10,12 @@
       <p style="line-height:200%; font-size: 14px">VacStatus was created as a hobby and will forever be free to use.
       <br>But in order to maintain this website, it costs time and money.
       <br>If you enjoy using this service, please feel free to donate.</p>
-      <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
         <input type="hidden" name="cmd" value="_donations">
         <input type="hidden" name="item_name" value="Donation">
-        <input type="hidden" name="business" value="jung3o-facilitator@yahoo.com">
-        <input type="hidden" name="notify_url" value="http://test.vacstatus.com/ipn">
-        <input type="hidden" name="return" value="http://test.vacstatus.com/donation">
+        <input type="hidden" name="business" value="jung3o@yahoo.com">
+        <input type="hidden" name="notify_url" value="http://vacstat.us/ipn">
+        <input type="hidden" name="return" value="http://vacstat.us/donation">
         <input type="hidden" name="rm" value="2">
         <input type="hidden" name="custom" value="{{{ Auth::check() ? Auth::User()->getSmallId() : "Anonymous" }}}">
         <input type="hidden" name="no_note" value="1">
