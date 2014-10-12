@@ -39,7 +39,7 @@ class DonationController extends \BaseController {
     $ipnMessage = Message::createFromGlobals(); // uses php://input
 
     $verifier->setIpnMessage($ipnMessage);
-    $verifier->setEnvironment('sandbox'); // can either be sandbox or production
+    $verifier->setEnvironment('production'); // can either be sandbox or production
 
     $listener->setVerifier($verifier);
 
