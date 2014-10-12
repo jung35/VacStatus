@@ -128,7 +128,7 @@
       </table>
     </div>
   </div>
-  @endif
+  @endiff
 </div>
 
 @stop

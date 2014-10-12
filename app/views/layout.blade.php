@@ -259,7 +259,7 @@
 
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.3.1/js/foundation.min.js"></script>
-    <script type="text/javascript" src="{{{ asset('js/app.js') }}}"></script>
+    <script type="text/javascript" src="/js/app.js"></script>
     @section('javascript')
     @show
     <script>
