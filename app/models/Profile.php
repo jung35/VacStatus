@@ -95,8 +95,8 @@ class Profile extends \Eloquent {
       $httpsURL = 'https://store.steampowered.com/avatar/';
       $httpURL = 'http://media.steampowered.com/steamcommunity/public/images/avatars/';
 
-      $profile->avatar_thumb = str_replace($httpURL, $httpsURL, $profile_Info->avatar);
-      $profile->avatar = str_replace($httpURL, $httpsURL, $profile_Info->avatarfull);
+      $profile->avatar_thumb = str_replace($httpURL, $httpsURL, $steamAPI_Info->avatar);
+      $profile->avatar = str_replace($httpURL, $httpsURL, $steamAPI_Info->avatarfull);
 
       $profile->alias = json_encode($steamAPI_alias);
 
