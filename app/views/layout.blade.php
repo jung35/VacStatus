@@ -279,6 +279,9 @@
       ga('create', 'UA-50795838-1', 'vacstatus.com');
       ga('require', 'displayfeatures');
       ga('send', 'pageview');
+      @if(Auth::check())
+      ga('set’' '&uid', Auth::User()->getId());
+      @endif
     </script>
   </body>
 </html>
