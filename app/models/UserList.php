@@ -79,7 +79,7 @@ class UserList extends \Eloquent {
   }
 
   public static function getMyList($listId) {
-    if($listId && is_numeric($listId)) {
+    if($listId && is_numeric($listId) && Auth::check()) {
       $userList = UserList::whereRaw('id = ? and user_id = ?', Array($listId, Auth::user()->getId()))->first();
 
       if(isset($userList->id)) {
