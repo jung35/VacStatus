@@ -280,7 +280,7 @@
       ga('require', 'displayfeatures');
       ga('send', 'pageview');
       @if(Auth::check())
-      ga('set’' '&uid', Auth::User()->getId());
+      ga('set’' '&uid', {{{ Auth::User()->getId() }}});
       @endif
     </script>
   </body>
