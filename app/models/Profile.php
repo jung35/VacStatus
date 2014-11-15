@@ -303,11 +303,15 @@ class Profile extends \Eloquent {
       Start updating the user profile with new data from Steam Web API
        */
       foreach($profiles as $profile) {
-        if(!isset($arrBySmallId[$profile->small_id]) ||
-           !is_object($profile->small_id) ||
-           !is_array($profile->small_id)) {
+        if(!isset($arrBySmallId[$profile->small_id])
+           && (
+             !is_object($profile->small_id)
+             || !is_array($profile->small_id))
+          ) {
           continue;
         }
+
+
         /*
         Make note that the following profile was found under steamid
          */

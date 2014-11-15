@@ -11,7 +11,7 @@ Class Steam {
    * Time in seconds before profile is called to an update
    * @var Integer
    */
-  public static $UPDATE_TIME = 600; // 1 HOUR = 3600 seconds
+  public static $UPDATE_TIME = 0; // 1 HOUR = 3600 seconds
 
   public static function getAPI() {
     return $_ENV['STEAM_API'];
