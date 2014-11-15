@@ -19,6 +19,6 @@ class DonationPerk extends \Eloquent {
   static public function getPerkAmount($perk) {
     $perk = self::wherePerk($perk)->first();
 
-    return $perk->amount;
+    return is_object($perk) ? $perk->amount:0;
   }
 }
