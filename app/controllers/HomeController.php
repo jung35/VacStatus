@@ -59,7 +59,25 @@ class HomeController extends BaseController {
       return Redirect::home()->with('error', 'Invalid fields.');
     }
 
-    $search = array_filter(explode(" ", $search));
+    $statusChecker = array_filter(explode("\n", $search));
+    $statusConfirm = false;
+    $search = array();
+    foreach($statusChecker as $status) {
+      if(substr(trim($status), 0, 1) == "#")
+      {
+        preg_match("(STEAM_.*?\s)", trim($status), $foundSteam);
+        if(count($foundSteam) == 0) continue;
+        $search[] = $foundSteam[0];
+        $statusConfirm = true;
+      }
+    }
+
+    $search = array_filter($search);
+
+    if(!$statusConfirm) {
+      $search = array_filter(explode(" ", $search));
+    }
+
     if(Auth::check())
     {
       if(count($search) > Auth::User()->unlockSearch()) {
