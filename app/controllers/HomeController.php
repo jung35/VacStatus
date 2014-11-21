@@ -71,13 +71,16 @@ class HomeController extends BaseController {
       return Redirect::home()->with('error', 'Too many profiles listed in search box.');
     }
 
-    switch($searchType) {
+    switch($searchType)
+    {
       case 1:
-        if(is_array($search)) {
+        if(is_array($search))
+        {
           $validProfile = Array();
           $invalidProfile = Array();
 
-          foreach($search as $potentialProfile) {
+          foreach($search as $potentialProfile)
+          {
             $steam3Id = SteamUser::findSteam3IdUser($potentialProfile);
 
             if($steam3Id->type == 'error') {
@@ -97,6 +100,10 @@ class HomeController extends BaseController {
         }
         break;
       case 2:
+        if(is_array($search))
+        {
+
+        }
         break;
     }
 

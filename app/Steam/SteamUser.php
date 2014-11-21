@@ -34,7 +34,8 @@ Class SteamUser extends Steam {
     {
       if (strlen($data) > 100) return (object) array('type' => 'error', 'data' => 'Field too long');
 
-      if (substr($data, 0, 6) == 'steam_')
+      if (substr($data, 0, 6) == 'steam_' ||
+          substr($data, 0, 2) == 'u:')
       {
         $tmp = explode(':',$data);
         if ((count($tmp) == 3) && is_numeric($tmp[1]) && is_numeric($tmp[2]))
