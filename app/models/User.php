@@ -50,8 +50,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
   }
 
   public function unlockList() {
+    if($this->isAdmin()) {
+      return 999;
+    }
+
     if($this->donation >= DonationPerk::getPerkAmount('list_10')) {
-      return 10;
+      return 20;
     }
 
     if($this->beta == 1) {
@@ -62,8 +66,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
   }
 
   public function unlockUser() {
+    if($this->isAdmin()) {
+      return 999;
+    }
+
     if($this->donation >= DonationPerk::getPerkAmount('user_50')) {
-      return 50;
+      return 75;
     }
 
     if($this->beta == 1) {
@@ -74,15 +82,19 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
   }
 
   public function unlockSearch() {
+    if($this->isAdmin()) {
+      return 999;
+    }
+
     if($this->donation >= DonationPerk::getPerkAmount('search_50')) {
-      return 50;
+      return 70;
     }
 
     if($this->beta == 1) {
-      return 25;
+      return 50;
     }
 
-    return 15;
+    return 30;
   }
 
   public function addDonation($amount) {

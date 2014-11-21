@@ -53,58 +53,47 @@ class HomeController extends BaseController {
   }
 
   public function searchMultipleAction() {
-    /*
-      1 - Default
-      2 - 'status' from console paste
-     */
-    $searchType = Input::get('search_type');
-
     $search = Input::get('search');
 
-    if(!isset($searchType) || !isset($search)) {
+    if(!isset($search)) {
       return Redirect::home()->with('error', 'Invalid fields.');
     }
 
-    $search = array_filter(explode("\n", $search));
-
-    if(count($search) > Auth::User()->unlockSearch()) {
-      return Redirect::home()->with('error', 'Too many profiles listed in search box.');
+    $search = array_filter(explode(" ", $search));
+    if(Auth::check())
+    {
+      if(count($search) > Auth::User()->unlockSearch()) {
+        return Redirect::home()->with('error', 'Too many profiles listed in search box.');
+      }
+    } else {
+      if(count($search) > 30) {
+        return Redirect::home()->with('error', 'Too many profiles listed in search box.');
+      }
     }
 
-    switch($searchType)
+    if(is_array($search))
     {
-      case 1:
-        if(is_array($search))
-        {
-          $validProfile = Array();
-          $invalidProfile = Array();
+      $validProfile = Array();
+      $invalidProfile = Array();
 
-          foreach($search as $potentialProfile)
-          {
-            $steam3Id = SteamUser::findSteam3IdUser($potentialProfile);
+      foreach($search as $potentialProfile)
+      {
+        $steam3Id = SteamUser::findSteam3IdUser($potentialProfile);
 
-            if($steam3Id->type == 'error') {
-              $invalidProfile[] = $potentialProfile;
-            } else {
-              $validProfile[] = $steam3Id->data;
-            }
-          }
-
-          $userList = Profile::updateMulitipleProfile($validProfile);
-          if(!is_object($userList)) {
-            return Redirect::home()->with('error', 'None of the users exist');
-          }
-          $userList->title = "Search";
-
-          return View::make('main/search', array('userList' => $userList, 'invalidProfile' => implode(", ", $invalidProfile)));
+        if($steam3Id->type == 'error') {
+          $invalidProfile[] = $potentialProfile;
+        } else {
+          $validProfile[] = $steam3Id->data;
         }
-        break;
-      case 2:
-        if(is_array($search))
-        {
+      }
 
-        }
-        break;
+      $userList = Profile::updateMulitipleProfile($validProfile);
+      if(!is_object($userList)) {
+        return Redirect::home()->with('error', 'None of the users exist');
+      }
+      $userList->title = "Search";
+
+      return View::make('main/search', array('userList' => $userList, 'invalidProfile' => implode(", ", $invalidProfile)));
     }
 
     return Redirect::home()->with('error', 'Invalid Search Option');

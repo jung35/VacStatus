@@ -133,16 +133,6 @@
         <div class="row">
           <div class="large-12 columns">
             <label>
-              <select name="search_type">
-                <option value="1">URL / STEAM2 ID / STEAM3 ID (64bit)</option>
-                <option value="2" disabled>"Status" Paste from Developer Console</option>
-              </select>
-            </label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="large-12 columns">
-            <label>
               <textarea name="search" placeholder="User Info Here (New Line per User)"></textarea>
             </label>
           </div>
@@ -150,7 +140,7 @@
         <div class="row">
           <div class="large-12 columns">
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
-            <button onClick="javascript:disableFormButton(this.form);" name="<button></button>" type="submit" class="button expand">Search</button>
+            <button onClick="javascript:disableFormButton(this.form);" type="submit" class="button expand">Search</button>
           </div>
         </div>
       </form>
