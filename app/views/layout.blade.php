@@ -133,7 +133,7 @@
         <div class="row">
           <div class="large-12 columns">
             <label>
-              <textarea name="search" placeholder="User Info Here (New Line per User)"></textarea>
+              <textarea name="search" placeholder="User Info Here (add space per User)"></textarea>
             </label>
           </div>
         </div>
