@@ -442,11 +442,13 @@ class Profile extends \Eloquent {
         $profile->display_name = $profile_Info->personaname;
         $profile->privacy = $profile_Info->communityvisibilitystate;
 
-        $httpsURL = 'https://store.steampowered.com/avatar/';
-        $httpURL = 'http://media.steampowered.com/steamcommunity/public/images/avatars/';
+        $httpsURL = 'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/';
 
-        $profile->avatar_thumb = str_replace($httpURL, $httpsURL, $profile_Info->avatar);
-        $profile->avatar = str_replace($httpURL, $httpsURL, $profile_Info->avatarfull);
+        preg_match('/^(.*)?\/avatars\/(.*)$/i', $profile_Info->avatar, $newAvatarLink);
+        preg_match('/^(.*)?\/avatars\/(.*)$/i', $profile_Info->avatarfull, $newAvatarFullLink);
+
+        $profile->avatar_thumb = $httpsURL.$newAvatarLink[2];
+        $profile->avatar = $httpsURL.$newAvatarFullLink[2];
 
         $profile->alias = json_encode($profile_Alias);
 
