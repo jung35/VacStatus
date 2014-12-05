@@ -34,20 +34,25 @@ Class SteamUser extends Steam {
     {
       if (strlen($data) > 100) return (object) array('type' => 'error', 'data' => 'Field too long');
 
-      if (substr($data, 0, 6) == 'steam_' ||
-          substr($data, 0, 2) == 'u:')
+      if (substr($data, 0, 6) == 'steam_')
       {
-        $tmp = explode(':',$data);
+        $tmp = explode(':', $data);
         if ((count($tmp) == 3) && is_numeric($tmp[1]) && is_numeric($tmp[2]))
         {
           $steam3Id = bcadd(($tmp[2] * 2) + $tmp[1], '76561197960265728');
           return (object) array('type' => 'success','data' => $steam3Id);
         }
-        else
+        return (object) array('type' => 'error', 'data' => 'Invalid Steam ID');
+      }
+      else if (substr($data, 0, 2) == 'u:')
+      {
+        $tmp = explode(':', $data);
+        if ((count($tmp) == 3) && is_numeric($tmp[2]))
         {
-          return (object) array('type' => 'error', 'data' => 'Invalid Steam ID');
+          $steam3Id = bcadd($tmp[2], '76561197960265728');
+          return (object) array('type' => 'success','data' => $steam3Id);
         }
-
+        return (object) array('type' => 'error', 'data' => 'Invalid Steam ID');
       }
       else if ($p = strrpos($data, '/'))
       {
