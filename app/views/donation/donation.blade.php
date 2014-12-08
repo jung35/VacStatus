@@ -43,8 +43,7 @@
       <h4>Where does donations go?<h4>
       <p style="line-height:200%; font-size: 14px">The priority is on the website.
       <br>
-      <br>Most of the donations will go on making VacStatus a better service.
-      <br>Some of the donations will also pay for my college tuition.</p>
+      <br>Most of the donations will go on making VacStatus a better service.</p>
     </div>
     <div class="large-6 medium-7 columns">
       <h4>As a Thank you.</h4>
