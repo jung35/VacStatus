@@ -94,8 +94,8 @@ class Profile extends \Eloquent {
 
       $httpsURL = 'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/';
 
-      preg_match('/^(.*)?\/avatars\/(.*)$/i', $profile_Info->avatar, $newAvatarLink);
-      preg_match('/^(.*)?\/avatars\/(.*)$/i', $profile_Info->avatarfull, $newAvatarFullLink);
+      preg_match('/^(.*)?\/avatars\/(.*)$/i', $steamAPI_Info->avatar, $newAvatarLink);
+      preg_match('/^(.*)?\/avatars\/(.*)$/i', $steamAPI_Info->avatarfull, $newAvatarFullLink);
 
       $profile->avatar_thumb = $httpsURL.$newAvatarLink[2];
       $profile->avatar = $httpsURL.$newAvatarFullLink[2];
