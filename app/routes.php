@@ -11,38 +11,43 @@
 |
 */
 
-Route::get('/', Array('as' => 'home', 'uses' => 'HomeController@indexAction'));
-Route::get('/l/{uorl?}/{list?}', Array('uses' => 'HomeController@indexAction'));
+Route::get('/', array('as' => 'home', 'uses' => 'HomeController@indexAction'));
+Route::get('/l/{uorl?}/{list?}', array('uses' => 'HomeController@indexAction'));
 
-Route::get('/logout', Array('before' => 'auth', 'as' => 'logout', 'uses' => 'LoginController@logoutAction'));
+Route::get('/logout', array('before' => 'auth', 'as' => 'logout', 'uses' => 'LoginController@logoutAction'));
 
-Route::post('/profile_lookup', Array('as' => 'search_single', 'uses' => 'HomeController@searchSingleAction'));
-Route::post('/search', Array('as' => 'search_multi', 'uses' => 'HomeController@searchMultipleAction'));
+Route::post('/profile_lookup', array('as' => 'search_single', 'uses' => 'HomeController@searchSingleAction'));
+Route::post('/search', array('as' => 'search_multi', 'uses' => 'HomeController@searchMultipleAction'));
 
-Route::get('/login/{action?}', Array('as' => 'login', 'uses' => 'LoginController@loginAction'));
+Route::get('/login/{action?}', array('as' => 'login', 'uses' => 'LoginController@loginAction'));
 
-Route::get('/u/{steam3Id?}', Array('as' => 'profile', 'uses' => 'ProfileController@profileAction'));
+Route::get('/u/{steam3Id?}', array('as' => 'profile', 'uses' => 'ProfileController@profileAction'));
 
-Route::post('/u/update/single', Array('before' => 'csrf', 'uses' => 'ProfileController@updateSingleProfileAction'));
+Route::post('/u/update/single', array('before' => 'csrf', 'uses' => 'ProfileController@updateSingleProfileAction'));
 
-Route::post('/list/fetch', Array('before' => 'csrf', 'as' => 'list_fetch', 'uses' => 'DisplayListController@fetchListAction'));
-Route::post('/list/update', Array('before' => 'csrf', 'as' => 'list_update', 'uses' => 'DisplayListController@updateListAction'));
+Route::post('/list/fetch', array('before' => 'csrf', 'as' => 'list_fetch', 'uses' => 'DisplayListController@fetchListAction'));
+Route::post('/list/update', array('before' => 'csrf', 'as' => 'list_update', 'uses' => 'DisplayListController@updateListAction'));
 
-Route::any('/ipn', Array('uses' => 'DonationController@IPNAction'));
-Route::any('/donation', Array('as' => 'donation', 'uses' => 'DonationController@DonationAction'));
+Route::any('/ipn', array('uses' => 'DonationController@IPNAction'));
+Route::any('/donation', array('as' => 'donation', 'uses' => 'DonationController@DonationAction'));
 
-Route::get('/news/{newsId?}', Array('as' => 'news', 'uses' => 'HomeController@newsAction'));
+Route::get('/news/{newsId?}', array('as' => 'news', 'uses' => 'HomeController@newsAction'));
 
-Route::group(array('before' => 'auth|csrf'), function() {
+Route::group(array('before' => 'auth'), function() {
+  Route::get('/settings', array('as' => 'settings', 'uses' => 'SettingsController@showSettings'));
+  Route::get('/settings/verify/{verification}', array('as' => 'settings_verify', 'uses' => 'SettingsController@verifySettings'));
 
-  Route::any( '/list/get', Array('as' => 'list_get', 'uses' => 'ListController@getAction'));
-  Route::post('/list/add', Array('as' => 'list_add', 'uses' => 'ListController@createAction'));
-  Route::post('/list/edit', Array('as' => 'list_edit', 'uses' => 'ListController@editAction'));
-  Route::post('/list/delete', Array('as' => 'list_delete', 'uses' => 'ListController@deleteAction'));
+  Route::group(array('before' => 'csrf'), function() {
+    Route::post('/settings', array('as' => 'settings_edit', 'uses' => 'SettingsController@editSettings'));
 
-  Route::post('/list/user/add', Array('as' => 'list_user_add', 'uses' => 'ListController@addUserAction'));
-  Route::post('/list/user/delete', Array('as' => 'list_user_delete', 'uses' => 'ListController@deleteUserAction'));
+    Route::any( '/list/get', array('as' => 'list_get', 'uses' => 'ListController@getAction'));
+    Route::post('/list/add', array('as' => 'list_add', 'uses' => 'ListController@createAction'));
+    Route::post('/list/edit', array('as' => 'list_edit', 'uses' => 'ListController@editAction'));
+    Route::post('/list/delete', array('as' => 'list_delete', 'uses' => 'ListController@deleteAction'));
 
+    Route::post('/list/user/add', array('as' => 'list_user_add', 'uses' => 'ListController@addUserAction'));
+    Route::post('/list/user/delete', array('as' => 'list_user_delete', 'uses' => 'ListController@deleteUserAction'));
+  });
 });
 
 Route::filter('admin', function()
@@ -54,15 +59,15 @@ Route::filter('admin', function()
 
 Route::group(array('prefix' => 'admin', 'before' => 'admin'), function()
 {
-  Route::get('/', Array('as' => 'admin_home', 'uses' => 'AdminController@indexAction'));
+  Route::get('/', array('as' => 'admin_home', 'uses' => 'AdminController@indexAction'));
 
-  Route::get('/news', Array('as' => 'admin_news', 'uses' => 'AdminController@newsAction'));
-  Route::post('/news/create', Array('before' => 'csrf', 'as' => 'admin_news_create', 'uses' => 'AdminController@newsCreateAction'));
+  Route::get('/news', array('as' => 'admin_news', 'uses' => 'AdminController@newsAction'));
+  Route::post('/news/create', array('before' => 'csrf', 'as' => 'admin_news_create', 'uses' => 'AdminController@newsCreateAction'));
 
-  Route::get('/news/edit/{newsId?}', Array('as' => 'admin_news_edit', 'uses' => 'AdminController@newsEditAction'));
-  Route::post('/news/edit', Array('before' => 'csrf', 'as' => 'admin_news_post_edit', 'uses' => 'AdminController@newsPostEditAction'));
+  Route::get('/news/edit/{newsId?}', array('as' => 'admin_news_edit', 'uses' => 'AdminController@newsEditAction'));
+  Route::post('/news/edit', array('before' => 'csrf', 'as' => 'admin_news_post_edit', 'uses' => 'AdminController@newsPostEditAction'));
 
-  Route::post('/news/delete', Array('before' => 'csrf', 'as' => 'admin_news_delete', 'uses' => 'AdminController@newsDeleteAction'));
+  Route::post('/news/delete', array('before' => 'csrf', 'as' => 'admin_news_delete', 'uses' => 'AdminController@newsDeleteAction'));
 });
 
 Route::get('/privacy', function()
@@ -72,4 +77,4 @@ Route::get('/privacy', function()
 
 
 
-Route::get('/old', Array('before' => 'auth', 'as' => 'old_data', 'uses' => 'OldDataController@indexAction'));
+Route::get('/old', array('before' => 'auth', 'as' => 'old_data', 'uses' => 'OldDataController@indexAction'));

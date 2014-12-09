@@ -5,6 +5,8 @@
 </h3>
 <h3 class="small-6 columns text-right list-options">
 @if(isset($userList->custom) && $userList->custom && isset($userList->privacy) && $userList->privacy < 3)
+  {{ var_dump(Auth::User()->UserMail) }}
+
   <a {{ $userList->privacy == 2 ? 'class="text-alert"' : '' }} onClick="javascript:showListLink({{{ $userList->user_id }}}, {{{ $userList->list_id }}})"><i class="fa fa-link"></i></a>
 @endif
 @if(isset($userList->personal) && $userList->personal)

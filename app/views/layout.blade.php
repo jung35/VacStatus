@@ -195,7 +195,7 @@
                 @endif</a>
                 <ul class="dropdown">
                   <li><a href="{{{ URL::route('profile', Array('steam3Id'=> Auth::user()->getSteam3Id() )) }}}"><i class="fa fa-user"></i> Profile</a></li>
-                  {{-- } <li><a href="#"><i class="fa fa-cog"></i> User CP</a></li> --}}
+                  <li><a href="{{{ URL::route('settings') }}}"><i class="fa fa-cog"></i> Settings</a></li>
                   <li class="divider"></li>
                   <li><a class="alert" href="{{{ URL::route('logout') }}}"><i class="fa fa-power-off"></i> Logout</a></li>
                 </ul>
@@ -213,9 +213,13 @@
       </div>
     </div>
 
-    <div class="row content-start">
-    @section('content')
-    @show
+    <div class="container">
+      <div class="row content-start">
+        <div class="small-12 column">
+          @section('content')
+          @show
+        </div>
+      </div>
     </div>
 
     <div class="footer">

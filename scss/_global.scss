@@ -137,3 +137,29 @@ table .button {
     height: 200px;
   }
 }
+.error, .success {
+  input, textarea, select {
+    margin-bottom: 0;
+  }
+}
+
+span, small {
+  &.error, &.success {
+    display: block;
+    padding: 0.375rem 0.5625rem 0.5625rem;
+    margin-top: -1px;
+    margin-bottom: 1rem;
+    font-size: 0.75rem;
+    font-weight: normal;
+    font-style: italic;
+    color: #fff;
+  }
+
+  &.error {
+    background: #f04124;
+  }
+
+  &.success {
+    background: #43AC6A;
+  }
+}
