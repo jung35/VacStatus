@@ -71,21 +71,21 @@ class HomeController extends BaseController {
 
     $statusChecker = array_filter(explode("\n", $search));
     $statusConfirm = false;
-    $search = array();
+    $searchArray = array();
     foreach($statusChecker as $status) {
       if(substr(trim($status), 0, 1) == "#")
       {
         preg_match("(STEAM_.*?\s)", trim($status), $foundSteam);
         if(count($foundSteam) == 0) continue;
-        $search[] = $foundSteam[0];
+        $searchArray[] = $foundSteam[0];
         $statusConfirm = true;
       }
     }
 
-    $search = array_filter($search);
-
     if(!$statusConfirm) {
       $search = array_filter(explode(" ", $search));
+    } else {
+      $search = array_filter($searchArray);
     }
 
     if(Auth::check())
@@ -125,9 +125,6 @@ class HomeController extends BaseController {
     }
 
     return Redirect::home()->with('error', 'Invalid Search Option');
-  }
-
-  private function searchMutlipleDefault($search) {
   }
 
   public function newsAction($newsId) {
