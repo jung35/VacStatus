@@ -1,17 +1,10 @@
-@extends('layout')
+@extends('settings/layout')
 
-@section('title')
-Settings
-@stop
-
-@section('content')
-
-  <h1>Settings</h1>
-  <hr>
+@section('settings_content')
   <h3>Add Email<br><small>This is so that you can recieve notifications on the lists that you have subscribed to when a person is banned</small></h3>
   {{ Form::open(array('action' => 'SettingsController@editSettings')) }}
     <div class="row">
-      <div class="large-8 medium-10 small-12 columns">
+      <div class="small-12 columns">
         <div class="row">
           <div class="medium-2 small-12 columns">
             <label for="emailLabel" class="right inline small-only-text-left">Email</label>

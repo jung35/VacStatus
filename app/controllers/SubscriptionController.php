@@ -10,8 +10,22 @@ class SubscriptionController extends \BaseController {
      */
     public function index()
     {
-        return "test";
-        //
+        $subscription = Subscription::where('subscription.user_id', '=', Auth::User()->id)
+                        ->join('user_list', 'user_list.id', '=', 'subscription.user_list_id')
+                        ->join('users', 'users.id', '=', 'user_list.user_id')
+                        ->join('profile', 'users.small_id', '=', 'profile.small_id')
+                        ->orderBy('subscription.id','desc')
+                        ->get([
+                            'subscription.id',
+                            'subscription.user_list_id',
+
+                            'user_list.user_id',
+                            'user_list.title',
+
+                            'profile.display_name',
+                        ]);
+
+        return View::make('settings/displaySubscription', array('subscription' => $subscription));
     }
 
     /**
