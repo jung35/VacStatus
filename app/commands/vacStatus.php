@@ -124,9 +124,9 @@ class vacStatus extends Command {
 
                 $banChange = false;
 
-                if(($steamAPI_Ban->NumberOfVACBans != $profile->vac) ||
+                if((($steamAPI_Ban->NumberOfVACBans != $profile->vac) ||
                    ($steamAPI_Ban->CommunityBanned != $profile->community) ||
-                   ($steamAPI_Ban->EconomyBan != $profile->trade))
+                   ($steamAPI_Ban->EconomyBan != $profile->trade)))
                 {
                     $sendEmail = true;
                     $banChange = true;
@@ -136,17 +136,17 @@ class vacStatus extends Command {
                 {
                     $emailArr[$sub_key]['profiles'][$profile->small_id] = array(
                       'display_name' => $profile->display_name,
-                      'vac_days'     => !$profile->vac ?: date('M j Y', strtotime($profile->updated_at) - $profile->vac_days * 86400),
+                      'vac_days'     => $profile->vac ? date('M j Y', strtotime($profile->updated_at) - $profile->vac_days * 86400): false,
                       'community'    => $profile->community,
                       'trade'        => $profile->trade
                       );
 
-                    $updateProfile = Profile::find($profile->profile_id)->first();
+                    $updateProfile = ProfileBan::find($profile->profile_id)->first();
 
-                    $updateProfile->vac = $profile_Ban->NumberOfVACBans;
-                    $updateProfile->community = $profile_Ban->CommunityBanned;
-                    $updateProfile->trade = $profile_Ban->EconomyBan != 'none';
-                    $updateProfile->vac_days = $profile_Ban->DaysSinceLastBan;
+                    $updateProfile->vac = $steamAPI_Ban->NumberOfVACBans;
+                    $updateProfile->community = $steamAPI_Ban->CommunityBanned;
+                    $updateProfile->trade = $steamAPI_Ban->EconomyBan != 'none';
+                    $updateProfile->vac_days = $steamAPI_Ban->DaysSinceLastBan;
 
                     $updateProfile->save();
                 }
@@ -160,7 +160,19 @@ class vacStatus extends Command {
 
         $userMail->touch();
 
-        $this->info(var_dump($sendEmail, $emailArr));
+        if(!$sendEmail) {
+            $this->info('no email sent');
+            return;
+        }
+
+        $email = $userMail->email;
+
+        Mail::send('emails.hacker', array('emailArr' => $emailArr), function($message) use ($email)
+        {
+            $message->to($email)->subject('Bans Found!');
+        });
+        $this->info('email sent');
+
         $queries = DB::getQueryLog();
         $this->info(count($queries));
     }

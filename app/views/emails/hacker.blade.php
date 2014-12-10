@@ -4,7 +4,7 @@
         <!-- NAME: 1 COLUMN -->
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Hacker Found!</title>
+        <title>Bans Found!</title>
 
     <style type="text/css">
         body,#bodyTable,#bodyCell{
@@ -589,16 +589,28 @@ ip Make the template fluid for portrait or landscape view adaptability. If a flu
 
                         <td valign="top" class="mcnTextContent" style="padding-top:9px; padding-right: 18px; padding-bottom: 9px; padding-left: 18px;">
 
-                            <h1>Hacker Found!</h1>
+                            <h1>(Trade/Community/Vac) Bans Were Found!</h1>
 
-                            <p><b>List:</b> ASDFASDF <b>By:</b> JUNG</p>
+                            @foreach($emailArr as $banList)
+
+                            <p><b>List:</b> {{{ $banList['title'] }}}</p>
                             <table class="tablebanlist" border="1" width="100%">
                                 <tr>
-                                    <td>Username</td>
-                                    <td style="color: red;">ban</td>
+                                    <th></th>
+                                    <th>VAC Ban</th>
+                                    <th>Community Ban</th>
+                                    <th>Trade Ban</th>
                                 </tr>
+                                @foreach($banList['profiles'] as $profile)
+                                <tr>
+                                    <td>{{{ $profile['display_name']}}}</td>
+                                    <td style="color: {{ $profile['vac_days']?'red':'green' }};">{{ $profile['vac_days']?:'NORMAL' }}</td>
+                                    <td style="color: {{ $profile['community']?'red':'green' }};">{{ $profile['community']?:'NORMAL' }}</td>
+                                    <td style="color: {{ $profile['trade']?'red':'green' }};">{{ $profile['trade']?:'NORMAL' }}</td>
+                                </tr>
+                                @endforeach
                             </table>
-
+                            @endforeach
 
                         </td>
                     </tr>
