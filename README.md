@@ -15,10 +15,11 @@ VacStatus is currently using `` Laravel `` and is currently maintained by [Jung3
 4. Run `bower install` to install any Foundation related files
 5. Run `compass watch` to compile style sheets
 
-To untrack `.env.php` you can do
+Rename `.env.php.sample` to `.env.local.php` and configure
 
-    git update-index --assume-unchanged .env.php
-If there is a better way to include and untrack, PLEASE send me a message or a pull request!
+Cron Job settings
+
+`` */1 * * * * php artisan vacStatus ``
 
 [jung]: https://github.com/jung3o
 [composer]: http://daringfireball.net/projects/markdown/syntax#list

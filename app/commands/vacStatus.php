@@ -4,6 +4,7 @@ use Illuminate\Console\Command;
 use Steam\Steam as Steam;
 
 class vacStatus extends Command {
+      protected $log;
 
     /**
      * The console command name.
@@ -27,6 +28,7 @@ class vacStatus extends Command {
     public function __construct()
     {
         parent::__construct();
+    $this->log = Log::getMonolog();
     }
 
     /**
@@ -124,7 +126,7 @@ class vacStatus extends Command {
 
                 $banChange = false;
 
-                if((($steamAPI_Ban->NumberOfVACBans != $profile->vac) ||
+                if(!(($steamAPI_Ban->NumberOfVACBans != $profile->vac) ||
                    ($steamAPI_Ban->CommunityBanned != $profile->community) ||
                    ($steamAPI_Ban->EconomyBan != $profile->trade)))
                 {
@@ -160,21 +162,27 @@ class vacStatus extends Command {
 
         $userMail->touch();
 
+        $email = $userMail->email;
+
+        $queries = DB::getQueryLog();
+        $this->info(count($queries));
+
+        $this->log->addInfo("mail", array(
+          "email" => $email,
+          "send" => $sendEmail,
+          "queries" => count($queries),
+        ));
+
         if(!$sendEmail) {
             $this->info('no email sent');
             return;
         }
-
-        $email = $userMail->email;
 
         Mail::send('emails.hacker', array('emailArr' => $emailArr), function($message) use ($email)
         {
             $message->to($email)->subject('Bans Found!');
         });
         $this->info('email sent');
-
-        $queries = DB::getQueryLog();
-        $this->info(count($queries));
     }
 
 }

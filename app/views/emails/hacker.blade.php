@@ -605,8 +605,8 @@ ip Make the template fluid for portrait or landscape view adaptability. If a flu
                                 <tr>
                                     <td>{{{ $profile['display_name']}}}</td>
                                     <td style="color: {{ $profile['vac_days']?'red':'green' }};">{{ $profile['vac_days']?:'NORMAL' }}</td>
-                                    <td style="color: {{ $profile['community']?'red':'green' }};">{{ $profile['community']?:'NORMAL' }}</td>
-                                    <td style="color: {{ $profile['trade']?'red':'green' }};">{{ $profile['trade']?:'NORMAL' }}</td>
+                                    <td style="color: {{ $profile['community']?'red':'green' }};">{{ $profile['community']?'BANNED':'NORMAL' }}</td>
+                                    <td style="color: {{ $profile['trade']?'red':'green' }};">{{ $profile['trade']?'BANNED':'NORMAL' }}</td>
                                 </tr>
                                 @endforeach
                             </table>
