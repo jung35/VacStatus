@@ -48,6 +48,10 @@ class SubscriptionController extends \BaseController {
             return Redirect::back()->with('error', 'You have no permission to this list.');
         }
 
+        if(Subscription::whereUserId(Auth::User()->id)->count() > Auth::User()->unlockSubscription()) {
+            return Redirect::back()->with('error', 'You have reached maximum subscriptions allowed.');
+        }
+
         $subscription = new Subscription;
         $subscription->user_id = Auth::User()->id;
         $subscription->user_list_id = $list_id;

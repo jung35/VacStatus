@@ -105,6 +105,22 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     return 30;
   }
 
+  public function unlockSubscription() {
+    if($this->isAdmin()) {
+      return 999;
+    }
+
+    if($this->donation >= DonationPerk::getPerkAmount('subscription')) {
+      return 25;
+    }
+
+    if($this->beta == 1) {
+      return 5;
+    }
+
+    return 3;
+  }
+
   public function addDonation($amount) {
     if(is_numeric($this->donation)) {
       $this->donation += $amount;

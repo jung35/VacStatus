@@ -23,7 +23,7 @@ class DonationController extends \BaseController {
       ->take(10)
       ->get();
 
-    $donationPerk = DonationPerk::orderBy('id', 'asc')
+    $donationPerk = DonationPerk::orderBy('amount', 'asc')
       ->get();
 
     return View::make('donation/donation', Array(
