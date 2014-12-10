@@ -138,19 +138,21 @@ class vacStatus extends Command {
                 {
                     $emailArr[$sub_key]['profiles'][$profile->small_id] = array(
                       'display_name' => $profile->display_name,
-                      'vac_days'     => $profile->vac ? date('M j Y', strtotime($profile->updated_at) - $profile->vac_days * 86400): false,
-                      'community'    => $profile->community,
-                      'trade'        => $profile->trade
+                      'vac_days'     => $steamAPI_Ban->NumberOfVACBans ? date('M j Y', strtotime($profile->updated_at) - $profile->vac_days * 86400): false,
+                      'community'    => $steamAPI_Ban->CommunityBanned,
+                      'trade'        => $steamAPI_Ban->EconomyBan != 'none'
                       );
 
-                    $updateProfile = ProfileBan::find($profile->profile_id)->first();
+                    $this->Info(var_dump($steamAPI_Ban->NumberOfVACBans, $profile->vac, ($steamAPI_Ban->CommunityBanned != $profile->community), (($steamAPI_Ban->EconomyBan != 'none') != $profile->trade)));
+
+                    $updateProfile = ProfileBan::whereProfileId($profile->profile_id)->first();
 
                     $updateProfile->vac = $steamAPI_Ban->NumberOfVACBans;
                     $updateProfile->community = $steamAPI_Ban->CommunityBanned;
                     $updateProfile->trade = $steamAPI_Ban->EconomyBan != 'none';
                     $updateProfile->vac_days = $steamAPI_Ban->DaysSinceLastBan;
 
-                    $updateProfile->save();
+                    $this->Info($updateProfile->save());
                 }
 
             }
