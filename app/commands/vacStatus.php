@@ -128,7 +128,7 @@ class vacStatus extends Command {
 
                 if((($steamAPI_Ban->NumberOfVACBans != $profile->vac) ||
                    ($steamAPI_Ban->CommunityBanned != $profile->community) ||
-                   ($steamAPI_Ban->EconomyBan != $profile->trade)))
+                   (($steamAPI_Ban->EconomyBan != 'none') != $profile->trade)))
                 {
                     $sendEmail = true;
                     $banChange = true;
