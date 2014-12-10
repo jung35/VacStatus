@@ -126,7 +126,7 @@ class vacStatus extends Command {
 
                 $banChange = false;
 
-                if(!(($steamAPI_Ban->NumberOfVACBans != $profile->vac) ||
+                if((($steamAPI_Ban->NumberOfVACBans != $profile->vac) ||
                    ($steamAPI_Ban->CommunityBanned != $profile->community) ||
                    ($steamAPI_Ban->EconomyBan != $profile->trade)))
                 {
