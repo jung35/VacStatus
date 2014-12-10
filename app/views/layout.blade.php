@@ -12,7 +12,7 @@
     <meta name="robots" content="All" />
     <meta name="revisit-after" content="1 DAYS" />
 
-    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="stylesheet" href="/css/app.css?" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.3.1/js/vendor/modernizr.min.js"></script>
     <script>
       var _token = '{{{ csrf_token() }}}';
