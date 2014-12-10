@@ -535,7 +535,7 @@ class Profile extends \Eloquent {
         $newProfile[] = $profile;
       }
 
-      return (object)$newProfile;
+      return (object) $newProfile;
     }
     return false;
   }

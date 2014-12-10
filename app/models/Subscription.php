@@ -9,7 +9,11 @@ class Subscription extends \Eloquent {
    */
   protected $table = 'subscription';
 
-  public function canSubscribe() {
+  public function UserList() {
+    return $this->hasOne('UserList', 'id', 'user_list_id');
+  }
 
+  public function canSubscribe() {
+    return true;
   }
 }

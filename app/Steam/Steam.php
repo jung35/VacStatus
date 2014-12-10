@@ -115,7 +115,7 @@ Class Steam {
 
   /**
    * Using cURL to request to Steam API Servers
-   * @param  String $type ('info', 'friends', 'ban', 'alias', 'xmlInfo')
+   * @param  String $type ('info', 'friends', 'ban', 'alias', 'vanityUrl')
    * @param  String/Array $value
    *
    * @return Object
