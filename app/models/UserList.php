@@ -31,6 +31,10 @@ class UserList extends \Eloquent {
     return $this->privacy;
   }
 
+  public function canSubscribe($user_id) {
+    return $this->user_id == $user_id || $this->privacy != 3;
+  }
+
   public static function getCount($userListProfiles = null) {
     $count = Array();
 

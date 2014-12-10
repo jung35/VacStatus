@@ -34,6 +34,8 @@ Route::any('/donation', array('as' => 'donation', 'uses' => 'DonationController@
 Route::get('/news/{newsId?}', array('as' => 'news', 'uses' => 'HomeController@newsAction'));
 
 Route::group(array('before' => 'auth'), function() {
+  Route::resource('subscription', 'SubscriptionController');
+
   Route::get('/settings', array('as' => 'settings', 'uses' => 'SettingsController@showSettings'));
   Route::get('/settings/verify/{verification}', array('as' => 'settings_verify', 'uses' => 'SettingsController@verifySettings'));
 

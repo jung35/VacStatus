@@ -9,5 +9,7 @@ class Subscription extends \Eloquent {
    */
   protected $table = 'subscription';
 
+  public function canSubscribe() {
 
+  }
 }

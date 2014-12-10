@@ -34,10 +34,20 @@ class HomeController extends BaseController {
       }
     }
 
+    if(Auth::check() && isset($userList->custom)) {
+      return View::make('main/index', array(
+                        'userList'     => $userList,
+                        'friendsList'  => $friendsList,
+                        'news'         => $news,
+                        'userMail'     => Auth::User()->UserMail,
+                        'subscription' => Subscription::whereUserListId($userList->list_id)->first()
+                        ));
+    }
     return View::make('main/index', array(
-                      'userList' => $userList,
+                      'userList'    => $userList,
                       'friendsList' => $friendsList,
-                      'news' => $news));
+                      'news'        => $news
+                      ));
   }
 
   public function searchSingleAction() {

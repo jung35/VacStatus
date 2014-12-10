@@ -36,7 +36,7 @@ class SettingsController extends \BaseController {
         {
             $userMail = new UserMail;
             $userMail->user_id = Auth::User()->id;
-        } else if($userMailCheck->email == $email) {
+        } else if(!is_null($userMailCheck) && $userMailCheck->email == $email) {
             return Redirect::back()->with('error', 'This email is either currently subscribed or waiting for verification.');
         }
 

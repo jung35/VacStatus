@@ -13,7 +13,15 @@ class DisplayListController extends \BaseController {
     }
 
     if($userList == null) {
-      return App::abort(500);
+      return 'error';
+    }
+
+    if(Auth::check() && isset($userList->custom)) {
+      return View::make('list/listTable', array(
+                        'userList'     => $userList,
+                        'userMail'     => Auth::User()->UserMail,
+                        'subscription' => Subscription::whereUserListId($userList->list_id)->first()
+                        ));
     }
     return View::make('list/listTable', array('userList' => $userList));
   }
