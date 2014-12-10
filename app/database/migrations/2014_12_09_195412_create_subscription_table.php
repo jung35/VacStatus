@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateUserListProfileTable extends Migration {
+class CreateSubscriptionTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,16 +12,13 @@ class CreateUserListProfileTable extends Migration {
      */
     public function up()
     {
-        Schema::create('user_list_profile', function(Blueprint $table)
+        Schema::create('subscription', function(Blueprint $table)
         {
             $table->increments('id');
+            $table->unsignedInteger('user_id');
             $table->unsignedInteger('user_list_id');
-            $table->unsignedInteger('profile_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('user_list_id')->references('id')->on('user_list');
-            $table->foreign('profile_id')->references('id')->on('profile');
-
-            // This is the username that was seen when user added this profile to list
-            $table->string('profile_name', 32);
             $table->timestamps();
         });
     }
@@ -34,7 +31,7 @@ class CreateUserListProfileTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('user_list_profile');
+        Schema::drop('subscription');
     }
 
 }

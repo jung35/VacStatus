@@ -43,7 +43,7 @@ Route::filter('auth', function()
 		}
 		else
 		{
-			return Redirect::guest('login');
+			return Redirect::home()->with('error', 'You must be logged in to access this page.');;
 		}
 	}
 });

@@ -351,23 +351,35 @@ class Profile extends \Eloquent {
 
         $profileBan = $profile->ProfileBan;
 
+        $skipProfileBan = false;
+
         if(!isset($profileBan->id)) {
           $profileBan = new ProfileBan;
           $profileBan->profile_id = $profile->id;
           $profileBan->unban = false;
         } else {
+          $skipProfileBan = true;
           if($profileBan->vac > $profile_Ban->NumberOfVACBans) {
             $profileBan->unban = true;
           }
+          if($profileBan->vac != $profile_Ban->NumberOfVACBans ||
+            $profileBan->community != $profile_Ban->CommunityBanned ||
+            $profileBan->trade != ($profile_Ban->EconomyBan != 'none') ||
+            $profileBan->vac_days != $profile_Ban->DaysSinceLastBan)
+          {
+            $skipProfileBan = false;
+          }
         }
+
 
         $profileBan->vac = $profile_Ban->NumberOfVACBans;
         $profileBan->community = $profile_Ban->CommunityBanned;
         $profileBan->trade = $profile_Ban->EconomyBan != 'none';
         $profileBan->vac_days = $profile_Ban->DaysSinceLastBan;
-
-        $profile->ProfileBan()->save($profileBan);
-        $profile->ProfileBan = $profileBan;
+        if(!$skipProfileBan) {
+          $profile->ProfileBan()->save($profileBan);
+          $profile->ProfileBan = $profileBan;
+        }
 
         /*
         Grab & Update Old Alias
@@ -535,7 +547,7 @@ class Profile extends \Eloquent {
         $newProfile[] = $profile;
       }
 
-      return (object)$newProfile;
+      return (object) $newProfile;
     }
     return false;
   }

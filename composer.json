@@ -6,7 +6,8 @@
   "require": {
     "laravel/framework": "4.2.*",
     "hybridauth/hybridauth": "dev-master",
-    "mike182uk/paypal-ipn-listener" : "v2.0.1"
+    "mike182uk/paypal-ipn-listener" : "v2.0.1",
+    "guzzlehttp/guzzle": "~4.0"
   },
   "require-dev": {
     "way/generators": "2.*"

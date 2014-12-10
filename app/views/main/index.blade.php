@@ -2,8 +2,8 @@
 
 @section('content')
 
-  <div class="large-12 columns">
-    <h2 class="text-center">Welcome to VacStatus<small>Keep track of people's VAC status in a list</small></h2>
+  <div class="large-12 columns vacstatus-index-box">
+    <h2 class="text-center">Welcome to VacStatus <small>Keep track of people's VAC status in a list</small></h2>
   @if(!Auth::check())
     <div data-alert class="alert-box vacstatus-alert-box">
       <p>In a game like Counter-Strike: Global Offensive, you do not get a notification of some sort when the hacker gets banned. With VacStatus, you can now can keep in check of the possible hacker you reported and when that hacker gets banned, you can even recieve an email notification!</p>
@@ -88,7 +88,11 @@
       </ul>
       <div class="tabs-content">
         <div class="list-display content active">
-          @include('list/listTable', array('userList' => $userList))
+          @if(isset($userMail))
+            @include('list/listTable', array( 'userList' => $userList, 'userMail' => $userMail, 'subscription' => $subscription ))
+          @else
+            @include('list/listTable', array( 'userList' => $userList ))
+          @endif
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@
 <div class="large-12 columns">
   <h2>Donations</h2>
   <div class="row">
-    <div class="large-6 medium-7 columns">
+    <div class="medium-6 columns">
       <h4>Why Donate?</h4>
       <p style="line-height:200%; font-size: 14px">VacStatus was created as a hobby and will forever be free to use.
       <br>But in order to maintain this website, it costs time and money.
@@ -42,10 +42,9 @@
       <br>
       <h4>Where does donations go?<h4>
       <p style="line-height:200%; font-size: 14px">The priority is on the website.
-      <br>
-      <br>Most of the donations will go on making VacStatus a better service.</p>
+      <br>All of the donations will go on making VacStatus a better service.</p>
     </div>
-    <div class="large-6 medium-7 columns">
+    <div class="medium-6 columns">
       <h4>As a Thank you.</h4>
       <p style="line-height:200%; font-size: 14px">Following are some "perks" you will recieve when you donate.
       <br>If you donate more than some of the "perks" listed, *
