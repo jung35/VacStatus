@@ -213,8 +213,8 @@
       </div>
     </div>
 
-    <div class="container">
-      <div class="row content-start">
+    <div class="container content-start">
+      <div class="row">
         <div class="small-12 column">
           @section('content')
           @show

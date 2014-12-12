@@ -1,6 +1,12 @@
 @extends('layout')
 
 @section('content')
+  @if(!Auth::check() || Auth::User()->UserMail == null || !Auth::User()->UserMail->canMail())
+  <div data-alert class="alert-box success ">
+    You can now recieve notifications! <a style="color:white; text-decoration:underline;" href="https://vacstat.us/news/12">Email &amp; Subscription implemented</a>
+  </div>
+  @endif
+
 
   <div class="large-12 columns vacstatus-index-box">
     <h2 class="text-center">Welcome to VacStatus <small>Keep track of people's VAC status in a list</small></h2>
