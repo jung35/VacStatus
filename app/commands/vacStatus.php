@@ -80,17 +80,18 @@ class vacStatus extends Command {
             $steamIds = array();
             $sortedProfiles = array();
             foreach($profiles as $profile) {
-                // if(($profile->community || $profile->vac || $profile->trade) &&
-                //    strtotime($profile->updated_at) != strtotime($profile->created_at) &&
-                //    strtotime($profile->updated_at) > strtotime($userMail->updated_at)) {
-                //     $sendEmail = true;
-                //     $emailArr[$sub_key]['profiles'][$profile->small_id] = array(
-                //       'display_name' => $profile->display_name,
-                //       'vac_days'     => !$profile->vac ?: date('M j Y', strtotime($profile->updated_at) - $profile->vac_days * 86400),
-                //       'community'    => $profile->community,
-                //       'trade'        => $profile->trade
-                //       );
-                // }
+
+                if(($profile->community || $profile->vac || $profile->trade) &&
+                   strtotime($profile->updated_at) != strtotime($profile->created_at) &&
+                   strtotime($profile->updated_at) > strtotime($userMail->updated_at)) {
+                    $sendEmail = true;
+                    $emailArr[$sub_key]['profiles'][$profile->small_id] = array(
+                      'display_name' => $profile->display_name,
+                      'vac_days'     => !$profile->vac ?: date('M j Y', strtotime($profile->updated_at) - $profile->vac_days * 86400),
+                      'community'    => $profile->community,
+                      'trade'        => $profile->trade
+                      );
+                }
 
                 $sortedProfiles[$profile->small_id] = (object) array(
                     'profile_id'   => $profile->profile_id,
