@@ -30,7 +30,7 @@
         beforeSend: fadeInLoader('Loading Profile')
       }).done(function(data) {
         fadeOutLoader();
-        $('.content-start').html(data);
+        $('.content-start > .row > .column').html(data);
       }).error(function() {
         fadeOutLoader(function() {
           fadInOutAlert("<strong>Error</strong> Steam API error. Please try refreshing again in few minutes.", 2);
