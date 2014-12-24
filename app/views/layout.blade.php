@@ -149,75 +149,76 @@
 
     @section('modal')
     @show
+    <div class="wrap">
+      <div class="sticky">
+        <div class="contain-to-grid fixed">
+          <nav class="top-bar" data-topbar>
+            <ul class="title-area">
+              <li class="name">
+                <h1><a href="{{{ URL::route('home') }}}">VacStatus</a></h1>
+              </li>
+              <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+            </ul>
 
-    <div class="sticky">
-      <div class="contain-to-grid fixed">
-        <nav class="top-bar" data-topbar>
-          <ul class="title-area">
-            <li class="name">
-              <h1><a href="{{{ URL::route('home') }}}">VacStatus</a></h1>
-            </li>
-            <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
-          </ul>
-
-          <section class="top-bar-section">
-            <ul class="left">
-              <form action="{{{ URL::route('search_single') }}}" method="POST">
-                <li class="has-form">
-                  <div class="row collapse">
-                    <div class="large-9 small-7 columns">
-                      <input name="search" type="text" placeholder="Quick User Search">
+            <section class="top-bar-section">
+              <ul class="left">
+                <form action="{{{ URL::route('search_single') }}}" method="POST">
+                  <li class="has-form">
+                    <div class="row collapse">
+                      <div class="large-9 small-7 columns">
+                        <input name="search" type="text" placeholder="Quick User Search">
+                      </div>
+                      <div class="large-2 small-3 columns">
+                        <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
+                        <button type="submit" class="button expand" title="Quick Search"><i class="fa fa-search"></i></button>
+                      </div>
+                      <div class="large-1 small-2 columns">
+                        <button type="button" class="button expand" title="Advanced Search" data-reveal-id="advSearchModal"><i class="fa fa-bars"></i></button>
+                      </div>
                     </div>
-                    <div class="large-2 small-3 columns">
-                      <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
-                      <button type="submit" class="button expand" title="Quick Search"><i class="fa fa-search"></i></button>
-                    </div>
-                    <div class="large-1 small-2 columns">
-                      <button type="button" class="button expand" title="Advanced Search" data-reveal-id="advSearchModal"><i class="fa fa-bars"></i></button>
-                    </div>
-                  </div>
+                  </li>
+                </form>
+              </ul>
+              <ul class="right">
+                @if(Auth::check())
+                @if(Auth::User()->isAdmin())
+                <li>
+                  <a class="alert" href="{{{ URL::route('admin_home') }}}">
+                    Admin CP
+                  </a>
                 </li>
-              </form>
-            </ul>
-            <ul class="right">
-              @if(Auth::check())
-              @if(Auth::User()->isAdmin())
-              <li>
-                <a class="alert" href="{{{ URL::route('admin_home') }}}">
-                  Admin CP
-                </a>
-              </li>
-              @endif
-              <li class="has-dropdown">
-                <a>{{{ Auth::user()->getUserName() }}}
-                @if(Auth::User()->isAdmin() && Cache::has('steamAPICalls_'.date('M_j_Y')))
-               ( {{{ Cache::get('steamAPICalls_'.date('M_j_Y')) }}} )
-                @endif</a>
-                <ul class="dropdown">
-                  <li><a href="{{{ URL::route('profile', Array('steam3Id'=> Auth::user()->getSteam3Id() )) }}}"><i class="fa fa-user"></i> Profile</a></li>
-                  <li><a href="{{{ URL::route('settings') }}}"><i class="fa fa-cog"></i> Settings</a></li>
-                  <li class="divider"></li>
-                  <li><a class="alert" href="{{{ URL::route('logout') }}}"><i class="fa fa-power-off"></i> Logout</a></li>
-                </ul>
-              </li>
-              @else
-              <li>
-                <a href="{{{ URL::route('login') }}}">
-                  <img src="{{{ asset('img/steamlogin.png') }}}">
-                </a>
-              </li>
-              @endif
-            </ul>
-          </section>
-        </nav>
+                @endif
+                <li class="has-dropdown">
+                  <a>{{{ Auth::user()->getUserName() }}}
+                  @if(Auth::User()->isAdmin() && Cache::has('steamAPICalls_'.date('M_j_Y')))
+                 ( {{{ Cache::get('steamAPICalls_'.date('M_j_Y')) }}} )
+                  @endif</a>
+                  <ul class="dropdown">
+                    <li><a href="{{{ URL::route('profile', Array('steam3Id'=> Auth::user()->getSteam3Id() )) }}}"><i class="fa fa-user"></i> Profile</a></li>
+                    <li><a href="{{{ URL::route('settings') }}}"><i class="fa fa-cog"></i> Settings</a></li>
+                    <li class="divider"></li>
+                    <li><a class="alert" href="{{{ URL::route('logout') }}}"><i class="fa fa-power-off"></i> Logout</a></li>
+                  </ul>
+                </li>
+                @else
+                <li>
+                  <a href="{{{ URL::route('login') }}}">
+                    <img src="{{{ asset('img/steamlogin.png') }}}">
+                  </a>
+                </li>
+                @endif
+              </ul>
+            </section>
+          </nav>
+        </div>
       </div>
-    </div>
 
-    <div class="container content-start">
-      <div class="row">
-        <div class="small-12 column">
-          @section('content')
-          @show
+      <div class="container content-start">
+        <div class="row">
+          <div class="small-12 column">
+            @section('content')
+            @show
+          </div>
         </div>
       </div>
     </div>
