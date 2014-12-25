@@ -9,6 +9,7 @@ VacStatus is currently using `` Laravel `` and is currently maintained by [Jung3
 ####Installation
 1. Create a copy of `.environment.php.sample` and rename it `.environment.php`.
 2. Using the value inside the .environment.php file, create a copy of `.env.php.sample` and rename it to `.env.(value from environment).php`. Edit the values from file accordingly.
+
     (Make sure you dont delete the original files `.environment.php.sample` and `.env.php.sample`)
 3. Install dependencies using [Composer][composer] `composer install`
 4. Run `php artisan migrate` to run migration
