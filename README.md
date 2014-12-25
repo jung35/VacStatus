@@ -13,7 +13,7 @@ VacStatus is currently using `` Laravel `` and is currently maintained by [Jung3
     (Make sure you dont delete the original files `.environment.php.sample` and `.env.php.sample`)
 3. Install dependencies using [Composer][composer] `composer install`
 4. Run `php artisan migrate` to run migration
-5. Install the requirements for [Foundation][foundation] (**DO NOT RUN `compass compile` yet!!!**)
+5. Install compass `gem install compass` (*You must have ruby installed!*)
 6. Run `bower install` to install any Foundation related files
 7. Run `compass compile` to compile style sheets (Or alternatively `compass watch`)
 
@@ -25,7 +25,7 @@ I also have redis currently selected as driver for [cache.php][cache] and [sessi
 ```
 
 [jung]: https://github.com/jung3o
-[composer]: http://daringfireball.net/projects/markdown/syntax#list
+[composer]: https://getcomposer.org/download/
 [foundation]: http://foundation.zurb.com/docs/sass.html
 
 [cache]: app/config/cache.php#L18
