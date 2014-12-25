@@ -1,29 +1,28 @@
-VacStatus
-===========
+##VacStatus
 
 Keep track of people's VAC ban status in a list
 
-Info
-------
+##Info
 
-VacStatus is currently using `` Laravel `` and is currently maintained by [Jung3o][jung]
+VacStatus is currently using `` Laravel `` and is currently maintained by [Jung3o][jung]. I have been using Homestead for development and have not tested development on laravel's built in server.
 
-1. Install dependencies using [Composer][composer] `composer install`
-2. edit [.env.php][env] to your own settings
-3. Run `php artisan migrate` to run migration
-3. Install the requirements for [Foundation][foundation] (DO NOT RUN `compass watch` yet!!!)
-4. Run `bower install` to install any Foundation related files
-5. Run `compass watch` to compile style sheets
+####Installation
+1. Create a copy of `.environment.php.sample` and rename it `.environment.php`.
+2. Using the value inside the .environment.php file, create a copy of `.env.php.sample` and rename it to `.env.(value from environment).php`. Edit the values from file accordingly.
+    (Make sure you dont delete the original files `.environment.php.sample` and `.env.php.sample`)
+3. Install dependencies using [Composer][composer] `composer install`
+4. Run `php artisan migrate` to run migration
+5. Install the requirements for [Foundation][foundation] (DO NOT RUN `compass watch` yet!!!)
+6. Run `bower install` to install any Foundation related files
+7. Run `compass watch` to compile style sheets
 
-Rename `.env.php.sample` to `.env.local.php` and configure
-
-Cron Job settings
-
-`` */1 * * * * php artisan vacStatus ``
+####Cron Job settings
+```
+*/1 * * * * php artisan vacStatus
+```
 
 [jung]: https://github.com/jung3o
 [composer]: http://daringfireball.net/projects/markdown/syntax#list
-[env]: .env.php
 [foundation]: http://foundation.zurb.com/docs/sass.html
 
 Contributing
