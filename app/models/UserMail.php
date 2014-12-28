@@ -14,6 +14,11 @@ class UserMail extends \Eloquent {
     return $this->verify == 'verified';
   }
 
+  public function canPushbullet()
+  {
+    return $this->pushbullet_verify == 'verified';
+  }
+
   public function Subscription() {
     return $this->hasMany('Subscription', 'user_id', 'user_id');
   }
