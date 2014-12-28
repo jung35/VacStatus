@@ -46,7 +46,7 @@ class vacStatus extends Command {
 
         $subscription = $userMail->Subscription;
 
-        $sendEmail = true;
+        $sendEmail = false;
         $emailArr = array();
 
         foreach($subscription as $sub_key => $sub) {
