@@ -579,7 +579,7 @@ ip Make the template fluid for portrait or landscape view adaptability. If a flu
                             <h3>Now we just have to validate your email...</h3>
 
                             <p>Please click on the following link to verify your email at VacStatus.<br>
-                            <a href="{{ route('settings_verify', $verify) }}">{{ route('settings_verify', $verify) }}</a><br>
+                            <a href="{{ route('settings_verify', array($verify, $type)) }}">{{ route('settings_verify', array($verify, $type)) }}</a><br>
                             <br>
                             If you have never registered here before, you can just go ahead and ignore it! :)</p>
 

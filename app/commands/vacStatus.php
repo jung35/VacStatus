@@ -18,7 +18,7 @@ class vacStatus extends Command {
      *
      * @var string
      */
-    protected $description = 'checks ban.';
+    protected $description = 'Checks bans.';
 
     /**
      * Create a new command instance.
@@ -166,26 +166,48 @@ class vacStatus extends Command {
         $userMail->touch();
 
         $email = $userMail->email;
+        $pbemail = $userMail->pushbullet;
 
         $queries = DB::getQueryLog();
         $this->info(count($queries));
 
         $this->log->addInfo("mail", array(
           "email" => $email,
+          "pbemail" => $pbemail,
           "send" => $sendEmail,
-          "queries" => count($queries),
+          "queries" => count($queries)
         ));
 
         if(!$sendEmail) {
-            $this->info('no email sent');
+            $this->info('No notifications sent');
             return;
         }
 
-        Mail::send('emails.hacker', array('emailArr' => $emailArr), function($message) use ($email)
-        {
-            $message->to($email)->subject('Bans Found!');
-        });
-        $this->info('email sent');
+        if ($userMail->canMail()) {
+            Mail::send('emails.hacker', array('emailArr' => $emailArr), function($message) use ($email)
+            {
+                $message->to($email)->subject('Bans Found!');
+            });
+        }
+
+        if ($userMail->canPushbullet()) {
+            $message = "";
+            foreach($emailArr as $banList) {
+                $bancount = 0;
+                $players = "";
+                if ($message != "") $message .= "\n\n";
+                foreach($banList['profiles'] as $profile) {
+                    if (end($banList['profiles']) != $profile) $players .= $profile['display_name'].", ";
+                    else $players .= ($bancount > 1 ? "and " : "").$profile['display_name'];
+                    $bancount++;
+                }
+                if ($bancount == 0) continue;
+                $message .= $players.($bancount > 1 ? " were " : " was")." Trade, Community, and/or VAC banned from your list '".$banList['title']."'";
+            }
+            PushBullet::user($pbemail)->note('Bans Found!', $message);
+        }
+
+        $this->info('Notifications sent');
     }
 
 }

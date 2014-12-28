@@ -7,7 +7,8 @@
     "laravel/framework": "4.2.*",
     "hybridauth/hybridauth": "dev-master",
     "mike182uk/paypal-ipn-listener" : "v2.0.1",
-    "guzzlehttp/guzzle": "~4.0"
+    "guzzlehttp/guzzle": "~4.0",
+    "lahaxearnaud/laravel-pushbullet": "~0.2"
   },
   "require-dev": {
     "way/generators": "2.*"
