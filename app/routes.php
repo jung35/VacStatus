@@ -37,7 +37,7 @@ Route::group(array('before' => 'auth'), function() {
   Route::resource('subscription', 'SubscriptionController');
 
   Route::get('/settings', array('as' => 'settings', 'uses' => 'SettingsController@showSettings'));
-  Route::get('/settings/verify/{verification}', array('as' => 'settings_verify', 'uses' => 'SettingsController@verifySettings'));
+  Route::get('/settings/verify/{verification}/{type}', array('as' => 'settings_verify', 'uses' => 'SettingsController@verifySettings'));
 
   Route::group(array('before' => 'csrf'), function() {
     Route::post('/settings', array('as' => 'settings_edit', 'uses' => 'SettingsController@editSettings'));

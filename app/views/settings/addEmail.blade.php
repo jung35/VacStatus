@@ -15,6 +15,15 @@
           </div>
         </div>
         <div class="row">
+          <div class="medium-2 small-12 columns">
+            <label for="pbemailLabel" class="right inline small-only-text-left">PushBullet</label>
+          </div>
+          <div class="medium-10 small-12 columns {{{ $pbemailStatus ? 'success' : 'error' }}}">
+            <input name="pbemail" type="email" id="pbemailLabel">
+            <small class="{{{ $pbemailStatus ? 'success' : 'error' }}}"> {{{ $pbemailStatus ? 'Subscribed at: '.$pbemail : 'Not currently subscribed' }}}</small>
+          </div>
+        </div>
+        <div class="row">
           <div class="medium-10 small-12 medium-offset-2 columns">
             <button class="button expand">Send Verification!</button>
           </div>
