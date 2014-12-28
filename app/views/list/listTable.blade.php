@@ -1,7 +1,7 @@
 <h3 class="small-6 columns list-title">
 
 @if((isset($userList->custom) && $userList->custom) && (Auth::check() && isset($userMail)))
-  @if($userMail == null || !$userMail->canMail())
+  @if($userMail == null || (!$userMail->canMail() && !$userMail->canPushbullet() && !$userMail->canPushover()))
     {{ Form::open(array('action' => 'SubscriptionController@store', 'class' => 'left list-subscribe', 'id' => 'listSubscribeForm')) }}
       <a data-tooltip aria-haspopup="true" class="has-tip" title="Please verify email inorder to subscribe!">
         <i class="fa fa-star text-alert"></i>
