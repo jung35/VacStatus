@@ -25,10 +25,7 @@ class AddProfileDescription extends Migration {
      */
     public function down()
     {
-        Schema::table('user_mail', function(Blueprint $table)
-        {
-            //
-        });
+        
     }
 
 }
