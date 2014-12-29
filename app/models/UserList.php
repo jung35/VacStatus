@@ -95,6 +95,7 @@ class UserList extends \Eloquent {
           ->get([
             'user_list_profile.id',
             'user_list_profile.profile_id',
+            'user_list_profile.profile_description',
             'user_list_profile.user_list_id',
 
             'profile.small_id',

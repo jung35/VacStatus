@@ -71,6 +71,7 @@ class ListController extends BaseController {
   public function addUserAction() {
     $listId = Input::get('list_id');
     $profileId = Input::get('profile_id');
+    $profileDescription = Input::get('profile_description');
     $userId = Auth::User()->getId();
 
     $userList = UserList::whereRaw('id = ? and user_id = ?', array($listId, $userId))->first();
@@ -82,6 +83,7 @@ class ListController extends BaseController {
           $userListProfile = new UserListProfile;
           $userListProfile->user_list_id = $listId;
           $userListProfile->profile_id = $profileId;
+          $userListProfile->profile_description = $profileDescription;
           $userListProfile->save();
           return Response::make('success');
         }

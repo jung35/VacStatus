@@ -63,6 +63,7 @@ function doAddUserList(form) {
   var action = form.action,
     list_id = form.list_id.value,
     profile_id = form.profile_id.value,
+    profile_description = form.profile_description.value,
     _token = form._token.value;
 
   $(form.submit).prop("disabled",true);
@@ -73,6 +74,7 @@ function doAddUserList(form) {
     data: {
       'list_id': list_id,
       'profile_id': profile_id,
+      'profile_description': profile_description,
       '_token': _token
     },
     beforeSend: fadeInLoader('Adding user to list')

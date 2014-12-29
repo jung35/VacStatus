@@ -8,6 +8,11 @@
         {{{ $UserListProfile->display_name }}}
       </span>
     </a>
+    @if(!is_null($UserListProfile->profile_description) && $UserListProfile->profile_description != '')
+    <a href="#" onClick="$('#profile_description').fadeToggle(250, function() { $(this).text($(this).text() == '(Description)' ? '{{{ $UserListProfile->profile_description }}}' : '(Description)').fadeToggle(250); });">
+      <div id="profile_description">(Description)</div>
+    </a>
+    @endif
   </td>
   @if($UserListProfile->vac > 0)
   <td class="vacstatus-list-status list-replaceable text-alert">
