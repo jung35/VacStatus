@@ -13,6 +13,7 @@ class ListController extends BaseController {
     foreach($userList as $list) {
       $simpleList[] = array(
         'id' => $list->getId(),
+        'user_id' => $list->user_id,
         'title' => $list->getTitle(),
         'privacy' => $list->getPrivacy()
       );

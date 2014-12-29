@@ -60,60 +60,6 @@
   border-left: 1px solid #ddd;
 }
 
-.vacstatus-multilist {
-  & > ul {
-    & > li > div {
-      &:hover {
-        background: #eee;
-      }
-      cursor: pointer;
-      padding: 10px 15px;
-      font-size: 13px;
-    }
-
-    border-bottom: 1px solid #eee;
-  }
-  .tabs-content {
-    table {
-      .vacstatus-list-avatar, .vacstatus-list-tracker {
-        width: 56px;
-        text-align: center;
-      }
-      .vacstatus-list-user a {
-        &:hover {
-          text-decoration: underline;
-          color: #222;
-        }
-        height: 100%;
-        display: block;
-        padding: 0;
-        color: #666;
-        font-size: 14px;
-      }
-      .vacstatus-list-status {
-        width: 150px;
-        text-align: center;
-      }
-      .vacstatus-list-button {
-        & > div {
-          text-align: center;
-        }
-        .f-dropdown {
-          width: 100px;
-          & ul {
-            text-align: left;
-            width: 120px;
-          }
-        }
-        width: 62px;
-      }
-      width: 100%;
-    }
-  }
-  margin-top: -18px;
-  padding-top: 18px;
-}
-
 .f-dropdown {
   &:before {
     left: auto;

@@ -56,6 +56,9 @@ a {
       margin: 0 0 0 10px;
     }
     .has-form {
+      input, button, .button {
+        top: .65rem;
+      }
       & > div {
         margin: 7px 0 0;
       }
@@ -104,10 +107,10 @@ table .button {
   width: 100%;
 }
 
-.wrap, .content-start {
-  height: calc(100% - 5px);
-  margin: 5px auto 0;
-  padding-bottom: 70px;
+.wrap {
+  .alert-box {
+    margin: 15px 0 5px;
+  }
 }
 
 .text-success {
@@ -170,4 +173,8 @@ span, small {
     border-bottom: 0;
   }
   margin: 0 15px 0 0;
+}
+
+.tooltip {
+  word-wrap: break-word;
 }

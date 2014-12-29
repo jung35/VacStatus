@@ -1,0 +1,49 @@
+.vacstatus-multilist {
+  .tabs-content {
+    table {
+      .vacstatus-list-avatar, .vacstatus-list-tracker {
+        width: 56px;
+        text-align: center;
+      }
+      .vacstatus-list-user a {
+        &:hover {
+          text-decoration: underline;
+          color: #222;
+        }
+        width: 270px;
+        height: 100%;
+        display: block;
+        padding: 0;
+        color: #666;
+        font-size: 14px;
+      }
+      .vacstatus-list-status {
+        width: 150px;
+        text-align: center;
+      }
+      .vacstatus-list-button {
+        form {
+          display: inline-block;
+        }
+        max-width: 122px;
+      }
+      width: 100%;
+    }
+  }
+  & > ul {
+    & > li > div,
+    & > li > a {
+      &:hover {
+        background: #eee !important;
+      }
+      background: #fff !important;
+      cursor: pointer !important;
+      padding: 10px 15px !important;
+      font-size: 13px !important;
+    }
+
+    border-bottom: 1px solid #eee;
+  }
+  margin-top: -18px;
+  padding-top: 18px;
+}

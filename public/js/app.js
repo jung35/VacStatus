@@ -1,5 +1,3 @@
-// Foundation JavaScript
-// Documentation can be found at: http://foundation.zurb.com/docs
 $(document).foundation();
 
 if (Modernizr.localstorage) {
@@ -14,6 +12,22 @@ $('.vacstatus-alert-box').on('close.fndtn.alert-box', function(event) {
   if (Modernizr.localstorage) {
     localStorage.setItem('vacstatusAlertBox', 'true');
   }
+});
+
+$(function() {
+  var footer = $(".footer");
+  var pos = footer.position();
+  var height = $(window).height();
+  height = height - pos.top - footer.height() - 25;
+  if (height > 0) {
+    footer.css({
+      'margin-top': height + 'px'
+    });
+  }
+});
+
+$(document).bind("ajaxComplete", function(){
+  $(document).foundation();
 });
 
 /**
@@ -171,7 +185,7 @@ function doCreateList(form) {
         $.each(data, function(k, list) {
           console.log(list);
           listList.append('<option value="'+ list.id +'">'+ list.title +'</option>');
-          personalList.prepend('<li><a onclick="javascript:showList('+ list.id +');">'+ list.title +'</a></li>');
+          personalList.prepend('<li><a href="/l/'+ list.user_id +'/'+ list.id +'">'+ list.title +'</a></li>');
         });
         personalList.append('<li class="divider"></li>');
         personalList.append('<li><a data-reveal-id="addList">New List</a></li>');
@@ -191,36 +205,6 @@ function doCreateList(form) {
     fadInOutAlert("<strong>Error</strong> There was an error adding this user to the list.", 2);
     $(form.submit).prop("disabled", false);
     $addProfileUser.foundation('reveal', 'close');
-  });
-}
-
-function showList(uori,list) {
-  var req;
-  if(list == null || list == undefined) {
-    req = uori;
-  } else {
-    req = [uori, list];
-  }
-  $.ajax({
-    url: '/list/fetch',
-    type: "POST",
-    async: false,
-    data: {
-      'req': req,
-      '_token': _token
-    },
-  }).done(function(data) {
-    $('.list-display').html(data);
-    $('.list-display-wrapper').animate({
-      height : $(".list-display").height() + 100
-    },600);
-    if(list == null || list == undefined) {
-      history.pushState('', '', '/l/'+uori);
-    } else {
-      history.pushState('', '', '/l/'+uori+'/'+list);
-    }
-  }).error(function() {
-    fadInOutAlert("<strong>Error</strong> There was an error loading list. Please try again soon", 2);
   });
 }
 

@@ -4,15 +4,13 @@
   </td>
   <td class="vacstatus-list-user list-replaceable">
     <a href="{{{ URL::route('profile', Array('steam3Id'=> Steam\Steam::toBigId($UserListProfile->small_id) )) }}}" target="_blank">
+      @if(!is_null($UserListProfile->profile_description) && !empty($UserListProfile->profile_description))
+        <i class="fa fa-eye" data-tooltip aria-haspopup="true" class="has-tip" title="{{{ $UserListProfile->profile_description }}}"></i>
+      @endif
       <span {{ (is_numeric($UserListProfile->donation) && $UserListProfile->donation >= DonationPerk::getPerkAmount('green_name')) ? "class='text-success'" : '' }}>
         {{{ $UserListProfile->display_name }}}
       </span>
     </a>
-    @if(!is_null($UserListProfile->profile_description) && $UserListProfile->profile_description != '')
-    <a href="#" onClick="$('#profile_description').fadeToggle(250, function() { $(this).text($(this).text() == '(Description)' ? '{{{ $UserListProfile->profile_description }}}' : '(Description)').fadeToggle(250); });">
-      <div id="profile_description">(Description)</div>
-    </a>
-    @endif
   </td>
   @if($UserListProfile->vac > 0)
   <td class="vacstatus-list-status list-replaceable text-alert">

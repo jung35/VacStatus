@@ -59,15 +59,15 @@
   <div class="row index-wrapper" data-equalizer>
 
     <div class="large-8 medium-8 columns vacstatus-multilist list-display-wrapper" data-equalizer-watch>
-      <ul class="tabs" data-tab>
-        <li class="tab-title"><div onClick="javascript:showList('most');">Most Tracked</div></li>
-        <li class="tab-title"><div onClick="javascript:showList('last');">Latest Added</div></li>
+      <ul class="tabs">
+        <li class="tab-title"><a href="{{{ URL::route('list_display', 'most') }}}">Most Tracked</a></li>
+        <li class="tab-title"><a href="{{{ URL::route('list_display', 'last') }}}">Latest Added</a></li>
         @if(Auth::check())
         <li class="tab-title">
           <div data-dropdown="personalList">Personal List <i class="fa fa-caret-down"></i></div>
           <ul id="personalList" class="f-dropdown" data-dropdown-content>
             @foreach(Auth::User()->UserList()->orderBy('id', 'DESC')->get() as $UserList1)
-            <li><a onClick="javascript:showList({{{ $UserList1->getId() }}});">{{{ $UserList1->getTitle() }}}</a></li>
+            <li><a href="{{{ URL::route('list_display', array($UserList1->user_id, $UserList1->id)) }}}">{{{ $UserList1->getTitle() }}}</a></li>
             @endforeach
             <li class="divider"></li>
             <li><a data-reveal-id="addList">New List</a></li>
@@ -82,7 +82,9 @@
               <a>{{{ $friends->getUserName() }}}</a>
               <ul class="dropdown">
                 @foreach($friends->UserList()->where('privacy','!=','3')->orderBy('id', 'DESC')->get() as $friendsList)
-                <li class="right"><a onClick="javascript:showList({{{ $friendsList->user_id }}}, {{{ $friendsList->getId() }}});">{{{ $friendsList->getTitle() }}}</a></li>
+                <li class="right">
+                  <a href="{{{ URL::route('list_display', array($UserList1->user_id, $UserList1->id)) }}}">{{{ $friendsList->getTitle() }}}</a>
+                </li>
                 @endforeach
               </ul>
             </li>
