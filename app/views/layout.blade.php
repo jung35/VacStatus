@@ -39,6 +39,9 @@
                 @endforeach
               </select>
             </label>
+            <label><strong>Description</strong>
+              <textarea name="profile_description" rows="5" placeholder="A description to remind you who he is"></textarea>
+            </label>
           </div>
         </div>
         <div class="row">
