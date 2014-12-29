@@ -28,7 +28,7 @@ class vacStatus extends Command {
     public function __construct()
     {
         parent::__construct();
-    $this->log = Log::getMonolog();
+        $this->log = Log::getMonolog();
     }
 
     /**
@@ -39,6 +39,11 @@ class vacStatus extends Command {
     public function fire()
     {
         $userMail = UserMail::checkUserList();
+
+        if(!$userMail) {
+          return;
+        }
+
         $subscription = $userMail->Subscription;
 
         $sendEmail = false;

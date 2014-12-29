@@ -19,6 +19,11 @@ class UserMail extends \Eloquent {
     return $this->pushbullet_verify == 'verified';
   }
 
+  public function canPushover()
+  {
+    return $this->pushover_verify == 'verified';
+  }
+
   public function Subscription() {
     return $this->hasMany('Subscription', 'user_id', 'user_id');
   }
@@ -26,19 +31,26 @@ class UserMail extends \Eloquent {
   static public function checkUserList() {
     if(Cache::has('getLastCheckedUser')) {
       $getLastCheckedUser = Cache::get('getLastCheckedUser');
-      $getNewUser = UserMail::whereRaw('id > ? and verify = ?', array($getLastCheckedUser, 'verified'))->first();
+      $getNewUser = UserMail::whereRaw('id > ? and (verify = ? or pushbullet_verify = ? or pushover_verify = ?)', array($getLastCheckedUser, 'verified', 'verified', 'verified'))->first();
 
       if(!is_object($getNewUser)) {
         Cache::forget('getLastCheckedUser');
         Cache::forever('getLastCheckedUser', -1);
-        return self::checkUserList();
       } else {
         Cache::forget('getLastCheckedUser');
         Cache::forever('getLastCheckedUser', $getNewUser->id);
+        return $getNewUser;
       }
-      return $getNewUser;
     }
     Cache::forever('getLastCheckedUser', -1);
-    return self::checkUserList();
+    $getNewUser = UserMail::whereRaw('id > ? and (verify = ? or pushbullet_verify = ? or pushover_verify = ?)', array(-1, 'verified', 'verified', 'verified'))->first();
+
+    if(is_null($getNewUser)) {
+      return false;
+    }
+
+    Cache::forget('getLastCheckedUser');
+    Cache::forever('getLastCheckedUser', $getNewUser->id);
+    return $getNewUser;
   }
 }
