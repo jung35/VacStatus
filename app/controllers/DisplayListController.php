@@ -30,15 +30,11 @@ class DisplayListController extends \BaseController {
 
     $list = Input::get('list');
 
-    if(!is_array($list)) {
-      return '';
-    }
+    if(!is_array($list)) return '';
 
     $userList = Profile::updateMulitipleProfile(Steam::toBigId($list));
 
-    if(!is_object($userList)) {
-      dd($userList, 'wtf');
-    }
+    if(!is_object($userList)) return '';
 
     return View::make('list/listRowDisplay', array('userList' => $userList));
 

@@ -40,7 +40,6 @@ class Profile extends \Eloquent {
       $steamAPI_Info = Steam::cURLSteamAPI('info', $steam3Id);
       // Steam web api sux m8
       if(isset($steamAPI_Info->type) && $steamAPI_Info->type == 'error') {
-        dd($steamAPI_Info);
         return $steamAPI_Info->type;
       }
 
