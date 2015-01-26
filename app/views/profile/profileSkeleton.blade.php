@@ -63,7 +63,7 @@
 
   <div class="medium-12 columns detailed">
     <h4 class="small-only-text-center">VAC Ban</h4>
-    <ul class="large-6 large-centered columns">
+    <ul class="large-8 large-centered columns">
 
       <li class="large-6 medium-6 columns profile-detail small-only-text-center">
         <ul class="row">
