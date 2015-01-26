@@ -148,7 +148,7 @@ class UserList extends \Eloquent {
       $userList = UserList::whereRaw('id = ? and user_id = ?', Array($listId, $userId))->first();
 
       if(isset($userList->id)) {
-        if($userList->privacy != 3) {
+        if($userList->privacy != 3 || $userList->user_id == Auth::User()->id) {
           $stranger = User::whereId($userId)->first();
           if($userList->privacy == 2) {
             if(!Auth::check()) {
