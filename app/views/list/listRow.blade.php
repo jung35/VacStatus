@@ -14,7 +14,7 @@
   </td>
   @if($UserListProfile->vac > 0)
   <td class="vacstatus-list-status list-replaceable text-alert">
-    <span class="fa fa-check"></span><span class="show-for-medium-up">&nbsp;&nbsp;{{{ date('M j Y', time() - ($UserListProfile->vac_days * 24 * 60 * 60)) }}}</span>
+    <span class="fa fa-check show-for-small-only"></span><span class="show-for-medium-up">&nbsp;&nbsp;{{{ date('M j Y', time() - ($UserListProfile->vac_days * 24 * 60 * 60)) }}}</span>
   </td>
   @else
   <td class="vacstatus-list-status list-replaceable text-success">
