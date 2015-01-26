@@ -41,7 +41,7 @@
 <table width="100%">
   <thead>
     <tr>
-      <th class="vacstatus-list-avatar"></th>
+      <th class="vacstatus-list-avatar show-for-medium-up"></th>
       <th class="vacstatus-list-user">User</th>
       <th class="vacstatus-list-status">VAC</th>
       <th class="vacstatus-list-tracker">Tracked</th>

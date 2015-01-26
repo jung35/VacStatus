@@ -1,5 +1,5 @@
 <tr class="profileId_{{{ $UserListProfile->profile_id ?:$UserListProfile->id }}}">
-  <td class="vacstatus-list-avatar list-replaceable">
+  <td class="vacstatus-list-avatar list-replaceable show-for-medium-up">
     <img src="{{{ $UserListProfile->avatar_thumb }}}">
   </td>
   <td class="vacstatus-list-user list-replaceable">
@@ -14,7 +14,7 @@
   </td>
   @if($UserListProfile->vac > 0)
   <td class="vacstatus-list-status list-replaceable text-alert">
-    <span class="fa fa-check"></span>&nbsp;&nbsp;{{{ date('M j Y', time() - ($UserListProfile->vac_days * 24 * 60 * 60)) }}}
+    <span class="fa fa-check"></span><span class="show-for-medium-up">&nbsp;&nbsp;{{{ date('M j Y', time() - ($UserListProfile->vac_days * 24 * 60 * 60)) }}}</span>
   </td>
   @else
   <td class="vacstatus-list-status list-replaceable text-success">
