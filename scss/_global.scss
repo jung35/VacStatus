@@ -64,11 +64,14 @@ a {
       }
       min-width: 300px;
       // width: 100%;
-      background: rgba(0, 0, 0, .02); // 3D403F
+      background: rgba(0, 0, 0, .01); // 3D403F
       margin: 0 auto;
     }
     img {
       margin-top: -5px;
+    }
+    li a {
+      transition: background-color 0.5s ease;
     }
     .has-dropdown {
       .dropdown {
@@ -119,6 +122,10 @@ table .button {
 
 .text-alert {
   color: #f04124;
+}
+
+.pushFooterDown {
+  height: 70px;
 }
 
 .footer {

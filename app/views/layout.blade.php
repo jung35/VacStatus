@@ -29,7 +29,7 @@
     @if(Auth::check())
     <div id="addProfileUser" class="reveal-modal tiny" data-reveal>
       <h2 class="text-center">Add User to List</h2>
-      <form action="{{{ URL::route('list_user_add') }}}" method="POST">
+      <form class="disable-enter" action="{{{ URL::route('list_user_add') }}}" method="POST">
         <div class="row">
           <div class="large-12 columns">
             <label><strong>Add User into:</strong>
@@ -61,7 +61,7 @@
     </div>
     <div id="addList" class="reveal-modal tiny" data-reveal>
       <h2 class="text-center">Add List <small>(Limit {{{ Auth::User()->unlockList() }}})</small></h2>
-      <form action="{{{ URL::route('list_add') }}}" method="POST">
+      <form class="disable-enter" action="{{{ URL::route('list_add') }}}" method="POST">
         <div class="row">
           <div class="large-12 columns">
             <label><strong>List Privacy</strong>
@@ -91,7 +91,7 @@
     </div>
     <div id="editList" class="reveal-modal tiny" data-reveal>
       <h2 class="text-center">Edit List <small>(ID: <span class="editList_id_element"></span>)</small></h2>
-      <form action="{{{ URL::route('list_edit') }}}" method="POST">
+      <form class="disable-enter" action="{{{ URL::route('list_edit') }}}" method="POST">
         <div class="row">
           <div class="large-12 columns">
             <label><strong>List Privacy</strong>
@@ -132,7 +132,7 @@
     @endif
     <div id="advSearchModal" class="reveal-modal tiny" data-reveal>
       <h2 class="text-center">Advanced Search</h2>
-      <form action="{{{ URL::route('search_multi') }}}" method="POST">
+      <form class="disable-enter" action="{{{ URL::route('search_multi') }}}" method="POST">
         <div class="row">
           <div class="large-12 columns">
             <label>
@@ -210,6 +210,11 @@
                   </a>
                 </li>
                 @endif
+                <li>
+                  <a href="{{{ URL::route('donation') }}}">
+                    <i class="fa fa-heart"></i>
+                  </a>
+                </li>
               </ul>
             </section>
           </nav>
@@ -224,6 +229,7 @@
           </div>
         </div>
       </div>
+      <div class="pushFooterDown"></div>
     </div>
 
     <div class="footer">

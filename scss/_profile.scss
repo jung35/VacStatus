@@ -5,12 +5,18 @@
         background: rgba(0, 0, 0, .4);
         color: rgba(255, 255, 255, .9);
       }
+
+      .fa {
+        line-height: 100%;
+        height: 100%;
+      }
+
       position: absolute;
       padding: 2px 0 0;
       top: 5px;
       bottom: 5px;
-      left: 24px;
-      right: 24px;
+      left: 21px;
+      right: 22px;
       line-height: 0;
       font-size: 128px;
       background: rgba(0, 0, 0, .2);

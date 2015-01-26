@@ -111,4 +111,52 @@ class ListController extends BaseController {
     }
     return Response::make('Invalid list or profile.');
   }
+
+  public function addMultipleUserAction() {
+    $listId = Input::get('list_id');
+    $profileIds = Input::get('profile_ids');
+    $profileDescription = Input::get('profile_description');
+    $userId = Auth::User()->getId();
+
+    $profileIds = array_filter(explode(",", $profileIds));
+
+    $userList = UserList::whereRaw('id = ? and user_id = ?', array($listId, $userId))->first();
+    if(isset($userList->id)) {
+      $count = UserListProfile::whereUserListId($listId)->count();
+
+      $userListProfile = UserListProfile::whereUserListId($listId)->whereIn('profile_id', $profileIds)->get();
+
+      foreach($userListProfile as $userPresent) {
+        unset($profileIds[array_search($userPresent->profile_id, $profileIds)]);
+      }
+
+      if(count($profileIds) == 0) {
+        return Response::make('There was no user left to add on list');
+      }
+
+      $queryValues = array();
+      $maxedOut = false;
+
+      foreach($profileIds as $profileId) {
+        if($count < Auth::User()->unlockUser()) {
+          $queryValues[] = array(
+            'user_list_id' => $listId,
+            'profile_id' => $profileId,
+            'profile_description' => $profileDescription
+          );
+          $count++;
+        } else {
+          $maxedOut = true;
+          break;
+        }
+      }
+
+      if(UserListProfile::insert($queryValues)) {
+        return Response::make($maxedOut ? 'maxed' : 'success');
+      }
+
+      return Response::make('There was an error trying to insert users into list.');
+    }
+    return Response::make('Invalid list or profile.');
+  }
 }

@@ -176,14 +176,16 @@ function doCreateList(form) {
         beforeSend: fadeInLoader('Fetching List')
       }).done(function(data) {
         var listList = $('#addProfileUser').find('select'),
+          mutliuserList = $('#addMultipleUser').find('select'),
           personalList = $('#personalList');
 
         // Clear list
         listList.html("");
+        mutliuserList.html("");
         personalList.html("");
         // append update list
         $.each(data, function(k, list) {
-          console.log(list);
+          mutliuserList.prepend('<option value="'+ list.id +'">'+ list.title +'</option>');
           listList.append('<option value="'+ list.id +'">'+ list.title +'</option>');
           personalList.prepend('<li><a href="/l/'+ list.user_id +'/'+ list.id +'">'+ list.title +'</a></li>');
         });
@@ -215,7 +217,7 @@ function showListLink(userId, listId) {
 
 var $editList = $('#editList');
 function showEditForm(listId, privacy) {
-  var listTitle = $('.list-title').text();
+  var listTitle = $('.list-title').find('.actual-list-title').text();
 
   $editList.find('.editList_id_element').html(listId);
   $editList.find('.editList_privacy').val(privacy);
@@ -229,6 +231,7 @@ function userMultiUpdate(list) {
   if(list.length == 0 || typeof list != 'object') {
     return;
   }
+
   $.ajax({
     url: '/list/update',
     type: "POST",
@@ -260,5 +263,59 @@ function userMultiUpdate(list) {
 $(window).load(function() {
   if(typeof userToUpdate != "undefined") {
     userMultiUpdate(userToUpdate);
+  }
+});
+
+var $addMultipleUser = $('#addMultipleUser');
+function MultipleAddModal() {
+  $addMultipleUser.foundation('reveal', 'open');
+}
+
+function doAddMultipleUserList(form) {
+  var action = form.action,
+    _token = form._token.value,
+    profile_ids = form.profile_ids.value,
+    list_id = form.list_id.value,
+    profile_description = form.profile_description.value;
+
+  $.ajax({
+    url: action,
+    type: "POST",
+    data: {
+      'profile_ids': profile_ids,
+      'list_id': list_id,
+      'profile_description': profile_description,
+      '_token': _token
+    },
+    beforeSend: function() {
+      $(form.submit).prop("disabled", true);
+      fadeInLoader('Adding Profiles to List');
+    }
+  }).done(function(data) {
+    if(data == 'success') {
+      fadInOutSuccess("<strong>Success</strong> All the users have been added to list.", 2);
+    } else if(data == 'maxed') {
+      fadInOutSuccess("<strong>Success</strong> Some of the users have not been added to the list because it was maxed out.", 2);
+    } else {
+      fadInOutAlert("<strong>Error</strong> "+data, 2);
+    }
+
+    fadeOutLoader();
+    $(form.submit).prop("disabled", false);
+    $addMultipleUser.foundation('reveal', 'close');
+  }).error(function() {
+    $(form.submit).prop("disabled", false);
+    fadeOutLoader(function() {
+      fadInOutAlert("<strong>Error</strong> There was an error submitting. Please try again soon.", 2);
+    });
+  });
+}
+
+
+$('.disable-enter').on("keyup keypress", function(e) {
+  var code = e.keyCode || e.which;
+  if (code  == 13) {
+    e.preventDefault();
+    return false;
   }
 });

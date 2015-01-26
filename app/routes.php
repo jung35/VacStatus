@@ -49,6 +49,8 @@ Route::group(array('before' => 'auth'), function() {
 
     Route::post('/list/user/add', array('as' => 'list_user_add', 'uses' => 'ListController@addUserAction'));
     Route::post('/list/user/delete', array('as' => 'list_user_delete', 'uses' => 'ListController@deleteUserAction'));
+
+    Route::post('/list/users/add', array('as' => 'list_users_add', 'uses' => 'ListController@addMultipleUserAction'));
   });
 });
 

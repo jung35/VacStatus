@@ -83,7 +83,7 @@ class HomeController extends BaseController {
     }
 
     if(!$statusConfirm) {
-      $search = array_filter(explode(" ", $search));
+      $search = array_filter(preg_split("/[\s\n]+/", $search));
     } else {
       $search = array_filter($searchArray);
     }
