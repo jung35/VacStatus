@@ -83,7 +83,7 @@
               <ul class="dropdown">
                 @foreach($friends->UserList()->where('privacy','!=','3')->orderBy('id', 'DESC')->get() as $friendsList)
                 <li class="right">
-                  <a href="{{{ URL::route('list_display', array($UserList1->user_id, $UserList1->id)) }}}">{{{ $friendsList->getTitle() }}}</a>
+                  <a href="{{{ URL::route('list_display', array($friendsList->user_id, $friendsList->id)) }}}">{{{ $friendsList->getTitle() }}}</a>
                 </li>
                 @endforeach
               </ul>
