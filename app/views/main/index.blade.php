@@ -94,7 +94,7 @@
         </li>
         @endif
       </ul>
-      <div class="tabs-content">
+      <div class="tabs-content row">
         <div class="list-display content active">
           @if(isset($userMail))
             @include('list/listTable', array( 'userList' => $userList, 'userMail' => $userMail, 'subscription' => $subscription ))
