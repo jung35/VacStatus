@@ -5,23 +5,23 @@ class SettingsController extends \BaseController {
     public function showSettings()
     {
         $userMail = Auth::User()->UserMail;
-       
+
         $emailStatus = false;
         $email = '';
-       
+
         $pbemailStatus = false;
         $pbemail = '';
-       
+
         if($userMail != null && $userMail->canMail()) {
             $emailStatus = true;
             $email = $userMail->email;
         }
-       
+
         if($userMail != null && $userMail->canPushbullet()) {
             $pbemailStatus = true;
             $pbemail = $userMail->pushbullet;
         }
-       
+
         return View::make('settings/addEmail', array(
                           'emailStatus' => $emailStatus,
                           'email' => $email,
@@ -33,7 +33,7 @@ class SettingsController extends \BaseController {
     {
         $email = Input::get('email');
         $pbemail = Input::get('pbemail');
-        
+
         if (!is_null($email) && $email != "") {
             $validator = Validator::make(
                 array('email' => $email),
@@ -68,7 +68,7 @@ class SettingsController extends \BaseController {
             }
             return Redirect::back()->with('error', 'Something went wrong sending the email.');
         }
-        
+
         if (!is_null($pbemail) && $pbemail != "") {
             $validator = Validator::make(
                 array('pbemail' => $pbemail),

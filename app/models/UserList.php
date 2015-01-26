@@ -110,7 +110,7 @@ class UserList extends \Eloquent {
 
             'profile_ban.community',
             'profile_ban.vac',
-            'profile_ban.vac_days',
+            'profile_ban.vac_banned_on',
             'profile_ban.trade',
             'profile_ban.unban',
 
@@ -181,7 +181,7 @@ class UserList extends \Eloquent {
 
               'profile_ban.community',
               'profile_ban.vac',
-              'profile_ban.vac_days',
+              'profile_ban.vac_banned_on',
               'profile_ban.trade',
               'profile_ban.unban',
 
@@ -239,7 +239,7 @@ class UserList extends \Eloquent {
 
         'profile_ban.community',
         'profile_ban.vac',
-        'profile_ban.vac_days',
+        'profile_ban.vac_banned_on',
         'profile_ban.trade',
         'profile_ban.unban',
 
@@ -315,7 +315,7 @@ class UserList extends \Eloquent {
 
         'profile_ban.community',
         'profile_ban.vac',
-        'profile_ban.vac_days',
+        'profile_ban.vac_banned_on',
         'profile_ban.trade',
         'profile_ban.unban',
 

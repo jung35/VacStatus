@@ -18,6 +18,9 @@
         font-size: 14px;
       }
       .vacstatus-list-status {
+        div {
+          display: inline !important;
+        }
         width: 150px;
         text-align: center;
       }

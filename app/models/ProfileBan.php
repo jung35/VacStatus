@@ -30,7 +30,8 @@ class ProfileBan extends \Eloquent {
   }
 
   public function getVacDays() {
-    return $this->isVacBanned() ? date('M j Y', time() - ($this->vac_days * 24 * 60 * 60)) : 'None';
+    $date = new DateTime($this->vac_banned_on);
+    return $this->isVacBanned() ? $date->format('M j Y') : 'None';
   }
 
   public function isUnbanned() {

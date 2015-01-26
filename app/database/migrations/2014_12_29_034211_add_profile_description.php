@@ -25,7 +25,7 @@ class AddProfileDescription extends Migration {
      */
     public function down()
     {
-        
+
     }
 
 }

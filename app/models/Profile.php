@@ -120,10 +120,13 @@ class Profile extends \Eloquent {
         }
       }
 
+      $banDate = new DateTime;
+      $banDate->modify('-'.$steamAPI_Ban->DaysSinceLastBan.' day');
+
       $profileBan->vac = $steamAPI_Ban->NumberOfVACBans;
       $profileBan->community = $steamAPI_Ban->CommunityBanned;
       $profileBan->trade = $steamAPI_Ban->EconomyBan != 'none';
-      $profileBan->vac_days = $steamAPI_Ban->DaysSinceLastBan;
+      $profileBan->vac_banned_on = $banDate;
 
       $profile->ProfileBan()->save($profileBan);
       $profile->ProfileBan = $profileBan;
@@ -285,7 +288,7 @@ class Profile extends \Eloquent {
 
           'profile_ban.community',
           'profile_ban.vac',
-          'profile_ban.vac_days',
+          'profile_ban.vac_banned_on',
           'profile_ban.trade',
           'profile_ban.unban',
 
@@ -362,20 +365,27 @@ class Profile extends \Eloquent {
           if($profileBan->vac > $profile_Ban->NumberOfVACBans) {
             $profileBan->unban = true;
           }
+
+          $banDate = new DateTime($profileBan->vac_banned_on);
+          $newDate = new DateTime();
+          $newDate->modify('-'.$steamAPI_Ban->DaysSinceLastBan.' day');
+
           if($profileBan->vac != $profile_Ban->NumberOfVACBans ||
             $profileBan->community != $profile_Ban->CommunityBanned ||
             $profileBan->trade != ($profile_Ban->EconomyBan != 'none') ||
-            $profileBan->vac_days != $profile_Ban->DaysSinceLastBan)
+            $banDate->format("Y-m-d") != $newDate->format("Y-m-d"))
           {
             $skipProfileBan = false;
           }
         }
 
+        $banDate = new DateTime();
+        $banDate->modify('-'.$steamAPI_Ban->DaysSinceLastBan.' day');
 
         $profileBan->vac = $profile_Ban->NumberOfVACBans;
         $profileBan->community = $profile_Ban->CommunityBanned;
         $profileBan->trade = $profile_Ban->EconomyBan != 'none';
-        $profileBan->vac_days = $profile_Ban->DaysSinceLastBan;
+        $profileBan->vac_banned_on = $banDate;
         if(!$skipProfileBan) {
           $profile->ProfileBan()->save($profileBan);
           $profile->ProfileBan = $profileBan;
@@ -485,11 +495,13 @@ class Profile extends \Eloquent {
             $profileBan->unban = true;
           }
         }
+        $banDate = new DateTime();
+        $banDate->modify('-'.$profile_Ban->DaysSinceLastBan.' day');
 
         $profileBan->vac = $profile_Ban->NumberOfVACBans;
         $profileBan->community = $profile_Ban->CommunityBanned;
         $profileBan->trade = $profile_Ban->EconomyBan != 'none';
-        $profileBan->vac_days = $profile_Ban->DaysSinceLastBan;
+        $profileBan->vac_banned_on = $banDate;
 
         $profile->ProfileBan()->save($profileBan);
         $profile->ProfileBan = $profileBan;

@@ -14,7 +14,10 @@
   </td>
   @if($UserListProfile->vac > 0)
   <td class="vacstatus-list-status list-replaceable text-alert">
-    <span class="fa fa-check show-for-small-only"></span><span class="show-for-medium-up">{{{ date('M j Y', time() - ($UserListProfile->vac_days * 24 * 60 * 60)) }}}</span>
+    <div>
+      <span class="fa fa-check show-for-small-only"></span>
+      <span class="show-for-medium-up">{{{ date_format(new DateTime($UserListProfile->vac_banned_on), 'M j Y') }}}</span>
+    </div>
   </td>
   @else
   <td class="vacstatus-list-status list-replaceable text-success">
