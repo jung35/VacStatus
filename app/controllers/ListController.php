@@ -39,7 +39,7 @@ class ListController extends BaseController {
         $userList->privacy = $privacy;
 
         if(!$userList->save()) {
-            return Response::make('Sorry, there was an error trying to save.')
+            return Response::make('Sorry, there was an error trying to save.');
         }
 
         return Response::make('success');
