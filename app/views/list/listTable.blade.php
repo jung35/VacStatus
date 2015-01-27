@@ -49,7 +49,7 @@
     </tr>
   </thead>
   <tbody>
-    @if(is_array($userList))
+    @if(is_object($userList))
       @foreach($userList as $UserListProfile)
         @if(is_object($UserListProfile))
           @if(isset($userList->personal) && $userList->personal)
