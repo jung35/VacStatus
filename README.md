@@ -4,7 +4,7 @@ Keep track of people's VAC ban status in a list
 
 ##Info
 
-VacStatus is currently using `` Laravel `` and is currently maintained by [Jung3o][jung]. I have been using Homestead for development and have not tested development on laravel's built in server.
+VacStatus is currently using `` [Laravel][laravel] `` and is currently maintained by [Jung3o][jung]. I have been using Homestead for development and have not tested development on laravel's built in server.
 
 ####Installation
 1. Create a copy of `.environment.php.sample` and rename it `.environment.php`.
@@ -12,7 +12,7 @@ VacStatus is currently using `` Laravel `` and is currently maintained by [Jung3
 
     (Make sure you dont delete the original files `.environment.php.sample` and `.env.php.sample`)
 3. Install dependencies using [Composer][composer] `composer install`
-4. Run `php artisan migrate` to run migration
+4. Run `php artisan migrate` to run migration (to create tables on db)
 5. Install compass `gem install compass` (*You must have ruby installed!*)
 6. Run `bower install` to install any Foundation related files
 7. Run `compass compile` to compile style sheets (Or alternatively `compass watch`)
@@ -24,6 +24,7 @@ I also have redis currently selected as driver for [cache.php][cache] and [sessi
 */1 * * * * php artisan vacStatus
 ```
 
+[laravel]: http://laravel.com/docs/4.2
 [jung]: https://github.com/jung3o
 [composer]: https://getcomposer.org/download/
 [foundation]: http://foundation.zurb.com/docs/sass.html
