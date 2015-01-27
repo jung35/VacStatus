@@ -106,7 +106,8 @@ class SettingsController extends \BaseController {
         return Redirect::back();
     }
 
-    public function verifySettings($verification, $type) {
+    public function verifySettings($verification, $type)
+    {
         if ($type == "email") {
             $userMail = UserMail::whereVerify($verification)->whereUserId(Auth::User()->id)->first();
 

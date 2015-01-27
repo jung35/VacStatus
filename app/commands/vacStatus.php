@@ -41,7 +41,7 @@ class vacStatus extends Command {
         $userMail = UserMail::checkUserList();
 
         if(!$userMail) {
-          return;
+            return;
         }
 
         $subscription = $userMail->Subscription;
@@ -63,54 +63,53 @@ class vacStatus extends Command {
             // $this->info(dd($userList));
 
             $profiles = UserListProfile::whereUserListId($userListId)
-                            ->join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
-                            ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
-                            ->orderBy('user_list_profile.id','desc')
-                            ->get([
-                                'user_list_profile.id',
-                                'user_list_profile.profile_id',
-                                'user_list_profile.user_list_id',
+                        ->join('profile', 'user_list_profile.profile_id', '=', 'profile.id')
+                        ->join('profile_ban', 'user_list_profile.profile_id', '=', 'profile_ban.profile_id')
+                        ->orderBy('user_list_profile.id','desc')
+                        ->get([
+                            'user_list_profile.id',
+                            'user_list_profile.profile_id',
+                            'user_list_profile.user_list_id',
 
-                                'profile.small_id',
-                                'profile.display_name',
+                            'profile.small_id',
+                            'profile.display_name',
 
-                                'profile_ban.community',
-                                'profile_ban.vac',
-                                'profile_ban.vac_banned_on',
-                                'profile_ban.trade',
-                                'profile_ban.unban',
-                                'profile_ban.created_at',
-                                'profile_ban.updated_at',
-                            ]);
+                            'profile_ban.community',
+                            'profile_ban.vac',
+                            'profile_ban.vac_banned_on',
+                            'profile_ban.trade',
+                            'profile_ban.unban',
+                            'profile_ban.created_at',
+                            'profile_ban.updated_at',
+                        ]);
             $steamIds = array();
             $sortedProfiles = array();
             foreach($profiles as $profile) {
 
-                if(($profile->community || $profile->vac || $profile->trade) &&
-                   strtotime($profile->updated_at) != strtotime($profile->created_at) &&
-                   strtotime($profile->updated_at) > strtotime($userMail->updated_at)) {
+                if(($profile->community || $profile->vac || $profile->trade)
+                   && strtotime($profile->updated_at) != strtotime($profile->created_at)
+                   && strtotime($profile->updated_at) > strtotime($userMail->updated_at)) {
                     $sendEmail = true;
                     $emailArr[$sub_key]['profiles'][$profile->small_id] = array(
-                      'display_name' => $profile->display_name,
-                      'vac_banned_on'=> !$profile->vac ?: date('M j Y', strtotime($profile->vac_banned_on)),
-                      'community'    => $profile->community,
-                      'trade'        => $profile->trade
-                      );
+                        'display_name' => $profile->display_name,
+                        'vac_banned_on'=> !$profile->vac ?: date('M j Y', strtotime($profile->vac_banned_on)),
+                        'community'    => $profile->community,
+                        'trade'        => $profile->trade
+                    );
                 }
 
                 $sortedProfiles[$profile->small_id] = (object) array(
-                    'profile_id'   => $profile->profile_id,
-                    'small_id'     => $profile->small_id,
-                    'display_name' => $profile->display_name,
-                    'community'    => $profile->community,
-                    'vac'          => $profile->vac,
-                    'vac_banned_on'     => $profile->vac_banned_on,
-                    'trade'        => $profile->trade,
-                    'updated_at'   => $profile->updated_at
-                    );
+                    'profile_id'    => $profile->profile_id,
+                    'small_id'      => $profile->small_id,
+                    'display_name'  => $profile->display_name,
+                    'community'     => $profile->community,
+                    'vac'           => $profile->vac,
+                    'vac_banned_on' => $profile->vac_banned_on,
+                    'trade'         => $profile->trade,
+                    'updated_at'    => $profile->updated_at
+                );
 
                 $steamIds[] = Steam::toBigId($profile->small_id);
-                // $this->info(var_dump($profile));
             }
 
             if(count($steamIds) == 0) continue;
@@ -132,9 +131,9 @@ class vacStatus extends Command {
 
                 $banChange = false;
 
-                if((($steamAPI_Ban->NumberOfVACBans != $profile->vac) ||
-                   ($steamAPI_Ban->CommunityBanned != $profile->community) ||
-                   (($steamAPI_Ban->EconomyBan != 'none') != $profile->trade)))
+                if($steamAPI_Ban->NumberOfVACBans != $profile->vac
+                   || $steamAPI_Ban->CommunityBanned != $profile->community
+                   || ($steamAPI_Ban->EconomyBan != 'none') != $profile->trade)
                 {
                     $sendEmail = true;
                     $banChange = true;
@@ -143,11 +142,11 @@ class vacStatus extends Command {
                 if($banChange)
                 {
                     $emailArr[$sub_key]['profiles'][$profile->small_id] = array(
-                      'display_name' => $profile->display_name,
-                      'vac_banned_on'=> $steamAPI_Ban->NumberOfVACBans ? date('M j Y', strtotime($profile->vac_banned_on)): false,
-                      'community'    => $steamAPI_Ban->CommunityBanned,
-                      'trade'        => $steamAPI_Ban->EconomyBan != 'none'
-                      );
+                        'display_name' => $profile->display_name,
+                        'vac_banned_on'=> $steamAPI_Ban->NumberOfVACBans ? date('M j Y', strtotime($profile->vac_banned_on)): false,
+                        'community'    => $steamAPI_Ban->CommunityBanned,
+                        'trade'        => $steamAPI_Ban->EconomyBan != 'none'
+                    );
 
                     $this->Info(var_dump($steamAPI_Ban->NumberOfVACBans, $profile->vac, ($steamAPI_Ban->CommunityBanned != $profile->community), (($steamAPI_Ban->EconomyBan != 'none') != $profile->trade)));
 
@@ -190,8 +189,6 @@ class vacStatus extends Command {
             $this->info('No notifications sent');
             return;
         }
-
-        return; // send updates to db
 
         if ($userMail->canMail()) {
             Mail::send('emails.hacker', array('emailArr' => $emailArr), function($message) use ($email)

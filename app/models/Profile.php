@@ -121,7 +121,7 @@ class Profile extends \Eloquent {
       }
 
       $banDate = new DateTime;
-      $banDate->modify('-'.$steamAPI_Ban->DaysSinceLastBan.' day');
+      $banDate->sub(new DateInterval("P{$steamAPI_Ban->DaysSinceLastBan}D"));
 
       $profileBan->vac = $steamAPI_Ban->NumberOfVACBans;
       $profileBan->community = $steamAPI_Ban->CommunityBanned;
@@ -368,7 +368,7 @@ class Profile extends \Eloquent {
 
           $banDate = new DateTime($profileBan->vac_banned_on);
           $newDate = new DateTime();
-          $newDate->modify('-'.$profile_Ban->DaysSinceLastBan.' day');
+          $newDate->sub(new DateInterval("P{$profile_Ban->DaysSinceLastBan}D"));
 
           if($profileBan->vac != $profile_Ban->NumberOfVACBans ||
             $profileBan->community != $profile_Ban->CommunityBanned ||
@@ -380,12 +380,13 @@ class Profile extends \Eloquent {
         }
 
         $banDate = new DateTime();
-        $banDate->modify('-'.$profile_Ban->DaysSinceLastBan.' day');
+        $banDate->sub(new DateInterval("P{$profile_Ban->DaysSinceLastBan}D"));
 
         $profileBan->vac = $profile_Ban->NumberOfVACBans;
         $profileBan->community = $profile_Ban->CommunityBanned;
         $profileBan->trade = $profile_Ban->EconomyBan != 'none';
         $profileBan->vac_banned_on = $banDate;
+
         if(!$skipProfileBan) {
           $profile->ProfileBan()->save($profileBan);
           $profile->ProfileBan = $profileBan;
@@ -496,7 +497,7 @@ class Profile extends \Eloquent {
           }
         }
         $banDate = new DateTime();
-        $banDate->modify('-'.$profile_Ban->DaysSinceLastBan.' day');
+        $banDate->sub(new DateInterval("P{$profile_Ban->DaysSinceLastBan}D"));
 
         $profileBan->vac = $profile_Ban->NumberOfVACBans;
         $profileBan->community = $profile_Ban->CommunityBanned;
