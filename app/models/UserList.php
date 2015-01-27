@@ -202,9 +202,11 @@ class UserList extends \Eloquent {
           }
 
           $userListProfiles->title = $userList->getTitle();
+
           if(Auth::check() && $userId == Auth::user()->getId()) {
             $userListProfiles->personal = true;
           }
+
           $userListProfiles->privacy = $userList->privacy;
           $userListProfiles->custom = true;
           $userListProfiles->list_id = $listId;
