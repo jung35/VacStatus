@@ -88,9 +88,11 @@ class vacStatus extends Command {
 
                 if(($profile->community || $profile->vac || $profile->trade)
                    && strtotime($profile->updated_at) != strtotime($profile->created_at)
-                   && strtotime($profile->updated_at) > strtotime($userMail->updated_at)) {
+                   && strtotime($profile->updated_at) > strtotime($userMail->updated_at))
+                {
                     $sendEmail = true;
                     $emailArr[$sub_key]['profiles'][$profile->small_id] = array(
+                        'vac'          => $steamAPI_Ban->NumberOfVACBans,
                         'display_name' => $profile->display_name,
                         'vac_banned_on'=> !$profile->vac ?: date('M j Y', strtotime($profile->vac_banned_on)),
                         'community'    => $profile->community,
@@ -142,6 +144,7 @@ class vacStatus extends Command {
                 if($banChange)
                 {
                     $emailArr[$sub_key]['profiles'][$profile->small_id] = array(
+                        'vac'          => $steamAPI_Ban->NumberOfVACBans,
                         'display_name' => $profile->display_name,
                         'vac_banned_on'=> $steamAPI_Ban->NumberOfVACBans ? date('M j Y', strtotime($profile->vac_banned_on)): false,
                         'community'    => $steamAPI_Ban->CommunityBanned,
