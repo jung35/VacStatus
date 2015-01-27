@@ -49,15 +49,17 @@
     </tr>
   </thead>
   <tbody>
-    @foreach($userList as $UserListProfile)
-      @if(is_object($UserListProfile))
-        @if(isset($userList->personal) && $userList->personal)
-          @include('list/listRow', array('UserListProfile' => $UserListProfile, 'personal' => true))
-        @else
-          @include('list/listRow', array('UserListProfile' => $UserListProfile))
+    @if(is_array($userList))
+      @foreach($userList as $UserListProfile)
+        @if(is_object($UserListProfile))
+          @if(isset($userList->personal) && $userList->personal)
+            @include('list/listRow', array('UserListProfile' => $UserListProfile, 'personal' => true))
+          @else
+            @include('list/listRow', array('UserListProfile' => $UserListProfile))
+          @endif
         @endif
-      @endif
-    @endforeach
+      @endforeach
+    @endif
   </tbody>
 </table>
 @if(isset($userList->update))
