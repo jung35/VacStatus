@@ -25,7 +25,7 @@
   @endif
 @endif
 
-<span class="actual-list-title">{{{ $userList->title }}}</span>
+<span class="actual-list-title">{{{ $userList->title?:'List' }}}</span>
 @if(isset($userList->user_name) && $userList->user_name)
 <small>{{{ $userList->user_name }}}</small>
 @endif
