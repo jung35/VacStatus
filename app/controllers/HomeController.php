@@ -26,9 +26,11 @@ class HomeController extends BaseController {
         $news = DB::table('news')->orderBy('id','desc')->take(10)->get();
         $friendsList = array();
 
-        if(Auth::check() && Cache::has('friendsList_'.$userId) && count(Cache::get('friendsList_'.$userId)) != 0) {
+        if(Auth::check()) {
             $userId = Auth::User()->getId();
-            $friendsList = User::whereIn('small_id', Cache::get('friendsList_'.$userId))->get();
+            if(Cache::has('friendsList_'.$userId) && count(Cache::get('friendsList_'.$userId)) != 0) {
+                $friendsList = User::whereIn('small_id', Cache::get('friendsList_'.$userId))->get();
+            }
         }
 
         $viewArray = array(
