@@ -39,7 +39,6 @@ class ProfileController extends BaseController {
                             ->with('steam3Id', $steam3Id);
         }
 
-
         $old = Array(1, 0);
 
         if(Cache::has("checked_$steam3Id")) {

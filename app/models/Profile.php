@@ -110,13 +110,29 @@ class Profile extends \Eloquent {
 
       $profileBan = $profile->ProfileBan;
 
+      $skipProfileBan = false;
+
       if(!isset($profileBan->id)) {
         $profileBan = new ProfileBan;
         $profileBan->profile_id = $profile->id;
         $profileBan->unban = false;
       } else {
-        if($profileBan->vac > $steamAPI_Ban->NumberOfVACBans) {
+        $skipProfileBan = true;
+
+        if($profileBan->vac > $profile_Ban->NumberOfVACBans) {
           $profileBan->unban = true;
+        }
+
+        $banDate = new DateTime($profileBan->vac_banned_on);
+        $newDate = new DateTime();
+        $newDate->sub(new DateInterval("P{$steamAPI_Ban->DaysSinceLastBan}D"));
+
+        if($profileBan->vac != $profile_Ban->NumberOfVACBans ||
+          $profileBan->community != $profile_Ban->CommunityBanned ||
+          $profileBan->trade != ($profile_Ban->EconomyBan != 'none') ||
+          $banDate->format("Y-m-d") != $newDate->format("Y-m-d"))
+        {
+          $skipProfileBan = false;
         }
       }
 
@@ -128,8 +144,10 @@ class Profile extends \Eloquent {
       $profileBan->trade = $steamAPI_Ban->EconomyBan != 'none';
       $profileBan->vac_banned_on = $banDate;
 
-      $profile->ProfileBan()->save($profileBan);
-      $profile->ProfileBan = $profileBan;
+      if(!$skipProfileBan) {
+        $profile->ProfileBan()->save($profileBan);
+        $profile->ProfileBan = $profileBan;
+      }
 
       /*
       Grab & Update Old Alias
@@ -362,6 +380,7 @@ class Profile extends \Eloquent {
           $profileBan->unban = false;
         } else {
           $skipProfileBan = true;
+
           if($profileBan->vac > $profile_Ban->NumberOfVACBans) {
             $profileBan->unban = true;
           }
