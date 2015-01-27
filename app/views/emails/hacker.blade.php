@@ -604,7 +604,7 @@ ip Make the template fluid for portrait or landscape view adaptability. If a flu
                                 @foreach($banList['profiles'] as $profile)
                                 <tr>
                                     <td>{{{ $profile['display_name']}}}</td>
-                                    <td style="color: {{ $profile['vac_days']?'red':'green' }};">{{ $profile['vac_days']?:'NORMAL' }}</td>
+                                    <td style="color: {{ $profile['vac']?'red':'green' }};">{{ $profile['vac'] ? date_format(new DateTime($UserListProfile->vac_banned_on), 'M j Y') : 'NORMAL' }}</td>
                                     <td style="color: {{ $profile['community']?'red':'green' }};">{{ $profile['community']?'BANNED':'NORMAL' }}</td>
                                     <td style="color: {{ $profile['trade']?'red':'green' }};">{{ $profile['trade']?'BANNED':'NORMAL' }}</td>
                                 </tr>
