@@ -119,7 +119,7 @@ class Profile extends \Eloquent {
       } else {
         $skipProfileBan = true;
 
-        if($profileBan->vac > $profile_Ban->NumberOfVACBans) {
+        if($profileBan->vac > $steamAPI_Ban->NumberOfVACBans) {
           $profileBan->unban = true;
         }
 
@@ -127,9 +127,9 @@ class Profile extends \Eloquent {
         $newDate = new DateTime();
         $newDate->sub(new DateInterval("P{$steamAPI_Ban->DaysSinceLastBan}D"));
 
-        if($profileBan->vac != $profile_Ban->NumberOfVACBans ||
-          $profileBan->community != $profile_Ban->CommunityBanned ||
-          $profileBan->trade != ($profile_Ban->EconomyBan != 'none') ||
+        if($profileBan->vac != $steamAPI_Ban->NumberOfVACBans ||
+          $profileBan->community != $steamAPI_Ban->CommunityBanned ||
+          $profileBan->trade != ($steamAPI_Ban->EconomyBan != 'none') ||
           $banDate->format("Y-m-d") != $newDate->format("Y-m-d"))
         {
           $skipProfileBan = false;
