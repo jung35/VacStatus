@@ -193,6 +193,8 @@ class vacStatus extends Command {
             return;
         }
 
+        return;
+
         if ($userMail->canMail()) {
             Mail::send('emails.hacker', array('emailArr' => $emailArr), function($message) use ($email)
             {
