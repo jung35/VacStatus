@@ -92,7 +92,7 @@ class vacStatus extends Command {
                 {
                     $sendEmail = true;
                     $emailArr[$sub_key]['profiles'][$profile->small_id] = array(
-                        'vac'          => $steamAPI_Ban->NumberOfVACBans,
+                        'vac'          => $profile->NumberOfVACBans,
                         'display_name' => $profile->display_name,
                         'vac_banned_on'=> !$profile->vac ?: date('M j Y', strtotime($profile->vac_banned_on)),
                         'community'    => $profile->community,
