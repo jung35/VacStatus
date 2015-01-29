@@ -39,7 +39,7 @@ return array(
   |
   */
 
-  'timezone' => 'UTC',
+  'timezone' => 'America/Los_Angeles', // valvetime
 
   /*
   |--------------------------------------------------------------------------
