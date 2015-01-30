@@ -151,7 +151,7 @@ class vacStatus extends Command {
                         'trade'        => $steamAPI_Ban->EconomyBan != 'none'
                     );
 
-                    $this->Info(var_dump($steamAPI_Ban->NumberOfVACBans, $profile->vac, ($steamAPI_Ban->CommunityBanned != $profile->community), (($steamAPI_Ban->EconomyBan != 'none') != $profile->trade)));
+                    $this->Info('updated:vacstatus.php',var_dump($steamAPI_Ban->NumberOfVACBans, $profile->vac, ($steamAPI_Ban->CommunityBanned != $profile->community), (($steamAPI_Ban->EconomyBan != 'none') != $profile->trade)));
 
                     $updateProfile = ProfileBan::whereProfileId($profile->profile_id)->first();
 

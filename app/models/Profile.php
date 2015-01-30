@@ -110,6 +110,9 @@ class Profile extends \Eloquent {
 
       $profileBan = $profile->ProfileBan;
 
+      $newDate = new DateTime();
+      $newDate->sub(new DateInterval("P{$steamAPI_Ban->DaysSinceLastBan}D"));
+
       $skipProfileBan = false;
 
       if(!isset($profileBan->id)) {
@@ -124,8 +127,6 @@ class Profile extends \Eloquent {
         }
 
         $banDate = new DateTime($profileBan->vac_banned_on);
-        $newDate = new DateTime();
-        $newDate->sub(new DateInterval("P{$steamAPI_Ban->DaysSinceLastBan}D"));
 
         if($profileBan->vac != $steamAPI_Ban->NumberOfVACBans ||
           $profileBan->community != $steamAPI_Ban->CommunityBanned ||
@@ -136,15 +137,13 @@ class Profile extends \Eloquent {
         }
       }
 
-      $banDate = new DateTime;
-      $banDate->sub(new DateInterval("P{$steamAPI_Ban->DaysSinceLastBan}D"));
-
       $profileBan->vac = $steamAPI_Ban->NumberOfVACBans;
       $profileBan->community = $steamAPI_Ban->CommunityBanned;
       $profileBan->trade = $steamAPI_Ban->EconomyBan != 'none';
-      $profileBan->vac_banned_on = $banDate;
+      $profileBan->vac_banned_on = $newDate;
 
       if(!$skipProfileBan) {
+        $this->Info('updated:singleprofile');
         $profile->ProfileBan()->save($profileBan);
         $profile->ProfileBan = $profileBan;
       }
@@ -407,6 +406,7 @@ class Profile extends \Eloquent {
         $profileBan->vac_banned_on = $banDate;
 
         if(!$skipProfileBan) {
+          $this->Info('updated:multiprofile');
           $profile->ProfileBan()->save($profileBan);
           $profile->ProfileBan = $profileBan;
         }
@@ -540,6 +540,7 @@ class Profile extends \Eloquent {
         $profileBan->vac_banned_on = $banDate;
 
         if(!$skipProfileBan) {
+          $this->Info('updated:multiprofile#2');
           $profile->ProfileBan()->save($profileBan);
           $profile->ProfileBan = $profileBan;
         }
