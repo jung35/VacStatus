@@ -143,7 +143,7 @@ class Profile extends \Eloquent {
       $profileBan->vac_banned_on = $newDate;
 
       if(!$skipProfileBan) {
-        $this->Info('updated:singleprofile');
+        //$this->Info('updated:singleprofile');
         $profile->ProfileBan()->save($profileBan);
         $profile->ProfileBan = $profileBan;
       }
@@ -406,7 +406,7 @@ class Profile extends \Eloquent {
         $profileBan->vac_banned_on = $banDate;
 
         if(!$skipProfileBan) {
-          $this->Info('updated:multiprofile');
+          //$this->Info('updated:multiprofile');
           $profile->ProfileBan()->save($profileBan);
           $profile->ProfileBan = $profileBan;
         }
@@ -540,7 +540,7 @@ class Profile extends \Eloquent {
         $profileBan->vac_banned_on = $banDate;
 
         if(!$skipProfileBan) {
-          $this->Info('updated:multiprofile#2');
+          //$this->Info('updated:multiprofile#2');
           $profile->ProfileBan()->save($profileBan);
           $profile->ProfileBan = $profileBan;
         }
