@@ -406,7 +406,7 @@ class Profile extends \Eloquent {
         $profileBan->vac_banned_on = $banDate;
 
         if(!$skipProfileBan) {
-          Log::warning('updated:multiprofile');
+          Log::warning('updated:multiprofile:'.$profileBan->profile_id);
           $profile->ProfileBan()->save($profileBan);
           $profile->ProfileBan = $profileBan;
         }
@@ -540,7 +540,7 @@ class Profile extends \Eloquent {
         $profileBan->vac_banned_on = $banDate;
 
         if(!$skipProfileBan) {
-          Log::warning('updated:multiprofile#2');
+          Log::warning('updated:multiprofile#2:'. $profileBan->profile_id);
           $profile->ProfileBan()->save($profileBan);
           $profile->ProfileBan = $profileBan;
         }

@@ -151,7 +151,7 @@ class vacStatus extends Command {
                         'trade'        => $steamAPI_Ban->EconomyBan != 'none'
                     );
 
-                    $this->log->addInfo('updated:vacstatus.php');
+                    $this->log->addInfo('updated:vacstatus.php:'.$profile->profile_id);
 
                     $updateProfile = ProfileBan::whereProfileId($profile->profile_id)->first();
 
