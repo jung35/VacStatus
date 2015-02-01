@@ -60,14 +60,16 @@ Class SteamUser extends Steam {
         $a = null;
         foreach ($tmp as $key => $item)
         {
-          if (is_numeric($item))
+          if ($item == 'profiles')
           {
-            $a = $item;
+            $a = $tmp[$key+1];
             break;
           } else if ($item == 'id') {
             $data = $tmp[$key+1];
+            break;
           }
         }
+
         if (is_numeric($a) && preg_match('/7656119/', $a))
         {
           return (object) array('type' => 'success', 'data' => $a);
