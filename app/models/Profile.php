@@ -143,7 +143,7 @@ class Profile extends \Eloquent {
       $profileBan->vac_banned_on = $newDate;
 
       if(!$skipProfileBan) {
-        Log::warning('updated:singleprofile');
+        Log::warning('updated:singleprofile:'.$profileBan->profile_id);
         $profile->ProfileBan()->save($profileBan);
         $profile->ProfileBan = $profileBan;
       }
