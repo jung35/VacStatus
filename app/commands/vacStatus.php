@@ -155,13 +155,13 @@ class vacStatus extends Command {
 
                     $updateProfile = ProfileBan::whereProfileId($profile->profile_id)->first();
 
-                    $banDate = new DateTime;
+                    $banDate = new DateTime();
                     $banDate->sub(new DateInterval("P{$steamAPI_Ban->DaysSinceLastBan}D"));
 
                     $updateProfile->vac = $steamAPI_Ban->NumberOfVACBans;
                     $updateProfile->community = $steamAPI_Ban->CommunityBanned;
                     $updateProfile->trade = $steamAPI_Ban->EconomyBan != 'none';
-                    $updateProfile->vac_banned_on = $banDate;
+                    $updateProfile->vac_banned_on = $banDate->format('Y-m-d');
 
                     $this->Info($updateProfile->save());
                 }

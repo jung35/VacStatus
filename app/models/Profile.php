@@ -138,11 +138,10 @@ class Profile extends \Eloquent {
           $skipProfileBan = false;
         }
       }
-
       $profileBan->vac = $steamAPI_Ban->NumberOfVACBans;
       $profileBan->community = $steamAPI_Ban->CommunityBanned;
       $profileBan->trade = $steamAPI_Ban->EconomyBan != 'none';
-      $profileBan->vac_banned_on = $newDate;
+      $profileBan->vac_banned_on = $newDate->format('Y-m-d');
 
       if(!$skipProfileBan) {
         Log::warning('updated:singleprofile:'.$profileBan->profile_id);
@@ -375,6 +374,9 @@ class Profile extends \Eloquent {
 
         $skipProfileBan = false;
 
+        $newDate = new DateTime();
+        $newDate->sub(new DateInterval("P{$profile_Ban->DaysSinceLastBan}D"));
+
         if(!isset($profileBan->id)) {
           $profileBan = new ProfileBan;
           $profileBan->profile_id = $profile->id;
@@ -387,8 +389,6 @@ class Profile extends \Eloquent {
           }
 
           $banDate = new DateTime($profileBan->vac_banned_on);
-          $newDate = new DateTime();
-          $newDate->sub(new DateInterval("P{$profile_Ban->DaysSinceLastBan}D"));
 
           if($profileBan->vac != $profile_Ban->NumberOfVACBans ||
             $profileBan->community != $profile_Ban->CommunityBanned ||
@@ -399,13 +399,10 @@ class Profile extends \Eloquent {
           }
         }
 
-        $banDate = new DateTime();
-        $banDate->sub(new DateInterval("P{$profile_Ban->DaysSinceLastBan}D"));
-
         $profileBan->vac = $profile_Ban->NumberOfVACBans;
         $profileBan->community = $profile_Ban->CommunityBanned;
         $profileBan->trade = $profile_Ban->EconomyBan != 'none';
-        $profileBan->vac_banned_on = $banDate;
+        $profileBan->vac_banned_on = $newDate->format('Y-m-d');
 
         if(!$skipProfileBan) {
           Log::warning('updated:multiprofile:'.$profileBan->profile_id);
@@ -509,6 +506,9 @@ class Profile extends \Eloquent {
         $profileBan = $profile->ProfileBan;
         $skipProfileBan = false;
 
+        $newDate = new DateTime();
+        $newDate->sub(new DateInterval("P{$profile_Ban->DaysSinceLastBan}D"));
+
         if(!isset($profileBan->id)) {
           $profileBan = new ProfileBan;
           $profileBan->profile_id = $profile->id;
@@ -521,8 +521,6 @@ class Profile extends \Eloquent {
           }
 
           $banDate = new DateTime($profileBan->vac_banned_on);
-          $newDate = new DateTime();
-          $newDate->sub(new DateInterval("P{$profile_Ban->DaysSinceLastBan}D"));
 
           if($profileBan->vac != $profile_Ban->NumberOfVACBans ||
             $profileBan->community != $profile_Ban->CommunityBanned ||
@@ -533,13 +531,10 @@ class Profile extends \Eloquent {
           }
         }
 
-        $banDate = new DateTime();
-        $banDate->sub(new DateInterval("P{$profile_Ban->DaysSinceLastBan}D"));
-
         $profileBan->vac = $profile_Ban->NumberOfVACBans;
         $profileBan->community = $profile_Ban->CommunityBanned;
         $profileBan->trade = $profile_Ban->EconomyBan != 'none';
-        $profileBan->vac_banned_on = $banDate;
+        $profileBan->vac_banned_on = $newDate->format('Y-m-d');
 
         if(!$skipProfileBan) {
           Log::warning('updated:multiprofile#2:'. $profileBan->profile_id);

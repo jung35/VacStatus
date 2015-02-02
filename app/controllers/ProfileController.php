@@ -81,7 +81,10 @@ class ProfileController extends BaseController {
         $steam3Id = Input::get('steam3Id');
 
         if(!$steam3Id) {
-            return App::abort(500);
+            return Response::json(array(
+                'type' => 'error',
+                'message' => 'Not enough data received'
+            ));
         }
 
         $profile = Profile::updateSingleProfile($steam3Id);
