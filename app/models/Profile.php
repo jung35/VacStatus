@@ -5,50 +5,52 @@ use Steam\SteamUser as SteamUser;
 
 class Profile extends \Eloquent {
 
-  /**
-   * The database table used by the model.
-   *
-   * @var string
-   */
-  protected $table = 'profile';
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'profile';
 
-  /**
-   * Connect to the old aliases that this user was seen with
-   */
-  public function ProfileOldAlias() {
+    /**
+     * Connect to the old aliases that this user was seen with
+     */
+    public function ProfileOldAlias() {
     return $this->hasMany('ProfileOldAlias');
-  }
+    }
 
-  /**
-   * Connect to the bans that this user was seen with
-   */
-  public function ProfileBan() {
+    /**
+     * Connect to the bans that this user was seen with
+     */
+    public function ProfileBan() {
     return $this->hasOne('ProfileBan');
-  }
+    }
 
-  /**
-   * Updates single profile in mysql DB
-   * It does not check if the profile should be allowed to update or not
-   * @param  Integer $steam3Id
-   *
-   * @return Object
-   */
-  public static function updateSingleProfile($steam3Id = null) {
+    /**
+     * Updates single profile in mysql DB
+     * It does not check if the profile should be allowed to update or not
+     * @param  Integer $steam3Id
+     *
+     * @return Object
+     */
+    public static function updateSingleProfile($steam3Id = null) {
 
     if($steam3Id) {
       // Grab user info using steam API and since this is only updating single user, just get to the key -> 0
       $steamAPI_Info = Steam::cURLSteamAPI('info', $steam3Id);
-      // Steam web api sux m8
       if(isset($steamAPI_Info->type) && $steamAPI_Info->type == 'error') {
-        return $steamAPI_Info->type;
+        return (object) array('type' => 'steamerror', 'error' => 'Profile Info');
       }
 
+      if(!isset($steamAPI_Info->response->players[0])) {
+        return (object) array('type' => 'error', 'error' => 'Profile does not exist');
+      }
       $steamAPI_Info = $steamAPI_Info->response->players[0];
 
       // Grab user's recent aliases that were used. Then sort them by time because steam gives weird timestamp
       $steamAPI_alias = Steam::cURLSteamAPI('alias', $steam3Id);
       if(isset($steamAPI_alias->type) && $steamAPI_alias->type == 'error') {
-        return $steamAPI_alias->type;
+        return (object) array('type' => 'steamerror', 'error' => 'Profile Alias');
       }
 
       /*
@@ -58,7 +60,7 @@ class Profile extends \Eloquent {
       // Grab user detailed ban info
       $steamAPI_Ban = Steam::cURLSteamAPI('ban', $steam3Id);
       if(isset($steamAPI_Ban->type) && $steamAPI_Ban->type == 'error') {
-        return $steamAPI_Ban->type;
+        return (object) array('type' => 'steamerror', 'error' => 'Profile Ban Info');
       }
 
       $steamAPI_Ban = $steamAPI_Ban->players[0];

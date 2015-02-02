@@ -86,9 +86,22 @@ class ProfileController extends BaseController {
 
         $profile = Profile::updateSingleProfile($steam3Id);
 
-        if($profile == 'error') {
-            // not stable connection to steam
-            return App::abort(500);
+        if(isset($profile->type)) {
+            $errorMessage = 'Sorry something went wrong!';
+
+            switch($profile->type) {
+                case 'error':
+                    $errorMessage = $profile->error;
+                    break;
+                case 'steamerror':
+                    $errorMessage = 'There was an error trying to get '.$profile->error.' from Steam API';
+                    break;
+            }
+
+            return Response::json(array(
+                'type' => 'error',
+                'message' => $errorMessage
+            ));
         }
 
         $old = Array(1, 0);

@@ -23,7 +23,7 @@ Route::get('/login/{action?}', array('as' => 'login', 'uses' => 'LoginController
 
 Route::get('/u/{steam3Id?}', array('as' => 'profile', 'uses' => 'ProfileController@profileAction'));
 
-Route::post('/u/update/single', array('before' => 'csrf', 'uses' => 'ProfileController@updateSingleProfileAction'));
+Route::post('/u/update/single', array('as' => 'profile.update.single', 'before' => 'csrf', 'uses' => 'ProfileController@updateSingleProfileAction'));
 
 Route::post('/list/fetch', array('before' => 'csrf', 'as' => 'list_fetch', 'uses' => 'DisplayListController@fetchListAction'));
 Route::post('/list/update', array('before' => 'csrf', 'as' => 'list_update', 'uses' => 'DisplayListController@updateListAction'));
