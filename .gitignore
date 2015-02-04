@@ -10,3 +10,5 @@ composer.lock
 Thumbs.db
 *.DS_Store
 .environment.php
+.env
+storage/
