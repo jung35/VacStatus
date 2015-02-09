@@ -1,3 +1,12 @@
 /vendor
 /node_modules
 .env
+
+.DS_Store
+Thumbs.db
+
+angular/node_modules
+public/images
+public/css
+public/js
+public/angular.html
