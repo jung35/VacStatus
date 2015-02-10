@@ -1,5 +1,5 @@
 suites:
     main:
-        namespace: App
-        psr4_prefix: App
+        namespace: VacStatus
+        psr4_prefix: VacStatus
         src_path: app

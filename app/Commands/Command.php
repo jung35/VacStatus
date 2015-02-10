@@ -1,4 +1,4 @@
-<?php namespace App\Commands;
+<?php namespace VacStatus\Commands;
 
 abstract class Command {
 

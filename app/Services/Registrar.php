@@ -1,6 +1,6 @@
-<?php namespace App\Services;
+<?php namespace VacStatus\Services;
 
-use App\User;
+use VacStatus\User;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 
