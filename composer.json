@@ -16,7 +16,7 @@
 			"database"
 		],
 		"psr-4": {
-			"VacStatus\\": "app/"
+			"App\\": "app/"
 		}
 	},
 	"autoload-dev": {
