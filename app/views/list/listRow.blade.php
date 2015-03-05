@@ -8,7 +8,7 @@
         <i class="fa fa-eye" data-tooltip aria-haspopup="true" class="has-tip" title="{{{ $UserListProfile->profile_description }}}"></i>
       @endif
       <span {{ (is_numeric($UserListProfile->donation) && $UserListProfile->donation >= DonationPerk::getPerkAmount('green_name')) ? "class='text-success'" : '' }}>
-        {{{ $UserListProfile->display_name }}}
+        {{{ $UserListProfile->profile_name?:$UserListProfile->display_name }}}
       </span>
     </a>
   </td>

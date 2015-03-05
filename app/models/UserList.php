@@ -97,6 +97,7 @@ class UserList extends \Eloquent {
             'user_list_profile.profile_id',
             'user_list_profile.profile_description',
             'user_list_profile.user_list_id',
+            'user_list_profile.profile_name',
 
             'profile.small_id',
             'profile.display_name',
@@ -169,6 +170,7 @@ class UserList extends \Eloquent {
               'user_list_profile.profile_id',
               'user_list_profile.profile_description',
               'user_list_profile.user_list_id',
+              'user_list_profile.profile_name',
 
               'profile.small_id',
               'profile.display_name',
@@ -229,6 +231,7 @@ class UserList extends \Eloquent {
         'user_list_profile.id',
         'user_list_profile.profile_id',
         'user_list_profile.user_list_id',
+        'user_list_profile.profile_name',
 
         'profile.small_id',
         'profile.display_name',
@@ -305,6 +308,7 @@ class UserList extends \Eloquent {
         'user_list_profile.id',
         'user_list_profile.profile_id',
         'user_list_profile.user_list_id',
+        'user_list_profile.profile_name',
 
         'profile.small_id',
         'profile.display_name',
