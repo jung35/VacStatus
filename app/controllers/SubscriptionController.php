@@ -38,7 +38,7 @@ class SubscriptionController extends \BaseController {
     {
         $list_id = Input::get('list_id');
 
-        $userList = UserList::find($list_id)->first();
+        $userList = UserList::whereId($list_id)->first();
 
         if($userList->null) {
             return Redirect::back()->with('error', 'Could not find list.');

@@ -32,7 +32,6 @@ class UserList extends \Eloquent {
   }
 
   public function canSubscribe($user_id) {
-    dd($this->user_id, $user_id);
     return $this->user_id == $user_id || $this->privacy != 3;
   }
 
