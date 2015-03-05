@@ -35,7 +35,7 @@
           <button onClick="javascript:doDeleteUserList(this.form);" name="submit" type="button" class="button tiny alert-bg"><i class="fa fa-minus"></i></button>
         </form>
       @else
-        <button class="button tiny" onClick="javascript:addUserList({{{ $UserListProfile->profile_id ?:$UserListProfile->id }}});"><i class="fa fa-plus"></i></button>
+        <button class="button tiny" onClick="javascript:addUserList({{{ $UserListProfile->profile_id ?:$UserListProfile->id }}}, '{{{ $UserListProfile->display_name }}}');"><i class="fa fa-plus"></i></button>
       @endif
     @endif
   </td>

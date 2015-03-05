@@ -68,8 +68,9 @@ function disableFormButton(form) {
 }
 
 var $addProfileUser = $('#addProfileUser');
-function addUserList(profileId) {
+function addUserList(profileId, profileName) {
   $addProfileUser.find('#profile_id').val(profileId);
+  $addProfileUser.find('#profile_name').val(profileName);
   $addProfileUser.foundation('reveal', 'open');
 }
 
@@ -77,6 +78,7 @@ function doAddUserList(form) {
   var action = form.action,
     list_id = form.list_id.value,
     profile_id = form.profile_id.value,
+    profile_name = form.profile_name.value,
     profile_description = form.profile_description.value,
     _token = form._token.value;
 
@@ -88,6 +90,7 @@ function doAddUserList(form) {
     data: {
       'list_id': list_id,
       'profile_id': profile_id,
+      'profile_name': profile_name,
       'profile_description': profile_description,
       '_token': _token
     },

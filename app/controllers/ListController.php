@@ -79,6 +79,7 @@ class ListController extends BaseController {
     public function addUserAction() {
         $listId = Input::get('list_id');
         $profileId = Input::get('profile_id');
+        $profileName = Input::get('profile_name');
         $profileDescription = Input::get('profile_description');
         $userId = Auth::User()->getId();
 
@@ -104,6 +105,7 @@ class ListController extends BaseController {
         $userListProfile->user_list_id = $listId;
         $userListProfile->profile_id = $profileId;
         $userListProfile->profile_description = $profileDescription;
+        $userListProfile->profile_name = $profileName;
 
         if(!$userListProfile->save()) {
             return Response::make('Sorry, there was an error while trying to save.');
