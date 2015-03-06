@@ -12,7 +12,7 @@ elixir.extend('react', function (src, options) {
     var config = this,
         defaultOptions = {
             debug : ! config.production,
-            srcDir: config.assetsDir + 'js',
+            srcDir: config.assetsDir + 'jsx',
             output: config.jsOutput
         };
 

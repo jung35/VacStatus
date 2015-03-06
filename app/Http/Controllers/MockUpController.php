@@ -9,6 +9,6 @@ class MockUpController extends Controller {
 
 	public function indexPage()
 	{
-		return 'hi';
+		return view('pages/home');
 	}
 }
