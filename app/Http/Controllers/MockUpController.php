@@ -1,7 +1,7 @@
-<?php namespace App\Http\Controllers;
+<?php namespace VacStatus\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use VacStatus\Http\Requests;
+use VacStatus\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 

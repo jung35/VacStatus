@@ -4,5 +4,139 @@
 @font-family-sans-serif: "Source Sans Pro", Helvetica, Arial, sans-serif;
 
 body, label, .checkbox label {
-	font-weight: 300;
+	font-weight: 400;
 }
+
+a {
+	-webkit-transition: all 0.15s ease-in;
+	-moz-transition: all 0.15s ease-in;
+	-o-transition: all 0.15s ease-in;
+	transition: all 0.15s ease-in;
+}
+
+.navbar {
+	.navbar-brand {
+		color: white;
+		font-size: 2.5em;
+		margin: 25px 0 0 10px;
+	}
+
+	.navbar-toggle {
+		margin-top: 30px;
+		border: 1px solid rgba(255, 255, 255, .3);
+	}
+
+	.nav {
+		li {
+			font-size: 1.2em;
+		}
+
+		& > li > a {
+			&.heart-red {
+				&:hover, &:focus {
+					color: #EF9A9A;
+				}
+			}
+
+			&:hover, &:focus {
+				background: none;
+			}
+		}
+	}
+
+	.navbar-collapse {
+		padding-top: 14px;
+	}
+}
+
+.footer {
+	.left-footer {
+		li {
+			display: inline-block;
+		}
+	
+		a {
+			&:hover {
+				background: rgba(255, 255, 255, .05);
+			}
+			display: inline-block;
+			padding: 20px;
+			color: white;
+			text-decoration: none;
+		}
+
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	background: #212121;
+	color: white;
+	font-size: 1.2em;
+}
+
+.flash {
+	&.flash-announcement {
+		background: #3f51b5;
+	}
+
+	&.flash-news {
+		background: #43a047;
+	}
+
+	.title {
+		text-align: center;
+		font-size: 1.56em;
+		font-weight: 400;
+		font-style: italic;
+		margin: 15px 0 0;
+
+		@media (min-width: @screen-sm-min) {
+			margin-top: 20px;
+			float: left;
+			text-align: left;
+		}
+	}
+
+	div.content {
+		padding: 10px 0 25px;
+		font-weight: 600;
+		text-align: center;
+
+		@media (min-width: @screen-sm-min) {
+			padding: 25px 0;
+		}
+	}
+
+	ul.content {
+		li {
+			display: block;
+			padding: 5px 20px 0;
+
+			@media (min-width: @screen-sm-min) {
+				display: inline-block;
+				padding: 0 20px;
+			}
+		}
+
+		text-align: center;
+		font-weight: 700;
+		padding: 5px 0 25px;
+		list-style: none;
+		margin: 0;
+
+		@media (min-width: @screen-sm-min) {
+			padding: 25px 0;
+		}
+
+	}
+
+	a {
+		color: #fff;
+	}
+
+	background: #212121;
+	color: white;
+}
+
+@import "pages/home";

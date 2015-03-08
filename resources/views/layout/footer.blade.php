@@ -1,16 +1,24 @@
 <div class="footer">
-	<ul class="left-footer">
-		<li><a href="#">Donate</a></li>
-		<li><a href="#">Privacy Policy</a></li>
-		<li><a href="#">Contact</a></li>
-		<li><a href="#">Github</a></li>
-	</ul>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-md-6">
+				<ul class="left-footer">
+					<li><a href="#">Donate</a></li>
+					<li><a href="#">Privacy Policy</a></li>
+					<li><a href="#">Contact</a></li>
+					<li><a href="#">Github</a></li>
+				</ul>
+			</div>
 
-	<div class="right-footer">
-		<p>
-			&copy; 2015 VacStatus<br>
-			Powered By <a href="#">Steam</a>
-		</p>
+			<div class="col-xs-12 col-md-6">
+				<div class="right-footer text-right">
+					<p>
+						&copy; 2015 VacStatus<br>
+						Powered By <a href="#">Steam</a>
+					</p>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 

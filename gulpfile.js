@@ -47,18 +47,20 @@ elixir.extend('img', function (src, options) {
 		defaultOptions = {
 			debug : ! config.production,
 			srcDir: config.assetsDir + 'img',
-			output: config.jsOutput + '/../img'
+			output: 'public/img'
 		};
 
+	process.stdout.write(JSON.stringify(config));
+
 	options = _.extend(defaultOptions, options);
-	src     = "./" + utilities.buildGulpSrc(src, options.srcDir, '/**.*');
+	src     = "./" + utilities.buildGulpSrc(src, options.srcDir, '/**/*.*');
 	options = _.extend(defaultOptions, options);
 
 	gulp.task('img', function () {
 		gulp.src(src).pipe(gulp.dest(options.output));
 	});
 
-	this.registerWatcher('img', options.srcDir + '/*.*');
+	this.registerWatcher('img', options.srcDir + '/**/*.*');
 
 	return this.queueTask('img');
 });

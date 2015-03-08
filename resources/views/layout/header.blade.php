@@ -1,5 +1,5 @@
 <nav class="navbar navbar-default">
-	<div class="container-fluid">
+	<div class="container">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#vacstatus-navbar">
@@ -8,21 +8,21 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<div class="visible-xs-block">
-				<a class="navbar-brand" href="#">Brand</a>
+			<div class="visible-xs-inline">
+				<a class="navbar-brand" href="#">VacStatus</a>
 			</div>
 		</div>
 
 		<div class="collapse navbar-collapse" id="vacstatus-navbar">
 			<ul class="nav navbar-nav">
-				<li><a href="#">Home</a></li>
-				<li><a href="#">Most Tracked</a></li>
-				<li><a href="#">Latest Added</a></li>
-				<li><a href="#">Search</a></li>
+				<li @setActiveLink('home')><a href="#">Home</a></li>
+				<li @setActiveLink('tracked.most')><a href="#">Most Tracked</a></li>
+				<li @setActiveLink('tracked.latest')><a href="#">Latest Added</a></li>
+				<li @setActiveLink('search')><a href="#">Search</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="#">~button~</a></li>
-				<li><a href="#">~donate~</a></li>
+				<li><a class="heart-red" href="#"><span class="fa fa-heart"></span></a></li>
 			</ul>
 		</div>
 	</div>

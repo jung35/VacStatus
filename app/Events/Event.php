@@ -1,4 +1,4 @@
-<?php namespace App\Events;
+<?php namespace VacStatus\Events;
 
 abstract class Event {
 
