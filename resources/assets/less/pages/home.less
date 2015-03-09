@@ -90,13 +90,24 @@
 	}
 
 	.feature-list {
-		.text-right {
+		.evenitem {
 			.feature-item {
 				.item-img {
-					padding: 0 15px 0 0;
+					padding: 0 10px 0 0;
+
+					@media (min-width: @screen-md-min) {
+						padding: 0 0 0 10px;
+					}
 				}
 			}
+
+			text-align: right;
+
+			@media (min-width: @screen-md-min) {
+				text-align: left;
+			}
 		}
+
 		.feature-item {
 			.item-img {
 				display: inline-block;

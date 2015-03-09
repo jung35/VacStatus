@@ -1,7 +1,7 @@
 <div class="footer">
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-12 col-md-6">
+			<div class="col-xs-12 col-md-6 col-md-push-6">
 				<ul class="left-footer">
 					<li><a href="#">Donate</a></li>
 					<li><a href="#">Privacy Policy</a></li>
@@ -10,12 +10,10 @@
 				</ul>
 			</div>
 
-			<div class="col-xs-12 col-md-6">
-				<div class="right-footer text-right">
-					<p>
-						&copy; 2015 VacStatus<br>
-						Powered By <a href="#">Steam</a>
-					</p>
+			<div class="col-xs-12 col-md-6 col-md-pull-6">
+				<div class="right-footer copyright">
+					<div>&copy; 2015 VacStatus.</div>
+					<div>Powered By <a href="#">Steam</a></div>
 				</div>
 			</div>
 		</div>

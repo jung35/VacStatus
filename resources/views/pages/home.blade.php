@@ -92,8 +92,11 @@
 					</div>
 				</div>
 
-				<div class="col-xs-12 col-md-6 text-right">
+				<div class="col-xs-12 col-md-6 evenitem">
 					<div class="feature-item">
+						<div class="item-img hidden-xs hidden-sm">
+							<i class="fa fa-github"></i>
+						</div>
 						<div class="item-content">
 							<div class="title">Open Source</div>
 							<div class="content">
@@ -104,7 +107,7 @@
 								</p>
 							</div>
 						</div>
-						<div class="item-img">
+						<div class="item-img hidden-md hidden-lg">
 							<i class="fa fa-github"></i>
 						</div>
 					</div>
