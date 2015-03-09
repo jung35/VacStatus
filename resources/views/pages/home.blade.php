@@ -77,7 +77,7 @@
 				<div class="col-xs-12 col-md-6">
 					<div class="feature-item">
 						<div class="item-img">
-							<i class="fa fa-github"></i>
+							<i class="fa fa-github-square"></i>
 						</div>
 						<div class="item-content">
 							<div class="title">Open Source</div>
@@ -95,20 +95,60 @@
 				<div class="col-xs-12 col-md-6 evenitem">
 					<div class="feature-item">
 						<div class="item-img hidden-xs hidden-sm">
-							<i class="fa fa-github"></i>
+							<i class="fa fa-steam-square"></i>
 						</div>
 						<div class="item-content">
-							<div class="title">Open Source</div>
+							<div class="title">Steam Integrated</div>
 							<div class="content">
 								<p>
-									All of the code behind it can be seen on Github.
-									Feel free to take a look at it and maybe fix bugs
-									and add features you woud like to see added.
+									VacStatus uses Steam OpenID to login and register.
+									Registration is not required to use and browse
+									through this website, but there are some features
+									that will be hidden from guest users.
 								</p>
 							</div>
 						</div>
 						<div class="item-img hidden-md hidden-lg">
-							<i class="fa fa-github"></i>
+							<i class="fa fa-steam-square"></i>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-xs-12 col-md-6">
+					<div class="feature-item">
+						<div class="item-img">
+							<i class="fa fa-share-alt-square"></i>
+						</div>
+						<div class="item-content">
+							<div class="title">Create & Share Lists</div>
+							<div class="content">
+								<p>
+									Create lists to keep track of hackers you meet
+									and share them with your friends. Also, feel
+									free to create up to 5 lists.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-xs-12 col-md-6 evenitem">
+					<div class="feature-item">
+						<div class="item-img hidden-xs hidden-sm">
+							<i class="fa fa-envelope-square"></i>
+						</div>
+						<div class="item-content">
+							<div class="title">Receive Notifications</div>
+							<div class="content">
+								<p>
+									Subscribe up to 5 lists for free that you want to
+									keep track of and receive notifiactions via Email
+									or Pushbullet.
+								</p>
+							</div>
+						</div>
+						<div class="item-img hidden-md hidden-lg">
+							<i class="fa fa-envelope-square"></i>
 						</div>
 					</div>
 				</div>
