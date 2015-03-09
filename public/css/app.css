@@ -6213,6 +6213,10 @@ label,
 .checkbox label {
   font-weight: 400;
 }
+html,
+body {
+  height: 100%;
+}
 a {
   transition: all 0.15s ease-in;
 }
@@ -6240,6 +6244,7 @@ a {
   padding-top: 14px;
 }
 .footer {
+  min-height: 64px;
   background: #212121;
   color: white;
   font-size: 1.2em;
@@ -6260,6 +6265,13 @@ a {
 }
 .footer .left-footer a:hover {
   background: rgba(255, 255, 255, 0.05);
+}
+.wrap {
+  min-height: 100%;
+  margin-bottom: -64px;
+}
+.pushFooter {
+  height: 64px;
 }
 .flash {
   background: #212121;
@@ -6396,4 +6408,29 @@ a {
   display: block;
   z-index: 1;
   position: relative;
+}
+.home-page .feature-list .text-right .feature-item .item-img {
+  padding: 0 15px 0 0;
+}
+.home-page .feature-list .feature-item {
+  padding: 20px 0;
+}
+.home-page .feature-list .feature-item .item-img {
+  display: inline-block;
+  width: 110px;
+  font-size: 6em;
+  vertical-align: middle;
+  padding: 0 0 0 10px;
+}
+.home-page .feature-list .feature-item .item-content {
+  width: calc(100% - 130px);
+  display: inline-block;
+  vertical-align: middle;
+}
+.home-page .feature-list .feature-item .title {
+  font-weight: 600;
+  font-size: 1.7em;
+}
+.home-page .feature-list .feature-item .content {
+  font-size: 1.2em;
 }

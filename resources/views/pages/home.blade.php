@@ -71,18 +71,41 @@
 		</div>
 	</div>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12">
-				<div class="feature-list">
-					<div class="feature-item feature-github">
-						<div class="title">Open Source</div>
-						<div class="content">
-							<p>
-								All of the code behind it can be seen on Github.
-								Feel free to take a look at it and maybe fix bugs
-								and add features you woud like to see added.
-							</p>
+	<div class="feature-list">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12 col-md-6">
+					<div class="feature-item">
+						<div class="item-img">
+							<i class="fa fa-github"></i>
+						</div>
+						<div class="item-content">
+							<div class="title">Open Source</div>
+							<div class="content">
+								<p>
+									All of the code behind it can be seen on Github.
+									Feel free to take a look at it and maybe fix bugs
+									and add features you woud like to see added.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-xs-12 col-md-6 text-right">
+					<div class="feature-item">
+						<div class="item-content">
+							<div class="title">Open Source</div>
+							<div class="content">
+								<p>
+									All of the code behind it can be seen on Github.
+									Feel free to take a look at it and maybe fix bugs
+									and add features you woud like to see added.
+								</p>
+							</div>
+						</div>
+						<div class="item-img">
+							<i class="fa fa-github"></i>
 						</div>
 					</div>
 				</div>
