@@ -20,6 +20,15 @@ a {
 
 .navbar {
 	.navbar-brand {
+		@media (min-width: @screen-sm-min) {
+			font-size: 2em;
+			margin: 0;
+			margin-top: 12px;
+			padding-top: 13.75px;
+			height: 61px;
+		}
+
+		display: inline-block;
 		color: white;
 		font-size: 2.5em;
 		margin: 25px 0 0 10px;
@@ -196,14 +205,23 @@ a {
 	}
 
 	background: transparent url(/img/steam-small.png) no-repeat center;
+	display: inline-block !important;
 	font-weight: 400;
 	color: #aed581 !important;
 	border: 1px solid #aed581;
 	padding: 5px 12px !important;
 	font-size: 0.8em;
 	border-radius: 5px;
+	margin-left: 15px;
 	margin-top: 7px;
 	opacity: 0.7;
+	text-align: center;
+}
+
+hr.divider {
+	margin: 15px 0 5px;
+	border-color: rgba(255, 255, 255, .5);
 }
 
 @import "pages/home";
+@import "pages/list";

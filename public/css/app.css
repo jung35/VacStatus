@@ -6221,9 +6221,19 @@ a {
   transition: all 0.15s ease-in;
 }
 .navbar .navbar-brand {
+  display: inline-block;
   color: white;
   font-size: 2.5em;
   margin: 25px 0 0 10px;
+}
+@media (min-width: 768px) {
+  .navbar .navbar-brand {
+    font-size: 2em;
+    margin: 0;
+    margin-top: 12px;
+    padding-top: 13.75px;
+    height: 61px;
+  }
 }
 .navbar .navbar-toggle {
   margin-top: 30px;
@@ -6364,19 +6374,26 @@ a {
 }
 .steam-small-login {
   background: transparent url(/img/steam-small.png) no-repeat center;
+  display: inline-block !important;
   font-weight: 400;
   color: #aed581 !important;
   border: 1px solid #aed581;
   padding: 5px 12px !important;
   font-size: 0.8em;
   border-radius: 5px;
+  margin-left: 15px;
   margin-top: 7px;
   opacity: 0.7;
+  text-align: center;
 }
 .steam-small-login:hover,
 .steam-small-login:focus {
   background: transparent url(/img/steam-small.png) no-repeat center !important;
   opacity: 0.9;
+}
+hr.divider {
+  margin: 15px 0 5px;
+  border-color: rgba(255, 255, 255, 0.5);
 }
 /* 300,400,600,700 */
 .home-page .hero {
@@ -6492,4 +6509,38 @@ a {
 }
 .home-page .feature-list .feature-item .content {
   font-size: 1.2em;
+}
+/* 300,400,600,700 */
+.list-page .list-action-bar {
+  background: #424242;
+  padding: 10px 0;
+  font-weight: 600;
+}
+.list-page .list-action-bar a {
+  color: white;
+}
+.list-page .list-action-bar a:hover,
+.list-page .list-action-bar a:focus {
+  text-decoration: none;
+}
+.list-page .list-actions.collapse,
+.list-page .list-actions.collapsing {
+  color: white;
+  background: #424242;
+}
+.list-page .list-actions.collapse .btn,
+.list-page .list-actions.collapsing .btn {
+  font-weight: 600;
+}
+.list-page .list-title {
+  font-weight: 600;
+}
+.list-page .list-table {
+  font-size: 1.1em;
+}
+.list-page .list-table th {
+  font-weight: 600;
+}
+.list-page .list-table td {
+  vertical-align: middle;
 }

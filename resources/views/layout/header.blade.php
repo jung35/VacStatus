@@ -8,17 +8,25 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<div class="visible-xs-inline">
-				<a class="navbar-brand" href="#">VacStatus</a>
+			<div class="{{ Route::currentRouteName() == 'home' ? 'visible-xs-inline': 'navbar-display-logo' }}">
+				<a class="navbar-brand" href="{{ route('home') }}">VacStatus</a>
 			</div>
 		</div>
 
 		<div class="collapse navbar-collapse" id="vacstatus-navbar">
 			<ul class="nav navbar-nav">
-				<li @setActiveLink('home')><a href="#">Home</a></li>
-				<li @setActiveLink('tracked.most')><a href="#">Most Tracked</a></li>
-				<li @setActiveLink('tracked.latest')><a href="#">Latest Added</a></li>
-				<li @setActiveLink('search')><a href="#">Search</a></li>
+				<li class="{{ Route::currentRouteName() != 'home' ? 'visible-xs-inline': '' }} @setActiveLink('home')">
+					<a href="{{ route('home') }}">Home</a>
+				</li>
+				<li class="@setActiveLink('tracked.most')">
+					<a href="{{ route('tracked.most') }}">Most Tracked</a>
+				</li>
+				<li class="@setActiveLink('tracked.latest')">
+					<a href="#">Latest Added</a>
+				</li>
+				<li class="@setActiveLink('search')">
+					<a href="#">Search</a>
+				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a class="steam-small-login" href="#">Sign in through STEAM</a></li>

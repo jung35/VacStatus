@@ -29,6 +29,25 @@ class AppServiceProvider extends ServiceProvider {
 			'Illuminate\Contracts\Auth\Registrar',
 			'VacStatus\Services\Registrar'
 		);
+
+		$this->app->bind('Hybrid_Auth', function() {
+			return new Hybrid_Auth(array(
+				"base_url" => url('')."/login/auth",
+				"providers" => array (
+					"OpenID" => array (
+						"enabled" => true
+					),
+
+					"Steam" => array (
+						"enabled" => true,
+						"wrapper" => array(
+							'class'=>'Hybrid_Providers_Steam',
+							'path' => __DIR__.'/../../vendor/hybridauth/hybridauth/additional-providers/hybridauth-steam/Providers/Steam.php'
+						)
+					)
+				)
+			));
+		});
 	}
 
 }

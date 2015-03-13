@@ -1,9 +1,16 @@
 <?php
 
-Route::get('/', [
-	'as' => 'home', 'uses' => 'MockUpController@indexPage'
+get('/', [
+	'as' => 'home',
+	'uses' => 'MockUpController@indexPage'
 ]);
 
-Route::get('/list/most', [
-	'as' => 'tracked.most', 'uses' => 'MockUpController@mostTrackedPage'
+get('/login/{action?}', [
+	'as' => 'login',
+	'uses' => 'LoginController@login'
+]);
+
+get('/list/most', [
+	'as' => 'tracked.most',
+	'uses' => 'MockUpController@mostTrackedPage'
 ]);

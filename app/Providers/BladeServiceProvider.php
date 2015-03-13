@@ -11,7 +11,7 @@ class BladeServiceProvider extends ServiceProvider
         {
             $pattern = $compiler->createOpenMatcher('setActiveLink');
 
-            return preg_replace($pattern, '$1<?php echo Route::currentRouteName() == $2) ? \'class="active"\' : \'\';  ?>', $view);
+            return preg_replace($pattern, '$1<?php echo Route::currentRouteName() == $2) ? \'active\' : \'\';  ?>', $view);
         });
     }
 
