@@ -6395,6 +6395,43 @@ hr.divider {
   margin: 15px 0 5px;
   border-color: rgba(255, 255, 255, 0.5);
 }
+.notification {
+  max-width: 240px;
+  width: 240px;
+  z-index: 5;
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+.notification .alert {
+  display: block;
+  max-width: 200px;
+  width: 200px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 240px;
+  margin-top: 20px;
+}
+.notification .alert.alert-info {
+  background: #212121 /* rgba(144, 202, 249, .05) */;
+  border-color: #42A5F5;
+  color: #64B5F6;
+}
+.notification .alert.alert-success {
+  background: #212121 /* rgba(165, 214, 167, .05) */;
+  border-color: #81C784;
+  color: #81C784;
+}
+.notification .alert.alert-warning {
+  background: #212121 /* rgba(255, 245, 157, .05) */;
+  border-color: #FFF176;
+  color: #FFF176;
+}
+.notification .alert.alert-danger {
+  background: #212121 /* rgba(239, 154, 154, .05) */;
+  border-color: #E57373;
+  color: #E57373;
+}
 /* 300,400,600,700 */
 .home-page .hero {
   background: #212121 url(/img/steam-logo.png) no-repeat center top;
@@ -6570,4 +6607,8 @@ hr.divider {
 .admin-header ul li a:focus {
   color: white;
   background: rgba(0, 0, 0, 0.1);
+}
+.admin-page .db-list {
+  font-size: 2em;
+  text-align: center;
 }

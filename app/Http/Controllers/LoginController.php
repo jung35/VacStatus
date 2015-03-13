@@ -25,11 +25,7 @@ class LoginController extends Controller {
 				->with('success','You have Successfully logged in.');
 		}
 
-		$config = [
-			"callback" => url('')."/auth/login",
-		];
-
-		$hybridAuth = new Hybridauth\Provider\Steam($config);
+		$hybridAuth = new Hybridauth\Provider\Steam(["callback" => url('')."/auth/login"]);
 		$hybridAuth->authenticate();
 		$hybridAuthUserProfile = $hybridAuth->getUserProfile();
 		$steam64BitId = str_replace("http://steamcommunity.com/openid/id/", "", $hybridAuthUserProfile->identifier );

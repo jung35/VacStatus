@@ -28,14 +28,19 @@ Route::group([
 		'as' => 'admin.home',
 		'uses' => 'MainController@index'
 	]);
+
+	get('/db', [
+	    'as' => 'admin.db',
+	    'uses' => 'DatabaseController@index'
+	]);
 	
-	get('/users', [
-		'as' => 'admin.users',
+	get('/db/users', [
+		'as' => 'admin.db.users',
 		'uses' => 'DatabaseController@user'
 	]);
 	
-	get('/profiles', [
-		'as' => 'admin.profiles',
+	get('/db/profiles', [
+		'as' => 'admin.db.profiles',
 		'uses' => 'DatabaseController@profile'
 	]);
 });

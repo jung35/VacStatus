@@ -9,11 +9,8 @@
 					<li class="@setActiveLink('admin.news')">
 						<a href="#">News</a>
 					</li>
-					<li class="@setActiveLink('admin.users')">
-						<a href="{{ route('admin.users') }}">Users</a>
-					</li>
-					<li class="@setActiveLink('admin.profiles')">
-						<a href="{{ route('admin.profiles') }}">Profiles</a>
+					<li class="@setActiveLink('admin.db')">
+						<a href="{{ route('admin.db') }}">Database</a>
 					</li>
 					<li class="@setActiveLink('admin.logs')">
 						<a href="#">Logs</a>

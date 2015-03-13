@@ -5,7 +5,12 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-12">
-					<h1>Users</h1>
+					<h1>
+						<a href="{{ route('admin.db') }}">
+							<span class="fa fa-arrow-left"></span>
+						</a>
+						Users
+					</h1>
 					<div class="table-responsive">
 						<table class="table">
 							<tr>
