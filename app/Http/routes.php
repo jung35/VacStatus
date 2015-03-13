@@ -2,7 +2,7 @@
 
 get('/', [
 	'as' => 'home',
-	'uses' => 'MockUpController@indexPage'
+	'uses' => 'PagesController@indexPage'
 ]);
 
 Route::group(['prefix' => 'auth'], function()
@@ -13,13 +13,34 @@ Route::group(['prefix' => 'auth'], function()
 	]);
 
 	get('/logout', [
-		'before' => 'auth',
+		'middleware' => 'auth',
 		'as' => 'auth.logout',
 		'uses' => 'LoginController@logout'
 	]);
 });
 
+Route::group([
+	'prefix' => 'admin',
+	'middleware' => 'admin',
+	'namespace' => 'Admin'
+], function() {
+	get('/', [
+		'as' => 'admin.home',
+		'uses' => 'MainController@index'
+	]);
+	
+	get('/users', [
+		'as' => 'admin.users',
+		'uses' => 'DatabaseController@user'
+	]);
+	
+	get('/profiles', [
+		'as' => 'admin.profiles',
+		'uses' => 'DatabaseController@profile'
+	]);
+});
+
 get('/list/most', [
 	'as' => 'tracked.most',
-	'uses' => 'MockUpController@mostTrackedPage'
+	'uses' => 'PagesController@mostTrackedPage'
 ]);

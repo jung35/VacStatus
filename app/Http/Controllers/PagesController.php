@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use VacStatus\Steam\Steam;
 
-class MockUpController extends Controller {
+class PagesController extends Controller {
 
 	public function indexPage()
 	{

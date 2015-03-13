@@ -6544,3 +6544,30 @@ hr.divider {
 .list-page .list-table td {
   vertical-align: middle;
 }
+.admin-header {
+  background: #424242;
+}
+.admin-header ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.admin-header ul li {
+  display: inline-block;
+}
+.admin-header ul li.active a {
+  color: white;
+  background: rgba(0, 0, 0, 0.1);
+}
+.admin-header ul li a {
+  display: inline-block;
+  color: #BDBDBD;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 15px 20px;
+}
+.admin-header ul li a:hover,
+.admin-header ul li a:focus {
+  color: white;
+  background: rgba(0, 0, 0, 0.1);
+}
