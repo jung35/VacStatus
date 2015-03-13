@@ -21,7 +21,7 @@
 				<li @setActiveLink('search')><a href="#">Search</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#">~button~</a></li>
+				<li><a class="steam-small-login" href="#">Sign in through STEAM</a></li>
 				<li><a class="heart-red" href="#"><span class="fa fa-heart"></span></a></li>
 			</ul>
 		</div>

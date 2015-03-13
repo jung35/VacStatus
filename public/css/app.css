@@ -6362,6 +6362,22 @@ a {
 .flash a {
   color: #fff;
 }
+.steam-small-login {
+  background: transparent url(/img/steam-small.png) no-repeat center;
+  font-weight: 400;
+  color: #aed581 !important;
+  border: 1px solid #aed581;
+  padding: 5px 12px !important;
+  font-size: 0.8em;
+  border-radius: 5px;
+  margin-top: 7px;
+  opacity: 0.7;
+}
+.steam-small-login:hover,
+.steam-small-login:focus {
+  background: transparent url(/img/steam-small.png) no-repeat center !important;
+  opacity: 0.9;
+}
 /* 300,400,600,700 */
 .home-page .hero {
   background: #212121 url(/img/steam-logo.png) no-repeat center top;

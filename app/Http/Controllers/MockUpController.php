@@ -11,4 +11,9 @@ class MockUpController extends Controller {
 	{
 		return view('pages/home');
 	}
+
+	public function mostTrackedPage()
+	{
+		return view('pages/list')->withGrab('most_tracked_users');
+	}
 }
