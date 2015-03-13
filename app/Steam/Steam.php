@@ -1,5 +1,7 @@
 <?php namespace VacStatus\Steam;
 
+use Cache;
+
 class Steam {
 	/**
 	 * Minimum timeout for steam updates on profile

@@ -13,7 +13,7 @@
 						</div>
 					</div>
 
-					<a href="#" class="btn">Get Started via STEAM</a>
+					<a href="{{ route('auth.login') }}" class="btn">Get Started via STEAM</a>
 
 					<div id="hero-carousel" class="carousel slide" data-ride="carousel">
 						<div class="carousel-inner" role="listbox">

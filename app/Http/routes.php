@@ -5,10 +5,19 @@ get('/', [
 	'uses' => 'MockUpController@indexPage'
 ]);
 
-get('/login/{action?}', [
-	'as' => 'login',
-	'uses' => 'LoginController@login'
-]);
+Route::group(['prefix' => 'auth'], function()
+{
+	get('/login', [
+		'as' => 'auth.login',
+		'uses' => 'LoginController@login'
+	]);
+
+	get('/logout', [
+		'before' => 'auth',
+		'as' => 'auth.logout',
+		'uses' => 'LoginController@logout'
+	]);
+});
 
 get('/list/most', [
 	'as' => 'tracked.most',

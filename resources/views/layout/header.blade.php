@@ -29,7 +29,11 @@
 				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a class="steam-small-login" href="#">Sign in through STEAM</a></li>
+			@if(\Auth::check())
+				<li><a href="{{ route('auth.logout') }}">Sign out</a></li>
+			@else
+				<li><a class="steam-small-login" href="{{ route('auth.login') }}">Sign in through STEAM</a></li>
+			@endif
 				<li><a class="heart-red" href="#"><span class="fa fa-heart"></span></a></li>
 			</ul>
 		</div>

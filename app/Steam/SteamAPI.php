@@ -1,6 +1,7 @@
 <?php namespace VacStatus\Steam;
 
 use VacStatus\Steam\Steam;
+use Cache;
 
 class SteamAPI {
 
@@ -34,7 +35,7 @@ class SteamAPI {
 	{
 		if(is_array($steam64BitId))
 		{
-	  		$steam64BitId = implode(',', $steam64BitId);
+			$steam64BitId = implode(',', $steam64BitId);
 		}
 
 		switch($this->type)
