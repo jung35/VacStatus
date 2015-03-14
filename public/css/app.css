@@ -6432,6 +6432,18 @@ hr.divider {
   border-color: #E57373;
   color: #E57373;
 }
+.faText-align {
+  vertical-align: -3px;
+}
+.beta-name {
+  color: #03a9f4;
+}
+.donator-name {
+  color: #8bc34a;
+}
+.admin-name {
+  color: #f0ad4e;
+}
 /* 300,400,600,700 */
 .home-page .hero {
   background: #212121 url(/img/steam-logo.png) no-repeat center top;
@@ -6581,10 +6593,18 @@ hr.divider {
 .list-page .list-table td {
   vertical-align: middle;
 }
+.profile-page {
+  cursor: default;
+}
 .profile-page .profile-header {
   background: #212121;
   color: white;
-  padding-bottom: 20px;
+  padding-bottom: 30px;
+}
+@media (min-width: 992px) {
+  .profile-page .profile-header {
+    padding-bottom: 20px;
+  }
 }
 .profile-page .profile-avatar {
   padding: 15px 0;
@@ -6609,7 +6629,7 @@ hr.divider {
 @media (min-width: 992px) {
   .profile-page .profile-username {
     font-size: 2.4em;
-    margin: 20px 0;
+    margin: 25px 0 10px;
     text-align: left;
   }
 }
@@ -6657,6 +6677,35 @@ hr.divider {
   .profile-page .profile-info {
     padding: 0;
   }
+}
+.profile-page .profile-badge {
+  margin-top: -10px;
+  text-align: center;
+  cursor: default;
+}
+.profile-page .profile-badge .label {
+  font-size: 1.2em;
+  border-radius: 0;
+  padding: 6px 15px;
+  margin: 0 7px;
+}
+.profile-page .profile-body {
+  padding: 10px 0 30px;
+  font-size: 1.1em;
+}
+.profile-page .profile-body .title {
+  font-weight: 600;
+  font-size: 1.5em;
+}
+.profile-page .divider {
+  margin: 30px 0 20px;
+  border-color: #E0E0E0;
+}
+.profile-page .table {
+  text-align: center;
+}
+.profile-page .table th {
+  text-align: center;
 }
 .admin-header {
   background: #424242;

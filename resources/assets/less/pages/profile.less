@@ -2,7 +2,10 @@
 	.profile-header {
 		background: #212121;
 		color: white;
-		padding-bottom: 20px;
+		padding-bottom: 30px;
+		@media (min-width: @screen-md-min) {
+			padding-bottom: 20px;
+		}
 	}
 
 	.profile-avatar {
@@ -28,7 +31,7 @@
 
 		@media (min-width: @screen-md-min) {
 			font-size: 2.4em;
-			margin: 20px 0;
+			margin: 25px 0 10px;
 			text-align: left;
 		}
 
@@ -77,4 +80,42 @@
 			padding: 0;
 		}
 	}
+
+	.profile-badge {
+		.label {
+			font-size: 1.2em;
+			border-radius: 0;
+			padding: 6px 15px;
+			margin: 0 7px;
+		}
+
+		margin-top: -10px;
+		text-align: center;
+		cursor: default;
+	}
+
+	.profile-body {
+		.title {
+			font-weight: 600;
+			font-size: 1.5em;
+		}
+		
+		padding: 10px 0 30px;
+		font-size: 1.1em;
+
+	}
+
+	.divider {
+		margin: 30px 0 20px;
+		border-color: #E0E0E0;
+	}
+
+	.table {
+		th {
+			text-align: center;
+		}
+		text-align: center;
+	}
+
+	cursor: default;
 }
