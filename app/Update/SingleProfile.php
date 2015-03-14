@@ -23,7 +23,7 @@ class SingleProfile extends BaseUpdate
 	}
 }
 
-/**
+/*
 
 	STEPS TO GET PROFILE
 
@@ -65,9 +65,9 @@ class SingleProfile extends BaseUpdate
 	[2]: https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L105
 	[3]: https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L187
 
- **/
+ */
 
-/**
+/*
 
 	RETURN FORMAT
 
@@ -128,4 +128,4 @@ class SingleProfile extends BaseUpdate
 
 	]
 
- **/
+ */
