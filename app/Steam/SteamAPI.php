@@ -2,6 +2,7 @@
 
 use VacStatus\Steam\Steam;
 use Cache;
+use Carbon;
 
 class SteamAPI {
 
@@ -14,6 +15,9 @@ class SteamAPI {
 		'vanityUrl'	=> 'http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/',
 		'alias'		=> 'http://steamcommunity.com/profiles/{steam64BitId}/ajaxaliases'
 	];
+
+	private $error = false;
+	private $errorMessage = '';
 
 	function __construct($type)
 	{
@@ -29,6 +33,11 @@ class SteamAPI {
 		{
 			$this->url .= "&relationship=friend";
 		}
+	}
+
+	public function setSmallId($smallId)
+	{
+		return Steam::to64Bit($smallId);
 	}
 
 	public function setSteamId($steam64BitId)
@@ -57,13 +66,12 @@ class SteamAPI {
 
 	public function run()
 	{
-		$cache_name = 'steamAPICalls_'.(date('M_j_Y'));
-		if(!Cache::has($cache_name))
-		{
-			Cache::forever($cache_name, 0);
-		}
+		$cache_name = 'steamAPICalls';
+		$expiresAt = Carbon::today()->addDay();
 
-		Cache::forever($cache_name, Cache::get($cache_name)+1);
+		if(!Cache::has($cache_name)) Cache::put($cache_name, 0, $expiresAt);
+
+		Cache::increment($cache_name);
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
@@ -77,9 +85,11 @@ class SteamAPI {
 		try {
 			$data = curl_exec($ch);
 		} catch(Exception $e) {
+			$this->error = true;
+			$this->errorMessage = 'api_conn_err';
 			return (object) [
 				'type' => 'error',
-				'data' => 'api_conn_err'
+				'data' => $this->errorMessage
 			];
 		}
 
@@ -88,92 +98,24 @@ class SteamAPI {
 
 		if(!is_object($data) && !is_array($data))
 		{
+			$this->error = true;
+			$this->errorMessage = 'api_data_err';
 			return (object) [
 				'type' => 'error',
-				'data' => 'api_data_err'
+				'data' => $this->errorMessage
 			];
 		}
 
 		return $data;
 	}
 
-	public function addVanity($steam64BitId)
+	public function error()
 	{
-		$this->url .= "&vanityurl=$steam64BitId";
+		return $this->error;
 	}
 
-	public static function cURLSteamAPI($type = null, $value = null, $try = true) {
-	// Maybe it should have default type...?
-	if($type == null || $value == null) return false;
-	$cache_name = 'steamAPICalls_'.(date('M_j_Y'));
-	if(!Cache::has($cache_name)) {
-	  Cache::forever($cache_name, 0);
+	public function errorMessage()
+	{
+		return $this->errorMessage;
 	}
-	Cache::forever($cache_name, Cache::get($cache_name)+1);
-	$steamAPI = self::getAPI();
-	// So this url doesn't float in some files as many different url's
-	// keeping them in one place
-	switch($type) {
-	  // Get most of all public information about this steam user
-	  case 'info':
-		if(is_array($value)) {
-		  $value = implode(',', $value);
-		}
-		$url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$steamAPI}&steamids={$value}&".time();
-		break;
-	  // Get list of friends (Profile must not be private)
-	  case 'friends':
-		if(is_array($value)) {
-		  $value = $value[0];
-		}
-		$url = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key={$steamAPI}&steamid={$value}&relationship=friend&".time();
-		break;
-	  // Get more detailed information about this person's ban status
-	  case 'ban':
-		if(is_array($value)) {
-		  $value = implode(',', $value);
-		}
-		$url = "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$steamAPI}&steamids={$value}&".time();
-		break;
-	  // Get list of usernames this user has used
-	  case 'alias':
-		if(is_array($value)) {
-		  $value = $value[0];
-		}
-		$url = "http://steamcommunity.com/profiles/{$value}/ajaxaliases?".time();
-		break;
-	  // For checking to make sure a user exists by this profile name
-	  case 'vanityUrl':
-		if(is_array($value)) {
-		  $value = $value[0];
-		}
-		$url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={$steamAPI}&vanityurl={$value}&".time();
-		break;
-	}
-
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,0);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 7);
-	try {
-	  $data = curl_exec($ch);
-	} catch(Exception $e) {
-	  if($try) {
-		return self::cURLSteamAPI($type, $value, false);
-	  }
-	  return (object) array('type' => 'error',
-							'data' => 'api_conn_err');
-	}
-	curl_close($ch);
-	$data = json_decode($data);
-	if(!is_object($data) && !is_array($data)) {
-	  return (object) array('type' => 'error',
-							'data' => 'api_data_err');
-	}
-	return $data;
-  }
 }

@@ -7,31 +7,7 @@ use VacStatus\Models\Profile;
 use Cache;
 use Carbon;
 
-class SingleProfile extends BaseUpdate
-{
-	protected $profileId;
-
-	function __construct($profileId)
-	{
-		$this->profileId = $profileId;
-		$this->cacheName = "profile_".$profileId;
-	}
-
-	private function getProfile()
-	{
-		if(!$this->canUpdate()) return Profile::whereId($this->profileId)->first();
-	}
-
-	private function updateUsingAPI()
-	{
-
-	}
-
-	private function grabFromDB()
-	{
-
-	}
-}
+use VacStatus\Steam\SteamAPI;
 
 /*
 
@@ -140,3 +116,60 @@ class SingleProfile extends BaseUpdate
 	]
 
  **/
+
+class SingleProfile extends BaseUpdate
+{
+	protected $smallId;
+
+	function __construct($smallId)
+	{
+		$this->smallId = $smallId;
+		$this->cacheName = "profile_$smallId";
+	}
+
+	private function getProfile()
+	{
+		if(!$this->canUpdate()) return $this->grabFromDB();
+
+		return $thtis->updateUsingAPI();
+	}
+
+	private function updateUsingAPI()
+	{
+		/* grab 'info' from web api and handle errors */
+		$steamAPI = new SteamAPI('info');
+		$steamAPI->setSmallId($this->smallId);
+		$steamInfo = $steamAPI->run();
+
+		if($steamAPI->error()) return (object) ['error' => true, 'error' => $steamAPI->errorMessage()];
+		if(!isset($steamInfo->response->players[0])) return (object) ['error' => true, 'error' => 'profile_null'];
+
+		$steamInfo = $steamAPI_Info->response->players[0];
+
+		/* grab 'ban' from web api and handle errors */
+		$steamAPI = new SteamAPI('ban');
+		$steamAPI->setSmallId($this->smallId);
+		$steamBan = $steamAPI->run();
+
+		if($steamAPI->error()) return (object) ['error' => true, 'error' => $steamAPI->errorMessage()];
+		if(!isset($steamBan->players[0])) return (object) ['error' => true, 'error' => 'profile_null'];
+
+		$steamBan = $steamBan->players[0];
+
+		/* grab 'alias' from old web api but do not break on errors */
+		$steamAPI = new SteamAPI('alias');
+		$steamAPI->setSmallId($this->smallId);
+		$steamAlias = $steamAPI->run();
+
+		if($steamAPI->error()) $steamAlias = null;
+
+		/* Successfully passed steam's not very reliable api servers */
+		
+
+	}
+
+	private function grabFromDB()
+	{
+
+	}
+}

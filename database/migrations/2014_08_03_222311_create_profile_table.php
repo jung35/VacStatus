@@ -21,7 +21,7 @@ class CreateProfileTable extends Migration {
       $table->text('avatar_thumb');
       $table->text('avatar');
       $table->integer('profile_created')->nullable();
-      $table->text('alias');
+      $table->text('alias')->nullable();
       $table->timestamps();
     });
   }
