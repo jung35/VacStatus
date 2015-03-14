@@ -1,31 +1,20 @@
 <?php namespace VacStatus\Update;
 
+use VacStatus\Update\BaseUpdate;
+
 use Cache;
 use Carbon;
 
-class LatestAdded
+class LatestAdded extends BaseUpdate
 {
-	protected $cacheName = "latestAdded";
-	protected $cacheLength = 3600; // seconds
-
-	function canUpdate()
+	function __constructor()
 	{
-		if(Cache::has($this->cacheName))
-		{
-			return false;
-		}
+		$this->cacheName = "latestAdded";
 
-		return true;
+		return $this->getLatestAdded();
 	}
 
-	function updateCache($mostTracked)
-	{
-		if(Cache::has($this->cacheName)) Cache::forget($this->cacheName);
-
-		Cache::put($this->cacheName, $mostTracked, Carbon::now()->addSeconds($this->cacheLength));
-	}
-
-	function getLatestAdded()
+	private function getLatestAdded()
 	{
 		if(!$this->canUpdate()) return Cache::get($this->cacheName);
 
