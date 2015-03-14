@@ -6217,7 +6217,7 @@ html,
 body {
   height: 100%;
 }
-a {
+* {
   transition: all 0.15s ease-in;
 }
 .navbar .navbar-brand {
