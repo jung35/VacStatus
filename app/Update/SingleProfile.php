@@ -19,6 +19,7 @@ use VacStatus\Steam\SteamAPI;
 
 	->	REQUIRES UPDATE
 		->	Request to STEAM WEB API
+			(IT'S PROBABLY BETTER TO GRAB ALL THE API DATAS BEFORE DOING ANYTHING TO THE DB)
 			->	'info'	->	reponse.players[0]
 				->	profile.small_id 			->	toSmallId	->	"steamid"
 				->	profile.privacy 			->				->	"communityvisibilitystate"
@@ -136,6 +137,8 @@ class SingleProfile extends BaseUpdate
 
 	private function updateUsingAPI()
 	{
+		/* Time to follow that great guide to updating via API above */
+
 		/* grab 'info' from web api and handle errors */
 		$steamAPI = new SteamAPI('info');
 		$steamAPI->setSmallId($this->smallId);
@@ -164,6 +167,7 @@ class SingleProfile extends BaseUpdate
 		if($steamAPI->error()) $steamAlias = null;
 
 		/* Successfully passed steam's not very reliable api servers */
+		/* Lets hope we got the alias as well :))) */
 		
 
 	}
