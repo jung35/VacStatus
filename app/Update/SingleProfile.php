@@ -19,9 +19,53 @@ class SingleProfile extends BaseUpdate
 
 	private function getProfile()
 	{
-		if(!$this->canUpdate()) return Profile::whereId($this->profileId)->first();
+		// if(!$this->canUpdate()) return Profile::whereId($this->profileId)->first();
 	}
 }
+
+/**
+
+	STEPS TO GET PROFILE
+
+*************************************************************************************************
+
+	->	Check if the cache has expired
+
+	->	REQUIRES UPDATE
+		->	Request to STEAM WEB API
+			->	'info'	->	reponse.players[0]
+				->	profile.small_id 			->	toSmallId	->	"steamid"
+				->	profile.privacy 			->				->	"communityvisibilitystate"
+				->	profile.display_name		->				->	"personaname"
+				->	profile.avatar 				->	see: [0]	->	"avatarfull"
+				->	profile.avatar_thumb 		->	see: [0]	->	"avatar"
+				->	profile.profile_created 	->	null(?)		->	"timecreated"
+				->	profile_old_alias			-> (ADD DISPLAY NAME ONLY IF IT'S UNIQUE)
+			->	'ban'	->	players[0]
+				(MAKE SURE TO CHECK IF THE VALUE HAVE BEEN CHANGED BEFORE RETURNING)
+				->	profile_ban.unban			->	COMPARE profile.vac AND "NumberOfVACBans"
+				->	profile_ban.community 		->				->	"CommunityBanned"
+				->	profile_ban.vac 			->				->	"NumberOfVACBans"
+				->	profile_ban.vac_banned_on	->	see: [1]	->	"DaysSinceLastBan"
+				->	profile_ban.trade 			->				->	"EconomyBan"
+			->	'alias'
+				(THIS ONE IS A VERY UNSTABLE API SO DON'T DIE WHEN IT DOESNT RESPOND)
+				-> profile.alias 				->	see: [2]	->	(ALL OF IT)
+		->	ADD ALL OF THE VALUES INTO AN ARRAY
+			->	USE "RETURN FORMAT" AS REFERENCE
+
+	->	NO UPDATE
+		->	DO A QUERY USING LEFT JOIN TO MAKE IT EFFICIENT AS POSSIBLE
+			-> see: [3]
+		->	MOVE THE VALUES FROM QUERY TO A NEW ARRAY
+			->	USE "RETURN FORMAT" AS REFERENCE
+
+	[0]: https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L97
+	[1]: https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L115
+	[2]: https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L105
+	[3]: https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L187
+
+ **/
 
 /**
 
@@ -49,11 +93,12 @@ class SingleProfile extends BaseUpdate
 				https://github.com/jung3o/VacStatus/blob/master/app%2FSteam%2FSteamUser.php#L13
 			-> conver time
 				https://github.com/jung3o/VacStatus/blob/master/app%2FSteam%2FSteamUser.php#L26
+		profile.created_at
 		profile_ban.vac
 			-> this is the number of vac bans
 		profile_ban.vac_banned_on
 			-> see to convert date
-				https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L115
+				https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L131
 		profile_ban.community
 		profile_ban.trade
 		users.site_admin
@@ -71,6 +116,14 @@ class SingleProfile extends BaseUpdate
 				-> convert UNIX timestamp to readable DATE ("M j Y, g:i a")
 					ex. Mar 0 2015, 10:57 am
 			profile_old_alias.seen_alias
+		]
+		TIMES_CHECKED = [ (FROM CACHE)
+			NUMBER OF TIMES CHECKED
+			TIMESTAMP - UNIX
+		]
+		TIMES_ADDED = [ (FROM CACHE)
+			NUMBER OF TIMES ADDED
+			TIMESTAMP - UNIX
 		]
 
 	]
