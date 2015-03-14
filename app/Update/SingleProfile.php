@@ -19,7 +19,17 @@ class SingleProfile extends BaseUpdate
 
 	private function getProfile()
 	{
-		// if(!$this->canUpdate()) return Profile::whereId($this->profileId)->first();
+		if(!$this->canUpdate()) return Profile::whereId($this->profileId)->first();
+	}
+
+	private function updateUsingAPI()
+	{
+
+	}
+
+	private function grabFromDB()
+	{
+
 	}
 }
 
@@ -53,6 +63,7 @@ class SingleProfile extends BaseUpdate
 				-> profile.alias 				->	see: [2]	->	(ALL OF IT)
 		->	ADD ALL OF THE VALUES INTO AN ARRAY
 			->	USE "RETURN FORMAT" AS REFERENCE
+		->	UPDATE CACHE TO MAKE SURE THIS ISN'T CALLED AGAIN UNTIL TIME EXPIRES
 
 	->	NO UPDATE
 		->	DO A QUERY USING LEFT JOIN TO MAKE IT EFFICIENT AS POSSIBLE
@@ -128,4 +139,4 @@ class SingleProfile extends BaseUpdate
 
 	]
 
- */
+ **/
