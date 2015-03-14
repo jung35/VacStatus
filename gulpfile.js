@@ -50,8 +50,6 @@ elixir.extend('img', function (src, options) {
 			output: 'public/img'
 		};
 
-	process.stdout.write(JSON.stringify(config));
-
 	options = _.extend(defaultOptions, options);
 	src     = "./" + utilities.buildGulpSrc(src, options.srcDir, '/**/*.*');
 	options = _.extend(defaultOptions, options);

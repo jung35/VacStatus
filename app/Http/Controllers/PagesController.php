@@ -14,6 +14,11 @@ class PagesController extends Controller {
 		return view('pages/home');
 	}
 
+	public function profilePage()
+	{
+		return view('pages/profile');
+	}
+
 	public function mostTrackedPage()
 	{
 		return view('pages/list')->withGrab('most_tracked_users');

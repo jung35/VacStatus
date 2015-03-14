@@ -1,0 +1,80 @@
+.profile-page {
+	.profile-header {
+		background: #212121;
+		color: white;
+		padding-bottom: 20px;
+	}
+
+	.profile-avatar {
+		img {
+			margin: auto;
+			border: 7px solid white;
+			@media (min-width: @screen-md-min) {
+				// margin: 0 0 0 auto;
+				max-height: 180px
+			}
+		}
+
+		padding: 15px 0;
+	}
+
+	.profile-username {
+		white-space: nowrap;
+		max-width: 100%;
+		overflow: hidden;
+		font-size: 2em;
+		text-align: center;
+		font-weight: 600;
+
+		@media (min-width: @screen-md-min) {
+			font-size: 2.4em;
+			margin: 20px 0;
+			text-align: left;
+		}
+
+		@media (min-width: @screen-lg-min) {
+			margin: 15px 0 10px;
+		}
+	}
+
+	.profile-steam {
+		a {
+			&:hover, &:focus {
+				color: rgba(255, 255, 255, 0.7);
+			}
+
+			color: rgba(255, 255, 255, 0.2);
+		}
+
+		text-align: center;
+		font-size: 9em;
+		line-height: 1em;
+
+		@media (min-width: @screen-md-min) {
+			margin-left: 10px;
+			font-size: 6em;
+			vertical-align: middle;
+		}
+
+		@media (min-width: @screen-lg-min) {
+			margin-top: -15px;
+			margin-left: 15px;
+			font-size: 8em;
+		}
+	}
+
+	.profile-info {
+		li {
+			padding: 0 0 3px;
+		}
+
+		padding: 20px 0 0;
+		margin: 0;
+		list-style: none;
+		font-size: 1.1em;
+
+		@media (min-width: @screen-md-min) {
+			padding: 0;
+		}
+	}
+}

@@ -49,3 +49,8 @@ get('/list/most', [
 	'as' => 'tracked.most',
 	'uses' => 'PagesController@mostTrackedPage'
 ]);
+
+get('/u', [
+	'as' => 'profile',
+	'uses' => 'PagesController@profilePage'
+]);

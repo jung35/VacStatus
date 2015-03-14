@@ -55,33 +55,10 @@ var notif = {
 }
 
 $(function() {
-	notif
-		.run();
-	notif
-		.add('success', '123')
-		.add('danger', 'asdgf')
-		.add('info', 'asdasda')
-		.add('warning', 'aaaaaaaaaaaa')
-		.run();
-	notif
-		.add('success', '123')
-		.add('danger', 'asdgf')
-		.add('info', 'asdasda')
-		.add('warning', 'aaaaaaaaaaaa')
-		.add('warning', 'aaaaaaaaaaaa')
-		.add('warning', 'aaaaaaaaaaaa')
-		.add('warning', 'aaaaaaaaaaaa')
-		.run();
-	notif
-		.add('success', '123')
-		.add('danger', 'asdgf')
-		.add('info', 'asdasda')
-		.add('warning', 'aaaaaaaaaaaa')
-		.run();
-	notif
-		.add('success', '123')
-		.add('danger', 'asdgf')
-		.add('info', 'asdasda')
-		.add('warning', 'aaaaaaaaaaaa')
-		.run();
+	// notif
+	// 	.add('success', '123')
+	// 	.add('danger', 'asdgf')
+	// 	.add('info', 'asdasda')
+	// 	.add('warning', 'aaaaaaaaaaaa')
+	// 	.run();
 });
