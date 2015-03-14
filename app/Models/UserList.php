@@ -1,25 +1,23 @@
-<?php
+<?php namespace VacStatus\Models;
 
-use Steam\Steam as Steam;
+use Illuminate\Database\Eloquent\Model;
 
-class UserList extends \Eloquent {
-
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
+class UserList extends Model
+{
 	protected $table = 'user_list';
 
-	public function UserListProfile() {
+	public function UserListProfile()
+	{
 		return $this->hasMany('UserListProfile');
 	}
 
-	public function User() {
+	public function User()
+	{
 		return $this->belongsTo('User', 'user_id', 'id');
 	}
 
-	public function canSubscribe($user_id) {
+	public function canSubscribe($user_id)
+	{
 		return $this->user_id == $user_id || $this->privacy != 3;
 	}
 }

@@ -14,7 +14,6 @@ class AddMoreNotificationToUserMailTable extends Migration {
     {
         Schema::table('user_mail', function(Blueprint $table)
         {
-            $table->text('pushover');
             $table->text('pushbullet');
         });
     }

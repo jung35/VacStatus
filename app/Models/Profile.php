@@ -2,30 +2,33 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Profile extends Model {
-
+class Profile extends Model
+{
 	protected $table = 'profile';
 
-	public function ProfileOldAlias() {
+	public function ProfileOldAlias()
+	{
 		return $this->hasMany('ProfileOldAlias');
 	}
 
-	public function ProfileBan() {
+	public function ProfileBan()
+	{
 		return $this->hasOne('ProfileBan');
 	}
 
-	public function isPrivate() {
+	public function isPrivate()
+	{
 		return $this->privacy != 3;
 	}
 
-	public function getSteamCreation() {
-		if(isset($this->profile_created)) {
-			return date('M j Y', $this->profile_created);
-		}
+	public function getSteamCreation()
+	{
+		if(isset($this->profile_created)) return date('M j Y', $this->profile_created);
 		return "Unknown";
 	}
 
-	public function getAlias() {
+	public function getAlias()
+	{
 		return json_decode($this->alias);
 	}
 }
