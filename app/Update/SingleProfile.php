@@ -146,8 +146,8 @@ class SingleProfile extends BaseUpdate
 		$steamAPI->setSmallId($this->smallId);
 		$steamInfo = $steamAPI->run();
 
-		if($steamAPI->error()) return (object) ['error' => true, 'error' => $steamAPI->errorMessage()];
-		if(!isset($steamInfo->response->players[0])) return (object) ['error' => true, 'error' => 'profile_null'];
+		if($steamAPI->error()) return (object) ['error' => $steamAPI->errorMessage()];
+		if(!isset($steamInfo->response->players[0])) return (object) ['error' => 'profile_null'];
 
 		$steamInfo = $steamInfo->response->players[0];
 
@@ -156,8 +156,8 @@ class SingleProfile extends BaseUpdate
 		$steamAPI->setSmallId($this->smallId);
 		$steamBan = $steamAPI->run();
 
-		if($steamAPI->error()) return (object) ['error' => true, 'error' => $steamAPI->errorMessage()];
-		if(!isset($steamBan->players[0])) return (object) ['error' => true, 'error' => 'profile_null'];
+		if($steamAPI->error()) return (object) ['error' => $steamAPI->errorMessage()];
+		if(!isset($steamBan->players[0])) return (object) ['error' => 'profile_null'];
 
 		$steamBan = $steamBan->players[0];
 
@@ -166,11 +166,112 @@ class SingleProfile extends BaseUpdate
 		$steamAPI->setSmallId($this->smallId);
 		$steamAlias = $steamAPI->run();
 
-		if($steamAPI->error()) $steamAlias = null;
+		if($steamAPI->error()) $steamAlias = (object) [];
 
 		/* Successfully passed steam's not very reliable api servers */
 		/* Lets hope we got the alias as well :))) */
+
+		/* Lets start up with profile table */
+		$profile = Profile::whereSmallId($this->smallId)->first();
+
+		if(!isset($profile->id))
+		{
+			$profile = new Profile;
+			$profile->smallId = $this->smallId;
+
+			if(isset($steamInfo->timecreated)) // people like to hide their info because smurf or hack
+			{
+				$profile->profile_created = $steamInfo->timecreated;
+			}
+		} else {
+			// Make sure to update if this was private and now suddenly public
+			if(empty($profile->profile_created) && isset($steamInfo->timecreated)) {
+				$profile->profile_created = $steamInfo->timecreated;
+			}
+		}
+
+		$profile->display_name = $steamInfo->personaname;
+		$profile->avatar = Steam::imgToHTTPS($steamInfo->avatarfull);
+		$profile->avatar_thumb = Steam::imgToHTTPS($steamInfo->avatar);
+		$profile->privacy = $steamInfo->communityvisibilitystate;
+		$profile->alias = json_encode($steamAlias);
+
+		if(!$profile->save()) return (object) ['error' => 'profile_save_error'];
+
+
+		/* Now to do profile_ban table */
+		$profileBan = $profile->ProfileBan;
+
+		// Dont update the profile_ban if there is nothing to update
+		// This has to do with in the future when I check for new bans to notify/email
+		$skipProfileBan = false;
+
+		$newVacBanDate = new DateTime();
+		$newVacBanDate->sub(new DateInterval("P{$steamBan->DaysSinceLastBan}D"));
+
+		if(!isset($profileBan->id))
+		{
+			$profileBan = new ProfileBan;
+			$profileBan->profile_id = $profile->id;
+			$profileBan->unban = false;
+		} else {
+	        $skipProfileBan = $profileBan->skipProfileBanUpdate($steamBan);
+
+	        if($profileBan->vac > $steamBan->NumberOfVACBans)
+	        {
+	          $profileBan->unban = true;
+	        }
+		}
+
+		$profileBan->vac = $steamBan->NumberOfVACBans;
+		$profileBan->community = $steamBan->CommunityBanned;
+		$profileBan->trade = $steamBan->EconomyBan != 'none';
+		$profileBan->vac_banned_on = $newVacBanDate->format('Y-m-d');
+
+		if(!$skipProfileBan) if(!$profile->ProfileBan()->save($profileBan)) return (object) ['error' => 'profile_ban_save_error'];
+
+
+		/* Time to do profile_old_alias */
+		/* Checks to make sure if there is already a same name before inserting new name */
+		$profileOldAlias = $profile->ProfileOldAlias()->whereProfileId($profile->id)->get();
+		$profileOldAlias = $profileOldAlias->count() ? $profileOldAlias : new ProfileOldAlias;
+
+		if($profileOldAlias->count() == 0)
+		{
+			$profileOldAlias->addAlias($profile);
+		} else {
+			$match = false;
+			$recent = 0;
+			foreach($profileOldAlias as $oldAlias)
+			{
+				if(is_object($oldAlias))
+				{
+					if($oldAlias->getAlias() == $profile->getDisplayName())
+					{
+						$match = true;
+						break;
+					}
+
+					$recent = $oldAlias->compareTime($recent);
+				}
+			}
+
+			if(!$match && $recent + Steam::$UPDATE_TIME < time())
+			{
+				$profileOldAlias->addAlias($profile);
+			}
+		}
+
+		/* Finished inserting / updating into the DB! */
+
+		/* Writing the return array for the single profile */
+		
+		$return = [
+		];
+
+		/* YAY nothing broke :D time to return the data (and update cache) */
 		$this->updateCache(true);
+		return $return;
 	}
 
 	private function grabFromDB()

@@ -8,6 +8,7 @@ class Steam {
 	 * @var integer
 	 */
 	protected static $UPDATE_TIME = 3600; // 1 HOUR = 3600 seconds
+	protected static $HTTPS_URL = 'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/';
 
 	public static function getAPI()
 	{
@@ -101,5 +102,12 @@ class Steam {
 		}
 
 		return ['type' => 'error'];
+	}
+
+	public static function imgToHTTPS($url)
+	{
+		preg_match('/^(.*)?\/avatars\/(.*)$/i', $url, $newURL);
+
+		return self::$HTTPS_URL.$newURL[2];
 	}
 }
