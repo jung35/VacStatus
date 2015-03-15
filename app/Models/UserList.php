@@ -8,12 +8,12 @@ class UserList extends Model
 
 	public function UserListProfile()
 	{
-		return $this->hasMany('UserListProfile');
+		return $this->hasMany('VacStatus\Models\UserListProfile');
 	}
 
 	public function User()
 	{
-		return $this->belongsTo('User', 'user_id', 'id');
+		return $this->belongsTo('VacStatus\Models\User', 'user_id', 'id');
 	}
 
 	public function canSubscribe($user_id)

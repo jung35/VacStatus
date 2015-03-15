@@ -8,12 +8,12 @@ class Profile extends Model
 
 	public function ProfileOldAlias()
 	{
-		return $this->hasMany('ProfileOldAlias');
+		return $this->hasMany('VacStatus\Models\ProfileOldAlias');
 	}
 
 	public function ProfileBan()
 	{
-		return $this->hasOne('ProfileBan');
+		return $this->hasOne('VacStatus\Models\ProfileBan');
 	}
 
 	public function isPrivate()

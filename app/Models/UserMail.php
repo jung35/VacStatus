@@ -10,7 +10,7 @@ class UserMail extends Model
 
 	public function Subscription()
 	{
-		return $this->hasMany('Subscription', 'user_id', 'user_id');
+		return $this->hasMany('VacStatus\Models\Subscription', 'user_id', 'user_id');
 	}
 
 	public function canMail()

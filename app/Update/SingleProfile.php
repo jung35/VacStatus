@@ -3,11 +3,19 @@
 use VacStatus\Update\BaseUpdate;
 
 use VacStatus\Models\Profile;
+use VacStatus\Models\UserListProfile;
+use VacStatus\Models\User;
+use VacStatus\Models\ProfileBan;
+use VacStatus\Models\ProfileOldAlias;
 
 use Cache;
 use Carbon;
 
+use VacStatus\Steam\Steam;
 use VacStatus\Steam\SteamAPI;
+
+use DateTime;
+use DateInterval;
 
 /*
 
@@ -198,7 +206,6 @@ class SingleProfile extends BaseUpdate
 
 		if(!$profile->save()) return (object) ['error' => 'profile_save_error'];
 
-
 		/* Now to do profile_ban table */
 		$profileBan = $profile->ProfileBan;
 
@@ -246,7 +253,7 @@ class SingleProfile extends BaseUpdate
 			{
 				if(is_object($oldAlias))
 				{
-					if($oldAlias->getAlias() == $profile->getDisplayName())
+					if($oldAlias->alias == $profile->display_name)
 					{
 						$match = true;
 						break;
@@ -258,16 +265,69 @@ class SingleProfile extends BaseUpdate
 
 			if(!$match && $recent + Steam::$UPDATE_TIME < time())
 			{
-				$profileOldAlias->addAlias($profile);
+		        $newAlias = new ProfileOldAlias;
+		        $newAlias->profile_id = $profile->id;
+		        $newAlias->seen = time();
+		        $newAlias->seen_alias = $profile->display_name;
+		        $profile->ProfileOldAlias()->save($newAlias);
 			}
 		}
 
 		/* Finished inserting / updating into the DB! */
 
-		/* Writing the return array for the single profile */
-		
-		$return = [
+		/* Check to see if this user has an account in vacstatus */
+		$user = User::whereSmallId($this->smallId)->first();
+
+		/* getting the number of times checked and added */
+
+		$gettingCount = UserListProfile::whereProfileId($profile->id)
+			->orderBy('id','desc')
+			->get();
+
+		$profileTimesAdded = [
+			'time' => $gettingCount->count(),
+			'number' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y, g:i a") : null
 		];
+
+		$profileCheckCache = "profile_checked_";
+
+		$currentProfileCheck = [
+			'number' => 0,
+			'time' => time()
+		];
+
+		if(Cache::has($profileCheckCache.$this->smallId)) $currentProfileCheck = Cache::get($profileCheckCache.$this->smallId);
+
+		$newProfileCheck = [
+			'number' => $currentProfileCheck['number'] + 1,
+			'time' => time()
+		];
+
+		Cache::forever($profileCheckCache.$this->smallId, $newProfileCheck);
+
+		/* Writing the return array for the single profile */
+
+		$return = [
+			'display_name'		=> $steamInfo->personaname,
+			'avatar'			=> Steam::imgToHTTPS($steamInfo->avatarfull),
+			'small_id'			=> $this->smallId,
+			'profile_created'	=> isset($profile->profile_created) ? $profile->profile_created : null,
+			'privacy'			=> $steamInfo->communityvisibilitystate,
+			'alias'				=> $steamAlias,
+			'created_at'		=> $profile->created_at->format("M j Y"),
+			'vac'				=> $steamBan->NumberOfVACBans,
+			'vac_banned_on'		=> $newVacBanDate->format('Y-m-d'),
+			'community'			=> $steamBan->CommunityBanned,
+			'trade'				=> $steamBan->EconomyBan != 'none',
+			'site_admin'		=> isset($user->id) ? $user->site_admin : 0,
+			'donation'			=> isset($user->id) ? $user->donation : 0,
+			'beta'				=> isset($user->id) ? $user->beta : 0,
+			'profile_old_alias'	=> $profileOldAlias->toArray(),
+			'times_checked'		=> $currentProfileCheck,
+			'times_added'		=> $profileTimesAdded
+		];
+
+		dd($return);
 
 		/* YAY nothing broke :D time to return the data (and update cache) */
 		$this->updateCache(true);

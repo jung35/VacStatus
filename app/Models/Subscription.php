@@ -8,6 +8,6 @@ class Subscription extends Model
 
 	public function UserList()
 	{
-		return $this->hasOne('UserList', 'id', 'user_list_id');
+		return $this->hasOne('VacStatus\Models\UserList', 'id', 'user_list_id');
 	}
 }

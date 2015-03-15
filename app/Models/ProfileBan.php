@@ -2,13 +2,16 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use DateTime;
+use DateInterval;
+
 class ProfileBan extends Model
 {
 	protected $table = 'profile_ban';
 
 	public function Profile()
 	{
-			return $this->belongsTo('Profile', 'profile_id', 'id');
+		return $this->belongsTo('VacStatus\Models\Profile', 'profile_id', 'id');
 	}
 
 	public function isVacBanned()

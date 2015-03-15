@@ -20,17 +20,17 @@ class User extends Model implements AuthenticatableContract
 
 	public function UserList()
 	{
-		return $this->hasMany('UserList');
+		return $this->hasMany('VacStatus\Models\UserList');
 	}
 
 	public function Subscription()
 	{
-		return $this->hasMany('Subscription');
+		return $this->hasMany('VacStatus\Models\Subscription');
 	}
 
 	public function UserMail()
 	{
-		return $this->hasOne('UserMail');
+		return $this->hasOne('VacStatus\Models\UserMail');
 	}
 
 	public function getSteam3Id()

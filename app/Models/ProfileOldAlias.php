@@ -8,7 +8,7 @@ class ProfileOldAlias extends Model
 
 	public function Profile()
 	{
-		return $this->belongsTo('Profile', 'profile_id', 'id');
+		return $this->belongsTo('VacStatus\Models\Profile', 'profile_id', 'id');
 	}
 
 	public function addAlias(Profile $profile)

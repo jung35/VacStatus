@@ -8,11 +8,11 @@ class UserListProfile extends Model
 
 	public function UserList()
 	{
-		return $this->belongsTo('UserList', 'user_list_id', 'id');
+		return $this->belongsTo('VacStatus\Models\UserList', 'user_list_id', 'id');
 	}
 
 	public function Profile()
 	{
-		return $this->hasOne('Profile', 'id');
+		return $this->hasOne('VacStatus\Models\Profile', 'id');
 	}
 }

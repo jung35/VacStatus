@@ -7,7 +7,7 @@ class Steam {
 	 * Minimum timeout for steam updates on profile
 	 * @var integer
 	 */
-	protected static $UPDATE_TIME = 3600; // 1 HOUR = 3600 seconds
+	public static $UPDATE_TIME = 3600; // 1 HOUR = 3600 seconds
 	protected static $HTTPS_URL = 'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/';
 
 	public static function getAPI()
