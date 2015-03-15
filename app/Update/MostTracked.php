@@ -13,7 +13,7 @@ use Carbon;
 
 	->	Get ALL of the rows from the 'user_list_profile' table
 		->	Create a new blank array (call this: ListProfileArray)
-		->	Loop
+		->	For Loop
 			-> CHECK IF INDEX OF 'profile_id' IS NOT FOUND IN 'ListProfileArray'
 				->	Make value of 'profile_id' as index of 'ListProfileArray' and insert profile detail as array
 				->	Along with the profile detail, add another index containing the '# of times profile was added'
