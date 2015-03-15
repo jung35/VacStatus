@@ -17,10 +17,15 @@ class ProfileController extends Controller {
 	 */
 	public function index($steam64BitId)
 	{
-		$singleProfile = new SingleProfile(Steam::toSmallId($steam64BitId));
+		$smallId = Steam::toSmallId($steam64BitId);
+		if(is_array($smallId))
+		{
+			return ['error' => 'invalid_small_id'];
+		}
+		$singleProfile = new SingleProfile($smallId);
 		$singleProfile = $singleProfile->getProfile();
 
-		return compact('singleProfile');
+		return $singleProfile;
 	}
 
 	/**
