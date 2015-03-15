@@ -8,32 +8,7 @@
 					<div class="col-xs-12">
 						<a href="#" data-toggle="collapse" data-target="#list-actions"><span class="fa fa-bars"></span>&nbsp; Advanced Options</a>
 						<div id="list-actions" class="list-actions collapse">
-							<div class="list-action-container">
-								<hr class="divider">
-								<div class="row">
-									<div class="col-xs-12 col-md-6">
-										
-									</div>
-									<div class="col-xs-12 col-md-6">
-										<form action="" class="option-content">
-											<h4 class="title">Create New List</h4>
-											<div class="form-group">
-												<select class="form-control">
-													<option value="1">Public</option>
-													<option value="2">Friends Only</option>
-													<option value="3">Private</option>
-												</select>
-											</div>
-											<div class="form-group">
-												<input type="text" class="form-control" placeholder="List Name">
-											</div>
-											<div class="form-group">
-												<button type="submit" class="btn form-control">Create List</button>
-											</div>
-										</form>
-									</div>
-								</div>
-							</div>
+							@include('pages.tempPartial.listAction')
 						</div>
 					</div>
 				</div>
@@ -41,6 +16,11 @@
 		</div>
 		<div class="container">
 			<div class="row">
+				<div class="col-lg-3">
+					<div class="list-actions visible-lg-block">
+						@include('pages.tempPartial.listAction')
+					</div>
+				</div>
 				<div class="col-xs-12 col-lg-9">
 					<h2 class="list-title">
 						Most Tracked Users{{-- <br>
@@ -77,36 +57,6 @@
 								</td>
 							</tr>
 						</table>
-					</div>
-				</div>
-				<div class="col-lg-3">
-					<div class="list-actions visible-lg-block">
-						<div class="list-action-container">
-							<hr class="divider">
-							<div class="row">
-								<div class="col-xs-12">
-									
-								</div>
-								<div class="col-xs-12">
-									<form action="" class="option-content">
-										<h4 class="title">Create New List</h4>
-										<div class="form-group">
-											<select class="form-control">
-												<option value="1">Public</option>
-												<option value="2">Friends Only</option>
-												<option value="3">Private</option>
-											</select>
-										</div>
-										<div class="form-group">
-											<input type="text" class="form-control" placeholder="List Name">
-										</div>
-										<div class="form-group">
-											<button type="submit" class="btn form-control">Create List</button>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
 					</div>
 				</div>
 			</div>

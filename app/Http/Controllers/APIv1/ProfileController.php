@@ -8,13 +8,9 @@ use Illuminate\Http\Request;
 use VacStatus\Update\SingleProfile;
 use VacStatus\Steam\Steam;
 
-class ProfileController extends Controller {
+class ProfileController extends Controller
+{
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
 	public function index($steam64BitId)
 	{
 		$smallId = Steam::toSmallId($steam64BitId);

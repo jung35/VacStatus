@@ -57,10 +57,10 @@ use DateInterval;
 		->	MOVE THE VALUES FROM QUERY TO A NEW ARRAY
 			->	USE "RETURN FORMAT" AS REFERENCE
 
-	[0]: https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L97
-	[1]: https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L115
-	[2]: https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L105
-	[3]: https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L187
+	[0]: https://github.com/jung3o/VacStatus/tree/c6e626d8f8ab5f8c99db80f904275c185698c645/app/models/Profile.php#L97
+	[1]: https://github.com/jung3o/VacStatus/tree/c6e626d8f8ab5f8c99db80f904275c185698c645/app/models/Profile.php#L115
+	[2]: https://github.com/jung3o/VacStatus/tree/c6e626d8f8ab5f8c99db80f904275c185698c645/app/models/Profile.php#L105
+	[3]: https://github.com/jung3o/VacStatus/tree/c6e626d8f8ab5f8c99db80f904275c185698c645/app/models/Profile.php#L187
 
  */
 
@@ -70,7 +70,7 @@ use DateInterval;
 
 *************************************************************************************************
 
-	profile = [
+	return [
 		profile.id
 		profile.display_name
 		profile.avatar
@@ -88,15 +88,15 @@ use DateInterval;
 			-> convert from JSON to ARRAY
 				json_encode($value)
 			-> sort by time
-				https://github.com/jung3o/VacStatus/blob/master/app%2FSteam%2FSteamUser.php#L13
+				https://github.com/jung3o/VacStatus/tree/c6e626d8f8ab5f8c99db80f904275c185698c645/app/Steam/SteamUser.php#L13
 			-> conver time
-				https://github.com/jung3o/VacStatus/blob/master/app%2FSteam%2FSteamUser.php#L26
+				https://github.com/jung3o/VacStatus/tree/c6e626d8f8ab5f8c99db80f904275c185698c645/app/Steam/SteamUser.php#L26
 		profile.created_at
 		profile_ban.vac
 			-> this is the number of vac bans
 		profile_ban.vac_banned_on
 			-> see to convert date
-				https://github.com/jung3o/VacStatus/blob/master/app/models/Profile.php#L131
+				https://github.com/jung3o/VacStatus/tree/c6e626d8f8ab5f8c99db80f904275c185698c645/app/models/Profile.php#L131
 		profile_ban.community
 		profile_ban.trade
 		users.site_admin
