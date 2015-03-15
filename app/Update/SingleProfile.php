@@ -153,8 +153,8 @@ class SingleProfile extends BaseUpdate
 		$steamAPI->setSmallId($this->smallId);
 		$steamInfo = $steamAPI->run();
 
-		if($steamAPI->error()) return (object) ['error' => $steamAPI->errorMessage()];
-		if(!isset($steamInfo->response->players[0])) return (object) ['error' => 'profile_null'];
+		if($steamAPI->error()) return ['error' => $steamAPI->errorMessage()];
+		if(!isset($steamInfo->response->players[0])) return ['error' => 'profile_null'];
 
 		$steamInfo = $steamInfo->response->players[0];
 
@@ -163,8 +163,8 @@ class SingleProfile extends BaseUpdate
 		$steamAPI->setSmallId($this->smallId);
 		$steamBan = $steamAPI->run();
 
-		if($steamAPI->error()) return (object) ['error' => $steamAPI->errorMessage()];
-		if(!isset($steamBan->players[0])) return (object) ['error' => 'profile_null'];
+		if($steamAPI->error()) return ['error' => $steamAPI->errorMessage()];
+		if(!isset($steamBan->players[0])) return ['error' => 'profile_null'];
 
 		$steamBan = $steamBan->players[0];
 
@@ -173,7 +173,7 @@ class SingleProfile extends BaseUpdate
 		$steamAPI->setSmallId($this->smallId);
 		$steamAlias = $steamAPI->run();
 
-		if($steamAPI->error()) $steamAlias = (object) [];
+		if($steamAPI->error()) $steamAlias = [];
 
 		/* Successfully passed steam's not very reliable api servers */
 		/* Lets hope we got the alias as well :))) */
@@ -203,7 +203,7 @@ class SingleProfile extends BaseUpdate
 		$profile->privacy = $steamInfo->communityvisibilitystate;
 		$profile->alias = json_encode($steamAlias);
 
-		if(!$profile->save()) return (object) ['error' => 'profile_save_error'];
+		if(!$profile->save()) return ['error' => 'profile_save_error'];
 
 		/* Now to do profile_ban table */
 		$profileBan = $profile->ProfileBan;
@@ -234,7 +234,7 @@ class SingleProfile extends BaseUpdate
 		$profileBan->trade = $steamBan->EconomyBan != 'none';
 		$profileBan->vac_banned_on = $newVacBanDate->format('Y-m-d');
 
-		if(!$skipProfileBan) if(!$profile->ProfileBan()->save($profileBan)) return (object) ['error' => 'profile_ban_save_error'];
+		if(!$skipProfileBan) if(!$profile->ProfileBan()->save($profileBan)) return ['error' => 'profile_ban_save_error'];
 
 
 		/* Time to do profile_old_alias */
