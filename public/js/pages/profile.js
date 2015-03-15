@@ -41,7 +41,7 @@ var Profile = React.createClass({displayName: "Profile",
 				case 3:
 					privacy = {
 						type: "Public",
-						color: "primary"
+						color: "success"
 					};
 					break;
 				case 2:
@@ -70,7 +70,7 @@ var Profile = React.createClass({displayName: "Profile",
 			alias_recent = data.alias.map(function(alias, index) {
 				return (
 					React.createElement("tr", {key: index}, 
-						React.createElement("td", null,  alias.timechanged.replace('@', '') ), 
+						React.createElement("td", null,  alias.timechanged), 
 						React.createElement("td", null,  alias.newname)
 					)
 				);

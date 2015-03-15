@@ -174,7 +174,8 @@ class SingleProfile extends BaseUpdate
 		$steamAPI->setSmallId($this->smallId);
 		$steamAlias = $steamAPI->run();
 
-		if($steamAPI->error()) $steamAlias = [];
+		if($steamAPI->error()) { $steamAlias = []; }
+		else { usort($steamAlias, array('VacStatus\Steam\Steam', 'aliasSort')); }
 
 		/* Successfully passed steam's not very reliable api servers */
 		/* Lets hope we got the alias as well :))) */
@@ -240,7 +241,7 @@ class SingleProfile extends BaseUpdate
 
 		/* Time to do profile_old_alias */
 		/* Checks to make sure if there is already a same name before inserting new name */
-		$profileOldAlias = $profile->ProfileOldAlias()->whereProfileId($profile->id)->get();
+		$profileOldAlias = $profile->ProfileOldAlias()->whereProfileId($profile->id)->orderBy('id','desc')->get();
 		$profileOldAlias = $profileOldAlias->count() ? $profileOldAlias : new ProfileOldAlias;
 
 		if($profileOldAlias->count() == 0)
@@ -328,7 +329,7 @@ class SingleProfile extends BaseUpdate
 			'steam_32_bit'		=> Steam::to32Bit($steam64BitId),
 			'profile_created'	=> isset($profile->profile_created) ? date("M j Y", $profile->profile_created) : "Unknown",
 			'privacy'			=> $steamInfo->communityvisibilitystate,
-			'alias'				=> $steamAlias,
+			'alias'				=> Steam::friendlyAlias($steamAlias),
 			'created_at'		=> $profile->created_at->format("M j Y"),
 			'vac'				=> $steamBan->NumberOfVACBans,
 			'vac_banned_on'		=> $newVacBanDate->format("M j Y"),
@@ -374,7 +375,7 @@ class SingleProfile extends BaseUpdate
 			]);
 
 		/* Copied and pasted from function above */
-		$profileOldAlias = $profile->ProfileOldAlias()->whereProfileId($profile->id)->get();
+		$profileOldAlias = $profile->ProfileOldAlias()->whereProfileId($profile->id)->orderBy('id','desc')->get();
 
 		$gettingCount = UserListProfile::whereProfileId($profile->id)
 			->orderBy('id','desc')
@@ -424,7 +425,7 @@ class SingleProfile extends BaseUpdate
 			'steam_32_bit'		=> Steam::to32Bit($steam64BitId),
 			'profile_created'	=> isset($profile->profile_created) ? date("M j Y", $profile->profile_created) : "Unknown",
 			'privacy'			=> $profile->privacy,
-			'alias'				=> json_decode($profile->alias),
+			'alias'				=> Steam::friendlyAlias(json_decode($profile->alias)),
 			'created_at'		=> $profile->created_at->format("M j Y"),
 			'vac'				=> $profile->vac,
 			'vac_banned_on'		=> $profile->vac_banned_on->format("M j Y"),

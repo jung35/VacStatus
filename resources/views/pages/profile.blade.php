@@ -128,14 +128,6 @@
 										<td>Mar 4 2015, 5:11 pm</td>
 										<td>Jungㅁ</td>
 									</tr>
-									<tr>
-										<td>Oct 11 2014, 9:46 pm</td>
-										<td>Jung - VacStat.us</td>
-									</tr>
-									<tr>
-										<td>Oct 11 2014, 9:14 pm</td>
-										<td>Jung</td>
-									</tr>
 								</tbody>
 							</table>
 						</div>
@@ -156,42 +148,6 @@
 									<tr>
 										<td>Mar 9 2015, 10:57 am</td>
 										<td>Jung</td>
-									</tr>
-									<tr>
-										<td>Mar 8 2015, 10:44 pm</td>
-										<td>PewPEw</td>
-									</tr>
-									<tr>
-										<td>Mar 4 2015, 5:10 pm</td>
-										<td>Jungㅁ</td>
-									</tr>
-									<tr>
-										<td>Feb 27 2015, 8:41 am</td>
-										<td>:~)</td>
-									</tr>
-									<tr>
-										<td>Feb 21 2015, 12:49 pm</td>
-										<td>lgimk</td>
-									</tr>
-									<tr>
-										<td>Feb 3 2015, 12:23 pm</td>
-										<td>Jung - VacStat.us</td>
-									</tr>
-									<tr>
-										<td>Jan 24 2015, 6:33 pm</td>
-										<td>asdf</td>
-									</tr>
-									<tr>
-										<td>Jan 17 2015, 1:15 pm</td>
-										<td>Jung - VacStat.us #FiatSquad</td>
-									</tr>
-									<tr>
-										<td>Jan 15 2015, 6:56 am</td>
-										<td>..</td>
-									</tr>
-									<tr>
-										<td>Jan 10 2015, 3:48 pm</td>
-										<td>Jung [Proffessionslserfer]</td>
 									</tr>
 								</tbody>
 							</table>

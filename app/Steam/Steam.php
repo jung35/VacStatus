@@ -110,4 +110,27 @@ class Steam {
 
 		return self::$HTTPS_URL.$newURL[2];
 	}
+
+	public static function aliasSort($a, $b) {
+		return strcmp(self::aliasTimeConvert($b->timechanged), self::aliasTimeConvert($a->timechanged));
+	}
+
+	public static function aliasTimeConvert($time) {
+		return strtotime(str_replace("@", "", $time));
+	}
+
+	public static function friendlyAlias($aliases)
+	{
+		$newAlias = [];
+
+		foreach($aliases as $alias)
+		{
+    		$newAlias[] = [
+    			'newname' => $alias->newname,
+    			'timechanged' => date('M j Y', strtotime(str_replace("@", "", $alias->timechanged)))
+			];
+		}
+
+		return $newAlias;
+	}
 }
