@@ -6,7 +6,7 @@ use Carbon;
 class BaseUpdate
 {
 	protected $cacheName;
-	protected $cacheLength = 1; //60; // in minutes
+	protected $cacheLength = 0; //60; // in minutes
 
 	protected function canUpdate()
 	{

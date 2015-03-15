@@ -18,6 +18,9 @@ class ProfileController extends Controller {
 	public function index($steam64BitId)
 	{
 		$singleProfile = new SingleProfile(Steam::toSmallId($steam64BitId));
+		$singleProfile = $singleProfile->getProfile();
+
+		return compact('singleProfile');
 	}
 
 	/**

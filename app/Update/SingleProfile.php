@@ -135,11 +135,9 @@ class SingleProfile extends BaseUpdate
 	{
 		$this->smallId = $smallId;
 		$this->cacheName = "profile_$smallId";
-
-		return $this->getProfile();
 	}
 
-	private function getProfile()
+	public function getProfile()
 	{
 		if(!$this->canUpdate()) return $this->grabFromDB();
 
