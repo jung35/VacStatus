@@ -64,7 +64,7 @@ var Profile = React.createClass({
 						<td>{ alias.timechanged }</td>
 						<td>{ alias.newname }</td>
 					</tr>
-		        );
+				);
 			});
 
 			alias_recent = data.alias.map(function(alias, index) {
@@ -73,7 +73,7 @@ var Profile = React.createClass({
 						<td>{ alias.timechanged.replace('@', '') }</td>
 						<td>{ alias.newname }</td>
 					</tr>
-		        );
+				);
 			});
 
 			return (
@@ -260,8 +260,8 @@ var Profile = React.createClass({
 			);
 		} else {
 			return (
-	      		<div></div>
-	        )
+				<div></div>
+			)
 		}
 	}
 });

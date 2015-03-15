@@ -64,7 +64,7 @@ var Profile = React.createClass({displayName: "Profile",
 						React.createElement("td", null,  alias.timechanged), 
 						React.createElement("td", null,  alias.newname)
 					)
-		        );
+				);
 			});
 
 			alias_recent = data.alias.map(function(alias, index) {
@@ -73,7 +73,7 @@ var Profile = React.createClass({displayName: "Profile",
 						React.createElement("td", null,  alias.timechanged.replace('@', '') ), 
 						React.createElement("td", null,  alias.newname)
 					)
-		        );
+				);
 			});
 
 			return (
@@ -260,8 +260,8 @@ var Profile = React.createClass({displayName: "Profile",
 			);
 		} else {
 			return (
-	      		React.createElement("div", null)
-	        )
+				React.createElement("div", null)
+			)
 		}
 	}
 });

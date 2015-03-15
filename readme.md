@@ -1,5 +1,7 @@
 #VacStatus
 ##Current State
-Right now, the application is in progress of being designed.
+Right now, the application is in progress of being developed.
 
-You will need to install all the node modules to compile and move the assets.
+You will need to run 'npm install' and 'composer install' to install all the dependencies.
+
+Also you are assumed to know how to use laravel. No support will be given to install.
