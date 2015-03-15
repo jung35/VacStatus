@@ -10,6 +10,7 @@ use VacStatus\Models\ProfileOldAlias;
 
 use Cache;
 use Carbon;
+use Auth;
 
 use VacStatus\Steam\Steam;
 use VacStatus\Steam\SteamAPI;
@@ -184,7 +185,7 @@ class SingleProfile extends BaseUpdate
 		if(!isset($profile->id))
 		{
 			$profile = new Profile;
-			$profile->smallId = $this->smallId;
+			$profile->small_id = $this->smallId;
 
 			if(isset($steamInfo->timecreated)) // people like to hide their info because smurf or hack
 			{
@@ -252,7 +253,7 @@ class SingleProfile extends BaseUpdate
 			{
 				if(is_object($oldAlias))
 				{
-					if($oldAlias->alias == $profile->display_name)
+					if($oldAlias->seen_alias == $profile->display_name)
 					{
 						$match = true;
 						break;
@@ -284,47 +285,62 @@ class SingleProfile extends BaseUpdate
 			->get();
 
 		$profileTimesAdded = [
-			'time' => $gettingCount->count(),
-			'number' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y, g:i a") : null
+			'number' => $gettingCount->count(),
+			'time' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y") : null
 		];
 
 		$profileCheckCache = "profile_checked_";
 
 		$currentProfileCheck = [
 			'number' => 0,
-			'time' => time()
+			'time' => date("M j Y", time())
 		];
 
 		if(Cache::has($profileCheckCache.$this->smallId)) $currentProfileCheck = Cache::get($profileCheckCache.$this->smallId);
 
 		$newProfileCheck = [
 			'number' => $currentProfileCheck['number'] + 1,
-			'time' => time()
+			'time' => date("M j Y", time())
 		];
 
 		Cache::forever($profileCheckCache.$this->smallId, $newProfileCheck);
 
 		/* Writing the return array for the single profile */
 
+		$steam64BitId = Steam::to64Bit($profile->small_id);
+
+		$oldAliasArray = [];
+
+		foreach($profileOldAlias as $oldAlias)
+		{
+			$oldAliasArray[] = [
+				"newname" => $oldAlias->seen_alias,
+				"timechanged" => $oldAlias->seen->format("M j Y")
+			];
+		}
+
 		$return = [
 			'id'				=> $profile->id,
 			'display_name'		=> $steamInfo->personaname,
 			'avatar'			=> Steam::imgToHTTPS($steamInfo->avatarfull),
 			'small_id'			=> $this->smallId,
-			'profile_created'	=> isset($profile->profile_created) ? $profile->profile_created : null,
+			'steam_64_bit'		=> $steam64BitId,
+			'steam_32_bit'		=> Steam::to32Bit($steam64BitId),
+			'profile_created'	=> isset($profile->profile_created) ? date("M j Y", $profile->profile_created) : "Unknown",
 			'privacy'			=> $steamInfo->communityvisibilitystate,
 			'alias'				=> $steamAlias,
 			'created_at'		=> $profile->created_at->format("M j Y"),
 			'vac'				=> $steamBan->NumberOfVACBans,
-			'vac_banned_on'		=> $newVacBanDate->format('Y-m-d'),
+			'vac_banned_on'		=> $newVacBanDate->format("M j Y"),
 			'community'			=> $steamBan->CommunityBanned,
 			'trade'				=> $steamBan->EconomyBan != 'none',
 			'site_admin'		=> isset($user->id) ? $user->site_admin : 0,
 			'donation'			=> isset($user->id) ? $user->donation : 0,
 			'beta'				=> isset($user->id) ? $user->beta : 0,
-			'profile_old_alias'	=> $profileOldAlias->toArray(),
+			'profile_old_alias'	=> $oldAliasArray,
 			'times_checked'		=> $currentProfileCheck,
-			'times_added'		=> $profileTimesAdded
+			'times_added'		=> $profileTimesAdded,
+			'login_check'		=> Auth::check(),
 		];
 
 		/* YAY nothing broke :D time to return the data (and update cache) */
@@ -365,34 +381,48 @@ class SingleProfile extends BaseUpdate
 			->get();
 
 		$profileTimesAdded = [
-			'time' => $gettingCount->count(),
-			'number' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y, g:i a") : null
+			'number' => $gettingCount->count(),
+			'time' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y") : null
 		];
 
 		$profileCheckCache = "profile_checked_";
 
 		$currentProfileCheck = [
 			'number' => 0,
-			'time' => time()
+			'time' => date("M j Y", time())
 		];
 
 		if(Cache::has($profileCheckCache.$this->smallId)) $currentProfileCheck = Cache::get($profileCheckCache.$this->smallId);
 
 		$newProfileCheck = [
 			'number' => $currentProfileCheck['number'] + 1,
-			'time' => time()
+			'time' => date("M j Y", time())
 		];
 
 		Cache::forever($profileCheckCache.$this->smallId, $newProfileCheck);
 
 		/* WOW THAT WAS SHORT!!!!! */
 
+		$steam64BitId = Steam::to64Bit($profile->small_id);
+
+		$oldAliasArray = [];
+
+		foreach($profileOldAlias as $oldAlias)
+		{
+			$oldAliasArray[] = [
+				"newname" => $oldAlias->seen_alias,
+				"timechanged" => $oldAlias->seen->format("M j Y")
+			];
+		}
+
 		$return = [
 			'id'				=> $profile->id,
 			'display_name'		=> $profile->display_name,
 			'avatar'			=> $profile->avatar,
 			'small_id'			=> $profile->small_id,
-			'profile_created'	=> $profile->profile_created,
+			'steam_64_bit'		=> $steam64BitId,
+			'steam_32_bit'		=> Steam::to32Bit($steam64BitId),
+			'profile_created'	=> isset($profile->profile_created) ? date("M j Y", $profile->profile_created) : "Unknown",
 			'privacy'			=> $profile->privacy,
 			'alias'				=> json_decode($profile->alias),
 			'created_at'		=> $profile->created_at->format("M j Y"),
@@ -403,9 +433,10 @@ class SingleProfile extends BaseUpdate
 			'site_admin'		=> $profile->site_admin,
 			'donation'			=> $profile->donation,
 			'beta'				=> $profile->beta,
-			'profile_old_alias'	=> $profileOldAlias->toArray(),
+			'profile_old_alias'	=> $oldAliasArray,
 			'times_checked'		=> $currentProfileCheck,
-			'times_added'		=> $profileTimesAdded
+			'times_added'		=> $profileTimesAdded,
+			'login_check'		=> Auth::check(),
 		];
 
 		return $return;

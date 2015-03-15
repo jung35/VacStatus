@@ -19,6 +19,16 @@ Route::group(['prefix' => 'auth'], function()
 	]);
 });
 
+get('/list/most', [
+	'as' => 'tracked.most',
+	'uses' => 'PagesController@mostTrackedPage'
+]);
+
+get('/u/{steam65BitId}', [
+	'as' => 'profile',
+	'uses' => 'PagesController@profilePage'
+]);
+
 Route::group(['prefix' => 'api'], function()
 {
 	Route::group(['prefix' => 'v1', 'namespace' => 'APIv1'], function()
@@ -55,13 +65,3 @@ Route::group([
 		'uses' => 'DatabaseController@profile'
 	]);
 });
-
-get('/list/most', [
-	'as' => 'tracked.most',
-	'uses' => 'PagesController@mostTrackedPage'
-]);
-
-get('/u', [
-	'as' => 'profile',
-	'uses' => 'PagesController@profilePage'
-]);

@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Model;
 class ProfileOldAlias extends Model
 {
 	protected $table = 'profile_old_alias';
+	
+	protected $dates = ['seen'];
 
 	public function Profile()
 	{

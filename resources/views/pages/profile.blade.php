@@ -1,7 +1,11 @@
 @extends('layout.app')
 
+@section('title')
+&mdash; Profile
+@stop
+
 @section('content')
-	<div id="profile" class="profile-page">
+	<div id="profile" class="profile-page" data-steam64bitid="{{ $steam64BitId }}">
 		<div class="profile-header">
 			<div class="container">
 				<div class="row">
@@ -226,20 +230,26 @@
 							</div>
 						</div>
 					</div>
-				</div>
-				<hr class="divider">
-				<div class="row">
-					<div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
-						<div id="disqus_thread"></div>
-					</div>
+					<hr class="divider">
 				</div>
 			</div>
 		</div>
 	</div>
-    <script type="text/javascript">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+				<div id="disqus_thread" class="disqus_thread"></div>
+			</div>
+		</div>
+	</div>
+@stop
+
+@section('js')
+	<script src="/js/pages/profile.js"></script>
+	<script type="text/javascript">
 		var disqus_shortname = 'vbanstatus';
-		var disqus_identifier = '76561198020317127';
-		var disqus_title = 'VacStatus [76561198020317127]';
+		var disqus_identifier = '{{ $steam64BitId }}';
+		var disqus_title = 'VacStatus [{{ $steam64BitId }}]';
 
 		/* * * DON'T EDIT BELOW THIS LINE * * */
 		(function() {
@@ -247,5 +257,5 @@
 			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
 			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 		})();
-    </script>
+	</script>
 @stop

@@ -6679,6 +6679,7 @@ hr.divider {
   }
 }
 .profile-page .profile-badge {
+  height: 0;
   margin-top: -10px;
   text-align: center;
   cursor: default;
@@ -6690,7 +6691,7 @@ hr.divider {
   margin: 0 7px;
 }
 .profile-page .profile-body {
-  padding: 10px 0 30px;
+  padding: 30px 0 15px;
   font-size: 1.1em;
 }
 .profile-page .profile-body .title {
@@ -6706,6 +6707,9 @@ hr.divider {
 }
 .profile-page .table th {
   text-align: center;
+}
+.disqus_thread {
+  margin-bottom: 40px;
 }
 .admin-header {
   background: #424242;

@@ -14,9 +14,9 @@ class PagesController extends Controller {
 		return view('pages/home');
 	}
 
-	public function profilePage()
+	public function profilePage($steam64BitId)
 	{
-		return view('pages/profile');
+		return view('pages/profile', compact('steam64BitId'));
 	}
 
 	public function mostTrackedPage()
