@@ -14,6 +14,7 @@ class AlterPushbulletVerify extends Migration {
     {
         Schema::table('user_mail', function(Blueprint $table)
         {
+            $table->text('pushover_verify');
             $table->text('pushbullet_verify');
         });
     }

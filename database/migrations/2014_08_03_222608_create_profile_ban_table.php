@@ -19,7 +19,6 @@ class CreateProfileBanTable extends Migration {
       $table->foreign('profile_id')->references('id')->on('profile');
       $table->boolean('community');
       $table->integer('vac');
-      $table->integer('vac_days');
       $table->boolean('trade');
       $table->boolean('unban');
       $table->timestamps();

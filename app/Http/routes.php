@@ -19,6 +19,17 @@ Route::group(['prefix' => 'auth'], function()
 	]);
 });
 
+Route::group(['prefix' => 'api'], function()
+{
+	Route::group(['prefix' => 'v1', 'namespace' => 'APIv1'], function()
+	{
+		get('/profile/{steam65BitId}', [
+		    'as' => 'api.v1.profile',
+		    'uses' => 'ProfileController@index'
+		]);
+	});
+});
+
 Route::group([
 	'prefix' => 'admin',
 	'middleware' => 'admin',

@@ -1,11 +1,14 @@
 <?php namespace VacStatus\Update;
 
+use Cache;
+use Carbon;
+
 class BaseUpdate
 {
 	protected $cacheName;
-	protected $cacheLength = 3600; //seconds
+	protected $cacheLength = 0; //60; // in minutes
 
-	private function canUpdate()
+	protected function canUpdate()
 	{
 		if(Cache::has($this->cacheName))
 		{
@@ -15,10 +18,14 @@ class BaseUpdate
 		return true;
 	}
 
-	private function updateCache($data)
+	protected function updateCache($data)
 	{
 		if(Cache::has($this->cacheName)) Cache::forget($this->cacheName);
 
-		Cache::put($this->cacheName, $data, Carbon::now()->addSeconds($this->cacheLength));
+		$expireTime = Carbon::now()->addMinutes($this->cacheLength);
+
+		Cache::put($this->cacheName, $data, $expireTime);
+
+		dd(Cache::has($this->cacheName));
 	}
 }

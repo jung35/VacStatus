@@ -126,13 +126,15 @@ class SingleProfile extends BaseUpdate
 	{
 		$this->smallId = $smallId;
 		$this->cacheName = "profile_$smallId";
+
+		return $this->getProfile();
 	}
 
 	private function getProfile()
 	{
 		if(!$this->canUpdate()) return $this->grabFromDB();
 
-		return $thtis->updateUsingAPI();
+		return $this->updateUsingAPI();
 	}
 
 	private function updateUsingAPI()
@@ -147,7 +149,7 @@ class SingleProfile extends BaseUpdate
 		if($steamAPI->error()) return (object) ['error' => true, 'error' => $steamAPI->errorMessage()];
 		if(!isset($steamInfo->response->players[0])) return (object) ['error' => true, 'error' => 'profile_null'];
 
-		$steamInfo = $steamAPI_Info->response->players[0];
+		$steamInfo = $steamInfo->response->players[0];
 
 		/* grab 'ban' from web api and handle errors */
 		$steamAPI = new SteamAPI('ban');
@@ -168,12 +170,11 @@ class SingleProfile extends BaseUpdate
 
 		/* Successfully passed steam's not very reliable api servers */
 		/* Lets hope we got the alias as well :))) */
-		
-
+		$this->updateCache(true);
 	}
 
 	private function grabFromDB()
 	{
-
+		dd("ayy");
 	}
 }

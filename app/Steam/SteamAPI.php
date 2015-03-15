@@ -37,7 +37,7 @@ class SteamAPI {
 
 	public function setSmallId($smallId)
 	{
-		return Steam::to64Bit($smallId);
+		$this->setSteamId(Steam::to64Bit($smallId));
 	}
 
 	public function setSteamId($steam64BitId)
@@ -87,6 +87,7 @@ class SteamAPI {
 		} catch(Exception $e) {
 			$this->error = true;
 			$this->errorMessage = 'api_conn_err';
+
 			return (object) [
 				'type' => 'error',
 				'data' => $this->errorMessage
@@ -100,6 +101,7 @@ class SteamAPI {
 		{
 			$this->error = true;
 			$this->errorMessage = 'api_data_err';
+
 			return (object) [
 				'type' => 'error',
 				'data' => $this->errorMessage
