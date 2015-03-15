@@ -6,6 +6,8 @@ class Profile extends Model
 {
 	protected $table = 'profile';
 
+	protected $dates = ['vac_banned_on'];
+
 	public function ProfileOldAlias()
 	{
 		return $this->hasMany('VacStatus\Models\ProfileOldAlias');

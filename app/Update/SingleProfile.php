@@ -70,6 +70,7 @@ use DateInterval;
 *************************************************************************************************
 
 	profile = [
+		profile.id
 		profile.display_name
 		profile.avatar
 			-> this is the bigger one. other one is avatar_thumb
@@ -222,12 +223,12 @@ class SingleProfile extends BaseUpdate
 			$profileBan->profile_id = $profile->id;
 			$profileBan->unban = false;
 		} else {
-	        $skipProfileBan = $profileBan->skipProfileBanUpdate($steamBan);
+			$skipProfileBan = $profileBan->skipProfileBanUpdate($steamBan);
 
-	        if($profileBan->vac > $steamBan->NumberOfVACBans)
-	        {
-	          $profileBan->unban = true;
-	        }
+			if($profileBan->vac > $steamBan->NumberOfVACBans)
+			{
+			  $profileBan->unban = true;
+			}
 		}
 
 		$profileBan->vac = $steamBan->NumberOfVACBans;
@@ -265,11 +266,11 @@ class SingleProfile extends BaseUpdate
 
 			if(!$match && $recent + Steam::$UPDATE_TIME < time())
 			{
-		        $newAlias = new ProfileOldAlias;
-		        $newAlias->profile_id = $profile->id;
-		        $newAlias->seen = time();
-		        $newAlias->seen_alias = $profile->display_name;
-		        $profile->ProfileOldAlias()->save($newAlias);
+				$newAlias = new ProfileOldAlias;
+				$newAlias->profile_id = $profile->id;
+				$newAlias->seen = time();
+				$newAlias->seen_alias = $profile->display_name;
+				$profile->ProfileOldAlias()->save($newAlias);
 			}
 		}
 
@@ -308,6 +309,7 @@ class SingleProfile extends BaseUpdate
 		/* Writing the return array for the single profile */
 
 		$return = [
+			'id'				=> $profile->id,
 			'display_name'		=> $steamInfo->personaname,
 			'avatar'			=> Steam::imgToHTTPS($steamInfo->avatarfull),
 			'small_id'			=> $this->smallId,
@@ -327,8 +329,6 @@ class SingleProfile extends BaseUpdate
 			'times_added'		=> $profileTimesAdded
 		];
 
-		dd($return);
-
 		/* YAY nothing broke :D time to return the data (and update cache) */
 		$this->updateCache(true);
 		return $return;
@@ -336,6 +336,80 @@ class SingleProfile extends BaseUpdate
 
 	private function grabFromDB()
 	{
-		dd("ayy");
+		$profile = Profile::where('profile.small_id', $this->smallId)
+			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
+			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
+			->first([
+				'profile.id',
+				'profile.display_name',
+				'profile.avatar',
+				'profile.small_id',
+				'profile.profile_created',
+				'profile.privacy',
+				'profile.alias',
+				'profile.created_at',
+
+				'profile_ban.vac',
+				'profile_ban.vac_banned_on',
+				'profile_ban.community',
+				'profile_ban.trade',
+
+				'users.site_admin',
+				'users.donation',
+				'users.beta',
+			]);
+
+		/* Copied and pasted from function above */
+		$profileOldAlias = $profile->ProfileOldAlias()->whereProfileId($profile->id)->get();
+
+		$gettingCount = UserListProfile::whereProfileId($profile->id)
+			->orderBy('id','desc')
+			->get();
+
+		$profileTimesAdded = [
+			'time' => $gettingCount->count(),
+			'number' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y, g:i a") : null
+		];
+
+		$profileCheckCache = "profile_checked_";
+
+		$currentProfileCheck = [
+			'number' => 0,
+			'time' => time()
+		];
+
+		if(Cache::has($profileCheckCache.$this->smallId)) $currentProfileCheck = Cache::get($profileCheckCache.$this->smallId);
+
+		$newProfileCheck = [
+			'number' => $currentProfileCheck['number'] + 1,
+			'time' => time()
+		];
+
+		Cache::forever($profileCheckCache.$this->smallId, $newProfileCheck);
+
+		/* WOW THAT WAS SHORT!!!!! */
+
+		$return = [
+			'id'				=> $profile->id,
+			'display_name'		=> $profile->display_name,
+			'avatar'			=> $profile->avatar,
+			'small_id'			=> $profile->small_id,
+			'profile_created'	=> $profile->profile_created,
+			'privacy'			=> $profile->privacy,
+			'alias'				=> json_decode($profile->alias),
+			'created_at'		=> $profile->created_at->format("M j Y"),
+			'vac'				=> $profile->vac,
+			'vac_banned_on'		=> $profile->vac_banned_on->format("M j Y"),
+			'community'			=> $profile->community,
+			'trade'				=> $profile->trade,
+			'site_admin'		=> $profile->site_admin,
+			'donation'			=> $profile->donation,
+			'beta'				=> $profile->beta,
+			'profile_old_alias'	=> $profileOldAlias->toArray(),
+			'times_checked'		=> $currentProfileCheck,
+			'times_added'		=> $profileTimesAdded
+		];
+
+		return $return;
 	}
 }
