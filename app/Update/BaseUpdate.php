@@ -6,7 +6,7 @@ use Carbon;
 class BaseUpdate
 {
 	protected $cacheName;
-	protected $cacheLength = 0; //60; // in minutes
+	public $cacheLength = 60; //60; // in minutes
 
 	protected function canUpdate()
 	{
@@ -25,5 +25,12 @@ class BaseUpdate
 		$expireTime = Carbon::now()->addMinutes($this->cacheLength);
 
 		Cache::put($this->cacheName, $data, $expireTime);
+	}
+
+	protected function grabCache()
+	{
+		if(Cache::has($this->cacheName)) return Cache::get($this->cacheName);
+
+		return false;
 	}
 }

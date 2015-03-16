@@ -140,7 +140,11 @@ class SingleProfile extends BaseUpdate
 
 	public function getProfile()
 	{
-		if(!$this->canUpdate()) return $this->grabFromDB();
+		if(!$this->canUpdate()) {
+			$return = $this->grabCache();
+			if($return !== false) return $return;
+			return $this->grabFromDB();
+		}
 
 		return $this->updateUsingAPI();
 	}
@@ -356,7 +360,7 @@ class SingleProfile extends BaseUpdate
 		];
 
 		/* YAY nothing broke :D time to return the data (and update cache) */
-		$this->updateCache(true);
+		$this->updateCache($return);
 		return $return;
 	}
 

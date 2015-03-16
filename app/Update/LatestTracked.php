@@ -4,6 +4,7 @@ use VacStatus\Update\BaseUpdate;
 
 use Cache;
 use Carbon;
+use DateTime;
 
 use VacStatus\Models\UserListProfile;
 
@@ -53,20 +54,26 @@ class LatestTracked extends BaseUpdate
 {
 	function __constructor()
 	{
+		$this->cacheLength = 10;
 		$this->cacheName = "latestTracked";
 	}
 
 	public function getLatestTracked()
 	{
+		if(!$this->canUpdate()) {
+			$return = $this->grabCache();
+			if($return !== false) return $return;
+		}
+
 		return $this->grabFromDB();
 	}
 
 	private function grabFromDB()
 	{
-		dd('test');
-		$profile = UserListProfile::OrderBy('id', 'desc')
-			->leftjoin('profile', 'profile.id', '=', 'user_list_profile.profile_id')
-			->leftjoin('profile_ban', 'profile.id', '=', 'user_list_profile.profile_id')
+
+		$userListProfiles = UserListProfile::orderBy('user_list_profile.id', 'desc')
+			->leftjoin('profile', 'user_list_profile.profile_id', '=', 'profile.id')
+			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
 			->take(20)
 			->get([
@@ -85,6 +92,68 @@ class LatestTracked extends BaseUpdate
 				'users.beta',
 			]);
 
-		return $profile;
+		$return = [];
+
+		foreach($userListProfiles as $userListProfile)
+		{
+			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
+			$return[] = [
+				'id'			=> $userListProfile->id,
+				'display_name'	=> $userListProfile->display_name,
+				'avatar_thumb'	=> $userListProfile->avatar_thumb,
+				'small_id'		=> $userListProfile->small_id,
+				'vac'			=> $userListProfile->vac,
+				'vac_banned_on'	=> $vacBanDate->format("M j Y"),
+				'community'		=> $userListProfile->community,
+				'trade'			=> $userListProfile->trade,
+				'site_admin'	=> $userListProfile->site_admin?:0,
+				'donation'		=> $userListProfile->donation?:0,
+				'beta'			=> $userListProfile->beta?:0
+			];
+		}
+
+		$this->updateCache($return);
+		return $return;
+	}
+
+	function testTime()
+	{
+		$time = microtime();
+		$time = explode(' ', $time);
+		$time = $time[1] + $time[0];
+		$start = $time;
+
+		for($i = 0; $i <= 100; $i++)
+		{
+			$this->grabFromDB();
+		}
+
+		$time = microtime();
+		$time = explode(' ', $time);
+		$time = $time[1] + $time[0];
+		$finish = $time;
+		$total_time = round(($finish - $start), 4);
+
+		var_dump('db', $total_time);
+
+		///////////
+		$time = microtime();
+		$time = explode(' ', $time);
+		$time = $time[1] + $time[0];
+		$start = $time;
+
+		for($i = 0; $i <= 100; $i++)
+		{
+			$this->grabCache();
+		}
+
+		$time = microtime();
+		$time = explode(' ', $time);
+		$time = $time[1] + $time[0];
+		$finish = $time;
+		$total_time = round(($finish - $start), 4);
+
+		var_dump('cache', $total_time);
+		dd();
 	}
 }
