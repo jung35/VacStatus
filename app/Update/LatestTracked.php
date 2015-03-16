@@ -57,7 +57,7 @@ class LatestTracked extends BaseUpdate
 {
 	function __construct()
 	{
-		$this->cacheLength = 0;
+		$this->cacheLength = 1;
 		$this->cacheName = "latestTracked";
 	}
 

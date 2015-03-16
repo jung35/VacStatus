@@ -165,7 +165,7 @@ class SingleProfile extends BaseUpdate
 			$return = Cache::get($this->cacheName);
 
 			/* getting the number of times checked and added */
-			$gettingCount = UserListProfile::whereProfileId($return->id)
+			$gettingCount = UserListProfile::whereProfileId($return['id'])
 				->orderBy('id','desc')
 				->get();
 

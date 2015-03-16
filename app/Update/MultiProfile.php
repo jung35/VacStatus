@@ -16,7 +16,7 @@ class MultiProfile
 {
 	protected $profiles;
 	protected $profileCacheName = "profile_";
-	protected $cacheLength = 0;
+	protected $cacheLength = 1;
 	protected $refreshProfiles = [];
 
 	function __construct($profiles)

@@ -33,40 +33,44 @@ var List = React.createClass({displayName: "List",
 
 		data = this.state.data;
 
-		if(data != null)
+		if(data !== null)
 		{
 			if(data.author)
 			{
 				author = React.createElement("div", null, React.createElement("small", null, "By: ",  data.author));
 			}
 
-			list = data.list.map(function(profile, index)
+			if(data.list !== null)
 			{
-				return (
-					React.createElement("tr", {key: index}, 
-						React.createElement("td", {className: "user_avatar"}, 
-							React.createElement("img", {src: profile.avatar_thumb})
-						), 
-						React.createElement("td", {className: "user_name"}, 
-							React.createElement("a", {href: "/u/"}, profile.display_name)
-						), 
-						React.createElement("td", {className: "user_vac_ban text-center"}, 
-							React.createElement("span", {className: "text-" + (profile.vac > 0 ? "danger" : "success")}, 
-								 profile.vac > 0 ? profile.vac_banned_on : React.createElement("span", {className: "fa fa-times"})
+				list = data.list.map(function(profile, index)
+				{
+					return (
+						React.createElement("tr", {key: index}, 
+							React.createElement("td", {className: "user_avatar"}, 
+								React.createElement("img", {src: profile.avatar_thumb})
+							), 
+							React.createElement("td", {className: "user_name"}, 
+								React.createElement("a", {href: "/u/" + profile.steam_64_bit, target: "_blank"}, profile.display_name)
+							), 
+							React.createElement("td", {className: "user_vac_ban text-center"}, 
+								React.createElement("span", {className: "text-" + (profile.vac > 0 ? "danger" : "success")}, 
+									 profile.vac > 0 ? profile.vac_banned_on : React.createElement("span", {className: "fa fa-times"})
+								)
+							), 
+							React.createElement("td", {className: "user_community_ban text-center hidden-sm"}, 
+								React.createElement("span", {className: "fa fa-"+(data.community ? 'check' : 'times')+" text-" + (data.community ? 'danger' : 'success')})
+							), 
+							React.createElement("td", {className: "user_trade_ban text-center hidden-sm"}, 
+								React.createElement("span", {className: "fa fa-"+(data.trade ? 'check' : 'times')+" text-" + (data.trade ? 'danger' : 'success')})
+							), 	
+							React.createElement("td", {className: "user_track_number text-center"}, 
+								 profile.times_added.number
 							)
-						), 
-						React.createElement("td", {className: "user_community_ban text-center hidden-sm"}, 
-							React.createElement("span", {className: "fa fa-"+(data.community ? 'check' : 'times')+" text-" + (data.community ? 'danger' : 'success')})
-						), 
-						React.createElement("td", {className: "user_trade_ban text-center hidden-sm"}, 
-							React.createElement("span", {className: "fa fa-"+(data.trade ? 'check' : 'times')+" text-" + (data.trade ? 'danger' : 'success')})
-						), 	
-						React.createElement("td", {className: "user_track_number text-center"}, 
-							 profile.times_added.number
 						)
-					)
-				);
-			});
+					);
+				});
+			}
+
 
 			return (
 				React.createElement("div", {className: "container"}, 

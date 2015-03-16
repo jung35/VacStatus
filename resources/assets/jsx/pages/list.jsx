@@ -33,40 +33,44 @@ var List = React.createClass({
 
 		data = this.state.data;
 
-		if(data != null)
+		if(data !== null)
 		{
 			if(data.author)
 			{
 				author = <div><small>By: { data.author }</small></div>;
 			}
 
-			list = data.list.map(function(profile, index)
+			if(data.list !== null)
 			{
-				return (
-					<tr key={index}>
-						<td className="user_avatar">
-							<img src={profile.avatar_thumb} />
-						</td>
-						<td className="user_name">
-							<a href={"/u/"}>{profile.display_name}</a>
-						</td>
-						<td className="user_vac_ban text-center">
-							<span className={"text-" + (profile.vac > 0 ? "danger" : "success")}>
-								{ profile.vac > 0 ? profile.vac_banned_on : <span className="fa fa-times"></span> }
-							</span>
-						</td>
-						<td className="user_community_ban text-center hidden-sm">
-							<span className={"fa fa-"+(data.community ? 'check' : 'times')+" text-" + (data.community ? 'danger' : 'success')}></span>
-						</td>
-						<td className="user_trade_ban text-center hidden-sm">
-							<span className={"fa fa-"+(data.trade ? 'check' : 'times')+" text-" + (data.trade ? 'danger' : 'success')}></span>
-						</td>	
-						<td className="user_track_number text-center">
-							{ profile.times_added.number }
-						</td>
-					</tr>
-				);
-			});
+				list = data.list.map(function(profile, index)
+				{
+					return (
+						<tr key={index}>
+							<td className="user_avatar">
+								<img src={profile.avatar_thumb} />
+							</td>
+							<td className="user_name">
+								<a href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
+							</td>
+							<td className="user_vac_ban text-center">
+								<span className={"text-" + (profile.vac > 0 ? "danger" : "success")}>
+									{ profile.vac > 0 ? profile.vac_banned_on : <span className="fa fa-times"></span> }
+								</span>
+							</td>
+							<td className="user_community_ban text-center hidden-sm">
+								<span className={"fa fa-"+(data.community ? 'check' : 'times')+" text-" + (data.community ? 'danger' : 'success')}></span>
+							</td>
+							<td className="user_trade_ban text-center hidden-sm">
+								<span className={"fa fa-"+(data.trade ? 'check' : 'times')+" text-" + (data.trade ? 'danger' : 'success')}></span>
+							</td>	
+							<td className="user_track_number text-center">
+								{ profile.times_added.number }
+							</td>
+						</tr>
+					);
+				});
+			}
+
 
 			return (
 				<div className="container">
