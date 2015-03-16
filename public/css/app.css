@@ -6708,6 +6708,11 @@ hr.divider {
 .profile-page .table th {
   text-align: center;
 }
+@media (min-width: 768px) {
+  .profile-page .table-responsive {
+    max-height: 468px;
+  }
+}
 .disqus_thread {
   margin-bottom: 40px;
 }

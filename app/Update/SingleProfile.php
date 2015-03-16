@@ -315,7 +315,7 @@ class SingleProfile extends BaseUpdate
 
 		$oldAliasArray = [];
 
-		foreach($profileOldAlias as $oldAlias)
+		foreach($profileOldAlias as $k => $oldAlias)
 		{
 			if($oldAlias === true) 
 			{
@@ -419,7 +419,7 @@ class SingleProfile extends BaseUpdate
 
 		$oldAliasArray = [];
 
-		foreach($profileOldAlias as $oldAlias)
+		foreach($profileOldAlias as $k => $oldAlias)
 		{
 			$oldAliasArray[] = [
 				"newname" => $oldAlias->seen_alias,

@@ -25,7 +25,7 @@ get('/list/most', [
 ]);
 
 get('/list/latest', [
-	'as' => 'tracked.most',
+	'as' => 'tracked.latest',
 	'uses' => 'PagesController@latestAddedPage'
 ]);
 
