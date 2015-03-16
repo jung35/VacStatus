@@ -1,4 +1,5 @@
 var steam64BitId = $('#profile').data('steam64bitid');
+var auth_check = $('meta[name=auth]').attr("content");
 
 var Profile = React.createClass({displayName: "Profile",
 	fetchProfile: function(steam64BitId)
@@ -34,7 +35,7 @@ var Profile = React.createClass({displayName: "Profile",
 			if(data.donation >= 10.0) specialColors = "donator";
 			if(data.site_admin) specialColors = "admin";
 
-			if(data.login_check) auth = React.createElement("a", {href: "#"}, React.createElement("span", {className: "fa fa-plus faText-align"}));
+			if(auth_check) auth = React.createElement("a", {href: "#"}, React.createElement("span", {className: "fa fa-plus faText-align"}));
 
 			switch(data.privacy)
 			{

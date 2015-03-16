@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>VacStatus @yield('title')</title>
+	<title>
+		VacStatus @yield('title')
+	</title>
+	
 	@include('layout.head')
 </head>
 <body>

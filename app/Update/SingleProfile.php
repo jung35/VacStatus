@@ -149,6 +149,56 @@ class SingleProfile extends BaseUpdate
 		return $this->updateUsingAPI();
 	}
 
+	protected function updateCache($data)
+	{
+		unset($data['times_checked']);
+		unset($data['times_added']);
+		unset($data['login_check']);
+
+		parent::updateCache($data);
+	}
+
+	protected function grabCache()
+	{
+		if(Cache::has($this->cacheName)) 
+		{
+			$return = Cache::get($this->cacheName);
+
+			/* getting the number of times checked and added */
+			$gettingCount = UserListProfile::whereProfileId($return->id)
+				->orderBy('id','desc')
+				->get();
+
+			$profileTimesAdded = [
+				'number' => $gettingCount->count(),
+				'time' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y") : null
+			];
+
+			$profileCheckCache = "profile_checked_";
+
+			$currentProfileCheck = [
+				'number' => 0,
+				'time' => date("M j Y", time())
+			];
+
+			if(Cache::has($profileCheckCache.$this->smallId)) $currentProfileCheck = Cache::get($profileCheckCache.$this->smallId);
+
+			$newProfileCheck = [
+				'number' => $currentProfileCheck['number'] + 1,
+				'time' => date("M j Y", time())
+			];
+
+			Cache::forever($profileCheckCache.$this->smallId, $newProfileCheck);
+
+			$return['times_checked'] = $currentProfileCheck;
+			$return['times_added'] = $profileTimesAdded;
+
+			return $return;
+		}
+
+		return false;
+	}
+
 	private function updateUsingAPI()
 	{
 		/* Time to follow that great guide to updating via API above */
@@ -339,6 +389,7 @@ class SingleProfile extends BaseUpdate
 			'id'				=> $profile->id,
 			'display_name'		=> $steamInfo->personaname,
 			'avatar'			=> Steam::imgToHTTPS($steamInfo->avatarfull),
+			'avatar_thumb'		=> Steam::imgToHTTPS($steamInfo->avatar),
 			'small_id'			=> $this->smallId,
 			'steam_64_bit'		=> $steam64BitId,
 			'steam_32_bit'		=> Steam::to32Bit($steam64BitId),
@@ -356,7 +407,6 @@ class SingleProfile extends BaseUpdate
 			'profile_old_alias'	=> $oldAliasArray,
 			'times_checked'		=> $currentProfileCheck,
 			'times_added'		=> $profileTimesAdded,
-			'login_check'		=> Auth::check(),
 		];
 
 		/* YAY nothing broke :D time to return the data (and update cache) */
@@ -373,6 +423,7 @@ class SingleProfile extends BaseUpdate
 				'profile.id',
 				'profile.display_name',
 				'profile.avatar',
+				'profile.avatar_thumb',
 				'profile.small_id',
 				'profile.profile_created',
 				'profile.privacy',
@@ -452,7 +503,6 @@ class SingleProfile extends BaseUpdate
 			'profile_old_alias'	=> $oldAliasArray,
 			'times_checked'		=> $currentProfileCheck,
 			'times_added'		=> $profileTimesAdded,
-			'login_check'		=> Auth::check(),
 		];
 
 		return $return;

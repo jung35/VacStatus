@@ -114,7 +114,7 @@ class LatestTracked extends BaseUpdate
 		}
 
 		$multiProfile = new MultiProfile($return);
-		$multiProfile->run();
+		$return = $multiProfile->run();
 
 		$this->updateCache($return);
 		return $return;

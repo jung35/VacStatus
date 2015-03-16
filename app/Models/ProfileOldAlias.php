@@ -15,6 +15,6 @@ class ProfileOldAlias extends Model
 
 	public function compareTime($time)
 	{
-		return $time < $this->seen ? $this->seen : $time;
+		return is_object($time) && $time->timestamp < $this->seen->timestamp ? $this->seen : $time;
 	}
 }
