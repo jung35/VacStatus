@@ -1,7 +1,7 @@
 @extends('layout.app')
 
 @section('content')
-	<div class="list-page">
+	<div id="list" class="list-page" data-grab="{{ $grab }}">
 		<div class="list-action-bar hidden-lg">
 			<div class="container">
 				<div class="row">
@@ -62,4 +62,8 @@
 			</div>
 		</div>
 	</div>
+@stop
+
+@section('js')
+	<script src="/js/pages/list.js"></script>
 @stop

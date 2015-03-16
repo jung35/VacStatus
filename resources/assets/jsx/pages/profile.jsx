@@ -2,7 +2,7 @@ var steam64BitId = $('#profile').data('steam64bitid');
 var auth_check = $('meta[name=auth]').attr("content");
 
 var Profile = React.createClass({
-	fetchProfile: function(steam64BitId)
+	fetchProfile: function()
 	{
 		$.ajax({
 			url: '/api/v1/profile/'+steam64BitId,
@@ -15,14 +15,18 @@ var Profile = React.createClass({
 			}.bind(this)
 		});
 	},
-	componentDidMount: function() {
-		this.fetchProfile(steam64BitId);
+	componentDidMount: function()
+	{
+		this.fetchProfile();
 	},
-	getInitialState: function() {
+
+	getInitialState: function()
+	{
 		return {
 			data: null
 		};
 	},
+
 	render: function()
 	{
 		var data, specialColors, auth, privacy, alias_history, alias_recent;

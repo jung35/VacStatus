@@ -16,7 +16,7 @@ class MultiProfile
 {
 	protected $profiles;
 	protected $profileCacheName = "profile_";
-	protected $cacheLength = 60;
+	protected $cacheLength = 0;
 	protected $refreshProfiles = [];
 
 	function __construct($profiles)
@@ -119,7 +119,10 @@ class MultiProfile
 			// ->select()
 			->get([
 				'profile.*',
-				'profile_ban.*',
+				'profile_ban.community',
+				'profile_ban.vac',
+				'profile_ban.trade',
+				'profile_ban.unban',
 				'users.site_admin',
 				'users.donation',
 				'users.beta'
@@ -127,6 +130,16 @@ class MultiProfile
 
 		// dd($profiles);
 		// dd($profiles->where('small_id', 9856)->first());
+		$profileIds = [];
+
+		foreach($profiles as $profile)
+		{
+			$profileIds[] = $profile->id;
+		}
+
+		$userListProfile = UserListProfile::whereIn('profile_id', $profileIds)
+			->orderBy('id','desc')
+			->get();
 
 		$indexSave = [];
 
@@ -256,9 +269,7 @@ class MultiProfile
 				];
 			}
 
-			$gettingCount = UserListProfile::whereProfileId($profile->id)
-				->orderBy('id','desc')
-				->get();
+			$gettingCount = $userListProfile->where('profile_id', $profile->id);
 
 			$profileTimesAdded = [
 				'number' => $gettingCount->count(),

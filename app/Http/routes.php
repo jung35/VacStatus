@@ -26,7 +26,7 @@ get('/list/most', [
 
 get('/list/latest', [
 	'as' => 'tracked.latest',
-	'uses' => 'PagesController@latestAddedPage'
+	'uses' => 'PagesController@latestTrackedPage'
 ]);
 
 get('/u/{steam65BitId}', [

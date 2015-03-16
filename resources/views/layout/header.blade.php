@@ -22,7 +22,7 @@
 					<a href="{{ route('tracked.most') }}">Most Tracked</a>
 				</li>
 				<li class="@setActiveLink('tracked.latest')">
-					<a href="#">Latest Added</a>
+					<a href="{{ route('tracked.latest') }}">Latest Added</a>
 				</li>
 				<li class="@setActiveLink('search')">
 					<a href="#">Search</a>

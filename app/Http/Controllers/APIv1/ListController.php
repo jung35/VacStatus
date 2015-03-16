@@ -14,14 +14,25 @@ class ListController extends Controller {
 	{
 		$mostTracked = new MostTracked;
 
-		return $mostTracked->getMostTracked();
+		$return = [
+			'title' => 'Most Tracked Users',	
+			'list' => $mostTracked->getMostTracked()
+		];
+
+
+		return $return;
 	}
 
 	public function latestTracked()
 	{
-		$latestAdded = new LatestTracked();
+		$latestTracked = new LatestTracked();
 
-		return $latestAdded->getLatestTracked();
+		$return = [
+			'title' => 'Latest Tracked Users',
+			'list' => $latestTracked->getLatestTracked()
+		];
+
+		return $return;
 	}
 
 	/**

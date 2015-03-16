@@ -9,6 +9,8 @@ use DateTime;
 
 use VacStatus\Models\UserListProfile;
 
+use VacStatus\Steam\Steam;
+
 /*
 
 	STEPS TO GET LATEST TRACKED USERS
@@ -71,7 +73,6 @@ class LatestTracked extends BaseUpdate
 
 	private function grabFromDB()
 	{
-
 		$userListProfiles = UserListProfile::orderBy('user_list_profile.id', 'desc')
 			->take(20)
 			->leftjoin('profile', 'user_list_profile.profile_id', '=', 'profile.id')
@@ -93,23 +94,44 @@ class LatestTracked extends BaseUpdate
 				'users.beta',
 			]);
 
+		$profileIds = [];
+		foreach($userListProfiles as $userListProfile)
+		{
+			$profileIds[] = $userListProfile->id;
+		}
+
+		$all = UserListProfile::whereIn('profile_id', $profileIds)
+			->orderBy('id', 'desc')
+			->get();
+
 		$return = [];
 
 		foreach($userListProfiles as $k => $userListProfile)
 		{
+
+			$gettingCount = array_values($all->where('profile_id', $userListProfile->id)->toArray());
+
+			$profileTimesAdded = [
+				'number' => count($gettingCount),
+				'time' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]['created_at']))->format("M j Y") : null
+			];
+
 			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
+
 			$return[] = [
 				'id'			=> $userListProfile->id,
 				'display_name'	=> $userListProfile->display_name,
 				'avatar_thumb'	=> $userListProfile->avatar_thumb,
 				'small_id'		=> $userListProfile->small_id,
+				'steam_64_bit'	=> Steam::to64Bit($userListProfile->small_id),
 				'vac'			=> $userListProfile->vac,
 				'vac_banned_on'	=> $vacBanDate->format("M j Y"),
 				'community'		=> $userListProfile->community,
 				'trade'			=> $userListProfile->trade,
 				'site_admin'	=> $userListProfile->site_admin?:0,
 				'donation'		=> $userListProfile->donation?:0,
-				'beta'			=> $userListProfile->beta?:0
+				'beta'			=> $userListProfile->beta?:0,
+				'times_added'	=> $profileTimesAdded,
 			];
 		}
 
