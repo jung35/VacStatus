@@ -11,7 +11,7 @@ class Kernel extends ConsoleKernel {
 	 * @var array
 	 */
 	protected $commands = [
-		'VacStatus\Console\Commands\Inspire',
+		'VacStatus\Console\Commands\UpdateMultiAlias',
 	];
 
 	/**

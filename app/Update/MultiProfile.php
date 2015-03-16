@@ -50,7 +50,8 @@ class MultiProfile
 	private function updateUsingAPI()
 	{
 		$getSmallId = [];
-		foreach($this->refreshProfiles as $profile) $getSmallId[] = $profile['profile']['small_id'];
+		foreach($this->refreshProfiles as $profile)
+			$getSmallId[] = $profile['profile']['small_id'];
 
 		/* grab 'info' from web api and handle errors */
 		$steamAPI = new SteamAPI('info');
@@ -72,6 +73,21 @@ class MultiProfile
 
 		$steamBan = $steamBan->players;
 
-		dd($steamInfo, $steamBan);
+
+
+		// Send somewhere else to update alias
+		// This takes too long for many profiles
+		$randomString = str_random(12);
+		$updateAliasCacheName = "update_alias_";
+
+		if(Cache::has($updateAliasCacheName.$randomString))
+			while(Cache::has($updateAliasCacheName.$randomString))
+				$randomString = str_random(12);
+
+		Cache::forever($updateAliasCacheName.$randomString, $getSmallId);
+
+		shell_exec('php artisan update:alias '. $randomString .' > /dev/null 2>/dev/null &');
+
+		dd($randomString, $getSmallId);
 	}
 }
