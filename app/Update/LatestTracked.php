@@ -1,6 +1,7 @@
 <?php namespace VacStatus\Update;
 
 use VacStatus\Update\BaseUpdate;
+use VacStatus\Update\MultiProfile;
 
 use Cache;
 use Carbon;
@@ -52,9 +53,9 @@ use VacStatus\Models\UserListProfile;
 
 class LatestTracked extends BaseUpdate
 {
-	function __constructor()
+	function __construct()
 	{
-		$this->cacheLength = 10;
+		$this->cacheLength = 0;
 		$this->cacheName = "latestTracked";
 	}
 
@@ -72,10 +73,10 @@ class LatestTracked extends BaseUpdate
 	{
 
 		$userListProfiles = UserListProfile::orderBy('user_list_profile.id', 'desc')
+			->take(20)
 			->leftjoin('profile', 'user_list_profile.profile_id', '=', 'profile.id')
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
-			->take(20)
 			->get([
 				'profile.id',
 				'profile.display_name',
@@ -94,7 +95,7 @@ class LatestTracked extends BaseUpdate
 
 		$return = [];
 
-		foreach($userListProfiles as $userListProfile)
+		foreach($userListProfiles as $k => $userListProfile)
 		{
 			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
 			$return[] = [
@@ -112,48 +113,10 @@ class LatestTracked extends BaseUpdate
 			];
 		}
 
+		$multiProfile = new MultiProfile($return);
+		$multiProfile->run();
+
 		$this->updateCache($return);
 		return $return;
-	}
-
-	function testTime()
-	{
-		$time = microtime();
-		$time = explode(' ', $time);
-		$time = $time[1] + $time[0];
-		$start = $time;
-
-		for($i = 0; $i <= 100; $i++)
-		{
-			$this->grabFromDB();
-		}
-
-		$time = microtime();
-		$time = explode(' ', $time);
-		$time = $time[1] + $time[0];
-		$finish = $time;
-		$total_time = round(($finish - $start), 4);
-
-		var_dump('db', $total_time);
-
-		///////////
-		$time = microtime();
-		$time = explode(' ', $time);
-		$time = $time[1] + $time[0];
-		$start = $time;
-
-		for($i = 0; $i <= 100; $i++)
-		{
-			$this->grabCache();
-		}
-
-		$time = microtime();
-		$time = explode(' ', $time);
-		$time = $time[1] + $time[0];
-		$finish = $time;
-		$total_time = round(($finish - $start), 4);
-
-		var_dump('cache', $total_time);
-		dd();
 	}
 }

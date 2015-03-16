@@ -6,14 +6,11 @@ use Carbon;
 class BaseUpdate
 {
 	protected $cacheName;
-	public $cacheLength = 60; //60; // in minutes
+	protected $cacheLength = 0; //60; // in minutes
 
 	protected function canUpdate()
 	{
-		if(Cache::has($this->cacheName))
-		{
-			return false;
-		}
+		if(Cache::has($this->cacheName)) return false;
 
 		return true;
 	}

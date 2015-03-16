@@ -19,7 +19,7 @@ class ListController extends Controller {
 
 	public function latestTracked()
 	{
-		$latestAdded = new LatestTracked;
+		$latestAdded = new LatestTracked();
 
 		return $latestAdded->getLatestTracked();
 	}

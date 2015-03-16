@@ -60,7 +60,7 @@ use Carbon;
 
 class MostTracked extends BaseUpdate
 {
-	function __constructor()
+	function __construct()
 	{
 		$this->cacheName = "mostTracked";
 	}
