@@ -144,8 +144,8 @@ return [
 		'VacStatus\Providers\ConfigServiceProvider',
 		'VacStatus\Providers\EventServiceProvider',
 		'VacStatus\Providers\RouteServiceProvider',
-        'VacStatus\Providers\BladeServiceProvider',
-        'sgtaziz\SteamAuth\SteamAuthServiceProvider',
+		'VacStatus\Providers\BladeServiceProvider',
+		'sgtaziz\SteamAuth\SteamAuthServiceProvider',
 
 	],
 
