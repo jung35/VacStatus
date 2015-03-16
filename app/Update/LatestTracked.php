@@ -5,6 +5,8 @@ use VacStatus\Update\BaseUpdate;
 use Cache;
 use Carbon;
 
+use VacStatus\Models\UserListProfile;
+
 /*
 
 	STEPS TO GET LATEST TRACKED USERS
@@ -47,17 +49,42 @@ use Carbon;
 
 */
 
-class LatestAdded extends BaseUpdate
+class LatestTracked extends BaseUpdate
 {
 	function __constructor()
 	{
-		$this->cacheName = "latestAdded";
+		$this->cacheName = "latestTracked";
 	}
 
-	public function getLatestAdded()
+	public function getLatestTracked()
 	{
-		if(!$this->canUpdate()) return Cache::get($this->cacheName);
+		return $this->grabFromDB();
+	}
 
-		// do update stuff thingy
+	private function grabFromDB()
+	{
+		dd('test');
+		$profile = UserListProfile::OrderBy('id', 'desc')
+			->leftjoin('profile', 'profile.id', '=', 'user_list_profile.profile_id')
+			->leftjoin('profile_ban', 'profile.id', '=', 'user_list_profile.profile_id')
+			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
+			->take(20)
+			->get([
+				'profile.id',
+				'profile.display_name',
+				'profile.avatar_thumb',
+				'profile.small_id',
+
+				'profile_ban.vac',
+				'profile_ban.vac_banned_on',
+				'profile_ban.community',
+				'profile_ban.trade',
+
+				'users.site_admin',
+				'users.donation',
+				'users.beta',
+			]);
+
+		return $profile;
 	}
 }

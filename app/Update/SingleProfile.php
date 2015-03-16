@@ -242,11 +242,14 @@ class SingleProfile extends BaseUpdate
 		/* Time to do profile_old_alias */
 		/* Checks to make sure if there is already a same name before inserting new name */
 		$profileOldAlias = $profile->ProfileOldAlias()->whereProfileId($profile->id)->orderBy('id','desc')->get();
-		$profileOldAlias = $profileOldAlias->count() ? $profileOldAlias : new ProfileOldAlias;
 
 		if($profileOldAlias->count() == 0)
 		{
-			$profileOldAlias->addAlias($profile);
+			$profileOldAlias = new ProfileOldAlias;
+			$profileOldAlias->profile_id = $profile->id;
+			$profileOldAlias->seen = time();
+			$profileOldAlias->seen_alias = $profile->display_name;
+			$profileOldAlias->save();
 		} else {
 			$match = false;
 			$recent = 0;
@@ -314,6 +317,14 @@ class SingleProfile extends BaseUpdate
 
 		foreach($profileOldAlias as $oldAlias)
 		{
+			if($oldAlias === true) 
+			{
+				$oldAliasArray[] = [
+					"newname" => $profileOldAlias->seen_alias,
+					"timechanged" => $profileOldAlias->seen->format("M j Y")
+				];
+				break;
+			}
 			$oldAliasArray[] = [
 				"newname" => $oldAlias->seen_alias,
 				"timechanged" => $oldAlias->seen->format("M j Y")

@@ -5,26 +5,23 @@ use VacStatus\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
+use VacStatus\Update\MostTracked;
+use VacStatus\Update\LatestTracked;
+
 class ListController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
+	public function mostTracked()
 	{
-		//
+		$mostTracked = new MostTracked;
+
+		return $mostTracked->getMostTracked();
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
+	public function latestTracked()
 	{
-		//
+		$latestAdded = new LatestTracked;
+
+		return $latestAdded->getLatestTracked();
 	}
 
 	/**

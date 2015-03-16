@@ -19,9 +19,8 @@ class ProfileController extends Controller
 			return ['error' => 'invalid_small_id'];
 		}
 		$singleProfile = new SingleProfile($smallId);
-		$singleProfile = $singleProfile->getProfile();
 
-		return $singleProfile;
+		return $singleProfile->getProfile();
 	}
 
 	/**

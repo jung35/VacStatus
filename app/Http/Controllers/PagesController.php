@@ -21,6 +21,13 @@ class PagesController extends Controller {
 
 	public function mostTrackedPage()
 	{
-		return view('pages/list')->withGrab('most_tracked_users');
+		return view('pages/list')
+			->withGrab('most_tracked_users');
+	}
+
+	public function latestTrackedPage()
+	{
+		return view('pages/list')
+			->withGrab('most_tracked_users');
 	}
 }

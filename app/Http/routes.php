@@ -24,6 +24,11 @@ get('/list/most', [
 	'uses' => 'PagesController@mostTrackedPage'
 ]);
 
+get('/list/latest', [
+	'as' => 'tracked.most',
+	'uses' => 'PagesController@latestAddedPage'
+]);
+
 get('/u/{steam65BitId}', [
 	'as' => 'profile',
 	'uses' => 'PagesController@profilePage'
@@ -33,9 +38,19 @@ Route::group(['prefix' => 'api'], function()
 {
 	Route::group(['prefix' => 'v1', 'namespace' => 'APIv1'], function()
 	{
+		get('/list/most', [
+			'as' => 'api.v1.list.most',
+			'uses' => 'ListController@mostTracked'
+		]);
+
+		get('/list/latest', [
+			'as' => 'api.v1.list.latest',
+			'uses' => 'ListController@latestTracked'
+		]);
+
 		get('/profile/{steam65BitId}', [
-		    'as' => 'api.v1.profile',
-		    'uses' => 'ProfileController@index'
+			'as' => 'api.v1.profile',
+			'uses' => 'ProfileController@index'
 		]);
 	});
 });
@@ -51,8 +66,8 @@ Route::group([
 	]);
 
 	get('/db', [
-	    'as' => 'admin.db',
-	    'uses' => 'DatabaseController@index'
+		'as' => 'admin.db',
+		'uses' => 'DatabaseController@index'
 	]);
 	
 	get('/db/users', [
