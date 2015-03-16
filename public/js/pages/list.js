@@ -29,7 +29,7 @@ var List = React.createClass({displayName: "List",
 
 	render: function()
 	{
-		var data, author, list;
+		var data, author, list, smallActionBar, listElement, specialColors;
 
 		data = this.state.data;
 
@@ -44,13 +44,18 @@ var List = React.createClass({displayName: "List",
 			{
 				list = data.list.map(function(profile, index)
 				{
+					specialColors = "";
+					if(data.beta) specialColors = "beta";
+					if(data.donation >= 10.0) specialColors = "donator";
+					if(data.site_admin) specialColors = "admin";
+
 					return (
 						React.createElement("tr", {key: index}, 
 							React.createElement("td", {className: "user_avatar"}, 
 								React.createElement("img", {src: profile.avatar_thumb})
 							), 
 							React.createElement("td", {className: "user_name"}, 
-								React.createElement("a", {href: "/u/" + profile.steam_64_bit, target: "_blank"}, profile.display_name)
+								React.createElement("a", {className: "" + specialColors, href: "/u/" + profile.steam_64_bit, target: "_blank"}, profile.display_name)
 							), 
 							React.createElement("td", {className: "user_vac_ban text-center"}, 
 								React.createElement("span", {className: "text-" + (profile.vac > 0 ? "danger" : "success")}, 
@@ -71,8 +76,22 @@ var List = React.createClass({displayName: "List",
 				});
 			}
 
+			smallActionBar = (
+				React.createElement("div", {className: "list-action-bar hidden-lg"}, 
+					React.createElement("div", {className: "container"}, 
+						React.createElement("div", {className: "row"}, 
+							React.createElement("div", {className: "col-xs-12"}, 
+								React.createElement("a", {href: "#", "data-toggle": "collapse", "data-target": "#list-actions"}, React.createElement("span", {className: "fa fa-bars"}), "  Advanced Options"), 
+								React.createElement("div", {id: "list-actions", className: "list-actions collapse"}, 
+									React.createElement(ListAction, null)
+								)
+							)
+						)
+					)
+				)
+			)
 
-			return (
+			listElement = (
 				React.createElement("div", {className: "container"}, 
 					React.createElement("div", {className: "row"}, 
 						React.createElement("div", {className: "col-lg-3"}, 
@@ -101,11 +120,11 @@ var List = React.createClass({displayName: "List",
 					)
 				)
 			);
-		} else {
-			return (
-				React.createElement("div", null)
-			);
 		}
+
+		return (
+			React.createElement("div", null, smallActionBar, " ", listElement )
+		);
 	}
 });
 

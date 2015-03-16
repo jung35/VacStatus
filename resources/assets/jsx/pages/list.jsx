@@ -29,7 +29,7 @@ var List = React.createClass({
 
 	render: function()
 	{
-		var data, author, list;
+		var data, author, list, smallActionBar, listElement, specialColors;
 
 		data = this.state.data;
 
@@ -44,13 +44,18 @@ var List = React.createClass({
 			{
 				list = data.list.map(function(profile, index)
 				{
+					specialColors = "";
+					if(data.beta) specialColors = "beta";
+					if(data.donation >= 10.0) specialColors = "donator";
+					if(data.site_admin) specialColors = "admin";
+
 					return (
 						<tr key={index}>
 							<td className="user_avatar">
 								<img src={profile.avatar_thumb} />
 							</td>
 							<td className="user_name">
-								<a href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
+								<a className={"" + specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
 							</td>
 							<td className="user_vac_ban text-center">
 								<span className={"text-" + (profile.vac > 0 ? "danger" : "success")}>
@@ -71,8 +76,22 @@ var List = React.createClass({
 				});
 			}
 
+			smallActionBar = (
+				<div className="list-action-bar hidden-lg">
+					<div className="container">
+						<div className="row">
+							<div className="col-xs-12">
+								<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
+								<div id="list-actions" className="list-actions collapse">
+									<ListAction />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			)
 
-			return (
+			listElement = (
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-3">
@@ -101,11 +120,11 @@ var List = React.createClass({
 					</div>
 				</div>
 			);
-		} else {
-			return (
-				<div></div>
-			);
 		}
+
+		return (
+			<div>{ smallActionBar } { listElement }</div>
+		);
 	}
 });
 

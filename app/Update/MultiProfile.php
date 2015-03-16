@@ -305,7 +305,7 @@ class MultiProfile
 				'steam_32_bit'		=> Steam::to32Bit($steam64BitId),
 				'profile_created'	=> isset($steamInfo->timecreated) ? date("M j Y", $steamInfo->timecreated) : "Unknown",
 				'privacy'			=> $steamInfo->communityvisibilitystate,
-				'alias'				=> $profile->alias,
+				'alias'				=> Steam::friendlyAlias(json_decode($profile->alias)),
 				'created_at'		=> $profile->created_at->format("M j Y"),
 				'vac'				=> $steamBan->NumberOfVACBans,
 				'vac_banned_on'		=> $vacBanDate->format("M j Y"),

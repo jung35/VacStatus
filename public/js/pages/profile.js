@@ -35,6 +35,7 @@ var Profile = React.createClass({displayName: "Profile",
 
 		if(data != null)
 		{
+			specialColors = "";
 			if(data.beta) specialColors = "beta";
 			if(data.donation >= 10.0) specialColors = "donator";
 			if(data.site_admin) specialColors = "admin";

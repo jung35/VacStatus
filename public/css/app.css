@@ -6436,13 +6436,16 @@ hr.divider {
   vertical-align: -3px;
 }
 .beta-name {
-  color: #03a9f4;
+  color: #03a9f4 !important;
 }
 .donator-name {
-  color: #8bc34a;
+  color: #8bc34a !important;
 }
 .admin-name {
-  color: #f0ad4e;
+  color: #f0ad4e !important;
+}
+.text-danger {
+  color: #EF5350;
 }
 /* 300,400,600,700 */
 .home-page .hero {
@@ -6595,6 +6598,9 @@ hr.divider {
 }
 .list-page .list-table td {
   vertical-align: middle;
+}
+.list-page a {
+  color: #212121;
 }
 .profile-page {
   cursor: default;
