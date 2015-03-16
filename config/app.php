@@ -144,7 +144,8 @@ return [
 		'VacStatus\Providers\ConfigServiceProvider',
 		'VacStatus\Providers\EventServiceProvider',
 		'VacStatus\Providers\RouteServiceProvider',
-        'VacStatus\Providers\BladeServiceProvider',
+		'VacStatus\Providers\BladeServiceProvider',
+		'sgtaziz\SteamAuth\SteamAuthServiceProvider',
 
 	],
 
@@ -194,6 +195,7 @@ return [
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
 		'Carbon' 	=> 'Carbon\Carbon',
+		'SteamAuth' => 'sgtaziz\SteamAuth\Facades\SteamAuth',
 
 	],
 

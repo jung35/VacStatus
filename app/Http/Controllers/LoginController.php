@@ -12,7 +12,7 @@ use VacStatus\Steam\SteamAPI;
 
 use Cache;
 use Auth;
-use Hybridauth;
+use SteamAuth;
 
 class LoginController extends Controller {
 	
@@ -25,10 +25,8 @@ class LoginController extends Controller {
 				->with('success','You have Successfully logged in.');
 		}
 
-		$hybridAuth = new Hybridauth\Provider\Steam(["callback" => url('')."/auth/login"]);
-		$hybridAuth->authenticate();
-		$hybridAuthUserProfile = $hybridAuth->getUserProfile();
-		$steam64BitId = str_replace("http://steamcommunity.com/openid/id/", "", $hybridAuthUserProfile->identifier );
+		$steamuser = SteamAuth::Auth();
+		$steam64BitId = str_replace("http://steamcommunity.com/openid/id/", "", $steamuser['steamid'] );
 
 		// Try to grab user if it exists
 		$user = User::whereSmallId(Steam::toSmallId($steam64BitId))->first();
@@ -88,8 +86,6 @@ class LoginController extends Controller {
 
 		Auth::login($user, true);
 		Cache::forever('friendsList_'. Auth::User()->id, $simpleFriends);
-
-		$hybridAuth->disconnect();
 
 		return redirect()
 			->intended('/')
