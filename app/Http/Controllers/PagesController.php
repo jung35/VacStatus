@@ -36,10 +36,4 @@ class PagesController extends Controller {
 		return view('pages/list')
 			->withGrab($listId);
 	}
-
-	public function customListPageBACKWARDSCOMPATIBLE($poop, $listId)
-	{
-		return view('pages/list')
-			->withGrab($listId);
-	}
 }

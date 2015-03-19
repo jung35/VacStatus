@@ -30,14 +30,13 @@ get('/list/latest', [
 ]);
 
 get('/list/{listId}', [
-	'as' => 'tracked.latest',
+	'as' => 'tracked.custom',
 	'uses' => 'PagesController@customListPage'
 ]);
 
-get('/list/{useless}/{listId}', [
-	'as' => 'tracked.latest',
-	'uses' => 'PagesController@customListPageBACKWARDSCOMPATIBLE'
-]);
+get('/list/{useless}/{listId}', function($soUSLESS, $listId) {
+	return Redirect::route('tracked.custom', $listId, 301); 
+});
 
 get('/u/{steam65BitId}', [
 	'as' => 'profile',
