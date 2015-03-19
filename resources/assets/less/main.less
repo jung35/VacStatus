@@ -59,6 +59,45 @@ html, body {
 	.navbar-collapse {
 		padding-top: 14px;
 	}
+
+	.dropdown-toggle {
+		height: 46px;
+		padding: 8px 15px 15px;
+	}
+
+	.nav-avatar {
+		display: inline-block;
+		border-radius: 16px;
+		vertical-align: middle;
+		overflow: hidden;
+	}
+
+	.nav-username {
+		margin: 0 10px 0 0;
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.dropdown-menu {
+		li {
+			&.divider {
+				margin: 0 0;
+				border-bottom: 1px solid #4a4a4a;
+				border-top: 1px solid #3a3a3a;
+			}
+
+			a {
+				&:hover, &:focus {
+					background: rgba(0, 0, 0, 0.5);
+				}
+				padding: 7px 15px;
+				color: white;
+			}
+		}
+		padding: 0;
+		font-size: 11px;
+		background: #424242;
+	}
 }
 
 .footer {
@@ -284,4 +323,12 @@ hr.divider {
 
 .text-danger {
 	color: #EF5350;	
+}
+
+.btn {
+	background: #fff;
+	color: #212121;
+	border: 1px solid #424242;
+	font-weight: 600;
+	margin-top: 5px;
 }

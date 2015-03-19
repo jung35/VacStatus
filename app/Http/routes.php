@@ -34,6 +34,14 @@ get('/list/{listId}', [
 	'uses' => 'PagesController@customListPage'
 ]);
 
+Route::group(['middleware' => 'auth'], function()
+{
+	get('/list', [
+		'as' => 'list.list',
+		'uses' => 'PagesController@listListPage'
+	]);
+});
+
 get('/list/{useless}/{listId}', function($soUSLESS, $listId) {
 	return Redirect::route('tracked.custom', $listId, 301); 
 });
@@ -48,18 +56,24 @@ Route::group(['prefix' => 'api'], function()
 	Route::group(['prefix' => 'v1', 'namespace' => 'APIv1'], function()
 	{
 		get('/list/most', [
-			'as' => 'api.v1.list.most',
+			'as' => 'api.v1.tracked.most',
 			'uses' => 'ListController@mostTracked'
 		]);
 
 		get('/list/latest', [
-			'as' => 'api.v1.list.latest',
+			'as' => 'api.v1.tracked.latest',
 			'uses' => 'ListController@latestTracked'
 		]);
 
 		get('/list/{userList}', [
-			'as' => 'api.v1.list.latest',
+			'as' => 'api.v1.tracked.latest',
 			'uses' => 'ListController@customList'
+		]);
+
+		get('/list', [
+		    'middleware' => 'auth',
+			'as' => 'api.v1.list.list',
+			'uses' => 'ListController@listList'
 		]);
 
 		get('/profile/{steam65BitId}', [

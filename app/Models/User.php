@@ -18,6 +18,11 @@ class User extends Model implements AuthenticatableContract
 		return $this->site_admin == 1;
 	}
 
+	public function Profile()
+	{
+		return $this->hasOne('VacStatus\Models\Profile', 'small_id', 'small_id');
+	}
+
 	public function UserList()
 	{
 		return $this->hasMany('VacStatus\Models\UserList');

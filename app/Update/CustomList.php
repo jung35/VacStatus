@@ -31,7 +31,7 @@ class CustomList
 			$friendsList = Session::get("friendsList");
 
 			if(($userList->privacy == 3 && $userId != $userList->user_id)
-				|| ($userList->privacy == 2 && !in_array($userList->small_id, $friendsList)))
+				|| ($userList->privacy == 2 && !in_array($userList->user->small_id, $friendsList)))
 			{
 				$this->error = "list_no_permission"; return;
 			}
@@ -47,16 +47,17 @@ class CustomList
 		return is_null($this->error) ? false : ['error' => $this->error];
 	}
 
+	public function myList()
+	{
+		if(Auth::check() && $this->userList->user_id == Auth::user()->id) return true;
+
+		return false;
+	}
+
 	public function getCustomList()
 	{
 		if($this->error()) return $this->error();
 		$userList = $this->userList;
-
-		$return = [
-			'title' => $userList->title,
-			'author' => $userList->user->display_name,
-			'list' => []
-		];
 
 		$userListProfiles = UserList::where('user_list.id', $userList->id)
 			->leftjoin('user_list_profile as ulp_1', 'ulp_1.user_list_id', '=', 'user_list.id')
@@ -64,9 +65,12 @@ class CustomList
 			->leftjoin('profile', 'ulp_1.profile_id', '=', 'profile.id')
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
+			->leftjoin('subscription', 'subscription.user_list_id', '=', 'user_list.id')
 			->groupBy('profile.id')
 			->orderBy('ulp_1.id', 'desc')
 			->get([
+		      	'ulp_1.profile_name',
+
 				'profile.id',
 				'profile.display_name',
 				'profile.avatar_thumb',
@@ -83,7 +87,17 @@ class CustomList
 
 				\DB::raw('max(ulp_1.created_at) as created_at'),
 				\DB::raw('count(ulp_2.profile_id) as total'),
+				\DB::raw('count(distinct subscription.id) as sub_count'),
 			]);
+
+		$return = [
+			'title' => $userList->title,
+			'author' => $userList->user->display_name,
+			'my_list' => $this->myList(),
+			'privacy' => $userList->privacy,
+			'sub_count' => $userListProfiles[0]->sub_count,
+			'list' => []
+		];
 
 		foreach($userListProfiles as $userListProfile)
 		{
@@ -91,7 +105,7 @@ class CustomList
 
 			$return['list'][] = [
 				'id'			=> $userListProfile->id,
-				'display_name'	=> $userListProfile->display_name,
+				'display_name'	=> $userListProfile->profile_name?:$userListProfile->display_name,
 				'avatar_thumb'	=> $userListProfile->avatar_thumb,
 				'small_id'		=> $userListProfile->small_id,
 				'steam_64_bit'	=> Steam::to64Bit($userListProfile->small_id),

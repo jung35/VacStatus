@@ -22,7 +22,7 @@ class LoginController extends Controller {
 		if(Auth::viaRemember())
 		{
 			return redirect()
-				->intended('/')
+				->intended('/list')
 				->with('success','You have Successfully logged in.');
 		}
 
@@ -90,7 +90,7 @@ class LoginController extends Controller {
 		Session::put('friendsList', $simpleFriends);
 
 		return redirect()
-			->intended('/')
+			->intended('/list')
 			->with('success','You have Successfully logged in.');
 	}
 

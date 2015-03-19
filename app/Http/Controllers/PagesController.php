@@ -19,6 +19,11 @@ class PagesController extends Controller {
 		return view('pages/profile', compact('steam64BitId'));
 	}
 
+	public function listListPage()
+	{
+		return view('pages/listPortal');
+	}
+
 	public function mostTrackedPage()
 	{
 		return view('pages/list')

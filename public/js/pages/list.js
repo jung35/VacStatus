@@ -1,4 +1,5 @@
 var grab = $('#list').data('grab');
+var auth_check = $('meta[name=auth]').attr("content");
 
 var List = React.createClass({displayName: "List",
 	fetchList: function()
@@ -29,18 +30,30 @@ var List = React.createClass({displayName: "List",
 
 	render: function()
 	{
-		var data, author, list, smallActionBar, listElement, specialColors;
+		var data,
+			author,
+			list,
+			smallActionBar,
+			listElement,
+			specialColors,
+			showListAction,
+			listExtraInfo;
 
 		data = this.state.data;
 
 		if(data !== null)
 		{
+			if(data.error)
+			{
+				return React.createElement("h1", {className: "text-center"}, data.error)
+			}
+
 			if(data.author)
 			{
 				author = React.createElement("div", null, React.createElement("small", null, "By: ",  data.author));
 			}
 
-			if(data.list !== null)
+			if(data.list !== null && data.list !== undefined)
 			{
 				list = data.list.map(function(profile, index)
 				{
@@ -76,32 +89,73 @@ var List = React.createClass({displayName: "List",
 				});
 			}
 
-			smallActionBar = (
-				React.createElement("div", {className: "list-action-bar hidden-lg"}, 
-					React.createElement("div", {className: "container"}, 
-						React.createElement("div", {className: "row"}, 
-							React.createElement("div", {className: "col-xs-12"}, 
-								React.createElement("a", {href: "#", "data-toggle": "collapse", "data-target": "#list-actions"}, React.createElement("span", {className: "fa fa-bars"}), "  Advanced Options"), 
-								React.createElement("div", {id: "list-actions", className: "list-actions collapse"}, 
-									React.createElement(ListAction, null)
+			if(data.privacy && data.sub_count)
+			{
+				var privacy, privacy_color;
+				switch(data.privacy)
+				{
+					case 3:
+						privacy = "Private";
+						privacy_color = "danger";
+						break;
+					case 2:
+						privacy = "Friends Only";
+						privacy_color = "warning";
+						break;
+					default:
+						privacy = "Public";
+						privacy_color = "success";
+						break;
+				}
+
+				listExtraInfo = (
+					React.createElement("div", {className: "col-xs-12 col-md-6"}, 
+						React.createElement("div", {className: "list-extra-info text-right"}, 
+							React.createElement("div", {className: "list-type text-" + privacy_color}, privacy, " List"), 
+							React.createElement("div", null, "Subscribed Users: ",  data.sub_count)
+						)
+					)
+             	);
+			}
+
+			if(auth_check && data.author)
+			{
+				var eListAction = React.createElement(ListAction, {myList: data.my_list});
+				smallActionBar = (
+					React.createElement("div", {className: "list-action-bar hidden-lg"}, 
+						React.createElement("div", {className: "container"}, 
+							React.createElement("div", {className: "row"}, 
+								React.createElement("div", {className: "col-xs-12"}, 
+									React.createElement("a", {href: "#", "data-toggle": "collapse", "data-target": "#list-actions"}, React.createElement("span", {className: "fa fa-bars"}), "  Advanced Options"), 
+									React.createElement("div", {id: "list-actions", className: "list-actions collapse"}, 
+										eListAction 
+									)
 								)
 							)
 						)
 					)
 				)
-			)
+
+				showListAction = (
+	              	React.createElement("div", {className: "col-lg-3"}, 
+						React.createElement("div", {className: "list-actions visible-lg-block"}, 
+							eListAction 
+						)
+					)
+				);
+			}
 
 			listElement = (
 				React.createElement("div", {className: "container"}, 
 					React.createElement("div", {className: "row"}, 
-						React.createElement("div", {className: "col-lg-3"}, 
-							React.createElement("div", {className: "list-actions visible-lg-block"}, 
-								React.createElement(ListAction, null)
-							)
-						), 
-						React.createElement("div", {className: "col-xs-12 col-lg-9"}, 
-							React.createElement("h2", {className: "list-title"}, 
-								 data.title, " ", author 
+						React.createElement("div", {className: "col-xs-12" + (showListAction ? " col-lg-9": "")}, 
+							React.createElement("div", {className: "row"}, 
+								React.createElement("div", {className: "col-xs-12 col-md-6"}, 
+									React.createElement("h2", {className: "list-title"}, 
+										 data.title, " ", author 
+									)
+								), 
+								listExtraInfo 
 							), 
 							React.createElement("div", {className: "table-responsive"}, 
 								React.createElement("table", {className: "table list-table"}, 
@@ -116,7 +170,8 @@ var List = React.createClass({displayName: "List",
 									list 
 								)
 							)
-						)
+						), 
+						showListAction 
 					)
 				)
 			);
@@ -131,29 +186,17 @@ var List = React.createClass({displayName: "List",
 var ListAction = React.createClass({displayName: "ListAction",
 	render: function()
 	{
+		console.log(this.props.myList);
+
 		return (
 			React.createElement("div", {className: "list-action-container"}, 
 				React.createElement("hr", {className: "divider"}), 
 				React.createElement("div", {className: "row"}, 
-					React.createElement("div", {className: "col-xs-12"}
+					React.createElement("div", {className: "col-xs-6 col-lg-12"}, 
+						React.createElement("button", {className: "btn btn-block"}, "Edit List")
 					), 
-					React.createElement("div", {className: "col-xs-12"}, 
-						React.createElement("form", {action: "", className: "option-content"}, 
-							React.createElement("h4", {className: "title"}, "Create New List"), 
-							React.createElement("div", {className: "form-group"}, 
-								React.createElement("select", {className: "form-control"}, 
-									React.createElement("option", {value: "1"}, "Public"), 
-									React.createElement("option", {value: "2"}, "Friends Only"), 
-									React.createElement("option", {value: "3"}, "Private")
-								)
-							), 
-							React.createElement("div", {className: "form-group"}, 
-								React.createElement("input", {type: "text", className: "form-control", placeholder: "List Name"})
-							), 
-							React.createElement("div", {className: "form-group"}, 
-								React.createElement("button", {type: "submit", className: "btn form-control"}, "Create List")
-							)
-						)
+					React.createElement("div", {className: "col-xs-6 col-lg-12"}, 
+						React.createElement("button", {className: "btn btn-block"}, "Subscribe to List")
 					)
 				)
 			)

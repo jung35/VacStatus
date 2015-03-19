@@ -1,4 +1,5 @@
 var grab = $('#list').data('grab');
+var auth_check = $('meta[name=auth]').attr("content");
 
 var List = React.createClass({
 	fetchList: function()
@@ -29,18 +30,30 @@ var List = React.createClass({
 
 	render: function()
 	{
-		var data, author, list, smallActionBar, listElement, specialColors;
+		var data,
+			author,
+			list,
+			smallActionBar,
+			listElement,
+			specialColors,
+			showListAction,
+			listExtraInfo;
 
 		data = this.state.data;
 
 		if(data !== null)
 		{
+			if(data.error)
+			{
+				return <h1 className="text-center">{data.error}</h1>
+			}
+
 			if(data.author)
 			{
 				author = <div><small>By: { data.author }</small></div>;
 			}
 
-			if(data.list !== null)
+			if(data.list !== null && data.list !== undefined)
 			{
 				list = data.list.map(function(profile, index)
 				{
@@ -76,33 +89,74 @@ var List = React.createClass({
 				});
 			}
 
-			smallActionBar = (
-				<div className="list-action-bar hidden-lg">
-					<div className="container">
-						<div className="row">
-							<div className="col-xs-12">
-								<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
-								<div id="list-actions" className="list-actions collapse">
-									<ListAction />
+			if(data.privacy && data.sub_count)
+			{
+				var privacy, privacy_color;
+				switch(data.privacy)
+				{
+					case 3:
+						privacy = "Private";
+						privacy_color = "danger";
+						break;
+					case 2:
+						privacy = "Friends Only";
+						privacy_color = "warning";
+						break;
+					default:
+						privacy = "Public";
+						privacy_color = "success";
+						break;
+				}
+
+				listExtraInfo = (
+					<div className="col-xs-12 col-md-6">
+						<div className="list-extra-info text-right">
+							<div className={"list-type text-" + privacy_color}>{ privacy } List</div>
+							<div>Subscribed Users: { data.sub_count }</div>
+						</div>
+					</div>
+             	);
+			}
+
+			if(auth_check && data.author)
+			{
+				var eListAction = <ListAction myList={data.my_list} />;
+				smallActionBar = (
+					<div className="list-action-bar hidden-lg">
+						<div className="container">
+							<div className="row">
+								<div className="col-xs-12">
+									<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
+									<div id="list-actions" className="list-actions collapse">
+										{ eListAction }
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			)
+				)
+
+				showListAction = (
+	              	<div className="col-lg-3">
+						<div className="list-actions visible-lg-block">
+							{ eListAction }
+						</div>
+					</div>
+				);
+			}
 
 			listElement = (
 				<div className="container">
 					<div className="row">
-						<div className="col-lg-3">
-							<div className="list-actions visible-lg-block">
-								<ListAction />
+						<div className={"col-xs-12" + (showListAction ? " col-lg-9": "" )}>
+							<div className="row">
+								<div className="col-xs-12 col-md-6">
+									<h2 className="list-title">
+										{ data.title } { author }
+									</h2>
+								</div>
+								{ listExtraInfo }
 							</div>
-						</div>
-						<div className="col-xs-12 col-lg-9">
-							<h2 className="list-title">
-								{ data.title } { author }
-							</h2>
 							<div className="table-responsive">
 								<table className="table list-table">
 									<tr>
@@ -117,6 +171,7 @@ var List = React.createClass({
 								</table>
 							</div>
 						</div>
+						{ showListAction }
 					</div>
 				</div>
 			);
@@ -131,29 +186,17 @@ var List = React.createClass({
 var ListAction = React.createClass({
 	render: function()
 	{
+		console.log(this.props.myList);
+
 		return (
 			<div className="list-action-container">
 				<hr className="divider" />
 				<div className="row">
-					<div className="col-xs-12">
+					<div className="col-xs-6 col-lg-12">
+						<button className="btn btn-block">Edit List</button>
 					</div>
-					<div className="col-xs-12">
-						<form action="" className="option-content">
-							<h4 className="title">Create New List</h4>
-							<div className="form-group">
-								<select className="form-control">
-									<option value="1">Public</option>
-									<option value="2">Friends Only</option>
-									<option value="3">Private</option>
-								</select>
-							</div>
-							<div className="form-group">
-								<input type="text" className="form-control" placeholder="List Name" />
-							</div>
-							<div className="form-group">
-								<button type="submit" className="btn form-control">Create List</button>
-							</div>
-						</form>
+					<div className="col-xs-6 col-lg-12">
+						<button className="btn btn-block">Subscribe to List</button>
 					</div>
 				</div>
 			</div>

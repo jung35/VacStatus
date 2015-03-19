@@ -6253,6 +6253,39 @@ body {
 .navbar .navbar-collapse {
   padding-top: 14px;
 }
+.navbar .dropdown-toggle {
+  height: 46px;
+  padding: 8px 15px 15px;
+}
+.navbar .nav-avatar {
+  display: inline-block;
+  border-radius: 16px;
+  vertical-align: middle;
+  overflow: hidden;
+}
+.navbar .nav-username {
+  margin: 0 10px 0 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+.navbar .dropdown-menu {
+  padding: 0;
+  font-size: 11px;
+  background: #424242;
+}
+.navbar .dropdown-menu li.divider {
+  margin: 0 0;
+  border-bottom: 1px solid #4a4a4a;
+  border-top: 1px solid #3a3a3a;
+}
+.navbar .dropdown-menu li a {
+  padding: 7px 15px;
+  color: white;
+}
+.navbar .dropdown-menu li a:hover,
+.navbar .dropdown-menu li a:focus {
+  background: rgba(0, 0, 0, 0.5);
+}
 .footer {
   min-height: 64px;
   background: #212121;
@@ -6447,6 +6480,13 @@ hr.divider {
 .text-danger {
   color: #EF5350;
 }
+.btn {
+  background: #fff;
+  color: #212121;
+  border: 1px solid #424242;
+  font-weight: 600;
+  margin-top: 5px;
+}
 /* 300,400,600,700 */
 .home-page .hero {
   background: #212121 url(/img/steam-logo.png) no-repeat center top;
@@ -6602,6 +6642,13 @@ hr.divider {
 .list-page a {
   color: #212121;
 }
+.list-page .list-extra-info {
+  margin: 35px 20px 10px;
+  font-size: 1.3em;
+}
+.list-page .list-extra-info .list-type {
+  font-weight: 600;
+}
 .profile-page {
   cursor: default;
 }
@@ -6724,6 +6771,47 @@ hr.divider {
 }
 .disqus_thread {
   margin-bottom: 40px;
+}
+.listPortal-page .special-list {
+  font-size: 1.3em;
+}
+.listPortal-page .special-list h3 {
+  font-size: 2em;
+  font-weight: 600;
+}
+@media (min-width: 768px) {
+  .listPortal-page .special-list h3 {
+    margin: 20px 10px 20px 0;
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+.listPortal-page .special-list a {
+  display: block;
+  margin: 10px 0;
+  font-weight: 600;
+  padding: 10px 20px;
+  border: 1px solid #212121;
+  color: #212121;
+  text-decoration: none;
+}
+.listPortal-page .special-list a:hover {
+  background: #212121;
+  color: white;
+}
+@media (min-width: 768px) {
+  .listPortal-page .special-list a {
+    display: inline-block;
+    margin: 0 10px;
+    vertical-align: -5px;
+  }
+}
+.listPortal-page .custom-list {
+  font-size: 1.3em;
+}
+.listPortal-page .custom-list h3 {
+  font-size: 2em;
+  font-weight: 600;
 }
 .admin-header {
   background: #424242;
