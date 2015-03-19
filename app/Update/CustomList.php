@@ -58,11 +58,14 @@ class CustomList
 			'list' => []
 		];
 
-		$userListProfiles = UserListProfile::whereUserListId($userList->id)
-			->leftjoin('profile', 'user_list_profile.profile_id', '=', 'profile.id')
+		$userListProfiles = UserList::where('user_list.id', $userList->id)
+			->leftjoin('user_list_profile as ulp_1', 'ulp_1.user_list_id', '=', 'user_list.id')
+			->leftjoin('user_list_profile as ulp_2', 'ulp_2.profile_id', '=', 'ulp_1.profile_id')
+			->leftjoin('profile', 'ulp_1.profile_id', '=', 'profile.id')
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
 			->groupBy('profile.id')
+			->orderBy('ulp_1.id', 'desc')
 			->get([
 				'profile.id',
 				'profile.display_name',
@@ -78,8 +81,8 @@ class CustomList
 				'users.donation',
 				'users.beta',
 
-				\DB::raw('max(user_list_profile.created_at) as created_at'),
-				\DB::raw('count(*) as total'),
+				\DB::raw('max(ulp_1.created_at) as created_at'),
+				\DB::raw('count(ulp_2.profile_id) as total'),
 			]);
 
 		foreach($userListProfiles as $userListProfile)

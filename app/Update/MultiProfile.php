@@ -113,13 +113,14 @@ class MultiProfile
 
 		$steamBans = $steamBans->players;
 
+		// whereIn('profile.small_id', $getSmallId)->	
 		$profiles = Profile::whereIn('profile.small_id', $getSmallId)
+			->groupBy('profile.id')
 			->leftjoin('profile_ban', 'profile_ban.profile_id', '=', 'profile.id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
 			->leftjoin('user_list_profile', 'user_list_profile.profile_id', '=', 'profile.id')
-			->groupBy('profile.id')
 			->get([
-				'profile.id',
+		        'profile.id',
 				'profile.small_id',
 				'profile.display_name',
 				'profile.privacy',
@@ -138,16 +139,16 @@ class MultiProfile
 				'users.beta',
 
 				\DB::raw('max(user_list_profile.created_at) as created_at'),
-				\DB::raw('count(*) as total'),
+				\DB::raw('count(*) as total')
 			]);
 
-		// dd($profiles);
+		// dd($profiles->where('small_id', 71288472)->first());
 		// dd($profiles->where('small_id', 9856)->first());
 		$profileIds = [];
 
-		foreach($profiles as $profile)
+		foreach($getSmallId as $small_id)
 		{
-			$profileIds[] = $profile->id;
+			$profileIds[] = $profiles->where('small_id', $small_id)->first();
 		}
 
 		$indexSave = [];
