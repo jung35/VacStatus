@@ -83,14 +83,13 @@ class MostTracked extends BaseUpdate
 	private function grabFromDB()
 	{
 		$userListProfiles = UserListProfile::select(
+			'profile.id',
+			'profile.display_name',
+			'profile.avatar_thumb',
+			'profile.small_id',
 
-           	'profile.id',
-           	'profile.display_name',
-           	'profile.avatar_thumb',
-           	'profile.small_id',
-
-           	'profile_ban.vac',
-           	'profile_ban.vac_banned_on',
+			'profile_ban.vac',
+			'profile_ban.vac_banned_on',
 			'profile_ban.community',
 			'profile_ban.trade',
 
@@ -107,7 +106,7 @@ class MostTracked extends BaseUpdate
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
 			->take(20)
 			->get();
-			
+
 		$return = [];
 
 		foreach($userListProfiles as $k => $userListProfile)
