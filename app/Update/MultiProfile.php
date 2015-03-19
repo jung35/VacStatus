@@ -116,16 +116,29 @@ class MultiProfile
 		$profiles = Profile::whereIn('profile.small_id', $getSmallId)
 			->leftjoin('profile_ban', 'profile_ban.profile_id', '=', 'profile.id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
-			// ->select()
+			->leftjoin('user_list_profile', 'user_list_profile.profile_id', '=', 'profile.id')
+			->groupBy('profile.id')
 			->get([
-				'profile.*',
+				'profile.id',
+				'profile.small_id',
+				'profile.display_name',
+				'profile.privacy',
+				'profile.avatar_thumb',
+				'profile.avatar',
+				'profile.profile_created',
+				'profile.alias',
+
 				'profile_ban.community',
 				'profile_ban.vac',
 				'profile_ban.trade',
 				'profile_ban.unban',
+
 				'users.site_admin',
 				'users.donation',
-				'users.beta'
+				'users.beta',
+
+				\DB::raw('max(user_list_profile.created_at) as created_at'),
+				\DB::raw('count(*) as total'),
 			]);
 
 		// dd($profiles);
@@ -136,10 +149,6 @@ class MultiProfile
 		{
 			$profileIds[] = $profile->id;
 		}
-
-		$userListProfile = UserListProfile::whereIn('profile_id', $profileIds)
-			->orderBy('id','desc')
-			->get();
 
 		$indexSave = [];
 
@@ -269,13 +278,6 @@ class MultiProfile
 				];
 			}
 
-			$gettingCount = $userListProfile->where('profile_id', $profile->id);
-
-			$profileTimesAdded = [
-				'number' => $gettingCount->count(),
-				'time' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y") : null
-			];
-
 			$profileCheckCache = "profile_checked_";
 
 			$currentProfileCheck = [
@@ -316,7 +318,10 @@ class MultiProfile
 				'beta'				=> $profile->beta?:0,
 				'profile_old_alias'	=> $oldAliasArray,
 				'times_checked'		=> $currentProfileCheck,
-				'times_added'		=> $profileTimesAdded,
+				'times_added'		=> [
+					'number' => $profile->total,
+					'time' => (new DateTime($profile->created_at))->format("M j Y")
+				],
 			];
 
 			$newProfiles[$toSaveKey[$profile->small_id]] = $return;

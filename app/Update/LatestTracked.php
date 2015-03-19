@@ -78,6 +78,7 @@ class LatestTracked extends BaseUpdate
 			->leftjoin('profile', 'user_list_profile.profile_id', '=', 'profile.id')
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
+			->groupBy('profile.id')
 			->get([
 				'profile.id',
 				'profile.display_name',
@@ -92,6 +93,9 @@ class LatestTracked extends BaseUpdate
 				'users.site_admin',
 				'users.donation',
 				'users.beta',
+
+				\DB::raw('max(user_list_profile.created_at) as created_at'),
+				\DB::raw('count(*) as total'),
 			]);
 
 		$profileIds = [];
@@ -108,14 +112,6 @@ class LatestTracked extends BaseUpdate
 
 		foreach($userListProfiles as $k => $userListProfile)
 		{
-
-			$gettingCount = array_values($all->where('profile_id', $userListProfile->id)->toArray());
-
-			$profileTimesAdded = [
-				'number' => count($gettingCount),
-				'time' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]['created_at']))->format("M j Y") : null
-			];
-
 			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
 
 			$return[] = [
@@ -131,7 +127,10 @@ class LatestTracked extends BaseUpdate
 				'site_admin'	=> $userListProfile->site_admin?:0,
 				'donation'		=> $userListProfile->donation?:0,
 				'beta'			=> $userListProfile->beta?:0,
-				'times_added'	=> $profileTimesAdded,
+				'times_added'	=> [
+					'number' => $userListProfile->total,
+					'time' => (new DateTime($userListProfile->created_at))->format("M j Y")
+				],
 			];
 		}
 
@@ -139,6 +138,7 @@ class LatestTracked extends BaseUpdate
 		$return = $multiProfile->run();
 
 		$this->updateCache($return);
+		
 		return $return;
 	}
 }
