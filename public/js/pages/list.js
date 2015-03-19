@@ -67,9 +67,9 @@ var List = React.createClass({displayName: "List",
 				list = data.list.map(function(profile, index)
 				{
 					specialColors = "";
-					if(data.beta) specialColors = "beta";
-					if(data.donation >= 10.0) specialColors = "donator";
-					if(data.site_admin) specialColors = "admin";
+					if(profile.beta) specialColors = "beta";
+					if(profile.donation >= 10.0) specialColors = "donator";
+					if(profile.site_admin) specialColors = "admin";
 
 					return (
 						React.createElement("tr", {key: index}, 
@@ -77,7 +77,7 @@ var List = React.createClass({displayName: "List",
 								React.createElement("img", {src: profile.avatar_thumb})
 							), 
 							React.createElement("td", {className: "user_name"}, 
-								React.createElement("a", {className: "" + specialColors, href: "/u/" + profile.steam_64_bit, target: "_blank"}, profile.display_name)
+								React.createElement("a", {className: specialColors + "-name", href: "/u/" + profile.steam_64_bit, target: "_blank"}, profile.display_name)
 							), 
 							React.createElement("td", {className: "user_vac_ban text-center"}, 
 								React.createElement("span", {className: "text-" + (profile.vac > 0 ? "danger" : "success")}, 

@@ -67,9 +67,9 @@ var List = React.createClass({
 				list = data.list.map(function(profile, index)
 				{
 					specialColors = "";
-					if(data.beta) specialColors = "beta";
-					if(data.donation >= 10.0) specialColors = "donator";
-					if(data.site_admin) specialColors = "admin";
+					if(profile.beta) specialColors = "beta";
+					if(profile.donation >= 10.0) specialColors = "donator";
+					if(profile.site_admin) specialColors = "admin";
 
 					return (
 						<tr key={index}>
@@ -77,7 +77,7 @@ var List = React.createClass({
 								<img src={profile.avatar_thumb} />
 							</td>
 							<td className="user_name">
-								<a className={"" + specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
+								<a className={specialColors + "-name"} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
 							</td>
 							<td className="user_vac_ban text-center">
 								<span className={"text-" + (profile.vac > 0 ? "danger" : "success")}>
