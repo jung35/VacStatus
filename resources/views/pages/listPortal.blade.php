@@ -45,7 +45,7 @@
 							<table class="table">
 								<thead>
 									<tr>
-										<th class="text-center" width="32px"></th> {{-- avatar --}}
+										<th class="text-center" width="32px"></th>
 										<th width="200px">User</th>
 										<th>Title</th>
 										<th class="text-center" width="150px">Users In List</th>

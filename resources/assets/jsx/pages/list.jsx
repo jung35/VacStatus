@@ -89,7 +89,7 @@ var List = React.createClass({
 				});
 			}
 
-			if(data.privacy && data.sub_count)
+			if(data.privacy)
 			{
 				var privacy, privacy_color;
 				switch(data.privacy)

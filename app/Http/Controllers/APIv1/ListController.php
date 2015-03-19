@@ -67,6 +67,7 @@ class ListController extends Controller
 				->leftjoin('user_list_profile', 'user_list.id', '=', 'user_list_profile.user_list_id')
 				->leftjoin('profile', 'profile.small_id', '=', 'users.small_id')
 				->leftjoin('subscription', 'subscription.user_list_id', '=', 'user_list.id')
+				->having('users_in_list', '>', 0)
 				->get([
 					'profile.id as profile_id',
 					'profile.display_name',

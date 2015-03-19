@@ -101,6 +101,7 @@ class CustomList
 
 		foreach($userListProfiles as $userListProfile)
 		{
+			if(is_null($userListProfile->id)) continue;
 			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
 
 			$return['list'][] = [
