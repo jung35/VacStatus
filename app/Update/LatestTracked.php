@@ -110,7 +110,7 @@ class LatestTracked extends BaseUpdate
 
 		$return = [];
 
-		foreach($userListProfiles as $k => $userListProfile)
+		foreach($userListProfiles as $userListProfile)
 		{
 			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
 

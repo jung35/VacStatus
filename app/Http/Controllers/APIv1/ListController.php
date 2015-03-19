@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 
 use VacStatus\Update\MostTracked;
 use VacStatus\Update\LatestTracked;
+use VacStatus\Update\CustomList;
+
+use VacStatus\Models\UserList;
 
 class ListController extends Controller {
 
@@ -33,5 +36,16 @@ class ListController extends Controller {
 		];
 
 		return $return;
+	}
+
+	public function customList(UserList $userList)
+	{
+		if(!isset($userList->id)) {
+			return ['error' => '404'];
+		}
+		$customList = new CustomList($userList);
+		if($customList->error()) return $customList->error();
+		
+		return $customList->getCustomList();
 	}
 }

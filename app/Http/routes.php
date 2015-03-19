@@ -29,6 +29,16 @@ get('/list/latest', [
 	'uses' => 'PagesController@latestTrackedPage'
 ]);
 
+get('/list/{listId}', [
+	'as' => 'tracked.latest',
+	'uses' => 'PagesController@customListPage'
+]);
+
+get('/list/{useless}/{listId}', [
+	'as' => 'tracked.latest',
+	'uses' => 'PagesController@customListPageBACKWARDSCOMPATIBLE'
+]);
+
 get('/u/{steam65BitId}', [
 	'as' => 'profile',
 	'uses' => 'PagesController@profilePage'
@@ -46,6 +56,11 @@ Route::group(['prefix' => 'api'], function()
 		get('/list/latest', [
 			'as' => 'api.v1.list.latest',
 			'uses' => 'ListController@latestTracked'
+		]);
+
+		get('/list/{userList}', [
+			'as' => 'api.v1.list.latest',
+			'uses' => 'ListController@customList'
 		]);
 
 		get('/profile/{steam65BitId}', [
@@ -79,4 +94,9 @@ Route::group([
 		'as' => 'admin.db.profiles',
 		'uses' => 'DatabaseController@profile'
 	]);
+});
+
+Route::model('userList', 'VacStatus\Models\UserList', function()
+{
+    return ['error' => '404'];
 });

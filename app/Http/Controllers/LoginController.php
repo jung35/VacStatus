@@ -13,6 +13,7 @@ use VacStatus\Steam\SteamAPI;
 use Cache;
 use Auth;
 use SteamAuth;
+use Session;
 
 class LoginController extends Controller {
 	
@@ -85,7 +86,8 @@ class LoginController extends Controller {
 		}
 
 		Auth::login($user, true);
-		Cache::forever('friendsList_'. Auth::User()->id, $simpleFriends);
+		$userId = $user->id;
+		Session::put('friendsList', $simpleFriends);
 
 		return redirect()
 			->intended('/')

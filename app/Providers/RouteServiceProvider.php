@@ -24,7 +24,7 @@ class RouteServiceProvider extends ServiceProvider {
 	{
 		parent::boot($router);
 
-		//
+		// $router->model('userList', 'VacStatus\Models\UserList');
 	}
 
 	/**

@@ -71,7 +71,7 @@ class MostTracked extends BaseUpdate
 	}
 
 	private function grabFromDB()
-	{
+	{		
 		$userListProfiles = UserListProfile::select(
 			'profile.id',
 			'profile.display_name',
@@ -99,7 +99,7 @@ class MostTracked extends BaseUpdate
 
 		$return = [];
 
-		foreach($userListProfiles as $k => $userListProfile)
+		foreach($userListProfiles as $userListProfile)
 		{
 			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
 
