@@ -9,7 +9,7 @@ class UserList extends Model
 	
 	protected $table = 'user_list';
 
-    protected $dates = ['deleted_at'];
+	protected $dates = ['deleted_at'];
 
 	public function UserListProfile()
 	{
@@ -24,5 +24,14 @@ class UserList extends Model
 	public function canSubscribe($user_id)
 	{
 		return $this->user_id == $user_id || $this->privacy != 3;
+	}
+
+	public function scopeCheckExistingUser($query, $profileId)
+	{
+		return $query->join('user_list_profile', function($join) use ($profileId)
+		{
+			$join->on('user_list_profile.user_list_id', '=', 'user_list.id')
+				->where('user_list_profile.profile_id', '=', $profileId);
+		});
 	}
 }

@@ -59,6 +59,31 @@ var ListHandler = React.createClass({displayName: "ListHandler",
 		});
 	},
 
+	submitNewUserToServer: function(data)
+	{
+		$.ajax({
+			url: '/api/v1/list/add',
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				_token: _token,
+				list_id: data.list_id,
+				description: data.description,
+				profile_id: data.profile_id
+			},
+			success: function(data) {
+				if(data.error) {
+					notif.add('danger', data.error).run();
+				} else {
+					notif.add('success', 'List has been saved!').run();
+				}
+			}.bind(this),
+				error: function(xhr, status, err) {
+				notif.add('danger', err).run();
+			}.bind(this)
+		});
+	},
+
 	saveNewDataForParent: function(data)
 	{
 		this.props.newTitle = data.title;
@@ -132,13 +157,18 @@ var ListHandler = React.createClass({displayName: "ListHandler",
 	{
 		return (
 			React.createElement("div", null, 
-				React.createElement(CreateList, {CreateListSend: this.submitNewListToServer}), 
+				React.createElement(CreateList, {
+					CreateListSend: this.submitNewListToServer}
+				), 
 				React.createElement(EditList, {
 					editData: this.props.editData, 
 					EditListSend: this.submitEditedListToServer, 
 					DeleteListSend: this.submitDeletedListToServer}
 				), 
-				React.createElement(AddUserToList, {myList: this.state.lists}), 
+				React.createElement(AddUserToList, {
+					myList: this.state.lists, 
+					AddUserSend: this.submitNewUserToServer}
+				), 
 				React.createElement(RemoveUserFromList, null)
 			)
 		);
@@ -281,11 +311,79 @@ var EditList = React.createClass({displayName: "EditList",
 	}
 });
 
+$(document).on("click", ".open-addUserModal", function()
+{
+	var profileId = $(this).data('id');
+	$("#addUserModal").find('#addUserProfileId').val(profileId);
+});	
+
 var AddUserToList = React.createClass({displayName: "AddUserToList",
+	handleSubmit: function(e)
+	{
+		e.preventDefault();
+
+		var list_id = this.refs.addUserList.getDOMNode().value.trim(),
+			description = this.refs.addUserDescription.getDOMNode().value.trim(),
+			profile_id = this.refs.addUserProfileId.getDOMNode().value.trim();
+
+		if (!list_id) {
+			notif.add('danger', 'Please select a list!').run();
+			return;
+		}
+
+		if(!profile_id) {
+			notif.add('danger', 'Please select a user!').run();
+			return;
+		}
+
+		this.props.AddUserSend({
+			list_id: list_id,
+			description: description,
+			profile_id: profile_id
+		});
+
+		this.refs.addUserDescription.getDOMNode().value = '';
+		this.refs.addUserProfileId.getDOMNode().value = '';
+
+		$('#addUserModal').modal('hide');
+	},
+
 	render: function()
 	{
+		var listOptions = this.props.myList.map(function(list, key) {
+			return React.createElement("option", {key: key, value:  list.id},  list.title);
+		});
+
 		return (
-			React.createElement("div", null)
+			React.createElement("div", {className: "modal fade", id: "addUserModal", tabIndex: "-1", role: "dialog"}, 
+				React.createElement("div", {className: "modal-dialog"}, 
+					React.createElement("div", {className: "modal-content"}, 
+						React.createElement("div", {className: "modal-header"}, 
+							React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal"}, React.createElement("span", null, "×")), 
+							React.createElement("h4", {className: "modal-title"}, "Add User to List")
+						), 
+						React.createElement("form", {onSubmit: this.handleSubmit}, 
+							React.createElement("div", {className: "modal-body"}, 
+								React.createElement("div", {className: "form-group"}, 
+									React.createElement("label", {htmlFor: "addUser-list"}, "Select a List"), 
+									React.createElement("select", {id: "addUser-list", ref: "addUserList", className: "form-control"}, 
+									listOptions 
+									)
+								), 
+								React.createElement("div", {className: "form-group"}, 
+									React.createElement("label", {htmlFor: "addUser-description"}, "User Description"), 
+									React.createElement("textarea", {id: "addUser-description", ref: "addUserDescription", className: "form-control", placeholder: "Few words to remind you who this person is."})
+								)
+							), 
+							React.createElement("div", {className: "modal-footer"}, 
+								React.createElement("input", {id: "addUserProfileId", type: "hidden", ref: "addUserProfileId"}), 
+								React.createElement("button", {type: "button", className: "btn btn-default", "data-dismiss": "modal"}, "Close"), 
+								React.createElement("button", {type: "submit", className: "btn btn-primary"}, "Add User")
+							)
+						)
+					)
+				)
+			)
 		);
 	}
 });

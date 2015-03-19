@@ -445,6 +445,7 @@ class SingleProfile extends BaseUpdate
 
 		$gettingCount = UserListProfile::whereProfileId($profile->id)
 			->orderBy('id','desc')
+			->whereNull('deleted_at')
 			->get();
 
 		$profileTimesAdded = [

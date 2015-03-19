@@ -6772,7 +6772,7 @@ hr.divider {
 }
 @media (min-width: 768px) {
   .profile-page .table-responsive {
-    max-height: 468px;
+    max-height: 480px;
   }
 }
 .disqus_thread {

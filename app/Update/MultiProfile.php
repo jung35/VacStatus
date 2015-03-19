@@ -119,6 +119,7 @@ class MultiProfile
 			->leftjoin('profile_ban', 'profile_ban.profile_id', '=', 'profile.id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
 			->leftjoin('user_list_profile', 'user_list_profile.profile_id', '=', 'profile.id')
+			->whereNull('user_list_profile.deleted_at')
 			->get([
 		        'profile.id',
 				'profile.small_id',
@@ -139,7 +140,7 @@ class MultiProfile
 				'users.beta',
 
 				\DB::raw('max(user_list_profile.created_at) as created_at'),
-				\DB::raw('count(*) as total')
+				\DB::raw('count(user_list_profile.id) as total')
 			]);
 
 		// dd($profiles->where('small_id', 71288472)->first());

@@ -88,9 +88,10 @@ class MostTracked extends BaseUpdate
 			'users.beta',
 
 			\DB::raw('max(user_list_profile.created_at) as created_at'),
-			\DB::raw('count(*) as total')
+			\DB::raw('count(user_list_profile.id) as total')
 			)->groupBy('profile.id')
 			->orderBy('total', 'desc')
+			->whereNull('user_list_profile.deleted_at')
 			->leftjoin('profile', 'user_list_profile.profile_id', '=', 'profile.id')
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')

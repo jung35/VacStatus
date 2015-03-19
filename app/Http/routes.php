@@ -83,10 +83,23 @@ Route::group(['prefix' => 'api'], function()
 				'uses' => 'ListController@listList'
 			]);
 
+			//
+			//	---------------------------------
+			//
+
+			post('/add', [
+				'as' => 'api.v1.list.user.add',
+				'uses' => 'ListUserController@addToList'
+			]);
+
 			post('/{listId?}', [
 				'as' => 'api.v1.list.create',
 				'uses' => 'ListController@modifyCustomList'
 			]);
+
+			//
+			//	---------------------------------
+			//
 
 			delete('/{userList}', [
 				'as' => 'api.v1.tracked.latest',

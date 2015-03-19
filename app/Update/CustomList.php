@@ -18,7 +18,7 @@ class CustomList
 	private $userList;
 	private $error = null;
 
-	function __construct(UserList $userList)
+	function __construct($userList)
 	{
 		if(!isset($userList->id))
 		{
@@ -65,6 +65,7 @@ class CustomList
 		$userListProfiles = UserList::where('user_list.id', $userList->id)
 			->leftjoin('user_list_profile as ulp_1', 'ulp_1.user_list_id', '=', 'user_list.id')
 			->leftjoin('user_list_profile as ulp_2', 'ulp_2.profile_id', '=', 'ulp_1.profile_id')
+			->whereNull('ulp_2.deleted_at')
 			->leftjoin('profile', 'ulp_1.profile_id', '=', 'profile.id')
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')

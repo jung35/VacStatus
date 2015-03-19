@@ -40,7 +40,11 @@ var Profile = React.createClass({
 			if(data.donation >= 10.0) specialColors = "donator";
 			if(data.site_admin) specialColors = "admin";
 
-			if(auth_check) auth = <a href="#"><span className="fa fa-plus faText-align"></span></a>;
+			if(auth_check) auth = (
+               	<a className="open-addUserModal" href="#addUserModal" data-toggle="modal" data-id={ data.id }>
+               		<span className="fa fa-plus faText-align"></span>
+               	</a>
+           	);
 
 			switch(data.privacy)
 			{

@@ -26,12 +26,13 @@ class ListController extends Controller
 	{
 		$this->middleware('auth');
 
-		$myList = UserList::where('user_list.user_id', \Auth::user()->id)
-		->get([
-			'user_list.id',
-			'user_list.title',
-			'user_list.privacy',
-		]);
+		$myList = UserList::where('user_id', \Auth::user()->id)
+			->orderBy('id', 'desc')
+			->get([
+				'id',
+				'title',
+				'privacy',
+			]);
 
 		return $myList;
 	}
@@ -50,6 +51,7 @@ class ListController extends Controller
 			->leftjoin('subscription', 'subscription.user_list_id', '=', 'user_list.id')
 			->groupBy('user_list.id')
 			->orderBy('user_list.id', 'desc')
+			->whereNull('ulp_1.deleted_at')
 			->get([
 				'user_list.id',
 				'user_list.title',
@@ -79,6 +81,7 @@ class ListController extends Controller
 
 			$myfriendsLists = User::whereIn('users.small_id', $friendsList)
 				->whereNotIn('user_list.privacy', [3])
+				->whereNull('user_list_profile.deleted_at')
 				->groupBy('user_list.id')
 				->orderBy('user_list.id', 'desc')
 				->leftjoin('user_list', 'user_list.user_id', '=', 'users.id')
@@ -221,6 +224,8 @@ class ListController extends Controller
 	{
 		$this->middleware('csrf');
 		$this->middleware('auth');
+
+		$userList->UserListProfile()->delete();
 		
 		if(!$userList->delete()) {
 			return ['error' => 'There was an error trying to delete the List'];
