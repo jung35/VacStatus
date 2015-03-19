@@ -1,0 +1,1 @@
+React.render(React.createElement(ListHandler, null), document.getElementById('listHandler'));

@@ -2,6 +2,15 @@ var grab = $('#list').data('grab');
 var auth_check = $('meta[name=auth]').attr("content");
 
 var List = React.createClass({displayName: "List",
+	UpdateListTitle: function(newData)
+	{
+		var data = this.state.data;
+		data.title = newData.newTitle;
+		data.privacy = newData.newPrivacy;
+
+		this.setState({data: data});
+	},
+
 	fetchList: function()
 	{
 		$.ajax({
@@ -92,17 +101,21 @@ var List = React.createClass({displayName: "List",
 			if(data.privacy)
 			{
 				var privacy, privacy_color;
+
 				switch(data.privacy)
 				{
+					case "3":
 					case 3:
 						privacy = "Private";
 						privacy_color = "danger";
 						break;
+					case "2":
 					case 2:
 						privacy = "Friends Only";
 						privacy_color = "warning";
 						break;
-					default:
+					case "1":
+					case 1:
 						privacy = "Public";
 						privacy_color = "success";
 						break;
@@ -178,7 +191,7 @@ var List = React.createClass({displayName: "List",
 		}
 
 		return (
-			React.createElement("div", null, smallActionBar, " ", listElement )
+			React.createElement("div", null, smallActionBar, " ", listElement, " ", React.createElement(ListHandler, {UpdateListTitle: this.UpdateListTitle, editData: this.state.data}))
 		);
 	}
 });
@@ -186,15 +199,21 @@ var List = React.createClass({displayName: "List",
 var ListAction = React.createClass({displayName: "ListAction",
 	render: function()
 	{
-		console.log(this.props.myList);
+		var editList;
+
+		if(this.props.myList) {
+			editList = (
+				React.createElement("div", {className: "col-xs-6 col-lg-12"}, 
+					React.createElement("button", {className: "btn btn-block", "data-toggle": "modal", "data-target": "#editListModal"}, "Edit List")
+				)
+            );
+		}
 
 		return (
 			React.createElement("div", {className: "list-action-container"}, 
 				React.createElement("hr", {className: "divider"}), 
 				React.createElement("div", {className: "row"}, 
-					React.createElement("div", {className: "col-xs-6 col-lg-12"}, 
-						React.createElement("button", {className: "btn btn-block"}, "Edit List")
-					), 
+					editList, 
 					React.createElement("div", {className: "col-xs-6 col-lg-12"}, 
 						React.createElement("button", {className: "btn btn-block"}, "Subscribe to List")
 					)

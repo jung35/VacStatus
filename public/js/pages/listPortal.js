@@ -24,6 +24,7 @@ var ListPortal = React.createClass({displayName: "ListPortal",
 			data: null
 		};
 	},
+	
 	render: function()
 	{
 		var data, my_list, friends_list;
@@ -61,7 +62,7 @@ var ListPortal = React.createClass({displayName: "ListPortal",
 					return (
 						React.createElement("tr", {key: index}, 
 							React.createElement("td", {className: "text-center"},  list.id), 
-							React.createElement("td", null, React.createElement("a", {class: "list_link", target: "_blank", href: "/list/" + list.id},  list.title)), 
+							React.createElement("td", null, React.createElement("a", {className: "list_link", href: "/list/" + list.id},  list.title)), 
 							React.createElement("td", {className: "text-center text-" + privacy_color}, privacy ), 
 							React.createElement("td", {className: "text-center"},  list.users_in_list), 
 							React.createElement("td", {className: "text-center"},  list.sub_count), 
@@ -97,7 +98,7 @@ var ListPortal = React.createClass({displayName: "ListPortal",
 							React.createElement("td", {className: "text-center"}, 
 								React.createElement("img", {src:  list.avatar_thumb})
 							), 
-							React.createElement("td", null, React.createElement("a", {class: "list_link", target: "_blank", href: "/list/" + list.user_list_id},  list.title)), 
+							React.createElement("td", null, React.createElement("a", {className: "list_link", href: "/list/" + list.user_list_id},  list.title)), 
 							React.createElement("td", null,  list.display_name), 
 							React.createElement("td", {className: "text-center text-" + privacy_color}, privacy ), 
 							React.createElement("td", {className: "text-center"},  list.users_in_list), 
@@ -125,12 +126,12 @@ var ListPortal = React.createClass({displayName: "ListPortal",
 							React.createElement("table", {className: "table"}, 
 								React.createElement("thead", null, 
 									React.createElement("tr", null, 
-										React.createElement("th", {className: "text-center", width: "20px"}, "ID"), 
+										React.createElement("th", {className: "text-center", width: "25px"}, "ID"), 
 										React.createElement("th", null, "List Name"), 
-										React.createElement("th", {className: "text-center", width: "150px"}, "List Type"), 
-										React.createElement("th", {className: "text-center", width: "150px"}, "Users In List"), 
-										React.createElement("th", {className: "text-center", width: "150px"}, "Subscribers"), 
-										React.createElement("th", {className: "text-center", width: "150px"}, "List Creation")
+										React.createElement("th", {className: "text-center", width: "120px"}, "List Type"), 
+										React.createElement("th", {className: "text-center", width: "120px"}, "Users In List"), 
+										React.createElement("th", {className: "text-center", width: "120px"}, "Subscribers"), 
+										React.createElement("th", {className: "text-center", width: "120px"}, "List Creation")
 									)
 								), 
 								React.createElement("tbody", null, 
@@ -150,10 +151,10 @@ var ListPortal = React.createClass({displayName: "ListPortal",
 										React.createElement("th", {className: "text-center", width: "32px"}), 
 										React.createElement("th", null, "List Name"), 
 										React.createElement("th", {width: "200px"}, "User"), 
-										React.createElement("th", {className: "text-center", width: "150px"}, "List Type"), 
-										React.createElement("th", {className: "text-center", width: "150px"}, "Users In List"), 
-										React.createElement("th", {className: "text-center", width: "150px"}, "Subscribers"), 
-										React.createElement("th", {className: "text-center", width: "150px"}, "List Creation")
+										React.createElement("th", {className: "text-center", width: "120px"}, "List Type"), 
+										React.createElement("th", {className: "text-center", width: "120px"}, "Users In List"), 
+										React.createElement("th", {className: "text-center", width: "120px"}, "Subscribers"), 
+										React.createElement("th", {className: "text-center", width: "120px"}, "List Creation")
 									)
 								), 
 								React.createElement("tbody", null, 
@@ -163,7 +164,8 @@ var ListPortal = React.createClass({displayName: "ListPortal",
 						)
 					)
 				)
-			)
+			), 
+			React.createElement(ListHandler, null)
 		)
      	);
 	}

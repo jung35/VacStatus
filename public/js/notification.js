@@ -11,44 +11,35 @@ var notif = {
 		return this;
 	},
 
-	run: function()
+	run: function(callback)
 	{
 		var alert = notif.element.find('.alert');
 		var initial = notif.interval;
-
-		var currentTime = +new Date();
-
-		if(currentTime <= notif.timeEnd)
-		{
-			setTimeout(function() {
-				notif.run()
-			}, notif.timeEnd - currentTime)
-			return;
-		} else {
-			notif.timeEnd = currentTime + (initial - 1) * 400;
-		}
 
 		alert.each(function(k, element)
 		{
 			setTimeout(function()
 			{
-				notif.animate($(element))
-			}, (initial - notif.interval) * 800);
+				notif.animate($(element), callback)
+			}, (initial - notif.interval) * 100);
 
 			notif.interval--;
 
 		}.bind(initial));
 	},
 
-	animate: function(notificationItem)
+	animate: function(notificationItem, callback)
 	{
-		notificationItem.animate({marginLeft:20}, 1000, function()
+		notificationItem.animate({marginLeft:20}, 100, function()
 		{
 			notificationItem.delay(2000).animate({
 				opacity: 0,
 				marginTop: -1 * (notificationItem.height() + 10)
 			}, 500, function() {
 				notificationItem.remove();
+				if(notif.interval == 0 && callback !== null && callback !== undefined) {
+					callback();
+				}
 			});
 		});
 	}

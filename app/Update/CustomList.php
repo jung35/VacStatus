@@ -30,11 +30,14 @@ class CustomList
 			$userId = Auth::User()->id;
 			$friendsList = Session::get("friendsList");
 
-			if(($userList->privacy == 3 && $userId != $userList->user_id)
-				|| ($userList->privacy == 2 && !in_array($userList->user->small_id, $friendsList)))
-			{
-				$this->error = "list_no_permission"; return;
+			if($userId != $userList->user_id) {
+				if(($userList->privacy == 3)
+					|| ($userList->privacy == 2 && !in_array($userList->user->small_id, $friendsList)))
+				{
+					$this->error = "list_no_permission"; return;
+				}
 			}
+			
 		} else if($userList->privacy == 2 || $userList->privacy == 3) {
 			$this->error = "list_no_permission"; return;
 		}
@@ -91,6 +94,7 @@ class CustomList
 			]);
 
 		$return = [
+			'id' => $userList->id,
 			'title' => $userList->title,
 			'author' => $userList->user->display_name,
 			'my_list' => $this->myList(),

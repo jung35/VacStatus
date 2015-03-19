@@ -55,26 +55,44 @@ Route::group(['prefix' => 'api'], function()
 {
 	Route::group(['prefix' => 'v1', 'namespace' => 'APIv1'], function()
 	{
-		get('/list/most', [
-			'as' => 'api.v1.tracked.most',
-			'uses' => 'ListController@mostTracked'
-		]);
+		Route::group(['prefix' => 'list'], function()
+		{
+			get('/simple', [
+				'middleware' => 'auth',
+				'as' => 'api.v1.list.simple',
+				'uses' => 'ListController@mySimpleList'
+			]);
 
-		get('/list/latest', [
-			'as' => 'api.v1.tracked.latest',
-			'uses' => 'ListController@latestTracked'
-		]);
+			get('/most', [
+				'as' => 'api.v1.tracked.most',
+				'uses' => 'ListController@mostTracked'
+			]);
 
-		get('/list/{userList}', [
-			'as' => 'api.v1.tracked.latest',
-			'uses' => 'ListController@customList'
-		]);
+			get('/latest', [
+				'as' => 'api.v1.tracked.latest',
+				'uses' => 'ListController@latestTracked'
+			]);
 
-		get('/list', [
-		    'middleware' => 'auth',
-			'as' => 'api.v1.list.list',
-			'uses' => 'ListController@listList'
-		]);
+			get('/{userList}', [
+				'as' => 'api.v1.tracked.latest',
+				'uses' => 'ListController@customList'
+			]);
+
+			get('/', [
+				'as' => 'api.v1.list.list',
+				'uses' => 'ListController@listList'
+			]);
+
+			post('/{listId?}', [
+				'as' => 'api.v1.list.create',
+				'uses' => 'ListController@modifyCustomList'
+			]);
+
+			delete('/{userList}', [
+				'as' => 'api.v1.tracked.latest',
+				'uses' => 'ListController@deleteCustomList'
+			]);
+		});
 
 		get('/profile/{steam65BitId}', [
 			'as' => 'api.v1.profile',
@@ -111,5 +129,5 @@ Route::group([
 
 Route::model('userList', 'VacStatus\Models\UserList', function()
 {
-    return ['error' => '404'];
+	return ['error' => '404'];
 });

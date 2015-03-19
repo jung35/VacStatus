@@ -6431,7 +6431,7 @@ hr.divider {
 .notification {
   max-width: 240px;
   width: 240px;
-  z-index: 5;
+  z-index: 1050;
   position: fixed;
   top: 0;
   right: 0;
@@ -6485,7 +6485,10 @@ hr.divider {
   color: #212121;
   border: 1px solid #424242;
   font-weight: 600;
-  margin-top: 5px;
+}
+.modal-open {
+  padding: 0 !important;
+  overflow: auto;
 }
 /* 300,400,600,700 */
 .home-page .hero {
@@ -6649,6 +6652,9 @@ hr.divider {
 .list-page .list-extra-info .list-type {
   font-weight: 600;
 }
+.list-page .btn {
+  margin-top: 5px;
+}
 .profile-page {
   cursor: default;
 }
@@ -6773,7 +6779,7 @@ hr.divider {
   margin-bottom: 40px;
 }
 .listPortal-page .special-list {
-  font-size: 1.3em;
+  font-size: 1.1em;
 }
 .listPortal-page .special-list h3 {
   font-size: 2em;
@@ -6807,11 +6813,14 @@ hr.divider {
   }
 }
 .listPortal-page .custom-list {
-  font-size: 1.3em;
+  font-size: 1.1em;
 }
 .listPortal-page .custom-list h3 {
   font-size: 2em;
   font-weight: 600;
+}
+.listPortal-page .btn {
+  margin-top: 5px;
 }
 .admin-header {
   background: #424242;

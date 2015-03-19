@@ -262,6 +262,7 @@ var Profile = React.createClass({
 							<hr className="divider" />
 						</div>
 					</div>
+					<ListHandler />
 				</div>
 			);
 		} else {

@@ -1,10 +1,15 @@
 <?php namespace VacStatus\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserList extends Model
 {
+	use SoftDeletes;
+	
 	protected $table = 'user_list';
+
+    protected $dates = ['deleted_at'];
 
 	public function UserListProfile()
 	{

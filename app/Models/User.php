@@ -15,7 +15,7 @@ class User extends Model implements AuthenticatableContract
 
 	public function isAdmin()
 	{
-		return $this->site_admin == 1;
+		return $this->site_admin >= 1;
 	}
 
 	public function Profile()
@@ -50,7 +50,7 @@ class User extends Model implements AuthenticatableContract
 
 	public function unlockList()
 	{
-		if($this->isAdmin()) return 999;
+		if($this->isAdmin()) return 1;
 
 		if($this->donation >= DonationPerk::getPerkAmount('list_1')) return 20;
 
@@ -90,6 +90,13 @@ class User extends Model implements AuthenticatableContract
 		if($this->beta == 1) return 5;
 
 		return 3;
+	}
+
+	public function canMakeList()
+	{
+		if($this->UserList->count() <= $this->unlockList()) return false;
+
+		return true;
 	}
 	
 	public function addDonation($amount)

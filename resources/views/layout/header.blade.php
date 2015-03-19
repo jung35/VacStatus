@@ -23,7 +23,7 @@
 					<a href="{{ route('list.list') }}">Lists</a>
 				</li>
 				<li>
-					<a href="{{ route('list.list') }}">Create List</a>
+					<a href="#" data-toggle="modal" data-target="#createListModal">Create List</a>
 				</li>
 			@else
 				<li class="@setActiveLink('tracked.most')">
@@ -44,7 +44,7 @@
 						<div class="nav-username">{{ Auth::user()->display_name }}</div>
 						<div class="nav-avatar"><img src="{{ Auth::user()->profile->avatar_thumb }}"></div>
 					</a>
-					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+					<ul class="dropdown-menu" role="menu">
 						<li>
 							<a href="{{ route('profile', VacStatus\Steam\Steam::to64bit(Auth::user()->small_id)) }}">Profile</a>
 						</li>

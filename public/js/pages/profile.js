@@ -261,7 +261,8 @@ var Profile = React.createClass({displayName: "Profile",
 							), 
 							React.createElement("hr", {className: "divider"})
 						)
-					)
+					), 
+					React.createElement(ListHandler, null)
 				)
 			);
 		} else {

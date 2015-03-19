@@ -34,3 +34,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
 
 <script src="/js/notification.js"></script>
+
+@if(\Auth::check())
+<script src="/js/listHandler.js"></script>
+@endif

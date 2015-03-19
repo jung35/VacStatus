@@ -24,6 +24,7 @@ var ListPortal = React.createClass({
 			data: null
 		};
 	},
+	
 	render: function()
 	{
 		var data, my_list, friends_list;
@@ -61,7 +62,7 @@ var ListPortal = React.createClass({
 					return (
 						<tr key={index}>
 							<td className="text-center">{ list.id }</td>
-							<td><a class="list_link" target="_blank" href={"/list/" + list.id}>{ list.title }</a></td>
+							<td><a className="list_link" href={"/list/" + list.id}>{ list.title }</a></td>
 							<td className={"text-center text-" + privacy_color}>{ privacy }</td>
 							<td className="text-center">{ list.users_in_list }</td>
 							<td className="text-center">{ list.sub_count }</td>
@@ -97,7 +98,7 @@ var ListPortal = React.createClass({
 							<td className="text-center">
 								<img src={ list.avatar_thumb } />
 							</td>
-							<td><a class="list_link" target="_blank" href={"/list/" + list.user_list_id}>{ list.title }</a></td>
+							<td><a className="list_link" href={"/list/" + list.user_list_id}>{ list.title }</a></td>
 							<td>{ list.display_name }</td>
 							<td className={"text-center text-" + privacy_color}>{ privacy }</td>
 							<td className="text-center">{ list.users_in_list }</td>
@@ -125,12 +126,12 @@ var ListPortal = React.createClass({
 							<table className="table">
 								<thead>
 									<tr>
-										<th className="text-center" width="20px">ID</th>
+										<th className="text-center" width="25px">ID</th>
 										<th>List Name</th>
-										<th className="text-center" width="150px">List Type</th>
-										<th className="text-center" width="150px">Users In List</th>
-										<th className="text-center" width="150px">Subscribers</th>
-										<th className="text-center" width="150px">List Creation</th>
+										<th className="text-center" width="120px">List Type</th>
+										<th className="text-center" width="120px">Users In List</th>
+										<th className="text-center" width="120px">Subscribers</th>
+										<th className="text-center" width="120px">List Creation</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -150,10 +151,10 @@ var ListPortal = React.createClass({
 										<th className="text-center" width="32px"></th>
 										<th>List Name</th>
 										<th width="200px">User</th>
-										<th className="text-center" width="150px">List Type</th>
-										<th className="text-center" width="150px">Users In List</th>
-										<th className="text-center" width="150px">Subscribers</th>
-										<th className="text-center" width="150px">List Creation</th>
+										<th className="text-center" width="120px">List Type</th>
+										<th className="text-center" width="120px">Users In List</th>
+										<th className="text-center" width="120px">Subscribers</th>
+										<th className="text-center" width="120px">List Creation</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -164,6 +165,7 @@ var ListPortal = React.createClass({
 					</div>
 				</div>
 			</div>
+			<ListHandler />
 		</div>
      	);
 	}

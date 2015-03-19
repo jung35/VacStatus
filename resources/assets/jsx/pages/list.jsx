@@ -2,6 +2,15 @@ var grab = $('#list').data('grab');
 var auth_check = $('meta[name=auth]').attr("content");
 
 var List = React.createClass({
+	UpdateListTitle: function(newData)
+	{
+		var data = this.state.data;
+		data.title = newData.newTitle;
+		data.privacy = newData.newPrivacy;
+
+		this.setState({data: data});
+	},
+
 	fetchList: function()
 	{
 		$.ajax({
@@ -92,17 +101,21 @@ var List = React.createClass({
 			if(data.privacy)
 			{
 				var privacy, privacy_color;
+
 				switch(data.privacy)
 				{
+					case "3":
 					case 3:
 						privacy = "Private";
 						privacy_color = "danger";
 						break;
+					case "2":
 					case 2:
 						privacy = "Friends Only";
 						privacy_color = "warning";
 						break;
-					default:
+					case "1":
+					case 1:
 						privacy = "Public";
 						privacy_color = "success";
 						break;
@@ -178,7 +191,7 @@ var List = React.createClass({
 		}
 
 		return (
-			<div>{ smallActionBar } { listElement }</div>
+			<div>{ smallActionBar } { listElement } <ListHandler UpdateListTitle={this.UpdateListTitle} editData={this.state.data} /></div>
 		);
 	}
 });
@@ -186,15 +199,21 @@ var List = React.createClass({
 var ListAction = React.createClass({
 	render: function()
 	{
-		console.log(this.props.myList);
+		var editList;
+
+		if(this.props.myList) {
+			editList = (
+				<div className="col-xs-6 col-lg-12">
+					<button className="btn btn-block" data-toggle="modal" data-target="#editListModal">Edit List</button>
+				</div>
+            );
+		}
 
 		return (
 			<div className="list-action-container">
 				<hr className="divider" />
 				<div className="row">
-					<div className="col-xs-6 col-lg-12">
-						<button className="btn btn-block">Edit List</button>
-					</div>
+					{ editList }
 					<div className="col-xs-6 col-lg-12">
 						<button className="btn btn-block">Subscribe to List</button>
 					</div>

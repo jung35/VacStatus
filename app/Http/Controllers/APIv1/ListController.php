@@ -1,9 +1,10 @@
 <?php namespace VacStatus\Http\Controllers\APIv1;
 
-use VacStatus\Http\Requests;
+use Illuminate\Http\Request;
+
 use VacStatus\Http\Controllers\Controller;
 
-use Illuminate\Http\Request;
+use VacStatus\Http\Requests;
 
 use VacStatus\Update\MostTracked;
 use VacStatus\Update\LatestTracked;
@@ -16,11 +17,28 @@ use VacStatus\Models\Subscription;
 use VacStatus\Steam\Steam;
 
 use Session;
+use Validator;
+use Input;
 
 class ListController extends Controller
 {
+	public function mySimpleList()
+	{
+		$this->middleware('auth');
+
+		$myList = UserList::where('user_list.user_id', \Auth::user()->id)
+		->get([
+			'user_list.id',
+			'user_list.title',
+			'user_list.privacy',
+		]);
+
+		return $myList;
+	}
 	public function listList()
 	{
+		$this->middleware('auth');
+
 		$return = [
 			'my_list' => [],
 			'friends_list' => []
@@ -140,5 +158,72 @@ class ListController extends Controller
 		if($customList->error()) return $customList->error();
 		
 		return $customList->getCustomList();
+	}
+
+	public function modifyCustomList($listId = null)
+	{
+		$this->middleware('csrf');
+		$this->middleware('auth');
+
+		$messages = [
+			'required' => 'The :attribute field is required.',
+			'numeric' => 'The :attribute field is required.',
+			'max' => 'List Name is limited to :max characters.',
+		];
+
+		$validator = Validator::make(
+			Input::all(), [
+				'title' => 'required|max:30',
+				'privacy' => 'required|numeric'
+			], $messages
+		);
+
+		if ($validator->fails())
+		{
+			return ['error' => $validator->errors()->all()[0]];
+		}
+
+		$user = \Auth::user();
+
+		if(!is_null($listId))
+		{
+			$userList = UserList::where('id', $listId)->first();
+			
+			if($userList->user_id !== $user->id)
+			{
+				return ['error' => 'You do not have permission to edit this list'];
+			}
+		} else if(!$user->canMakeList())
+		{
+			return ['error' => 'You\'ve reached the limit of list you can create!'];
+		} else {
+			$userList = new UserList;
+		}
+
+		$userList->title = Input::get('title');
+		$userList->privacy = Input::get('privacy');
+
+		if(!is_null($listId) && !$userList->save() || !$user->UserList()->save($userList))
+		{
+			return ['error' => 'There was an error while trying to save the list.'];
+		}
+
+		return $user->UserList()->get([
+			'user_list.id',
+			'user_list.title',
+			'user_list.privacy',
+      	]);
+	}
+
+	public function deleteCustomList(UserList $userList)
+	{
+		$this->middleware('csrf');
+		$this->middleware('auth');
+		
+		if(!$userList->delete()) {
+			return ['error' => 'There was an error trying to delete the List'];
+		}
+
+		return [true];
 	}
 }
