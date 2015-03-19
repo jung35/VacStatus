@@ -6,7 +6,7 @@
 
 @section('content')
 	<div id="profile" class="profile-page" data-steam64bitid="{{ $steam64BitId }}">
-		<div class="profile-header">
+{{-- 		<div class="profile-header">
 			<div class="container">
 				<div class="row">
 					<div class="col-xs-12 col-md-3 col-lg-2 col-lg-offset-1">
@@ -189,7 +189,7 @@
 					<hr class="divider">
 				</div>
 			</div>
-		</div>
+		</div> --}}
 	</div>
 	<div class="container">
 		<div class="row">

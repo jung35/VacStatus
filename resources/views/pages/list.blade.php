@@ -2,13 +2,12 @@
 
 @section('content')
 	<div id="list" class="list-page" data-grab="{{ $grab }}">
-		<div class="list-action-bar hidden-lg">
+		{{-- <div class="list-action-bar hidden-lg">
 			<div class="container">
 				<div class="row">
 					<div class="col-xs-12">
 						<a href="#" data-toggle="collapse" data-target="#list-actions"><span class="fa fa-bars"></span>&nbsp; Advanced Options</a>
 						<div id="list-actions" class="list-actions collapse">
-							@include('pages.tempPartial.listAction')
 						</div>
 					</div>
 				</div>
@@ -18,13 +17,12 @@
 			<div class="row">
 				<div class="col-lg-3">
 					<div class="list-actions visible-lg-block">
-						@include('pages.tempPartial.listAction')
 					</div>
 				</div>
 				<div class="col-xs-12 col-lg-9">
 					<h2 class="list-title">
-						Most Tracked Users{{-- <br>
-						<small>By: TestUser</small> --}}
+						Most Tracked Users<br>
+						<small>By: TestUser</small>
 					</h2>
 					<div class="table-responsive">
 						<table class="table list-table">
@@ -60,7 +58,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> --}}
 	</div>
 @stop
 
