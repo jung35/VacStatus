@@ -16,18 +16,8 @@ use VacStatus\Steam\Steam;
 
 *************************************************************************************************
 
-	->	Get ALL of the rows from the 'user_list_profile' table
-		->	Create a new blank array (call this: ListProfileArray)
-		->	For Loop
-			-> CHECK IF INDEX OF 'profile_id' IS NOT FOUND IN 'ListProfileArray'
-				->	Make value of 'profile_id' as index of 'ListProfileArray' and insert profile detail as array
-				->	Along with the profile detail, add another index containing the '# of times profile was added'
-					->	start the value with 0
-			-> AFTER THE IF STATMENT (NOT ELSE)
-				->	Grab the profile from 'ListProfileArray' and add increment
-		->	Sort 'ListProfileArray' by '# of times profile was added'
-			->	Grab only the first 20 after sorted
-				->	The '20' is some nice number I came up with. It could be always changed around
+	->	sql
+	
 */
 
 /*
