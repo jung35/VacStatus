@@ -1,4 +1,12 @@
 var ListPortal = React.createClass({displayName: "ListPortal",
+	UpdateMyList: function(myNewList)
+	{
+		var data = this.state.data;
+		data.my_list = myNewList;
+
+		this.setState({ data: data });
+	},
+
 	fetchLists: function()
 	{
 		$.ajax({
@@ -165,7 +173,7 @@ var ListPortal = React.createClass({displayName: "ListPortal",
 					)
 				)
 			), 
-			React.createElement(ListHandler, null)
+			React.createElement(ListHandler, {UpdateMyList: this.UpdateMyList})
 		)
      	);
 	}

@@ -208,11 +208,13 @@ class ListController extends Controller
 			return ['error' => 'There was an error while trying to save the list.'];
 		}
 
-		return $user->UserList()->get([
-			'user_list.id',
-			'user_list.title',
-			'user_list.privacy',
-      	]);
+		return $user->UserList()
+			->orderBy('id', 'desc')
+			->get([
+				'user_list.id',
+				'user_list.title',
+				'user_list.privacy',
+	      	]);
 	}
 
 	public function deleteCustomList(UserList $userList)

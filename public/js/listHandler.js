@@ -3,6 +3,7 @@ var _token = $('meta[name=_token]').attr("content");
 var ListHandler = React.createClass({displayName: "ListHandler",
 	submitNewListToServer: function(data)
 	{
+		console.log(data);
 		$.ajax({
 			url: '/api/v1/list',
 			dataType: 'json',
@@ -17,6 +18,10 @@ var ListHandler = React.createClass({displayName: "ListHandler",
 					notif.add('danger', data.error).run();
 				} else {
 					notif.add('success', 'List has been created!').run();
+					if(this.props.UpdateMyList !== undefined)
+					{
+						this.props.UpdateMyList(data);
+					}
 					this.updateLists(data);
 				}
 			}.bind(this),
