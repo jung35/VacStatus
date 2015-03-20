@@ -152,6 +152,11 @@ Route::group([
 		'uses' => 'MainController@index'
 	]);
 
+	post('/announcement', [
+     	'as' => 'admin.announcement.save',
+     	'uses' => 'MainController@announcementSave'
+ 	]);
+
 	Route::group(['prefix' => 'db'], function()
 	{
 		get('/', [

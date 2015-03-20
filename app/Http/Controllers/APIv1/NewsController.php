@@ -5,12 +5,12 @@ use VacStatus\Http\Controllers\Controller;
 
 use VacStatus\Models\News;
 
-use \Michelf\Markdown;
+use Michelf\Markdown;
 
 class NewsController extends Controller
 {
 	public function index()
-	{//Markdown::defaultTransform
+	{
 
 		$news = News::orderBy('id', 'desc')->paginate(10);
 

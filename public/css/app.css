@@ -6366,6 +6366,10 @@ body {
 .flash.flash-news {
   background: #43a047;
 }
+.flash p {
+  padding: 0;
+  margin: 0;
+}
 .flash .title {
   text-align: center;
   font-size: 1.56em;

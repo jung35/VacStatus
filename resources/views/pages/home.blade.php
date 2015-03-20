@@ -48,9 +48,7 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="title">Announcement</div>
-					<div class="content">
-						<strong><a href="#">Email & Subscription Implemented</a> -</strong> You can now recieve notifications!
-					</div>
+					<div class="content">{!! Michelf\Markdown::defaultTransform(Cache::get('announcement')) !!}</div>
 				</div>
 			</div>
 		</div>
