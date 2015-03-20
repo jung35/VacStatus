@@ -1,4 +1,5 @@
 var _token = $('meta[name=_token]').attr("content");
+var auth_check = $('meta[name=auth]').attr("content");
 
 var ListHandler = React.createClass({
 	submitNewListToServer: function(data)
@@ -124,6 +125,7 @@ var ListHandler = React.createClass({
 
 	fetchLists: function()
 	{
+		if(!auth_check) return;
 		$.ajax({
 			url: '/api/v1/list/simple',
 			dataType: 'json',

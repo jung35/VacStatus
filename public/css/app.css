@@ -6521,9 +6521,6 @@ hr.divider {
   font-size: .37em;
   font-weight: 600;
 }
-.home-page .hero .carousel {
-  margin-top: 30px;
-}
 .home-page .hero .carousel-control {
   color: rgba(255, 255, 255, 0.2);
   font-size: 4em;
@@ -6538,9 +6535,12 @@ hr.divider {
     right: 100px;
   }
 }
+.home-page .hero .carousel-inner .item {
+  padding-top: 30px;
+}
 .home-page .hero .carousel-inner .item img {
   box-shadow: 0px 0px 29px 0px #000000;
-  border: 1px solid white;
+  border: 1px solid #424242;
   border-radius: 3px;
   width: 413px;
   margin: 0 auto -3px;

@@ -18,13 +18,16 @@
 					<div id="hero-carousel" class="carousel slide" data-ride="carousel">
 						<div class="carousel-inner" role="listbox">
 							<div class="item active">
-								<img src="/img/screenshot/1.png">
+								<img src="/img/screenshot/0.png">
 							</div>
 							<div class="item">
 								<img src="/img/screenshot/1.png">
 							</div>
 							<div class="item">
-								<img src="/img/screenshot/1.png">
+								<img src="/img/screenshot/2.png">
+							</div>
+							<div class="item">
+								<img src="/img/screenshot/3.png">
 							</div>
 						</div>
 
