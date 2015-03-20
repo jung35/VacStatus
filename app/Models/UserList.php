@@ -20,7 +20,7 @@ class UserList extends Model
 	{
 		return $this->belongsTo('VacStatus\Models\User', 'user_id', 'id');
 	}
-
+	
 	public function canSubscribe($user_id)
 	{
 		return $this->user_id == $user_id || $this->privacy != 3;

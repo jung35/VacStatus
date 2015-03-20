@@ -96,6 +96,7 @@ class LoginController extends Controller {
 
     public function logout()
     {
+		$this->middleware('auth');
         Auth::logout();
 
 		return redirect()

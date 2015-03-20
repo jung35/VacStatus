@@ -13,11 +13,15 @@ Route::group(['prefix' => 'auth'], function()
 	]);
 
 	get('/logout', [
-		'middleware' => 'auth',
 		'as' => 'auth.logout',
 		'uses' => 'LoginController@logout'
 	]);
 });
+
+get('/list', [
+	'as' => 'list.list',
+	'uses' => 'PagesController@listListPage'
+]);
 
 get('/list/most', [
 	'as' => 'tracked.most',
@@ -34,13 +38,6 @@ get('/list/{listId}', [
 	'uses' => 'PagesController@customListPage'
 ]);
 
-Route::group(['middleware' => 'auth'], function()
-{
-	get('/list', [
-		'as' => 'list.list',
-		'uses' => 'PagesController@listListPage'
-	]);
-});
 
 get('/list/{useless}/{listId}', function($soUSLESS, $listId) {
 	return Redirect::route('tracked.custom', $listId, 301); 
@@ -76,6 +73,11 @@ post('/search', [
 	'uses' => 'PagesController@searchPage'
 ]);
 
+get('/settings', [
+	'as' => 'settings',
+	'uses' => 'SettingsController@subscriptionPage'
+]);
+
 Route::group(['prefix' => 'api'], function()
 {
 	Route::group(['prefix' => 'v1', 'namespace' => 'APIv1'], function()
@@ -93,7 +95,6 @@ Route::group(['prefix' => 'api'], function()
 		Route::group(['prefix' => 'list'], function()
 		{
 			get('/simple', [
-				'middleware' => 'auth',
 				'as' => 'api.v1.list.simple',
 				'uses' => 'ListController@mySimpleList'
 			]);
@@ -170,6 +171,14 @@ Route::group(['prefix' => 'api'], function()
 			]);
 
 			Route::any('/ipn', array('uses' => 'DonationController@IPN'));
+		});
+
+		Route::group(['prefix' => 'settings'], function()
+		{
+			get('/', [
+				'as' => 'api.v1.settings',
+				'uses' => 'SettingsController@subscribeIndex'
+			]);
 		});
 	});
 });

@@ -40,6 +40,8 @@ class PagesController extends Controller {
 
 	public function listListPage()
 	{
+		$this->middleware('auth');
+		
 		return view('pages/listPortal');
 	}
 

@@ -6904,3 +6904,39 @@ hr.divider {
   font-size: 2em;
   text-align: center;
 }
+.subscription-settings {
+  margin-bottom: 20px;
+}
+.subscription-settings .subscribe-form {
+  margin-top: 20px;
+}
+.subscription-settings .subscribe-form label {
+  font-weight: 600;
+}
+.subscription-settings .subscribe-form .form-group .col-sm-8 {
+  padding-right: 3px;
+}
+.subscription-settings .subscribe-form .form-group .col-sm-2 {
+  padding-left: 3px;
+}
+.subscription-settings .subscribed-list {
+  margin-top: 20px;
+}
+.subscription-settings .subscribed-list a {
+  display: block;
+  color: #212121;
+  text-decoration: none;
+}
+.subscription-settings .subscribed-list a:hover .panel-body {
+  background: #F5F5F5;
+}
+.subscription-settings .subscribed-list .panel-default {
+  margin-bottom: 0;
+}
+.subscription-settings .subscribed-list .list-name {
+  font-size: 1.3em;
+  font-weight: 600;
+}
+.subscription-settings .subscribed-list .list-author {
+  font-size: 1.1em;
+}

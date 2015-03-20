@@ -52,7 +52,7 @@
 						<li>
 							<a href="{{ route('profile', VacStatus\Steam\Steam::to64bit(Auth::user()->small_id)) }}">Profile</a>
 						</li>
-						<li><a href="#">Settings</a></li>
+						<li><a href="{{ route('settings') }}">Settings</a></li>
 						<li class="divider"></li>
 						<li><a href="{{ route('auth.logout') }}">Sign Out</a></li>
 					</ul>

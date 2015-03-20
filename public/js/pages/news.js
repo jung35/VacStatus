@@ -32,6 +32,7 @@ var News = React.createClass({displayName: "News",
 		var data, news, pagination;
 
 		data = this.state.data;
+		
 		if(data !== null)
 		{
 			if(data.error)
