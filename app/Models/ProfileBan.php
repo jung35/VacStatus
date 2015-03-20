@@ -47,15 +47,10 @@ class ProfileBan extends Model
 
 	public function skipProfileBanUpdate($steamBan)
 	{
-		$currentBanDate = new DateTime($this->vac_banned_on);
-
-		$newVacBanDate = new DateTime();
-		$newVacBanDate->sub(new DateInterval("P{$steamBan->DaysSinceLastBan}D"));
 
 		if($this->vac != $steamBan->NumberOfVACBans ||
 			$this->community != $steamBan->CommunityBanned ||
-			$this->trade != ($steamBan->EconomyBan != 'none') ||
-			$currentBanDate->format("Y-m-d") != $newVacBanDate->format("Y-m-d"))
+			$this->trade != ($steamBan->EconomyBan != 'none'))
 		{
 			return false;
 		}

@@ -6504,6 +6504,9 @@ hr.divider {
   padding: 0 !important;
   overflow: auto;
 }
+.pointer {
+  cursor: pointer;
+}
 /* 300,400,600,700 */
 .home-page .hero {
   background: #212121 url(/img/steam-logo.png) no-repeat center top;

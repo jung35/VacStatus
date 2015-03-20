@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSoftDelete extends Migration {
+class AddSoftDeleteToSubscriptionTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,13 +12,7 @@ class AddSoftDelete extends Migration {
 	 */
 	public function up()
 	{
-		// $table->softDeletes();
-		Schema::table('user_list', function(Blueprint $table)
-		{
-			$table->softDeletes();
-		});
-		
-		Schema::table('user_list_profile', function(Blueprint $table)
+		Schema::table('subscription', function(Blueprint $table)
 		{
 			$table->softDeletes();
 		});

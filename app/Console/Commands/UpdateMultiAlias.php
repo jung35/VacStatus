@@ -19,11 +19,6 @@ class UpdateMultiAlias extends Command {
 		parent::__construct();
 	}
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
-	 */
 	public function fire()
 	{
 		$cacheName = $this->queueCacheName.$this->argument('aliasCacheCode');

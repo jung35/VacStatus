@@ -144,8 +144,6 @@ class MultiProfile
 				\DB::raw('count(user_list_profile.id) as total')
 			]);
 
-		// dd($profiles->where('small_id', 71288472)->first());
-		// dd($profiles->where('small_id', 9856)->first());
 		$profileIds = [];
 
 		foreach($getSmallId as $small_id)
@@ -218,9 +216,11 @@ class MultiProfile
 
 				if($profileBan->vac > $steamBan->NumberOfVACBans)
 				{
-				  $profileBan->unban = true;
+					$skipProfileBan = false;
+			  		$profileBan->unban = true;
 				}
 			}
+			
 			$profileBan->vac = $steamBan->NumberOfVACBans;
 			$profileBan->community = $steamBan->CommunityBanned;
 			$profileBan->trade = $steamBan->EconomyBan != 'none';

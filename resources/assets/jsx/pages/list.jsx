@@ -103,9 +103,9 @@ var List = React.createClass({
 					if(auth_check) {
 						if(data.my_list) {
 							auth = (
-								<a className="userListModify open-addUserModal" href="#" onClick={this.submitDeleteUserToServer.bind(this, profile)} data-id={ profile.id }>
+								<span className="pointer userListModify open-addUserModal" onClick={this.submitDeleteUserToServer.bind(this, profile)} data-id={ profile.id }>
 									<span className="fa fa-minus faText-align text-danger"></span>
-								</a>
+								</span>
 							);
 						} else {
 							auth = (

@@ -4,7 +4,7 @@
         <!-- NAME: 1 COLUMN -->
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Thank you for registering!</title>
+        <title>Bans Found!</title>
 
     <style type="text/css">
         body,#bodyTable,#bodyCell{
@@ -540,6 +540,10 @@ ip Make the template fluid for portrait or landscape view adaptability. If a flu
             display:block !important;
         }
 
+}
+
+.tablebanlist td {
+    padding: 5px 10px;
 }</style></head>
     <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
         <center>
@@ -548,6 +552,17 @@ ip Make the template fluid for portrait or landscape view adaptability. If a flu
                     <td align="center" valign="top" id="bodyCell">
                         <!-- BEGIN TEMPLATE // -->
                         <table border="0" cellpadding="0" cellspacing="0" width="600" id="templateContainer">
+                            <tr>
+                                <td align="center" valign="top">
+                                    <!-- BEGIN PREHEADER // -->
+                                    <table border="0" cellpadding="0" cellspacing="0" width="600" id="templatePreheader">
+                                        <tr>
+                                            <td valign="top" class="preheaderContainer" style="padding-top:9px;"></td>
+                                        </tr>
+                                    </table>
+                                    <!-- // END PREHEADER -->
+                                </td>
+                            </tr>
                             <tr>
                                 <td align="center" valign="top">
                                     <!-- BEGIN HEADER // -->
@@ -574,14 +589,26 @@ ip Make the template fluid for portrait or landscape view adaptability. If a flu
 
                         <td valign="top" class="mcnTextContent" style="padding-top:9px; padding-right: 18px; padding-bottom: 9px; padding-left: 18px;">
 
-                            <h1>Thank you for subscribing!</h1>
+                            <h1>(Trade / Community / Vac) Bans Were Found!</h1>
 
-                            <h3>Now we just have to validate your email...</h3>
-
-                            <p>Please click on the following link to verify your email at VacStatus.<br>
-                            <a href="{{ route('settings.subscription.verify', $email) }}">{{ route('settings.subscription.verify', $email) }}</a><br>
-                            <br>
-                            If you have never registered here before, you can just go ahead and ignore it! :)</p>
+                            <table class="tablebanlist" border="1" width="100%">
+                                <tr>
+                                    <th width="32px"></th>
+                                    <th></th>
+                                    <th>VAC Ban</th>
+                                    <th>Community Ban</th>
+                                    <th>Trade Ban</th>
+                                </tr>
+                                @foreach($profiles as $profile)
+                                <tr>
+                                    <td><img src="{{{ $profile->avatar_thumb }}}"></td>
+                                    <td>{{{ $profile->display_name }}}</td>
+                                    <td style="color: {{ $profile->vac ?'red':'green' }};">{{ $profile->vac  ? date_format(new DateTime($profile->vac_banned_on), 'M j Y') : 'NORMAL' }}</td>
+                                    <td style="color: {{ $profile->community ?'red':'green' }};">{{ $profile->community ?'BANNED':'NORMAL' }}</td>
+                                    <td style="color: {{ $profile->trade ?'red':'green' }};">{{ $profile->trade ?'BANNED':'NORMAL' }}</td>
+                                </tr>
+                                @endforeach
+                            </table>
 
                         </td>
                     </tr>
