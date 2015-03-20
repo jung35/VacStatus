@@ -27,7 +27,7 @@
 					<a href="{{ route('list.list') }}">Lists</a>
 				</li>
 				<li>
-					<a href="#" data-toggle="modal" data-target="#createListModal">Create List</a>
+					<a href="#createListModal" data-toggle="modal">Create List</a>
 				</li>
 			@else
 				<li class="@setActiveLink('tracked.most')">
@@ -38,7 +38,7 @@
 				</li>
 			@endif
 				<li class="@setActiveLink('search')">
-					<a href="#">Search</a>
+					<a href="#searchModal" data-toggle="modal">Search</a>
 				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">

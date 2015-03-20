@@ -9,6 +9,10 @@ use VacStatus\Steam\Steam;
 
 use VacStatus\Models\News;
 
+use Input;
+use Cache;
+use Carbon;
+
 class PagesController extends Controller {
 
 	public function indexPage()
@@ -76,5 +80,29 @@ class PagesController extends Controller {
 	public function donatePage()
 	{
 		return view('pages/donate');
+	}
+
+	public function searchPage()
+	{
+		$this->middleware('csrf');
+
+		$searchQuery = Input::get('search');
+
+		if(!$searchQuery) return redirect()->route('home');
+
+		$randomString = str_random(12);
+		$searchCacheName = "search_key_";
+
+		if(Cache::has($searchCacheName.$randomString))
+			while(Cache::has($searchCacheName.$randomString))
+				$randomString = str_random(12);
+
+		$expiresAt = Carbon::now()->addMinutes(10);
+
+		Cache::put($searchCacheName.$randomString, $searchQuery, $expiresAt);
+
+		return view('pages/list')
+			->withGrab('search')
+			->withSearch($randomString);
 	}
 }

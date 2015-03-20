@@ -38,6 +38,8 @@ class SteamAPI {
 	public function setSmallId($smallId)
 	{
 		$this->setSteamId(Steam::to64Bit($smallId));
+		
+		return $this;
 	}
 
 	public function setSteamId($steam64BitId)
@@ -62,6 +64,8 @@ class SteamAPI {
 				$this->url .= "&steamids=$steam64BitId";
 				break;
 		}
+
+		return $this;
 	}
 
 	public function run()

@@ -123,6 +123,8 @@ class Steam {
 	{
 		$newAlias = [];
 
+		if(is_null($aliases)) return [];
+
 		foreach($aliases as $alias)
 		{
     		$newAlias[] = [
@@ -132,5 +134,90 @@ class Steam {
 		}
 
 		return $newAlias;
+	}
+
+	public static function findUser($data)
+	{
+		$data = strtolower(trim($data));
+
+		if (empty($data)) return ['error' => 'Invalid or empty input'];
+
+		if (strlen($data) > 100) return ['error' => 'Field too long'];
+		
+		if (substr($data, 0, 6) == 'steam_')
+		{
+			$tmp = explode(':', $data);
+
+			if ((count($tmp) == 3)
+			    && is_numeric($tmp[1])
+			    && is_numeric($tmp[2]))
+			{
+				$steam3Id = bcadd(($tmp[2] * 2) + $tmp[1], '76561197960265728');
+				return ['success' => $steam3Id];
+			}
+			return ['error' => 'Invalid Steam ID'];
+		}
+		else if (substr($data, 0, 2) == 'u:')
+		{
+			$tmp = explode(':', $data);
+
+			if ((count($tmp) == 3) && is_numeric($tmp[2]))
+			{
+				$steam3Id = bcadd($tmp[2], '76561197960265728');
+				return ['success' => $steam3Id];
+			}
+
+			return ['error' => 'Invalid Steam ID'];
+		} else if ($p = strrpos($data, '/'))
+		{
+			$tmp = explode('/',$data);
+			$a = null;
+
+			foreach ($tmp as $key => $item)
+			{
+				if ($item == 'profiles')
+				{
+					$a = $tmp[$key+1];
+					break;
+				} else if ($item == 'id')
+				{
+					$data = $tmp[$key+1];
+					break;
+				}
+			}
+
+			if (is_numeric($a) && preg_match('/7656119/', $a)) return ['success' => $a];
+			else {
+				$steamAPI = new SteamAPI('vanityUrl');
+				$steamVanityUrl = $steamAPI->setSteamId($data)->run();
+
+				if(isset($steamVanityUrl->type) && $steamVanityUrl->type == 'error'
+					|| !isset($steamVanityUrl->response->steamid)
+						&& $steamVanityUrl->response->success == 42) return ['error' => 'Invalid input'];
+
+				$steamid64 = (string) $steamVanityUrl->response->steamid;
+
+				if (!preg_match('/7656119/', $steamid64)) return ['error' => 'Invalid link'];
+				else return ['success' => $steamid64];
+			}
+		}
+		else if (is_numeric($data) && preg_match('/7656119/', $data))
+		{
+			return ['success' => $data];
+		}
+		else
+		{
+			$steamAPI = new SteamAPI('vanityUrl');
+			$steamVanityUrl = $steamAPI->setSteamId($data)->run();
+
+			if(isset($steamVanityUrl->type) && $steamVanityUrl->type == 'error'
+				|| !isset($steamVanityUrl->response->steamid)
+					&& $steamVanityUrl->response->success == 42) return ['error' => 'Invalid input'];
+
+			$steamid64 = (string) $steamVanityUrl->response->steamid;
+
+			if (!preg_match('/7656119/', $steamid64)) return ['error' => 'Invalid input'];
+			else return ['success' => $steamid64];
+		}
 	}
 }

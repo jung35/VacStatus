@@ -140,13 +140,11 @@ class SingleProfile extends BaseUpdate
 
 	public function getProfile()
 	{
-		if(!$this->canUpdate()) {
-			$return = $this->grabCache();
-			if($return !== false) return $return;
-			return $this->grabFromDB();
-		}
+		if($this->canUpdate()) return $this->updateUsingAPI();
 
-		return $this->updateUsingAPI();
+		$return = $this->grabCache();
+		if($return !== false) return $return;
+		return $this->grabFromDB();
 	}
 
 	protected function updateCache($data)
@@ -160,43 +158,40 @@ class SingleProfile extends BaseUpdate
 
 	protected function grabCache()
 	{
-		if(Cache::has($this->cacheName)) 
-		{
-			$return = Cache::get($this->cacheName);
+		if(!Cache::has($this->cacheName)) return false;
 
-			/* getting the number of times checked and added */
-			$gettingCount = UserListProfile::whereProfileId($return['id'])
-				->orderBy('id','desc')
-				->get();
+		$return = Cache::get($this->cacheName);
 
-			$profileTimesAdded = [
-				'number' => $gettingCount->count(),
-				'time' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y") : null
-			];
+		/* getting the number of times checked and added */
+		$gettingCount = UserListProfile::whereProfileId($return['id'])
+			->orderBy('id','desc')
+			->get();
 
-			$profileCheckCache = "profile_checked_";
+		$profileTimesAdded = [
+			'number' => $gettingCount->count(),
+			'time' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y") : null
+		];
 
-			$currentProfileCheck = [
-				'number' => 0,
-				'time' => date("M j Y", time())
-			];
+		$profileCheckCache = "profile_checked_";
 
-			if(Cache::has($profileCheckCache.$this->smallId)) $currentProfileCheck = Cache::get($profileCheckCache.$this->smallId);
+		$currentProfileCheck = [
+			'number' => 0,
+			'time' => date("M j Y", time())
+		];
 
-			$newProfileCheck = [
-				'number' => $currentProfileCheck['number'] + 1,
-				'time' => date("M j Y", time())
-			];
+		if(Cache::has($profileCheckCache.$this->smallId)) $currentProfileCheck = Cache::get($profileCheckCache.$this->smallId);
 
-			Cache::forever($profileCheckCache.$this->smallId, $newProfileCheck);
+		$newProfileCheck = [
+			'number' => $currentProfileCheck['number'] + 1,
+			'time' => date("M j Y", time())
+		];
 
-			$return['times_checked'] = $currentProfileCheck;
-			$return['times_added'] = $profileTimesAdded;
+		Cache::forever($profileCheckCache.$this->smallId, $newProfileCheck);
 
-			return $return;
-		}
+		$return['times_checked'] = $currentProfileCheck;
+		$return['times_added'] = $profileTimesAdded;
 
-		return false;
+		return $return;
 	}
 
 	private function updateUsingAPI()

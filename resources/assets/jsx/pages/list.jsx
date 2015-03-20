@@ -1,5 +1,6 @@
-var grab = $('#list').data('grab');
-var auth_check = $('meta[name=auth]').attr("content");
+var grab = $('#list').data('grab'),
+	searchKey = $('#list').data('search'),
+	auth_check = $('meta[name=auth]').attr("content");
 
 var List = React.createClass({
 	UpdateListTitle: function(newData)
@@ -13,8 +14,14 @@ var List = React.createClass({
 
 	fetchList: function()
 	{
+		var url = '/api/v1/list/'+grab;
+		if(grab == 'search')
+		{
+			url = 'api/v1/search/'+searchKey
+		}
+
 		$.ajax({
-			url: '/api/v1/list/'+grab,
+			url: url,
 			dataType: 'json',
 			success: function(data) {
 				this.setState({data: data});

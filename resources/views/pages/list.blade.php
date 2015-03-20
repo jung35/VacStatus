@@ -1,7 +1,7 @@
 @extends('layout.app')
 
 @section('content')
-	<div id="list" class="list-page" data-grab="{{ $grab }}">
+	<div id="list" class="list-page" data-grab="{{ $grab }}" data-search="{{ isset($search) ? $search : ''}}">
 		{{-- <div class="list-action-bar hidden-lg">
 			<div class="container">
 				<div class="row">

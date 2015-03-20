@@ -11,6 +11,7 @@ use VacStatus\Steam\SteamAPI;
 use VacStatus\Models\Profile;
 use VacStatus\Models\ProfileOldAlias;
 use VacStatus\Models\UserListProfile;
+use VacStatus\Models\ProfileBan;
 
 class MultiProfile
 {
@@ -89,7 +90,7 @@ class MultiProfile
 			$smallId = $profile['profile']['small_id'];
 			$key = $profile['profile_key'];
 
-			$getSmallId[] = $smallId;
+			$getSmallId[] = (int) $smallId;
 			$toSaveKey[$smallId] = $key;
 		}
 
@@ -178,12 +179,12 @@ class MultiProfile
 			$steamInfo = $steamInfos[$keys['steamInfos']];
 			$steamBan = $steamBans[$keys['steamBans']];
 
-			$profile = $profiles->where('small_id', $smallId)->first();
+			$profile = $profiles->where('small_id', (int) $smallId)->first();
 
 			if(is_null($profile))
 			{
 				$profile = new Profile;
-				$profile->small_id = $this->smallId;
+				$profile->small_id = $smallId;
 
 				if(isset($steamInfo->timecreated)) // people like to hide their info because smurf or hack
 				{
@@ -272,8 +273,17 @@ class MultiProfile
 
 			$oldAliasArray = [];
 
+
 			foreach($profileOldAlias as $k => $oldAlias)
 			{
+				if(!is_object($oldAlias))
+				{
+					$oldAliasArray[] = [
+						"newname" => $profileOldAlias->seen_alias,
+						"timechanged" => $profileOldAlias->seen->format("M j Y")
+					];
+					break;
+				}
 				$oldAliasArray[] = [
 					"newname" => $oldAlias->seen_alias,
 					"timechanged" => $oldAlias->seen->format("M j Y")
@@ -310,7 +320,7 @@ class MultiProfile
 				'profile_created'	=> isset($steamInfo->timecreated) ? date("M j Y", $steamInfo->timecreated) : "Unknown",
 				'privacy'			=> $steamInfo->communityvisibilitystate,
 				'alias'				=> Steam::friendlyAlias(json_decode($profile->alias)),
-				'created_at'		=> $profile->created_at->format("M j Y"),
+				'created_at'		=> $profile->created_at ? $profile->created_at->format("M j Y") : null,
 				'vac'				=> $steamBan->NumberOfVACBans,
 				'vac_banned_on'		=> $vacBanDate->format("M j Y"),
 				'community'			=> $steamBan->CommunityBanned,
@@ -321,7 +331,7 @@ class MultiProfile
 				'profile_old_alias'	=> $oldAliasArray,
 				'times_checked'		=> $currentProfileCheck,
 				'times_added'		=> [
-					'number' => $profile->total,
+					'number' => $profile->total?:0,
 					'time' => (new DateTime($profile->created_at))->format("M j Y")
 				],
 			];

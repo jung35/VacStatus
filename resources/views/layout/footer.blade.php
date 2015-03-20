@@ -29,7 +29,36 @@
 	</div>
 </div>
 
-<div id="search"></div>
+<div class="modal fade" id="searchModal" tabIndex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				<h4 class="modal-title">Search Users</h4>
+			</div>
+			<form action="{{ route('search') }}" method="post">
+				<div class="modal-body">
+					<div class="form-group">
+						<textarea
+							name="search"
+							cols="30"
+							rows="10"
+							class="form-control"
+							placeholder="2 ways to search:
+ - type in steam URL/id/profile and split them in spaces or newlines or both
+ - Type 'status' on console and paste the output here"
+						></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="hidden" name="_token" value="{{ csrf_token() }}">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Search</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
@@ -37,4 +66,3 @@
 
 <script src="/js/notification.js"></script>
 <script src="/js/listHandler.js"></script>
-<script src="/js/search.js"></script>

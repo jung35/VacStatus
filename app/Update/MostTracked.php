@@ -71,7 +71,7 @@ class MostTracked extends BaseUpdate
 	}
 
 	private function grabFromDB()
-	{		
+	{
 		$userListProfiles = UserListProfile::select(
 			'profile.id',
 			'profile.display_name',

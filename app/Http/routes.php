@@ -71,9 +71,10 @@ get('/donate', [
 	'uses' => 'PagesController@donatePage'
 ]);
 
-
-
-
+post('/search', [
+	'as' => 'search',
+	'uses' => 'PagesController@searchPage'
+]);
 
 Route::group(['prefix' => 'api'], function()
 {
@@ -82,6 +83,11 @@ Route::group(['prefix' => 'api'], function()
 		get('/profile/{steam65BitId}', [
 			'as' => 'api.v1.profile',
 			'uses' => 'ProfileController@index'
+		]);
+
+		get('/search/{searchKey}', [
+			'as' => 'api.v1.search',
+			'uses' => 'SearchController@search'
 		]);
 
 		Route::group(['prefix' => 'list'], function()
