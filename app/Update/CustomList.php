@@ -69,8 +69,11 @@ class CustomList
 			->leftjoin('profile', 'ulp_1.profile_id', '=', 'profile.id')
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
-			->leftjoin('subscription', 'subscription.user_list_id', '=', 'user_list.id')
-			->groupBy('profile.id')
+			->leftJoin('subscription', function($join)
+			{
+				$join->on('subscription.user_list_id', '=', 'user_list.id')
+					->whereNull('subscription.deleted_at');
+			})->groupBy('profile.id')
 			->orderBy('ulp_1.id', 'desc')
 			->get([
 		      	'ulp_1.profile_name',
@@ -94,11 +97,34 @@ class CustomList
 				\DB::raw('count(distinct subscription.id) as sub_count'),
 			]);
 
+
+		$canSub = false;
+		$subscription = null;
+
+		if(\Auth::check())
+		{
+			$user = \Auth::user();
+			$userMail = $user->UserMail;
+			$subscription = $user->Subscription
+				->where('user_list_id', $userList->id)
+				->first();
+
+			if($userMail)
+			{
+				if($userMail->verify == "verified" || $userMail->pushbullet_verify == "verified")
+				{
+					$canSub = true;
+				}
+			}
+		}
+
 		$return = [
 			'id' => $userList->id,
 			'title' => $userList->title,
 			'author' => $userList->user->display_name,
 			'my_list' => $this->myList(),
+			'can_sub' => $canSub,
+			'subscription' => $subscription,
 			'privacy' => $userList->privacy,
 			'sub_count' => isset($userListProfiles[0]) ? $userListProfiles[0]->sub_count : 0,
 			'list' => []

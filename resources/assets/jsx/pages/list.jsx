@@ -70,6 +70,53 @@ var List = React.createClass({
 		});
 	},
 
+	submitSubscriptionToServer: function()
+	{
+		$.ajax({
+			url: '/api/v1/list/subscribe/' + this.state.data.id,
+			dataType: 'json',
+			type: 'POST',
+			data: { _token: _token, },
+			success: function(data) {
+				if(data.error) {
+					notif.add('danger', data.error).run();
+				} else {
+					notif.add('success', 'You have subscribed to the list!').run();
+					this.setState({data: data});
+				}
+			}.bind(this),
+				error: function(xhr, status, err) {
+				notif.add('danger', err).run();
+			}.bind(this)
+		});
+
+	},
+
+	submitUnsubscriptionToServer: function()
+	{
+		$.ajax({
+			url: '/api/v1/list/subscribe/' + this.state.data.id,
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				_token: _token,
+				_method: 'DELETE',
+			},
+			success: function(data) {
+				if(data.error) {
+					notif.add('danger', data.error).run();
+				} else {
+					notif.add('success', 'You have unsubscribed from the list!').run();
+					this.setState({data: data});
+				}
+			}.bind(this),
+				error: function(xhr, status, err) {
+				notif.add('danger', err).run();
+			}.bind(this)
+		});
+	},
+
+
 	render: function()
 	{
 		var data,
@@ -183,7 +230,7 @@ var List = React.createClass({
 
 			if(auth_check && data.author)
 			{
-				var eListAction = <ListAction myList={data.my_list} />;
+				var eListAction = <ListAction ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} data={data} />;
 				smallActionBar = (
 					<div className="list-action-bar hidden-lg">
 						<div className="container">
@@ -251,29 +298,71 @@ var List = React.createClass({
 });
 
 var ListAction = React.createClass({
+	doSub: function()
+	{
+		this.props.ListSubscribe();
+	},
+
+	doUnsub: function()
+	{
+		this.props.ListUnsubscribe();
+	},
+
 	render: function()
 	{
-		var editList;
+		var data, editList, subButton;
 
-		if(this.props.myList) {
-			editList = (
+		data = this.props.data;
+
+		if(data !== null)
+		{
+			if(data.my_list) {
+				editList = (
+					<div className="col-xs-6 col-lg-12">
+						<button className="btn btn-block" data-toggle="modal" data-target="#editListModal">Edit List</button>
+					</div>
+				);
+			}
+
+			subButton = (
 				<div className="col-xs-6 col-lg-12">
-					<button className="btn btn-block" data-toggle="modal" data-target="#editListModal">Edit List</button>
+					<button className="btn btn-block" disabled="disabled">Subscribe to List</button>
+					<div className="text-center">
+						<small><i>Please go to settings and verify email</i></small>
+					</div>
+				</div>
+			);
+
+			if(data.can_sub)
+			{
+				subButton = (
+					<div className="col-xs-6 col-lg-12">
+						<button onClick={ this.doSub } className="btn btn-block btn-primary">Subscribe to List</button>
+					</div>
+				);
+
+				if(data.subscription !== null) 
+				{
+					subButton = (
+						<div className="col-xs-6 col-lg-12">
+							<button onClick={ this.doUnsub } className="btn btn-block btn-danger">Unubscribe to List</button>
+						</div>
+					);
+				}
+			}
+
+			return (
+				<div className="list-action-container">
+					<hr className="divider" />
+					<div className="row">
+						{ editList }
+						{ subButton }
+					</div>
 				</div>
 			);
 		}
 
-		return (
-			<div className="list-action-container">
-				<hr className="divider" />
-				<div className="row">
-					{ editList }
-					<div className="col-xs-6 col-lg-12">
-						<button className="btn btn-block">Subscribe to List</button>
-					</div>
-				</div>
-			</div>
-		);
+		return <div></div>
 	}
 });
 

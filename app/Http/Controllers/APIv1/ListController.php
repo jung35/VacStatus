@@ -17,6 +17,7 @@ use VacStatus\Steam\Steam;
 use Session;
 use Validator;
 use Input;
+use Auth;
 
 class ListController extends Controller
 {
@@ -24,7 +25,7 @@ class ListController extends Controller
 	{
 		$this->middleware('auth');
 
-		$myList = UserList::where('user_id', \Auth::user()->id)
+		$myList = UserList::where('user_id', Auth::user()->id)
 			->orderBy('id', 'desc')
 			->get([
 				'id',
@@ -43,7 +44,7 @@ class ListController extends Controller
 			'friends_list' => []
 		];
 
-		$userId = \Auth::user()->id;
+		$userId = Auth::user()->id;
 		$myLists = UserList::where('user_list.user_id', $userId)
 			->leftjoin('user_list_profile as ulp_1', 'ulp_1.user_list_id', '=', 'user_list.id')
 			->leftjoin('subscription', 'subscription.user_list_id', '=', 'user_list.id')
@@ -163,6 +164,7 @@ class ListController extends Controller
 		if(!isset($userList->id)) {
 			return ['error' => '404'];
 		}
+
 		$customList = new CustomList($userList);
 		if($customList->error()) return $customList->error();
 		
@@ -192,7 +194,7 @@ class ListController extends Controller
 			return ['error' => $validator->errors()->all()[0]];
 		}
 
-		$user = \Auth::user();
+		$user = Auth::user();
 
 		if(!is_null($listId))
 		{
@@ -238,5 +240,49 @@ class ListController extends Controller
 		}
 
 		return [true];
+	}
+
+	public function listSubscribe(UserList $userList)
+	{
+		$this->middleware('csrf');
+		$this->middleware('auth');
+
+		if(!isset($userList->id)) {
+			return ['error' => '404'];
+		}
+
+		$user = Auth::user();
+
+		$subscription = new Subscription;
+		$subscription->user_id = $user->id;
+		$subscription->user_list_id = $userList->id;
+		$subscription->save();
+
+		$customList = new CustomList($userList);
+		if($customList->error()) return $customList->error();
+		
+		return $customList->getCustomList();
+	}
+
+	public function listUnsubscribe(UserList $userList)
+	{
+		$this->middleware('csrf');
+		$this->middleware('auth');
+
+		if(!isset($userList->id)) {
+			return ['error' => '404'];
+		}
+
+		$user = Auth::user();
+		$subscription = Subscription::whereUserListId($userList->id)
+			->whereUserId($user->id)
+			->first();
+
+		$subscription->delete();
+		
+		$customList = new CustomList($userList);
+		if($customList->error()) return $customList->error();
+		
+		return $customList->getCustomList();
 	}
 }

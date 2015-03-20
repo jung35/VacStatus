@@ -70,6 +70,53 @@ var List = React.createClass({displayName: "List",
 		});
 	},
 
+	submitSubscriptionToServer: function()
+	{
+		$.ajax({
+			url: '/api/v1/list/subscribe/' + this.state.data.id,
+			dataType: 'json',
+			type: 'POST',
+			data: { _token: _token, },
+			success: function(data) {
+				if(data.error) {
+					notif.add('danger', data.error).run();
+				} else {
+					notif.add('success', 'You have subscribed to the list!').run();
+					this.setState({data: data});
+				}
+			}.bind(this),
+				error: function(xhr, status, err) {
+				notif.add('danger', err).run();
+			}.bind(this)
+		});
+
+	},
+
+	submitUnsubscriptionToServer: function()
+	{
+		$.ajax({
+			url: '/api/v1/list/subscribe/' + this.state.data.id,
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				_token: _token,
+				_method: 'DELETE',
+			},
+			success: function(data) {
+				if(data.error) {
+					notif.add('danger', data.error).run();
+				} else {
+					notif.add('success', 'You have unsubscribed from the list!').run();
+					this.setState({data: data});
+				}
+			}.bind(this),
+				error: function(xhr, status, err) {
+				notif.add('danger', err).run();
+			}.bind(this)
+		});
+	},
+
+
 	render: function()
 	{
 		var data,
@@ -183,7 +230,7 @@ var List = React.createClass({displayName: "List",
 
 			if(auth_check && data.author)
 			{
-				var eListAction = React.createElement(ListAction, {myList: data.my_list});
+				var eListAction = React.createElement(ListAction, {ListSubscribe: this.submitSubscriptionToServer, ListUnsubscribe: this.submitUnsubscriptionToServer, data: data});
 				smallActionBar = (
 					React.createElement("div", {className: "list-action-bar hidden-lg"}, 
 						React.createElement("div", {className: "container"}, 
@@ -251,29 +298,71 @@ var List = React.createClass({displayName: "List",
 });
 
 var ListAction = React.createClass({displayName: "ListAction",
+	doSub: function()
+	{
+		this.props.ListSubscribe();
+	},
+
+	doUnsub: function()
+	{
+		this.props.ListUnsubscribe();
+	},
+
 	render: function()
 	{
-		var editList;
+		var data, editList, subButton;
 
-		if(this.props.myList) {
-			editList = (
+		data = this.props.data;
+
+		if(data !== null)
+		{
+			if(data.my_list) {
+				editList = (
+					React.createElement("div", {className: "col-xs-6 col-lg-12"}, 
+						React.createElement("button", {className: "btn btn-block", "data-toggle": "modal", "data-target": "#editListModal"}, "Edit List")
+					)
+				);
+			}
+
+			subButton = (
 				React.createElement("div", {className: "col-xs-6 col-lg-12"}, 
-					React.createElement("button", {className: "btn btn-block", "data-toggle": "modal", "data-target": "#editListModal"}, "Edit List")
+					React.createElement("button", {className: "btn btn-block", disabled: "disabled"}, "Subscribe to List"), 
+					React.createElement("div", {className: "text-center"}, 
+						React.createElement("small", null, React.createElement("i", null, "Please go to settings and verify email"))
+					)
+				)
+			);
+
+			if(data.can_sub)
+			{
+				subButton = (
+					React.createElement("div", {className: "col-xs-6 col-lg-12"}, 
+						React.createElement("button", {onClick:  this.doSub, className: "btn btn-block btn-primary"}, "Subscribe to List")
+					)
+				);
+
+				if(data.subscription !== null) 
+				{
+					subButton = (
+						React.createElement("div", {className: "col-xs-6 col-lg-12"}, 
+							React.createElement("button", {onClick:  this.doUnsub, className: "btn btn-block btn-danger"}, "Unubscribe to List")
+						)
+					);
+				}
+			}
+
+			return (
+				React.createElement("div", {className: "list-action-container"}, 
+					React.createElement("hr", {className: "divider"}), 
+					React.createElement("div", {className: "row"}, 
+						editList, 
+						subButton 
+					)
 				)
 			);
 		}
 
-		return (
-			React.createElement("div", {className: "list-action-container"}, 
-				React.createElement("hr", {className: "divider"}), 
-				React.createElement("div", {className: "row"}, 
-					editList, 
-					React.createElement("div", {className: "col-xs-6 col-lg-12"}, 
-						React.createElement("button", {className: "btn btn-block"}, "Subscribe to List")
-					)
-				)
-			)
-		);
+		return React.createElement("div", null)
 	}
 });
 

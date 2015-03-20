@@ -141,9 +141,19 @@ Route::group(['prefix' => 'api'], function()
 				'uses' => 'ListController@modifyCustomList'
 			]);
 
+			post('/subscribe/{userList}', [
+				'as' => 'api.v1.list.subscribe',
+				'uses' => 'ListController@listSubscribe'
+	     	]);
+
 			//
 			//	---------------------------------
 			//
+
+			delete('/subscribe/{userList}', [
+				'as' => 'api.v1.list.unsubscribe',
+				'uses' => 'ListController@listUnsubscribe'
+	     	]);
 
 			delete('/delete', [
 				'as' => 'api.v1.list.user.delete',
