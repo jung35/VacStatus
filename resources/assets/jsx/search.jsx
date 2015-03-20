@@ -1,9 +1,8 @@
 var Search = React.createClass({
 	render: function()
 	{
-		<div>
-		</div>
+		return <div></div>;
 	}
 });
 
-React.render(<Search />, document.GetElementById('search'));
+React.render(<Search />, document.getElementById('search'));

@@ -51,6 +51,15 @@ get('/u/{steam65BitId}', [
 	'uses' => 'PagesController@profilePage'
 ]);
 
+get('/news/{page?}', [
+	'as' => 'news',
+	'uses' => 'PagesController@newsPage'
+]);
+
+
+
+
+
 Route::group(['prefix' => 'api'], function()
 {
 	Route::group(['prefix' => 'v1', 'namespace' => 'APIv1'], function()
@@ -112,6 +121,20 @@ Route::group(['prefix' => 'api'], function()
 			]);
 		});
 
+		Route::group(['prefix' => 'news'], function()
+		{
+
+			get('/', [
+				'as' => 'api.v1.news',
+				'uses' => 'NewsController@index'
+			]);
+
+			get('/{news}', [
+				'as' => 'api.v1.news.item',
+				'uses' => 'NewsController@showArticle'
+			]);
+		});
+
 		get('/profile/{steam65BitId}', [
 			'as' => 'api.v1.profile',
 			'uses' => 'ProfileController@index'
@@ -129,23 +152,54 @@ Route::group([
 		'uses' => 'MainController@index'
 	]);
 
-	get('/db', [
-		'as' => 'admin.db',
-		'uses' => 'DatabaseController@index'
-	]);
-	
-	get('/db/users', [
-		'as' => 'admin.db.users',
-		'uses' => 'DatabaseController@user'
-	]);
-	
-	get('/db/profiles', [
-		'as' => 'admin.db.profiles',
-		'uses' => 'DatabaseController@profile'
-	]);
+	Route::group(['prefix' => 'db'], function()
+	{
+		get('/', [
+			'as' => 'admin.db',
+			'uses' => 'DatabaseController@index'
+		]);
+		
+		get('/users', [
+			'as' => 'admin.db.users',
+			'uses' => 'DatabaseController@user'
+		]);
+		
+		get('/profiles', [
+			'as' => 'admin.db.profiles',
+			'uses' => 'DatabaseController@profile'
+		]);
+	});
+
+	Route::group(['prefix' => 'news'], function()
+	{
+		get('/', [
+			'as' => 'admin.news',
+			'uses' => 'NewsController@index'
+		]);
+
+		get('/{news}', [
+			'as' => 'admin.news.edit',
+			'uses' => 'NewsController@editForm'
+		]);
+
+		post('/{newsId?}', [
+			'as' => 'admin.news.save',
+			'uses' => 'NewsController@saveNews'
+		]);
+
+		delete('/{news}', [
+			'as' => 'admin.news.delete',
+			'uses' => 'NewsController@delete'
+		]);
+	});
 });
 
 Route::model('userList', 'VacStatus\Models\UserList', function()
+{
+	return ['error' => '404'];
+});
+
+Route::model('news', 'VacStatus\Models\News', function()
 {
 	return ['error' => '404'];
 });

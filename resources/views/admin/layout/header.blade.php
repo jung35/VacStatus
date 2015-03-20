@@ -7,7 +7,7 @@
 						<a href="{{ route('admin.home') }}">Admin Home</a>
 					</li>
 					<li class="@setActiveLink('admin.news')">
-						<a href="#">News</a>
+						<a href="{{ route('admin.news') }}">News</a>
 					</li>
 					<li class="@setActiveLink('admin.db')">
 						<a href="{{ route('admin.db') }}">Database</a>

@@ -18,6 +18,10 @@
 				<li class="{{ Route::currentRouteName() != 'home' ? 'visible-xs-inline': '' }} @setActiveLink('home')">
 					<a href="{{ route('home') }}">Home</a>
 				</li>
+				<li class="@setActiveLink('news')">
+					<a href="#">News</a>
+				</li>
+
 			@if(\Auth::check())
 				<li class="@setActiveLink('list.list')">
 					<a href="{{ route('list.list') }}">Lists</a>

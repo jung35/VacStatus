@@ -7,11 +7,26 @@ use Illuminate\Http\Request;
 
 use VacStatus\Steam\Steam;
 
+use VacStatus\Models\News;
+
 class PagesController extends Controller {
 
 	public function indexPage()
 	{
-		return view('pages/home');
+		$news = News::orderBy('id', 'desc')->take(2)->get();
+
+		$parsedNews = [];
+
+		foreach($news as $article)
+		{
+			$parsedNews[] = [
+				'id' => $article->id,
+				'title' => $article->title,
+				'created_at' => $article->created_at->format("M j Y"),
+			];
+		}
+
+		return view('pages/home', compact('parsedNews'));
 	}
 
 	public function profilePage($steam64BitId)
@@ -40,5 +55,11 @@ class PagesController extends Controller {
 	{
 		return view('pages/list')
 			->withGrab($listId);
+	}
+
+	public function newsPage($page = 1)
+	{
+		return view('pages/news')
+			->withPage($page);
 	}
 }

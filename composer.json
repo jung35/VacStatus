@@ -10,7 +10,8 @@
 		"guzzlehttp/guzzle": "~4.0",
 		"mike182uk/paypal-ipn-listener" : "v2.0.2",
 		"sgtaziz/steamauth": "~1.0",
-		"predis/predis": "1.1.*@dev"
+		"predis/predis": "1.1.*@dev",
+		"michelf/php-markdown": "1.5.0"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",

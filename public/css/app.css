@@ -6286,6 +6286,16 @@ body {
 .navbar .dropdown-menu li a:focus {
   background: rgba(0, 0, 0, 0.5);
 }
+@media (min-width: 768px) {
+  .navbar {
+    font-size: 0.9em;
+  }
+}
+@media (min-width: 992px) {
+  .navbar {
+    font-size: 1em;
+  }
+}
 .footer {
   min-height: 64px;
   background: #212121;

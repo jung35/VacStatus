@@ -62,12 +62,11 @@
 				<div class="col-xs-12">
 					<div class="title">News</div>
 					<ul class="content">
+						@foreach($parsedNews as $singleArticle)
 						<li>
-							<strong><a href="#">[Jan 01 2015] Error in Email Updates</a></strong>
+							<strong><a href="{{ route('news') }}">[{{ $singleArticle['created_at'] }}] {{ $singleArticle['title'] }}</a></strong>
 						</li>
-						<li>
-							<strong><a href="#">[Jan 02 2015] Mass add on search & pushbullet notification</a></strong>
-						</li>
+						@endforeach
 					</ul>
 				</div>
 			</div>
