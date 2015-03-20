@@ -6840,6 +6840,39 @@ hr.divider {
 .listPortal-page .btn {
   margin-top: 5px;
 }
+.donate-page {
+  padding: 0 0 30px;
+}
+.donate-page p {
+  line-height: 170%;
+  font-size: 14px;
+}
+.donate-page p.tiny-text {
+  line-height: 5px;
+  font-size: 12px;
+}
+.donate-page label {
+  line-height: 25px;
+}
+@media (max-width: 991px) {
+  .donate-page {
+    text-align: center;
+  }
+  .donate-page table {
+    text-align: left;
+  }
+}
+@media (max-width: 991px) and (min-width: 768px) {
+  .donate-page .donate-button {
+    text-align: right;
+  }
+  .donate-page .donate-user-text {
+    text-align: left;
+  }
+}
+.donate-page a {
+  color: #212121;
+}
 .admin-header {
   background: #424242;
 }

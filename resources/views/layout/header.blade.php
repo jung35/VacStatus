@@ -60,7 +60,7 @@
 			@else
 				<li><a class="steam-small-login" href="{{ route('auth.login') }}">Sign in through STEAM</a></li>
 			@endif
-				<li><a class="heart-red" href="#"><span class="fa fa-heart"></span></a></li>
+				<li><a class="heart-red" href="{{ route('donate') }}"><span class="fa fa-heart"></span></a></li>
 			</ul>
 		</div>
 	</div>

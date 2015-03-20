@@ -62,4 +62,19 @@ class PagesController extends Controller {
 		return view('pages/news')
 			->withPage($page);
 	}
+
+	public function privacyPage()
+	{
+		return view('pages/privacy');
+	}
+
+	public function contactPage()
+	{
+		return view('pages/contact');
+	}
+
+	public function donatePage()
+	{
+		return view('pages/donate');
+	}
 }

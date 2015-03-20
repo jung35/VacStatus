@@ -3,9 +3,7 @@
 use Illuminate\Http\Request;
 
 use VacStatus\Http\Controllers\Controller;
-
 use VacStatus\Http\Requests;
-
 use VacStatus\Update\MostTracked;
 use VacStatus\Update\LatestTracked;
 use VacStatus\Update\CustomList;

@@ -70,7 +70,6 @@ var List = React.createClass({
 			list,
 			smallActionBar,
 			listElement,
-			specialColors,
 			showListAction,
 			listExtraInfo;
 
@@ -92,7 +91,7 @@ var List = React.createClass({
 			{
 				list = data.list.map(function(profile, index)
 				{
-					var auth;
+					var auth, specialColors;
 
 					if(auth_check) {
 						if(data.my_list) {
@@ -109,6 +108,7 @@ var List = React.createClass({
 							);
 						}
 					}
+
 					specialColors = "";
 					if(profile.beta) specialColors = "beta-name";
 					if(profile.donation >= 10.0) specialColors = "donator-name";

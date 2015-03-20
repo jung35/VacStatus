@@ -56,6 +56,21 @@ get('/news/{page?}', [
 	'uses' => 'PagesController@newsPage'
 ]);
 
+get('/privacy', [
+	'as' => 'privacy',
+	'uses' => 'PagesController@privacyPage'
+]);
+
+get('/contact', [
+	'as' => 'contact',
+	'uses' => 'PagesController@contactPage'
+]);
+
+get('/donate', [
+	'as' => 'donate',
+	'uses' => 'PagesController@donatePage'
+]);
+
 
 
 
@@ -64,6 +79,11 @@ Route::group(['prefix' => 'api'], function()
 {
 	Route::group(['prefix' => 'v1', 'namespace' => 'APIv1'], function()
 	{
+		get('/profile/{steam65BitId}', [
+			'as' => 'api.v1.profile',
+			'uses' => 'ProfileController@index'
+		]);
+
 		Route::group(['prefix' => 'list'], function()
 		{
 			get('/simple', [
@@ -135,10 +155,16 @@ Route::group(['prefix' => 'api'], function()
 			]);
 		});
 
-		get('/profile/{steam65BitId}', [
-			'as' => 'api.v1.profile',
-			'uses' => 'ProfileController@index'
-		]);
+		Route::group(['prefix' => 'donate'], function()
+		{
+
+			get('/', [
+				'as' => 'api.v1.donate',
+				'uses' => 'DonationController@index'
+			]);
+
+			Route::any('/ipn', array('uses' => 'DonationController@IPN'));
+		});
 	});
 });
 

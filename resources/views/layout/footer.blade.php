@@ -3,10 +3,10 @@
 		<div class="row">
 			<div class="col-xs-12 col-md-6 col-md-push-6">
 				<ul class="left-footer">
-					<li><a href="#">Donate</a></li>
-					<li><a href="#">Privacy Policy</a></li>
-					<li><a href="#">Contact</a></li>
-					<li><a href="#">Github</a></li>
+					<li><a href="{{ route('donate') }}">Donate</a></li>
+					<li><a href="{{ route('privacy') }}">Privacy Policy</a></li>
+					<li><a href="{{ route('contact') }}">Contact</a></li>
+					<li><a target="_blank" href="https://github.com/jung3o/VacStatus">Github</a></li>
 				</ul>
 			</div>
 
