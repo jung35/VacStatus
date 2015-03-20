@@ -19,7 +19,7 @@
 					<a href="{{ route('home') }}">Home</a>
 				</li>
 				<li class="@setActiveLink('news')">
-					<a href="#">News</a>
+					<a href="{{ route('news') }}">News</a>
 				</li>
 
 			@if(\Auth::check())
