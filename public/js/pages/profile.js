@@ -41,10 +41,10 @@ var Profile = React.createClass({displayName: "Profile",
 			if(data.site_admin) specialColors = "admin";
 
 			if(auth_check) auth = (
-               	React.createElement("a", {className: "open-addUserModal", href: "#addUserModal", "data-toggle": "modal", "data-id":  data.id}, 
-               		React.createElement("span", {className: "fa fa-plus faText-align"})
-               	)
-           	);
+				React.createElement("a", {className: "open-addUserModal", href: "#addUserModal", "data-toggle": "modal", "data-id":  data.id}, 
+					React.createElement("span", {className: "fa fa-plus faText-align"})
+				)
+			);
 
 			switch(data.privacy)
 			{

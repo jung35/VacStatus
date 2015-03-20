@@ -84,7 +84,7 @@ var ListPortal = React.createClass({
 			{
 				friends_list = data.friends_list.map(function(list, index)
 				{
-					var privacy, privacy_color;
+					var privacy, privacy_color, specialColors;
 					switch(list.privacy)
 					{
 						case 3:
@@ -101,13 +101,18 @@ var ListPortal = React.createClass({
 							break;
 					}
 
+					specialColors = "";
+					if(list.beta) specialColors = "beta-name";
+					if(list.donation >= 10.0) specialColors = "donator-name";
+					if(list.site_admin) specialColors = "admin-name";
+
 					return (
 						<tr key={index}>
 							<td className="text-center">
 								<img src={ list.avatar_thumb } />
 							</td>
 							<td><a className="list_link" href={"/list/" + list.user_list_id}>{ list.title }</a></td>
-							<td>{ list.display_name }</td>
+							<td className={ specialColors }>{ list.display_name }</td>
 							<td className={"text-center text-" + privacy_color}>{ privacy }</td>
 							<td className="text-center">{ list.users_in_list }</td>
 							<td className="text-center">{ list.sub_count }</td>

@@ -37,6 +37,32 @@ var List = React.createClass({
 		};
 	},
 
+	submitDeleteUserToServer: function(profile)
+	{
+		$.ajax({
+			url: '/api/v1/list/delete',
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				_token: _token,
+				_method: 'DELETE',
+				list_id: this.state.data.id,
+				profile_id: profile.id
+			},
+			success: function(data) {
+				if(data.error) {
+					notif.add('danger', data.error).run();
+				} else {
+					notif.add('success', 'User has been removed from the list!').run();
+					this.setState({data: data});
+				}
+			}.bind(this),
+				error: function(xhr, status, err) {
+				notif.add('danger', err).run();
+			}.bind(this)
+		});
+	},
+
 	render: function()
 	{
 		var data,
@@ -66,18 +92,35 @@ var List = React.createClass({
 			{
 				list = data.list.map(function(profile, index)
 				{
+					var auth;
+
+					if(auth_check) {
+						if(data.my_list) {
+							auth = (
+								<a className="userListModify open-addUserModal" href="#" onClick={this.submitDeleteUserToServer.bind(this, profile)} data-id={ profile.id }>
+									<span className="fa fa-minus faText-align text-danger"></span>
+								</a>
+							);
+						} else {
+							auth = (
+								<a className="userListModify open-addUserModal" href="#addUserModal" data-toggle="modal" data-id={ profile.id }>
+									<span className="fa fa-plus faText-align text-primary"></span>
+								</a>
+							);
+						}
+					}
 					specialColors = "";
-					if(profile.beta) specialColors = "beta";
-					if(profile.donation >= 10.0) specialColors = "donator";
-					if(profile.site_admin) specialColors = "admin";
+					if(profile.beta) specialColors = "beta-name";
+					if(profile.donation >= 10.0) specialColors = "donator-name";
+					if(profile.site_admin) specialColors = "admin-name";
 
 					return (
-						<tr key={index}>
+						<tr key={ index }>
 							<td className="user_avatar">
-								<img src={profile.avatar_thumb} />
+								{ auth }<img src={profile.avatar_thumb} />
 							</td>
 							<td className="user_name">
-								<a className={specialColors + "-name"} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
+								<a className={specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
 							</td>
 							<td className="user_vac_ban text-center">
 								<span className={"text-" + (profile.vac > 0 ? "danger" : "success")}>
@@ -95,7 +138,7 @@ var List = React.createClass({
 							</td>
 						</tr>
 					);
-				});
+				}.bind(this));
 			}
 
 			if(data.privacy)
@@ -128,7 +171,7 @@ var List = React.createClass({
 							<div>Subscribed Users: { data.sub_count }</div>
 						</div>
 					</div>
-             	);
+				);
 			}
 
 			if(auth_check && data.author)
@@ -150,7 +193,7 @@ var List = React.createClass({
 				)
 
 				showListAction = (
-	              	<div className="col-lg-3">
+					<div className="col-lg-3">
 						<div className="list-actions visible-lg-block">
 							{ eListAction }
 						</div>
@@ -172,15 +215,19 @@ var List = React.createClass({
 							</div>
 							<div className="table-responsive">
 								<table className="table list-table">
-									<tr>
-										<th width="48"></th>
-										<th>User</th>
-										<th className="text-center" width="120">VAC Ban</th>
-										<th className="text-center hidden-sm" width="140">Community Ban</th>
-										<th className="text-center hidden-sm" width="100">Trade Ban</th>
-										<th className="text-center" width="100">Tracked By</th>
-									</tr>
-									{ list }
+									<thead>
+										<tr>
+											<th width="80"></th>
+											<th>User</th>
+											<th className="text-center" width="120">VAC Ban</th>
+											<th className="text-center hidden-sm" width="140">Community Ban</th>
+											<th className="text-center hidden-sm" width="100">Trade Ban</th>
+											<th className="text-center" width="100">Tracked By</th>
+										</tr>
+									</thead>
+									<tbody>
+										{ list }
+									</tbody>
 								</table>
 							</div>
 						</div>
@@ -206,7 +253,7 @@ var ListAction = React.createClass({
 				<div className="col-xs-6 col-lg-12">
 					<button className="btn btn-block" data-toggle="modal" data-target="#editListModal">Edit List</button>
 				</div>
-            );
+			);
 		}
 
 		return (

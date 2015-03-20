@@ -101,6 +101,11 @@ Route::group(['prefix' => 'api'], function()
 			//	---------------------------------
 			//
 
+			delete('/delete', [
+				'as' => 'api.v1.list.user.delete',
+				'uses' => 'ListUserController@deleteFromList'
+			]);
+
 			delete('/{userList}', [
 				'as' => 'api.v1.tracked.latest',
 				'uses' => 'ListController@deleteCustomList'

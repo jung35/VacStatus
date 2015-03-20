@@ -84,7 +84,7 @@ var ListPortal = React.createClass({displayName: "ListPortal",
 			{
 				friends_list = data.friends_list.map(function(list, index)
 				{
-					var privacy, privacy_color;
+					var privacy, privacy_color, specialColors;
 					switch(list.privacy)
 					{
 						case 3:
@@ -101,13 +101,18 @@ var ListPortal = React.createClass({displayName: "ListPortal",
 							break;
 					}
 
+					specialColors = "";
+					if(list.beta) specialColors = "beta-name";
+					if(list.donation >= 10.0) specialColors = "donator-name";
+					if(list.site_admin) specialColors = "admin-name";
+
 					return (
 						React.createElement("tr", {key: index}, 
 							React.createElement("td", {className: "text-center"}, 
 								React.createElement("img", {src:  list.avatar_thumb})
 							), 
 							React.createElement("td", null, React.createElement("a", {className: "list_link", href: "/list/" + list.user_list_id},  list.title)), 
-							React.createElement("td", null,  list.display_name), 
+							React.createElement("td", {className: specialColors },  list.display_name), 
 							React.createElement("td", {className: "text-center text-" + privacy_color}, privacy ), 
 							React.createElement("td", {className: "text-center"},  list.users_in_list), 
 							React.createElement("td", {className: "text-center"},  list.sub_count), 

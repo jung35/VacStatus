@@ -12,9 +12,9 @@
 							Keep track of people's VAC status in a list
 						</div>
 					</div>
-
+					@if(!Auth::check())
 					<a href="{{ route('auth.login') }}" class="btn">Get Started via STEAM</a>
-
+					@endif
 					<div id="hero-carousel" class="carousel slide" data-ride="carousel">
 						<div class="carousel-inner" role="listbox">
 							<div class="item active">

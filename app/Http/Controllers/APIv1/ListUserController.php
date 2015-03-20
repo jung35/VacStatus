@@ -69,4 +69,25 @@ class ListUserController extends Controller
 
 		return $customList->getCustomList();
 	}
+
+	public function deleteFromList()
+	{
+		$this->middleware('csrf');
+		$this->middleware('auth');
+
+		$input = Input::all();
+
+		$userListProfile = UserListProfile::where('user_list_id', $input['list_id'])
+			->where('profile_id', $input['profile_id'])
+			->first();
+		
+		if(!$userListProfile->delete()) {
+			return ['error' => 'There was an error trying to remove user from list.'];
+		}
+
+		$customList = new CustomList(UserList::where('id', $input['list_id'])->first());
+		if($customList->error()) return $customList->error();
+
+		return $customList->getCustomList();
+	}
 }

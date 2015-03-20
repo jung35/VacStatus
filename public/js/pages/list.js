@@ -37,6 +37,32 @@ var List = React.createClass({displayName: "List",
 		};
 	},
 
+	submitDeleteUserToServer: function(profile)
+	{
+		$.ajax({
+			url: '/api/v1/list/delete',
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				_token: _token,
+				_method: 'DELETE',
+				list_id: this.state.data.id,
+				profile_id: profile.id
+			},
+			success: function(data) {
+				if(data.error) {
+					notif.add('danger', data.error).run();
+				} else {
+					notif.add('success', 'User has been removed from the list!').run();
+					this.setState({data: data});
+				}
+			}.bind(this),
+				error: function(xhr, status, err) {
+				notif.add('danger', err).run();
+			}.bind(this)
+		});
+	},
+
 	render: function()
 	{
 		var data,
@@ -66,18 +92,35 @@ var List = React.createClass({displayName: "List",
 			{
 				list = data.list.map(function(profile, index)
 				{
+					var auth;
+
+					if(auth_check) {
+						if(data.my_list) {
+							auth = (
+								React.createElement("a", {className: "userListModify open-addUserModal", href: "#", onClick: this.submitDeleteUserToServer.bind(this, profile), "data-id":  profile.id}, 
+									React.createElement("span", {className: "fa fa-minus faText-align text-danger"})
+								)
+							);
+						} else {
+							auth = (
+								React.createElement("a", {className: "userListModify open-addUserModal", href: "#addUserModal", "data-toggle": "modal", "data-id":  profile.id}, 
+									React.createElement("span", {className: "fa fa-plus faText-align text-primary"})
+								)
+							);
+						}
+					}
 					specialColors = "";
-					if(profile.beta) specialColors = "beta";
-					if(profile.donation >= 10.0) specialColors = "donator";
-					if(profile.site_admin) specialColors = "admin";
+					if(profile.beta) specialColors = "beta-name";
+					if(profile.donation >= 10.0) specialColors = "donator-name";
+					if(profile.site_admin) specialColors = "admin-name";
 
 					return (
-						React.createElement("tr", {key: index}, 
+						React.createElement("tr", {key: index }, 
 							React.createElement("td", {className: "user_avatar"}, 
-								React.createElement("img", {src: profile.avatar_thumb})
+								auth, React.createElement("img", {src: profile.avatar_thumb})
 							), 
 							React.createElement("td", {className: "user_name"}, 
-								React.createElement("a", {className: specialColors + "-name", href: "/u/" + profile.steam_64_bit, target: "_blank"}, profile.display_name)
+								React.createElement("a", {className: specialColors, href: "/u/" + profile.steam_64_bit, target: "_blank"}, profile.display_name)
 							), 
 							React.createElement("td", {className: "user_vac_ban text-center"}, 
 								React.createElement("span", {className: "text-" + (profile.vac > 0 ? "danger" : "success")}, 
@@ -95,7 +138,7 @@ var List = React.createClass({displayName: "List",
 							)
 						)
 					);
-				});
+				}.bind(this));
 			}
 
 			if(data.privacy)
@@ -128,7 +171,7 @@ var List = React.createClass({displayName: "List",
 							React.createElement("div", null, "Subscribed Users: ",  data.sub_count)
 						)
 					)
-             	);
+				);
 			}
 
 			if(auth_check && data.author)
@@ -150,7 +193,7 @@ var List = React.createClass({displayName: "List",
 				)
 
 				showListAction = (
-	              	React.createElement("div", {className: "col-lg-3"}, 
+					React.createElement("div", {className: "col-lg-3"}, 
 						React.createElement("div", {className: "list-actions visible-lg-block"}, 
 							eListAction 
 						)
@@ -172,15 +215,19 @@ var List = React.createClass({displayName: "List",
 							), 
 							React.createElement("div", {className: "table-responsive"}, 
 								React.createElement("table", {className: "table list-table"}, 
-									React.createElement("tr", null, 
-										React.createElement("th", {width: "48"}), 
-										React.createElement("th", null, "User"), 
-										React.createElement("th", {className: "text-center", width: "120"}, "VAC Ban"), 
-										React.createElement("th", {className: "text-center hidden-sm", width: "140"}, "Community Ban"), 
-										React.createElement("th", {className: "text-center hidden-sm", width: "100"}, "Trade Ban"), 
-										React.createElement("th", {className: "text-center", width: "100"}, "Tracked By")
+									React.createElement("thead", null, 
+										React.createElement("tr", null, 
+											React.createElement("th", {width: "80"}), 
+											React.createElement("th", null, "User"), 
+											React.createElement("th", {className: "text-center", width: "120"}, "VAC Ban"), 
+											React.createElement("th", {className: "text-center hidden-sm", width: "140"}, "Community Ban"), 
+											React.createElement("th", {className: "text-center hidden-sm", width: "100"}, "Trade Ban"), 
+											React.createElement("th", {className: "text-center", width: "100"}, "Tracked By")
+										)
 									), 
-									list 
+									React.createElement("tbody", null, 
+										list 
+									)
 								)
 							)
 						), 
@@ -206,7 +253,7 @@ var ListAction = React.createClass({displayName: "ListAction",
 				React.createElement("div", {className: "col-xs-6 col-lg-12"}, 
 					React.createElement("button", {className: "btn btn-block", "data-toggle": "modal", "data-target": "#editListModal"}, "Edit List")
 				)
-            );
+			);
 		}
 
 		return (

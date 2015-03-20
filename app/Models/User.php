@@ -50,7 +50,7 @@ class User extends Model implements AuthenticatableContract
 
 	public function unlockList()
 	{
-		if($this->isAdmin()) return 1;
+		if($this->isAdmin()) return 999;
 
 		if($this->donation >= DonationPerk::getPerkAmount('list_1')) return 20;
 
@@ -94,7 +94,7 @@ class User extends Model implements AuthenticatableContract
 
 	public function canMakeList()
 	{
-		if($this->UserList->count() <= $this->unlockList()) return false;
+		if($this->UserList->count() >= $this->unlockList()) return false;
 
 		return true;
 	}

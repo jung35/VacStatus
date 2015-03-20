@@ -31,7 +31,8 @@ class UserList extends Model
 		return $query->join('user_list_profile', function($join) use ($profileId)
 		{
 			$join->on('user_list_profile.user_list_id', '=', 'user_list.id')
-				->where('user_list_profile.profile_id', '=', $profileId);
+				->where('user_list_profile.profile_id', '=', $profileId)
+				->whereNull('user_list_profile.deleted_at');
 		});
 	}
 }

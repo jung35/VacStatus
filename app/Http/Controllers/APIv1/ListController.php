@@ -99,6 +99,10 @@ class ListController extends Controller
 					'user_list.title',
 					'user_list.privacy',
 					'user_list.created_at',
+
+					'users.site_admin',
+					'users.donation',
+					'users.beta',
 					
 					\DB::raw('count(user_list_profile.created_at) as users_in_list'),
 					\DB::raw('count(Distinct subscription.id) as sub_count'),
@@ -117,6 +121,10 @@ class ListController extends Controller
 					'title' => $myfriendsList->title,
 					'privacy' => $myfriendsList->privacy,
 					'created_at' => $myfriendsList->created_at->format("M j Y"),
+					
+					'site_admin'	=> $myfriendsList->site_admin?:0,
+					'donation'		=> $myfriendsList->donation?:0,
+					'beta'			=> $myfriendsList->beta?:0,
 
 					'users_in_list' => $myfriendsList->users_in_list,
 					'sub_count' => $myfriendsList->sub_count,
@@ -228,7 +236,7 @@ class ListController extends Controller
 		$userList->UserListProfile()->delete();
 		
 		if(!$userList->delete()) {
-			return ['error' => 'There was an error trying to delete the List'];
+			return ['error' => 'There was an error trying to delete the list'];
 		}
 
 		return [true];

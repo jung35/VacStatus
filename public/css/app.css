@@ -6655,6 +6655,10 @@ hr.divider {
 .list-page .btn {
   margin-top: 5px;
 }
+.list-page .userListModify {
+  font-size: 1.2em;
+  margin-right: 10px;
+}
 .profile-page {
   cursor: default;
 }
