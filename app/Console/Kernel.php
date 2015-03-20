@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected function schedule(Schedule $schedule)
 	{
-		$schedule->command('list:check')->cron('*/1 * * * *');
+		$schedule->command('list')->cron('*/1 * * * *');
 	}
 
 }

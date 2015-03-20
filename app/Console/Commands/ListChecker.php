@@ -12,7 +12,7 @@ use Cache;
 
 class ListChecker extends Command
 {
-	protected $name = 'list:check';
+	protected $name = 'list';
 	protected $description = 'Checks subscription and sends email if a player is caught.';
 	protected $checkerCacheName = "last_checked_subscription";
  	protected $log;
