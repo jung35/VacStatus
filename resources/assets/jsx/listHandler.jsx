@@ -76,7 +76,7 @@ var ListHandler = React.createClass({
 				if(data.error) {
 					notif.add('danger', data.error).run();
 				} else {
-					notif.add('success', 'List has been saved!').run();
+					notif.add('success', 'User has been added to the list!').run();
 				}
 			}.bind(this),
 				error: function(xhr, status, err) {
@@ -171,7 +171,6 @@ var ListHandler = React.createClass({
 					myList={this.state.lists}
 					AddUserSend={this.submitNewUserToServer}
 				/>
-				<RemoveUserFromList />
 			</div>
 		);
 	}
@@ -386,15 +385,6 @@ var AddUserToList = React.createClass({
 					</div>
 				</div>
 			</div>
-		);
-	}
-});
-
-var RemoveUserFromList = React.createClass({
-	render: function()
-	{
-		return (
-			<div></div>
 		);
 	}
 });
