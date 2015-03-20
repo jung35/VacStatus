@@ -73,10 +73,18 @@ post('/search', [
 	'uses' => 'PagesController@searchPage'
 ]);
 
-get('/settings', [
-	'as' => 'settings',
-	'uses' => 'SettingsController@subscriptionPage'
-]);
+Route::group(['prefix' => 'settings'], function()
+{
+	get('/', [
+		'as' => 'settings',
+		'uses' => 'SettingsController@subscriptionPage'
+	]);
+
+	get('/subscribe/{email}/{verify}', [
+		'as' => 'settings.subscription.verify',
+		'uses' => 'SettingsController@subscriptionVerify'
+	]);
+});
 
 Route::group(['prefix' => 'api'], function()
 {
@@ -178,6 +186,21 @@ Route::group(['prefix' => 'api'], function()
 			get('/', [
 				'as' => 'api.v1.settings',
 				'uses' => 'SettingsController@subscribeIndex'
+			]);
+
+			post('/subscribe', [
+				'as' => 'api.v1.settings.subscribe',
+				'uses' => 'SettingsController@makeSubscription'
+			]);
+
+			delete('/subscribe/email', [
+				'as' => 'api.v1.settings.subscribe.email.delete',
+				'uses' => 'SettingsController@deleteEmail'
+			]);
+
+			delete('/subscribe/pushbullet', [
+				'as' => 'api.v1.settings.subscribe.pushbullet.delete',
+				'uses' => 'SettingsController@deletePushBullet'
 			]);
 		});
 	});

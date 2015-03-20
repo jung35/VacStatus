@@ -1,5 +1,94 @@
 var Subscription = React.createClass({
 
+	handleSubmit: function(e)
+	{
+		e.preventDefault();
+
+		var email = this.refs.subcribeEmail.getDOMNode().value.trim(),
+			push_bullet = this.refs.subcribePushBullet.getDOMNode().value.trim();
+
+		if (!email && !push_bullet) {
+			notif.add('danger', 'Atleast 1 field needs to be filled out!').run();
+			return;
+		}
+
+		$.ajax({
+			url: '/api/v1/settings/subscribe',
+			type: 'POST',
+			data: {
+				_token: _token,
+				email: email,
+				push_bullet: push_bullet
+			},
+			dataType: 'json',
+			success: function(data) {
+				if(data.error) {
+					notif.add('danger', data.error).run();
+				} else {
+					notif.add('success', 'Settings have been saved!').run();
+					this.setState({data: data});
+				}
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
+		});
+	},
+
+	emailRemove: function(e)
+	{
+		e.preventDefault();
+
+		$.ajax({
+			url: '/api/v1/settings/subscribe/email',
+			type: 'POST',
+			data: {
+				_token: _token,
+				_method: 'DELETE'
+			},
+			dataType: 'json',
+			success: function(data) {
+				if(data.error) {
+					notif.add('danger', data.error).run();
+				} else {
+					$('#subcribeEmail').val("");
+					notif.add('success', 'Successfully removed email!').add('warning', 'Please check your email to verify!').run();
+					this.setState({data: data});
+				}
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
+		});
+	},
+
+	pushBulletRemove: function(e)
+	{
+		e.preventDefault();
+
+		$.ajax({
+			url: '/api/v1/settings/subscribe/pushbullet',
+			type: 'POST',
+			data: {
+				_token: _token,
+				_method: 'DELETE'
+			},
+			dataType: 'json',
+			success: function(data) {
+				if(data.error) {
+					notif.add('danger', data.error).run();
+				} else {
+					$('#subcribePushBullet').val("");
+					notif.add('success', 'Successfully removed pushbullet!').run();
+					this.setState({data: data});
+				}
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
+		});
+	},
+
 	fetchSubscription: function()
 	{
 		$.ajax({
@@ -29,10 +118,10 @@ var Subscription = React.createClass({
 	render:  function()
 	{
 		var data,
-			emailVerified,
+			emailInputSmall,
 			emailButton,
 			emailColor,
-			pushBulletVerified,
+			pushBulletInputSmall,
 			pushBulletButton,
 			pushBulletColor,
 			userList;
@@ -41,18 +130,19 @@ var Subscription = React.createClass({
 		
 		if(data !== null)
 		{
-			emailVerified = false;
-			pushBulletVerified = false;
+			emailInputSmall = false;
+			pushBulletInputSmall = false;
 
 			if(data.userMail !== null)
 			{
-				if(data.userMail.email !== null && data.userMail.email !== undefined)
+				if(data.userMail.email)
 				{
+					emailInputSmall = true;
 					emailColor = "has-warning";
 
 					emailButton = (
 						<div className="col-sm-2">
-							<button className="btn btn-block btn-info">Resend</button>
+							<button type="button" onClick={this.emailRemove} className="btn btn-block btn-danger">Remove</button>
 						</div>
 					);
 
@@ -60,43 +150,30 @@ var Subscription = React.createClass({
 					{
 						emailColor = "has-success";
 
-						emailButton = (
-							<div className="col-sm-2">
-								<button className="btn btn-block btn-danger">Remove</button>
-							</div>
-						);
 
-						emailVerified = true;
 					}
 				}
 
-				if(data.userMail.pushbullet !== null && data.userMail.pushbullet !== undefined)
+				if(data.userMail.pushbullet)
 				{
+					pushBulletInputSmall = true;
 					pushBulletColor = "has-warning";
 
 					pushBulletButton = (
 						<div className="col-sm-2">
-							<button className="btn btn-block btn-info">Resend</button>
+							<button type="button" onClick={this.pushBulletRemove} className="btn btn-block btn-danger">Remove</button>
 						</div>
 					);
+
 
 					if(data.userMail.pushbullet_verify == "verified")
 					{
 						pushBulletColor = "has-success";
-
-						pushBulletButton = (
-							<div className="col-sm-2">
-								<button className="btn btn-block btn-danger">Remove</button>
-							</div>
-						);
-
-						pushBulletVerified = true;
 					}
 				}
 			}
 			userLists = <div className="col-xs-12"><i>You're not subscribed to any list.</i></div>;
 
-			console.log(data.userLists);
 			if(data.userLists !== null && data.userLists !== undefined)
 			{
 				userLists = data.userLists.map(function(list, index)
@@ -129,17 +206,17 @@ var Subscription = React.createClass({
 							<div className="row">
 								<div className="col-xs-12 col-md-6">
 									<h3>Receive Updates <small>&mdash; You only need to enter in one of them</small></h3>
-									<form className="subscribe-form form-horizontal">
+									<form onSubmit={this.handleSubmit} className="subscribe-form form-horizontal">
 										<div className={"form-group " + emailColor}>
 											<label htmlFor="subcribeEmail" className="col-sm-2 control-label">Email</label>
-											<div className={ emailVerified ? "col-sm-8 " : "col-sm-10"}>
+											<div className={ emailInputSmall ? "col-sm-8 " : "col-sm-10"}>
 												<input type="email" className="form-control" id="subcribeEmail" ref="subcribeEmail" placeholder="Email" defaultValue={ data.userMail.email } />
 											</div>
 											{ emailButton }
 										</div>
 										<div className={"form-group " + pushBulletColor}>
 											<label htmlFor="subcribePushBullet" className="col-sm-2 control-label">Pushbullet</label>
-											<div className={ pushBulletVerified ? "col-sm-8" : "col-sm-10"}>
+											<div className={ pushBulletInputSmall ? "col-sm-8" : "col-sm-10"}>
 												<input type="email" className="form-control" id="subcribePushBullet" ref="subcribePushBullet" placeholder="PushBullet Email" defaultValue={ data.userMail.pushbullet } />
 											</div>
 											{ pushBulletButton }

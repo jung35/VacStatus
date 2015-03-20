@@ -7,6 +7,9 @@ use VacStatus\Http\Requests;
 
 use VacStatus\Models\UserList;
 use Auth;
+use Input;
+use Validator;
+use Mail;
 
 class SettingsController extends Controller
 {
@@ -39,5 +42,103 @@ class SettingsController extends Controller
 			]);
 
 		return compact('userMail', 'userLists');
+	}
+
+	public function makeSubscription()
+	{
+		$this->middleware('csrf');
+		$this->middleware('auth');
+
+		$email = Input::get('email');
+		$pushBullet = Input::get('push_bullet');
+
+		$user = Auth::user();
+		$userMail = $user->UserMail;
+
+		$sendVerificationTo = [];
+
+		$rules = array('email' => 'email');
+
+		if($email)
+		{
+			$validator = Validator::make(['email' => $email], $rules);
+
+			if(!$validator->fails() && $userMail->email != $email)
+			{
+				$verificationCode = str_random(32);
+
+				$sendVerificationTo[] = [
+					'email' => $email,
+					'verify' => $verificationCode
+				];
+
+				$userMail->email = $email;
+				$userMail->verify = $verificationCode;
+			}
+		}
+		
+		if($pushBullet)
+		{
+			$validator = Validator::make(['email' => $pushBullet], $rules);
+
+			if(!$validator->fails() && $userMail->pushbullet != $pushBullet)
+			{
+				$verificationCode = str_random(32);
+
+				$sendVerificationTo[] = [
+					'email' => $pushBullet,
+					'verify' => $verificationCode
+				];
+
+				$userMail->pushbullet = $pushBullet;
+				$userMail->pushbullet_verify = $verificationCode;
+			}
+		}
+
+		if(count($sendVerificationTo) == 0) return $this->subscribeIndex();
+
+		if(!$userMail->save()) return ['error', 'There was an error trying to save the emails'];
+
+		foreach($sendVerificationTo as $email) {
+			Mail::send('emails.verification', [
+				'email' => $email
+			], function($message) use ($email) {
+				$message->to($email['email'])->subject('Thank you for subscribing!');
+			});
+		}
+
+		return $this->subscribeIndex();
+	}
+
+	public function deleteEmail()
+	{
+		$this->middleware('csrf');
+		$this->middleware('auth');
+
+		$user = Auth::user();
+		$userMail = $user->UserMail;
+
+		$userMail->email = "";
+		$userMail->verify = "";
+
+		$userMail->save();
+
+		return $this->subscribeIndex();
+	}
+
+	public function deletePushBullet()
+	{
+		$this->middleware('csrf');
+		$this->middleware('auth');
+
+		$user = Auth::user();
+		$userMail = $user->UserMail;
+
+		$userMail->pushbullet = "";
+		$userMail->pushbullet_verify = "";
+
+		$userMail->save();
+
+		return $this->subscribeIndex();
 	}
 }
