@@ -36,7 +36,7 @@ var Profile = React.createClass({
 		if(data != null)
 		{
 			specialColors = "";
-			if(data.beta) specialColors = "beta";
+			if(data.beta >= 1) specialColors = "beta";
 			if(data.donation >= 10.0) specialColors = "donator";
 			if(data.site_admin >= 1) specialColors = "admin";
 
@@ -180,7 +180,7 @@ var Profile = React.createClass({
 								<div className="col-xs-12">
 									{ data.site_admin >= 1 ? <div className="label label-warning">Admin</div> : ''}
 									{ data.donation >= 10 ? <div className="label label-success">Donator</div> : ''}
-									{ data.beta ? <div className="label label-primary">Beta</div> : ''}
+									{ data.beta >= 1 ? <div className="label label-primary">Beta</div> : ''}
 								</div>
 							</div>
 						</div>

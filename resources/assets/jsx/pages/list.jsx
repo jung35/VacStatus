@@ -169,7 +169,7 @@ var List = React.createClass({
 					}
 
 					specialColors = "";
-					if(profile.beta) specialColors = "beta-name";
+					if(profile.beta >= 1) specialColors = "beta-name";
 					if(profile.donation >= 10.0) specialColors = "donator-name";
 					if(profile.site_admin >= 1) specialColors = "admin-name";
 

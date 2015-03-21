@@ -102,7 +102,7 @@ var ListPortal = React.createClass({
 					}
 
 					specialColors = "";
-					if(list.beta) specialColors = "beta-name";
+					if(list.beta >= 1) specialColors = "beta-name";
 					if(list.donation >= 10.0) specialColors = "donator-name";
 					if(list.site_admin >= 1) specialColors = "admin-name";
 
