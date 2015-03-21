@@ -85,7 +85,7 @@
 								<p>
 									All of the code behind it can be seen on Github.
 									Feel free to take a look at it and maybe fix bugs
-									and add features you woud like to see added.
+									and add features you would like to see added.
 								</p>
 							</div>
 						</div>
