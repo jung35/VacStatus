@@ -98,7 +98,7 @@ var Donate = React.createClass({
 								{ donation.display_name }
 							</a>
 						</td>
-						<td className="text-center">${ donation.donation.toFixed(2) }</td>
+						<td className="text-center">${ donation.donation }</td>
 					</tr>
 		        );
 			});

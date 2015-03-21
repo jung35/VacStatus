@@ -98,7 +98,7 @@ var Donate = React.createClass({displayName: "Donate",
 								 donation.display_name
 							)
 						), 
-						React.createElement("td", {className: "text-center"}, "$",  donation.donation.toFixed(2) )
+						React.createElement("td", {className: "text-center"}, "$",  donation.donation)
 					)
 		        );
 			});
