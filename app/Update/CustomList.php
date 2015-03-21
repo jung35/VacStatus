@@ -6,7 +6,6 @@ use Cache;
 use Carbon;
 use DateTime;
 use Auth;
-use Session;
 
 use VacStatus\Models\UserList;
 use VacStatus\Models\UserListProfile;
@@ -30,8 +29,12 @@ class CustomList
 			$userId = Auth::User()->id;
 
 			$friendsListCacheName = "friendsList_{$userId}";
-
-			$friendsList = Session::get($friendsListCacheName);
+			if(!Cache::has($friendsListCacheName) && $userList->privacy == 2)
+			{
+					$this->error = "list_no_permission"; return;
+			}
+			
+			$friendsList = Cache::get($friendsListCacheName);
 
 			if($userId != $userList->user_id) {
 				if(($userList->privacy == 3)
@@ -40,7 +43,6 @@ class CustomList
 					$this->error = "list_no_permission"; return;
 				}
 			}
-			
 		} else if($userList->privacy == 2 || $userList->privacy == 3) {
 			$this->error = "list_no_permission"; return;
 		}
