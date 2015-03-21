@@ -32,10 +32,6 @@ class SubscriptionCheck
 
 	public function __construct($lastCheckedSubscription)
 	{
-		// TESTING PURPOSES
-		$lastCheckedSubscription = -1;
-
-
 		$userMail = UserMail::whereRaw('user_mail.id > ? and (user_mail.verify = ? or user_mail.pushbullet_verify = ?)', array($lastCheckedSubscription, 'verified', 'verified'))
 			->first();
 

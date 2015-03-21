@@ -27,6 +27,7 @@ class ListChecker extends Command
 	public function fire()
 	{
 		$lastCheckedSubscription = -1;
+		
 		if(Cache::has('last_checked_subscription')) $lastCheckedSubscription = Cache::pull('last_checked_subscription');
 
 		$subscriptionCheck = new SubscriptionCheck($lastCheckedSubscription);
