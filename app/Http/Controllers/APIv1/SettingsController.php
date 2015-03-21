@@ -6,6 +6,8 @@ use VacStatus\Http\Controllers\Controller;
 use VacStatus\Http\Requests;
 
 use VacStatus\Models\UserList;
+use VacStatus\Models\UserMail;
+
 use Auth;
 use Input;
 use Validator;
