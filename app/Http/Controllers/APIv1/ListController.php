@@ -257,6 +257,11 @@ class ListController extends Controller
 
 		$user = Auth::user();
 
+		if($user->unlockSubscription() <= $user->Subscription()->count())
+		{
+			return ['error' => 'You have reached the maximum subsciption limit!'];
+		}
+
 		$subscription = new Subscription;
 		$subscription->user_id = $user->id;
 		$subscription->user_list_id = $userList->id;
@@ -278,6 +283,7 @@ class ListController extends Controller
 		}
 
 		$user = Auth::user();
+
 		$subscription = Subscription::whereUserListId($userList->id)
 			->whereUserId($user->id)
 			->first();

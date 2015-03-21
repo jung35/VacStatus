@@ -85,11 +85,11 @@ class User extends Model implements AuthenticatableContract
 	{
 		if($this->isAdmin()) return 999;
 
-		if($this->donation >= DonationPerk::getPerkAmount('subscription')) return 25;
+		if($this->donation >= DonationPerk::getPerkAmount('subscription')) return 30;
 
-		if($this->beta == 1) return 5;
+		if($this->beta == 1) return 10;
 
-		return 3;
+		return 5;
 	}
 
 	public function canMakeList()
