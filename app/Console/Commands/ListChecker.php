@@ -36,7 +36,7 @@ class ListChecker extends Command
 
 		$toSend = $subscriptionCheck->run();
 
-		if(!$toSend)
+		if(!$toSend || $toSend['error'])
 		{
 			$this->log->addInfo('Nothing was sent!');
 			return;

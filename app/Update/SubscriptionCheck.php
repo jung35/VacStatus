@@ -190,7 +190,7 @@ class SubscriptionCheck
 			}
 		}
 
-		if(count($profilesToSendForNotification) == 0) return false;
+		if(count($profilesToSendForNotification) == 0) return ['error' => 'No method of sending'];
 
 		$userInfo = [
 			'send' => [
