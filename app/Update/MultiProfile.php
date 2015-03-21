@@ -133,6 +133,7 @@ class MultiProfile
 				'profile.avatar',
 				'profile.profile_created',
 				'profile.alias',
+				'profile.created_at',
 
 				'profile_ban.community',
 				'profile_ban.vac',
@@ -143,7 +144,7 @@ class MultiProfile
 				'users.donation',
 				'users.beta',
 
-				\DB::raw('max(user_list_profile.created_at) as created_at'),
+				\DB::raw('max(user_list_profile.created_at) as last_added_created_at'),
 				\DB::raw('count(user_list_profile.id) as total')
 			]);
 
@@ -340,7 +341,7 @@ class MultiProfile
 				'times_checked'		=> $currentProfileCheck,
 				'times_added'		=> [
 					'number' => $profile->total?:0,
-					'time' => (new DateTime($profile->created_at))->format("M j Y")
+					'time' => (new DateTime($profile->last_added_created_at))->format("M j Y")
 				],
 			];
 

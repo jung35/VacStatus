@@ -53,8 +53,7 @@ class ListController extends Controller
 			{
 				$join->on('subscription.user_list_id', '=', 'user_list.id')
 					->whereNull('subscription.deleted_at');
-			})
-			->whereNull('ulp_1.deleted_at')
+			})->whereNull('ulp_1.deleted_at')
 			->get([
 				'user_list.id',
 				'user_list.title',
@@ -96,8 +95,7 @@ class ListController extends Controller
 				{
 					$join->on('subscription.user_list_id', '=', 'user_list.id')
 						->whereNull('subscription.deleted_at');
-				})
-				->having('users_in_list', '>', 0)
+				})->having('users_in_list', '>', 0)
 				->get([
 					'profile.id as profile_id',
 					'profile.display_name',

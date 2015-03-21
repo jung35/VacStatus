@@ -34,7 +34,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-				<h4 class="modal-title">Search Users</h4>
+				<h4 class="modal-title">Look Up Users</h4>
 			</div>
 			<form action="{{ route('search') }}" method="post">
 				<div class="modal-body">

@@ -491,9 +491,11 @@ class SingleProfile extends BaseUpdate
 			'vac_banned_on'		=> $profile->vac_banned_on->format("M j Y"),
 			'community'			=> $profile->community,
 			'trade'				=> $profile->trade,
+			
 			'site_admin'		=> $profile->site_admin,
 			'donation'			=> $profile->donation,
 			'beta'				=> $profile->beta,
+
 			'profile_old_alias'	=> $oldAliasArray,
 			'times_checked'		=> $currentProfileCheck,
 			'times_added'		=> $profileTimesAdded,

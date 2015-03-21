@@ -38,7 +38,7 @@
 				</li>
 			@endif
 				<li class="@setActiveLink('search')">
-					<a href="#searchModal" data-toggle="modal">Search</a>
+					<a href="#searchModal" data-toggle="modal">Look Up Users</a>
 				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
