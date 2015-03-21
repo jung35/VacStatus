@@ -76,7 +76,7 @@ var Donate = React.createClass({
 								{ donation.display_name == null ? 'Anonymous': donation.display_name }
 							</a>
 						</td>
-						<td className="text-center">${ donation.original_amount.toFixed(2) }</td>
+						<td className="text-center">${ donation.original_amount }</td>
 					</tr>
 		        );
 			});

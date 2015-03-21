@@ -76,7 +76,7 @@ var Donate = React.createClass({displayName: "Donate",
 								 donation.display_name == null ? 'Anonymous': donation.display_name
 							)
 						), 
-						React.createElement("td", {className: "text-center"}, "$",  donation.original_amount.toFixed(2) )
+						React.createElement("td", {className: "text-center"}, "$",  donation.original_amount)
 					)
 		        );
 			});
