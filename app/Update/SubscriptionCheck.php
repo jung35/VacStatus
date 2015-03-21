@@ -124,7 +124,7 @@ class SubscriptionCheck
 			$userListProfiles = $profiles->where('user_list_id', $userList->id);
 			foreach($userListProfiles as $profile)
 			{
-				if($userList->updated_at->timestamp < $profile->updated_at->timestamp && $profile->updated_at->timestamp <= time() && $userList->updated_at->timestamp != $userList->created_at->timestam)
+				if($userList->updated_at->timestamp < $profile->updated_at->timestamp && $profile->updated_at->timestamp <= time() && $userList->updated_at->timestamp != $userList->created_at->timestamp)
 				{ 
 					$profilesToSendForNotification[$profile->id] = $profile;
 				}
