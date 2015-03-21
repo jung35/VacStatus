@@ -74,7 +74,7 @@ class MultiProfile
 		{
 			if(!$this->canUpdate($profile['small_id']))
 			{
-				if(count($profile) == 1) continue;
+				if(count($profile) != 1) continue;
 			}
 
 			$refreshProfiles[] = [
