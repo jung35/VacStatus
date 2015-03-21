@@ -13,7 +13,7 @@
 			<div class="col-xs-12 col-md-6 col-md-pull-6">
 				<div class="right-footer copyright">
 					<div>&copy; 2015 VacStatus.</div>
-					<div>Powered By <a href="#">Steam</a></div>
+					<div>Powered By <a href="http://steampowered.com" target="_blank">Steam</a></div>
 				</div>
 			</div>
 		</div>
