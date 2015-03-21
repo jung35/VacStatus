@@ -10,6 +10,8 @@ use VacStatus\Models\User;
 use VacStatus\Steam\Steam;
 use VacStatus\Steam\SteamAPI;
 
+use VacStatus\Update\SingleProfile;
+
 use Cache;
 use Auth;
 use SteamAuth;
@@ -53,6 +55,10 @@ class LoginController extends Controller {
 		}
 
 		$user->display_name = (string) $userSteamInfo->personaname;
+
+		$smallId = Steam::toSmallId($steam64BitId);
+		$singleProfile = new SingleProfile($smallId);
+		$singleProfile->getProfile();
 
 		if(!$user->save())
 		{
