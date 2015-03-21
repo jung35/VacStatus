@@ -46,7 +46,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<div class="nav-username">{{ Auth::user()->display_name }}</div>
-						<div class="nav-avatar"><img src="{{ Auth::user()->profile->avatar_thumb }}"></div>
+						<div class="nav-avatar"><img src="{{ isset(Auth::user()->profile->avatar_thumb)? Auth::user()->profile->avatar_thumb:'' }}"></div>
 					</a>
 					<ul class="dropdown-menu" role="menu">
 						<li>
