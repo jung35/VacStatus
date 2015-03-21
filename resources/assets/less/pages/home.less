@@ -1,0 +1,138 @@
+/* 300,400,600,700 */
+
+.home-page {
+	.hero {
+		.logo {
+			font-size: 3.5em;
+			font-weight: 700;
+			line-height: 80%;
+			padding-top: 30px;
+
+			@media (min-width: @screen-sm-min) {
+				font-size: 5em;
+			}
+
+			@media (min-width: @screen-md-min) {
+				font-size: 6em;
+			}
+
+			@media (min-width: @screen-lg-min) {
+				font-size: 7em;
+			}
+		}
+
+		.sub-text {
+			font-size: .37em;
+			font-weight: 600;
+		}
+
+		.carousel-control {
+			color: rgba(255, 255, 255, .2);
+			font-size: 4em;
+			margin: 80px 0 0;
+			background-image: none;
+			
+			@media (min-width: @screen-md-min) {
+				&.left {
+					left: 100px;
+				}
+
+				&.right {
+					right: 100px;
+				}
+			}
+		}
+
+		.carousel-inner {
+			.item {
+				img {
+					-webkit-box-shadow: 0px 0px 29px 0px rgba(0, 0, 0, 1);
+					-moz-box-shadow:    0px 0px 29px 0px rgba(0, 0, 0, 1);
+					box-shadow:         0px 0px 29px 0px rgba(0, 0, 0, 1);
+					border: 1px solid #424242;
+					border-radius: 3px;
+					width: 413px;
+					margin: 0 auto -3px;
+				}
+
+				padding-top: 30px;
+			}
+		}
+
+		.btn {
+			&:hover {
+				background: rgba(255, 255, 255, .05);
+			}
+
+			background: transparent;
+			border-radius: 3px;
+			font-size: 1.5em;
+			padding: 9px 25px;
+			font-weight: 300;
+			color: #aed581;
+			border: 1px solid #aed581;
+			margin: 15px 0 10px;
+		}
+
+		&:after {
+			content: "";
+			background: url(/img/small-inset-shadow.png);
+			height: 5px;
+			margin-top: -5px;
+			display: block;
+			z-index: 1;
+			position: relative;
+		}
+
+		background: #212121 url(/img/steam-logo.png) no-repeat center top;
+		color: white;
+		text-align: center;
+	}
+
+	.feature-list {
+		.evenitem {
+			.feature-item {
+				.item-img {
+					padding: 0 10px 0 0;
+
+					@media (min-width: @screen-md-min) {
+						padding: 0 0 0 10px;
+					}
+				}
+			}
+
+			text-align: right;
+
+			@media (min-width: @screen-md-min) {
+				text-align: left;
+			}
+		}
+
+		.feature-item {
+			.item-img {
+				display: inline-block;
+				width: 110px;
+				font-size: 6em;
+				vertical-align: middle;
+				padding: 0 0 0 10px;
+			}
+
+			.item-content {
+				width: calc(~"100% - 130px");
+				display: inline-block;
+				vertical-align: middle;
+			}
+
+			.title {
+				font-weight: 600;
+				font-size: 1.7em;
+			}
+
+			.content {
+				font-size: 1.2em;
+			}
+
+			padding: 20px 0;
+		}
+	}
+}

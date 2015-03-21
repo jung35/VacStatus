@@ -1,212 +1,223 @@
-<?php
-namespace Steam;
+<?php namespace VacStatus\Steam;
 
-use \Cache as Cache;
-/**
- * Steam Class
- * Handles all of interactions with STEAM API except for login
- */
-Class Steam {
-  /**
-   * Time in seconds before profile is called to an update
-   * @var Integer
-   */
-  public static $UPDATE_TIME = 3600; // 1 HOUR = 3600 seconds
+use Cache;
 
-  public static function getAPI() {
-    return $_ENV['STEAM_API'];
-  }
+class Steam {
+	/**
+	 * Minimum timeout for steam updates on profile
+	 * @var integer
+	 */
+	public static $UPDATE_TIME = 3600; // 1 HOUR = 3600 seconds
+	protected static $HTTPS_URL = 'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/';
 
-  /**
-   * Check to see if the profile's last update was long enough for new update
-   * @param  Integer $updated_at last time updated
-   *
-   * @return Boolean
-   */
-  public static function canUpdate($smallId) {
-    if(Cache::has("profile_$smallId")) {
-      if(Cache::get("profile_$smallId") + self::$UPDATE_TIME > time()) {
-        return false;
-      }
-    }
-    return true;
-  }
+	public static function getAPI()
+	{
+		return env('STEAM_API');
+	}
 
-  /**
-   * Instead of using db to see when the profile has been last updated, use cache
-   * @param Integer $smallId
-   *
-   * @return Void
-   */
-  public static function setUpdate($smallId) {
-    Cache::put("profile_$smallId", time(), self::$UPDATE_TIME / 60);
-    return;
-  }
+	public static function canUpdate($smallId)
+	{
+		if(Cache::has("profile_$smallId")) {
+			if(Cache::get("profile_$smallId") + self::$UPDATE_TIME > time()) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-  /**
-   * Conversion of Steam3 ID to smaller number to work easier with
-   * @param Integer $steam3Id
-   *
-   * @return Integer/Array
-   */
-  public static function toSmallId($steam3Id = null)
-  {
-    if(is_array($steam3Id)) {
-      $smallIds = Array();
-      foreach($steam3Id as $key => $value) {
-          $smallIds[$key] = explode('.', bcsub($value,'76561197960265728'))[0];
-      }
-      return $smallIds;
-    }
-    if($steam3Id && is_numeric($steam3Id)) {
-      $steam3Id .= '';
-      return explode('.', bcsub($steam3Id,'76561197960265728'))[0];
-    }
+	public static function setUpdate($smallId)
+	{
+		Cache::put("profile_$smallId", time(), self::$UPDATE_TIME / 60);
+		return;
+	}
 
-    return Array('type' => 'error',
-                 'data' => 'nan');
-  }
+	public static function toSmallId($steam64BitId)
+	{
+		if(is_array($steam64BitId))
+		{
+			$smallIds = [];
+			foreach($steam64BitId as $key => $value)
+			{
+				$smallIds[$key] = explode('.', bcsub($value,'76561197960265728'))[0];
+			}
 
-  /**
-   * Conversion of smaller steam3 ID to its regular number to work easier with
-   * @param Integer $smallId
-   *
-   * @return Integer/Array
-   */
-  public static function toBigId($smallId = null)
-  {
-    if(is_array($smallId)) {
-      $steam3Ids = Array();
-      foreach($smallId as $key => $value) {
-        $steam3Ids[$key] = explode('.', bcadd($value,'76561197960265728'))[0];
-      }
-      return $steam3Ids;
-    }
-    if($smallId && is_numeric($smallId)) {
-      $smallId .= '';
-      return explode('.', bcadd($smallId,'76561197960265728'))[0];
-    }
+			return $smallIds;
+		}
 
-    return Array('type' => 'error',
-                 'data' => 'nan');
-  }
+		if(is_numeric($steam64BitId))
+		{
+			$steam64BitId .= '';
+			return explode('.', bcsub($steam64BitId,'76561197960265728'))[0];
+		}
 
-  /**
-   * Converts from Steam3 ID to Steam2 ID
-   * @param  Integer $steam3Id
-   *
-   * @return String/Array
-   */
-  public static function toSteam2Id($steam3Id = null)
-  {
-    if($steam3Id && is_numeric($steam3Id)) {
-      $steamIdPartOne = (substr($steam3Id,-1)%2 == 0) ? 0 : 1;
-      $steamIdPartTwo = bcsub($steam3Id,'76561197960265728');
-      if (bccomp($steamIdPartTwo,'0') == 1) {
-        $steamIdPartTwo = bcsub($steamIdPartTwo, $steamIdPartOne);
-        $steamIdPartTwo = bcdiv($steamIdPartTwo, 2);
-        return "STEAM_0:$steamIdPartOne:".explode('.', $steamIdPartTwo)[0];
-      }
-    }
+		return ['type' => 'error'];
+	}
 
-    return Array('type' => 'error',
-                 'data' => 'nan');
-  }
+	public static function to64bit($smallId)
+	{
+		if(is_array($smallId))
+		{
+			$steam64BitIds = [];
+			foreach($smallId as $key => $value)
+			{
+				$steam64BitIds[$key] = explode('.', bcadd($value,'76561197960265728'))[0];
+			}
 
-  /**
-   * Using cURL to request to Steam API Servers
-   * @param  String $type ('info', 'friends', 'ban', 'alias', 'vanityUrl')
-   * @param  String/Array $value
-   *
-   * @return Object
-   */
-  public static function cURLSteamAPI($type = null, $value = null, $try = true) {
+			return $steam64BitIds;
+		}
 
-    // Maybe it should have default type...?
-    if($type == null || $value == null) return false;
+		if(is_numeric($smallId))
+		{
+			$smallId .= '';
+			return explode('.', bcadd($smallId,'76561197960265728'))[0];
+		}
 
-    $cache_name = 'steamAPICalls_'.(date('M_j_Y'));
+		return ['type' => 'error'];
+	}
 
-    if(!Cache::has($cache_name)) {
-      Cache::forever($cache_name, 0);
-    }
-    Cache::forever($cache_name, Cache::get($cache_name)+1);
+	public static function to32Bit($steam64BitId)
+	{
+		if(is_numeric($steam64BitId))
+		{
+			$steamIdPartOne = substr($steam64BitId, -1) % 2 == 0 ? 0 : 1;
+			$steamIdPartTwo = bcsub($steam64BitId, '76561197960265728');
 
-    $steamAPI = self::getAPI();
+			if (bccomp($steamIdPartTwo,'0') == 1)
+			{
+				$steamIdPartTwo = bcsub($steamIdPartTwo, $steamIdPartOne);
+				$steamIdPartTwo = bcdiv($steamIdPartTwo, 2);
 
-    // So this url doesn't float in some files as many different url's
-    // keeping them in one place
-    switch($type) {
-      // Get most of all public information about this steam user
-      case 'info':
-        if(is_array($value)) {
-          $value = implode(',', $value);
-        }
-        $url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$steamAPI}&steamids={$value}&".time();
-        break;
+				return "STEAM_0:$steamIdPartOne:".explode('.', $steamIdPartTwo)[0];
+			}
+		}
 
-      // Get list of friends (Profile must not be private)
-      case 'friends':
-        if(is_array($value)) {
-          $value = $value[0];
-        }
-        $url = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key={$steamAPI}&steamid={$value}&relationship=friend&".time();
-        break;
+		return ['type' => 'error'];
+	}
 
-      // Get more detailed information about this person's ban status
-      case 'ban':
-        if(is_array($value)) {
-          $value = implode(',', $value);
-        }
+	public static function toSteam3Id($steam64BitId)
+	{
+		if(is_numeric($steam64BitId))
+		{
+			return 'U:1:'.self::toSmallId($steam64BitId);
+		}
 
-        $url = "http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key={$steamAPI}&steamids={$value}&".time();
-        break;
+		return ['type' => 'error'];
+	}
 
-      // Get list of usernames this user has used
-      case 'alias':
-        if(is_array($value)) {
-          $value = $value[0];
-        }
-        $url = "http://steamcommunity.com/profiles/{$value}/ajaxaliases?".time();
-        break;
+	public static function imgToHTTPS($url)
+	{
+		preg_match('/^(.*)?\/avatars\/(.*)$/i', $url, $newURL);
 
-      // For checking to make sure a user exists by this profile name
-      case 'vanityUrl':
-        if(is_array($value)) {
-          $value = $value[0];
-        }
-        $url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={$steamAPI}&vanityurl={$value}&".time();
-        break;
-    }
+		return self::$HTTPS_URL.$newURL[2];
+	}
 
+	public static function aliasSort($a, $b) {
+		return strcmp(self::aliasTimeConvert($b->timechanged), self::aliasTimeConvert($a->timechanged));
+	}
 
-    $ch = curl_init();
+	public static function aliasTimeConvert($time) {
+		return strtotime(str_replace("@", "", $time));
+	}
 
-    curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,0);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 7);
+	public static function friendlyAlias($aliases)
+	{
+		$newAlias = [];
 
-    try {
-      $data = curl_exec($ch);
-    } catch(Exception $e) {
-      if($try) {
-        return self::cURLSteamAPI($type, $value, false);
-      }
-      return (object) array('type' => 'error',
-                            'data' => 'api_conn_err');
-    }
-    curl_close($ch);
+		if(is_null($aliases)) return [];
 
-    $data = json_decode($data);
-    if(!is_object($data) && !is_array($data)) {
-      return (object) array('type' => 'error',
-                            'data' => 'api_data_err');
-    }
-    return $data;
-  }
+		foreach($aliases as $alias)
+		{
+    		$newAlias[] = [
+    			'newname' => $alias->newname,
+    			'timechanged' => date('M j Y', strtotime(str_replace("@", "", $alias->timechanged)))
+			];
+		}
 
+		return $newAlias;
+	}
+
+	public static function findUser($data)
+	{
+		$data = strtolower(trim($data));
+
+		if (empty($data)) return ['error' => 'Invalid or empty input'];
+
+		if (strlen($data) > 100) return ['error' => 'Field too long'];
+		
+		if (substr($data, 0, 6) == 'steam_')
+		{
+			$tmp = explode(':', $data);
+
+			if ((count($tmp) == 3)
+			    && is_numeric($tmp[1])
+			    && is_numeric($tmp[2]))
+			{
+				$steam3Id = bcadd(($tmp[2] * 2) + $tmp[1], '76561197960265728');
+				return ['success' => $steam3Id];
+			}
+			return ['error' => 'Invalid Steam ID'];
+		}
+		else if (substr($data, 0, 2) == 'u:')
+		{
+			$tmp = explode(':', $data);
+
+			if ((count($tmp) == 3) && is_numeric($tmp[2]))
+			{
+				$steam3Id = bcadd($tmp[2], '76561197960265728');
+				return ['success' => $steam3Id];
+			}
+
+			return ['error' => 'Invalid Steam ID'];
+		} else if ($p = strrpos($data, '/'))
+		{
+			$tmp = explode('/',$data);
+			$a = null;
+
+			foreach ($tmp as $key => $item)
+			{
+				if ($item == 'profiles')
+				{
+					$a = $tmp[$key+1];
+					break;
+				} else if ($item == 'id')
+				{
+					$data = $tmp[$key+1];
+					break;
+				}
+			}
+
+			if (is_numeric($a) && preg_match('/7656119/', $a)) return ['success' => $a];
+			else {
+				$steamAPI = new SteamAPI('vanityUrl');
+				$steamVanityUrl = $steamAPI->setSteamId($data)->run();
+
+				if(isset($steamVanityUrl->type) && $steamVanityUrl->type == 'error'
+					|| !isset($steamVanityUrl->response->steamid)
+						&& $steamVanityUrl->response->success == 42) return ['error' => 'Invalid input'];
+
+				$steamid64 = (string) $steamVanityUrl->response->steamid;
+
+				if (!preg_match('/7656119/', $steamid64)) return ['error' => 'Invalid link'];
+				else return ['success' => $steamid64];
+			}
+		}
+		else if (is_numeric($data) && preg_match('/7656119/', $data))
+		{
+			return ['success' => $data];
+		}
+		else
+		{
+			$steamAPI = new SteamAPI('vanityUrl');
+			$steamVanityUrl = $steamAPI->setSteamId($data)->run();
+
+			if(isset($steamVanityUrl->type) && $steamVanityUrl->type == 'error'
+				|| !isset($steamVanityUrl->response->steamid)
+					&& $steamVanityUrl->response->success == 42) return ['error' => 'Invalid input'];
+
+			$steamid64 = (string) $steamVanityUrl->response->steamid;
+
+			if (!preg_match('/7656119/', $steamid64)) return ['error' => 'Invalid input'];
+			else return ['success' => $steamid64];
+		}
+	}
 }

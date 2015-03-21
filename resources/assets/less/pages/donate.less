@@ -1,0 +1,37 @@
+.donate-page {
+	p {
+		&.tiny-text {
+			line-height: 5px;
+			font-size: 12px
+		}
+		line-height: 170%;
+		font-size: 14px
+	}
+
+	label {
+		line-height: 25px;
+	}
+
+	@media (max-width: @screen-sm-max) {
+		table {
+			text-align: left;
+		}
+		@media (min-width: @screen-sm-min) {
+			.donate-button {
+				text-align: right;
+			}
+
+			.donate-user-text {
+				text-align: left;
+			}
+		}
+		
+		text-align: center;
+	}
+
+	a {
+		color: #212121;
+	}
+
+	padding: 0 0 30px;
+}
