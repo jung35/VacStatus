@@ -38,7 +38,7 @@ var Profile = React.createClass({
 			specialColors = "";
 			if(data.beta) specialColors = "beta";
 			if(data.donation >= 10.0) specialColors = "donator";
-			if(data.site_admin) specialColors = "admin";
+			if(data.site_admin >= 1) specialColors = "admin";
 
 			if(auth_check) auth = (
 				<a className="open-addUserModal" href="#addUserModal" data-toggle="modal" data-id={ data.id }>
@@ -178,7 +178,7 @@ var Profile = React.createClass({
 						<div className="container">
 							<div className="row">
 								<div className="col-xs-12">
-									{ data.site_admin ? <div className="label label-warning">Admin</div> : ''}
+									{ data.site_admin >= 1 ? <div className="label label-warning">Admin</div> : ''}
 									{ data.donation >= 10 ? <div className="label label-success">Donator</div> : ''}
 									{ data.beta ? <div className="label label-primary">Beta</div> : ''}
 								</div>

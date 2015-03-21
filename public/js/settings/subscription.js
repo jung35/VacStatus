@@ -181,7 +181,7 @@ var Subscription = React.createClass({displayName: "Subscription",
 					var specialColors = "";
 					if(list.beta) specialColors = "beta-name";
 					if(list.donation >= 10.0) specialColors = "donator-name";
-					if(list.site_admin) specialColors = "admin-name";
+					if(list.site_admin >= 1) specialColors = "admin-name";
 
 					return (
 						React.createElement("div", {key: index, className: "col-xs-6 col-sm-4"}, 

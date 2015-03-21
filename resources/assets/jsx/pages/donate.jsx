@@ -60,7 +60,7 @@ var Donate = React.createClass({
 				specialColors = "";
 				if(donation.beta) specialColors = "beta-name";
 				if(donation.donation >= 10.0) specialColors = "donator-name";
-				if(donation.site_admin) specialColors = "admin-name";
+				if(donation.site_admin >= 1) specialColors = "admin-name";
 
 				url = "#";
 				if(donation.display_name != null)
