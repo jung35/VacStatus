@@ -88,7 +88,7 @@ var Donate = React.createClass({displayName: "Donate",
 				specialColors = "";
 				if(donation.beta) specialColors = "beta-name";
 				if(donation.donation >= 10.0) specialColors = "donator-name";
-				if(donation.site_admin) specialColors = "admin-name";
+				if(donation.site_admin >= 1) specialColors = "admin-name";
 
 				return (
 					React.createElement("tr", {key: index }, 
