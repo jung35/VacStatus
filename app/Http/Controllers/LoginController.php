@@ -15,7 +15,6 @@ use VacStatus\Update\SingleProfile;
 use Cache;
 use Auth;
 use SteamAuth;
-use Session;
 
 class LoginController extends Controller {
 	
@@ -93,7 +92,7 @@ class LoginController extends Controller {
 
 		Auth::login($user, true);
 		$userId = $user->id;
-		Session::put('friendsList', $simpleFriends);
+		Cache::forever("friendsList_{$user->id}", $simpleFriends);
 
 		return redirect()
 			->intended('/list')

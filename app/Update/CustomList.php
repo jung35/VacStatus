@@ -28,7 +28,10 @@ class CustomList
 		if(Auth::check()) 
 		{
 			$userId = Auth::User()->id;
-			$friendsList = Session::get("friendsList");
+
+			$friendsListCacheName = "friendsList_{$userId}";
+
+			$friendsList = Session::get($friendsListCacheName);
 
 			if($userId != $userList->user_id) {
 				if(($userList->privacy == 3)

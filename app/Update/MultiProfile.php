@@ -72,7 +72,10 @@ class MultiProfile
 
 		foreach($this->profiles as $k => $profile)
 		{
-			if(!$this->canUpdate($profile['small_id'])) continue;
+			if(!$this->canUpdate($profile['small_id']))
+			{
+				if(count($profile) == 1) continue;
+			}
 
 			$refreshProfiles[] = [
 				'profile_key' => $k,

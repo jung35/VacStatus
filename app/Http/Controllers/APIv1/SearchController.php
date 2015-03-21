@@ -96,9 +96,11 @@ class SearchController extends Controller
 			\DB::raw('max(user_list_profile.created_at) as created_at'),
 			\DB::raw('count(user_list_profile.id) as total')
 			)->groupBy('profile.id')
-			->whereNull('user_list_profile.deleted_at')
-			->whereIn('profile.small_id', $smallIds)
-			->leftjoin('user_list_profile', 'user_list_profile.profile_id', '=', 'profile.id')
+			->leftJoin('user_list_profile', function($join)
+			{
+				$join->on('user_list_profile.profile_id', '=', 'profile.id')
+					->whereNull('user_list_profile.deleted_at');
+			})->whereIn('profile.small_id', $smallIds)
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
 			->get();
@@ -133,7 +135,7 @@ class SearchController extends Controller
 				'donation'		=> $profile->donation?:0,
 				'beta'			=> $profile->beta?:0,
 				'times_added'	=> [
-					'number' => $profile->total,
+					'number' => $profile->total?:0,
 					'time' => (new DateTime($profile->created_at))->format("M j Y")
 				],
 			];

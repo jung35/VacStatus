@@ -14,7 +14,7 @@ use VacStatus\Models\Subscription;
 
 use VacStatus\Steam\Steam;
 
-use Session;
+use Cache;
 use Validator;
 use Input;
 use Auth;
@@ -78,9 +78,11 @@ class ListController extends Controller
 			];
 		}
 
-		if(Session::has('friendsList'))
+		$friendsListCacheName = "friendsList_{$userId}";
+
+		if(Cache::has($friendsListCacheName))
 		{
-			$friendsList = Session::get('friendsList');
+			$friendsList = Cache::get($friendsListCacheName);
 
 			$myfriendsLists = User::whereIn('users.small_id', $friendsList)
 				->whereNotIn('user_list.privacy', [3])
