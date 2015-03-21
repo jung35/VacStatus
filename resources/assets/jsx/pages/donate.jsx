@@ -48,7 +48,7 @@ var Donate = React.createClass({
 				return (
 			        <tr key={ index }>
 						<td>{ perk.desc }</td>
-						<td>${ perk.amount.toFixed(2) }</td>
+						<td>${ perk.amount }</td>
 					</tr>
 		        );
 			});

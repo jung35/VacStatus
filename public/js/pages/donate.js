@@ -48,7 +48,7 @@ var Donate = React.createClass({displayName: "Donate",
 				return (
 			        React.createElement("tr", {key: index }, 
 						React.createElement("td", null,  perk.desc), 
-						React.createElement("td", null, "$",  perk.amount.toFixed(2) )
+						React.createElement("td", null, "$",  perk.amount)
 					)
 		        );
 			});

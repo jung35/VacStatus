@@ -133,7 +133,7 @@ var Subscription = React.createClass({
 			emailInputSmall = false;
 			pushBulletInputSmall = false;
 
-			if(data.userMail !== null)
+			if(data.userMail != null)
 			{
 				if(data.userMail.email)
 				{
