@@ -4,7 +4,6 @@ var auth_check = $('meta[name=auth]').attr("content");
 var ListHandler = React.createClass({
 	submitNewListToServer: function(data)
 	{
-		console.log(data);
 		$.ajax({
 			url: '/api/v1/list',
 			dataType: 'json',

@@ -40,8 +40,6 @@ class PagesController extends Controller {
 
 	public function listListPage()
 	{
-		$this->middleware('auth');
-		
 		return view('pages/listPortal');
 	}
 
@@ -86,8 +84,6 @@ class PagesController extends Controller {
 
 	public function searchPage()
 	{
-		$this->middleware('csrf');
-
 		$searchQuery = Input::get('search');
 
 		if(!$searchQuery) return redirect()->route('home');

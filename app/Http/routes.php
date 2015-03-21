@@ -13,6 +13,7 @@ Route::group(['prefix' => 'auth'], function()
 	]);
 
 	get('/logout', [
+		'middleware' => 'auth',
 		'as' => 'auth.logout',
 		'uses' => 'LoginController@logout'
 	]);
@@ -20,6 +21,7 @@ Route::group(['prefix' => 'auth'], function()
 
 get('/list', [
 	'as' => 'list.list',
+    'middleware' => 'auth',
 	'uses' => 'PagesController@listListPage'
 ]);
 
@@ -84,6 +86,7 @@ post('/search', [
 Route::group(['prefix' => 'settings'], function()
 {
 	get('/', [
+	    'middleware' => 'auth',
 		'as' => 'settings',
 		'uses' => 'SettingsController@subscriptionPage'
 	]);
@@ -111,6 +114,7 @@ Route::group(['prefix' => 'api'], function()
 		Route::group(['prefix' => 'list'], function()
 		{
 			get('/simple', [
+	    		'middleware' => 'auth',
 				'as' => 'api.v1.list.simple',
 				'uses' => 'ListController@mySimpleList'
 			]);
@@ -125,53 +129,56 @@ Route::group(['prefix' => 'api'], function()
 				'uses' => 'ListController@latestTracked'
 			]);
 
+			get('/', [
+	    		'middleware' => 'auth',
+				'as' => 'api.v1.list.list',
+				'uses' => 'ListController@listList'
+			]);
+
 			get('/{userList}', [
 				'as' => 'api.v1.tracked.latest',
 				'uses' => 'ListController@customList'
 			]);
 
-			get('/', [
-				'as' => 'api.v1.list.list',
-				'uses' => 'ListController@listList'
-			]);
-
 			//
 			//	---------------------------------
 			//
+			Route::group(['middleware' => 'auth'], function()
+			{
+				post('/add', [
+					'as' => 'api.v1.list.user.add',
+					'uses' => 'ListUserController@addToList'
+				]);
 
-			post('/add', [
-				'as' => 'api.v1.list.user.add',
-				'uses' => 'ListUserController@addToList'
-			]);
+				post('/{listId?}', [
+					'as' => 'api.v1.list.create',
+					'uses' => 'ListController@modifyCustomList'
+				]);
 
-			post('/{listId?}', [
-				'as' => 'api.v1.list.create',
-				'uses' => 'ListController@modifyCustomList'
-			]);
+				post('/subscribe/{userList}', [
+					'as' => 'api.v1.list.subscribe',
+					'uses' => 'ListController@listSubscribe'
+				]);
 
-			post('/subscribe/{userList}', [
-				'as' => 'api.v1.list.subscribe',
-				'uses' => 'ListController@listSubscribe'
-	     	]);
+				//
+				//	---------------------------------
+				//
 
-			//
-			//	---------------------------------
-			//
+				delete('/subscribe/{userList}', [
+					'as' => 'api.v1.list.unsubscribe',
+					'uses' => 'ListController@listUnsubscribe'
+				]);
 
-			delete('/subscribe/{userList}', [
-				'as' => 'api.v1.list.unsubscribe',
-				'uses' => 'ListController@listUnsubscribe'
-	     	]);
+				delete('/delete', [
+					'as' => 'api.v1.list.user.delete',
+					'uses' => 'ListUserController@deleteFromList'
+				]);
 
-			delete('/delete', [
-				'as' => 'api.v1.list.user.delete',
-				'uses' => 'ListUserController@deleteFromList'
-			]);
-
-			delete('/{userList}', [
-				'as' => 'api.v1.tracked.latest',
-				'uses' => 'ListController@deleteCustomList'
-			]);
+				delete('/{userList}', [
+					'as' => 'api.v1.tracked.latest',
+					'uses' => 'ListController@deleteCustomList'
+				]);
+			});
 		});
 
 		Route::group(['prefix' => 'news'], function()
@@ -199,7 +206,7 @@ Route::group(['prefix' => 'api'], function()
 			Route::any('/ipn', array('uses' => 'DonationController@IPN'));
 		});
 
-		Route::group(['prefix' => 'settings'], function()
+		Route::group(['prefix' => 'settings', 'middleware' => 'auth'], function()
 		{
 			get('/', [
 				'as' => 'api.v1.settings',
@@ -235,9 +242,9 @@ Route::group([
 	]);
 
 	post('/announcement', [
-     	'as' => 'admin.announcement.save',
-     	'uses' => 'MainController@announcementSave'
- 	]);
+		'as' => 'admin.announcement.save',
+		'uses' => 'MainController@announcementSave'
+	]);
 
 	Route::group(['prefix' => 'db'], function()
 	{

@@ -18,9 +18,6 @@ class ListUserController extends Controller
 {
 	public function addToList()
 	{
-		$this->middleware('csrf');
-		$this->middleware('auth');
-
 		$messages = [
 			'required' => 'The :attribute field is required.',
 			'numeric' => 'The :attribute field is required.',
@@ -72,9 +69,6 @@ class ListUserController extends Controller
 
 	public function deleteFromList()
 	{
-		$this->middleware('csrf');
-		$this->middleware('auth');
-
 		$input = Input::all();
 
 		$userListProfile = UserListProfile::where('user_list_id', $input['list_id'])

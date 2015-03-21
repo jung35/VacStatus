@@ -10,7 +10,6 @@ class SettingsController extends Controller
 {
 	public function subscriptionPage()
 	{
-		$this->middleware('auth');
 		return view('settings/subscription');
 	}
 

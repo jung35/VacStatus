@@ -23,8 +23,6 @@ class ListController extends Controller
 {
 	public function mySimpleList()
 	{
-		$this->middleware('auth');
-
 		$myList = UserList::where('user_id', Auth::user()->id)
 			->orderBy('id', 'desc')
 			->get([
@@ -37,8 +35,6 @@ class ListController extends Controller
 	}
 	public function listList()
 	{
-		$this->middleware('auth');
-
 		$return = [
 			'my_list' => [],
 			'friends_list' => []
@@ -181,9 +177,6 @@ class ListController extends Controller
 
 	public function modifyCustomList($listId = null)
 	{
-		$this->middleware('csrf');
-		$this->middleware('auth');
-
 		$messages = [
 			'required' => 'The :attribute field is required.',
 			'numeric' => 'The :attribute field is required.',
@@ -227,20 +220,45 @@ class ListController extends Controller
 			return ['error' => 'There was an error while trying to save the list.'];
 		}
 
-		return $user->UserList()
-			->orderBy('id', 'desc')
+		$myLists = UserList::where('user_list.user_id', $user->id)
+			->leftjoin('user_list_profile as ulp_1', 'ulp_1.user_list_id', '=', 'user_list.id')
+			->groupBy('user_list.id')
+			->orderBy('user_list.id', 'desc')
+			->leftJoin('subscription', function($join)
+			{
+				$join->on('subscription.user_list_id', '=', 'user_list.id')
+					->whereNull('subscription.deleted_at');
+			})->whereNull('ulp_1.deleted_at')
 			->get([
 				'user_list.id',
 				'user_list.title',
 				'user_list.privacy',
+				'user_list.created_at',
+				
+				\DB::raw('count(ulp_1.id) as users_in_list'),
+				\DB::raw('count(distinct subscription.id) as sub_count'),
 			]);
+
+		$return = [];
+
+		foreach($myLists as $myList)
+		{
+			$return[] = [
+				'id' => $myList->id,
+				'title' => $myList->title,
+				'privacy' => $myList->privacy,
+				'created_at' => $myList->created_at->format("M j Y"),
+				
+				'users_in_list' => $myList->users_in_list,
+				'sub_count' => $myList->sub_count,
+			];
+		}
+
+		return $return;
 	}
 
 	public function deleteCustomList(UserList $userList)
 	{
-		$this->middleware('csrf');
-		$this->middleware('auth');
-
 		$userList->UserListProfile()->delete();
 		
 		if(!$userList->delete()) {
@@ -252,9 +270,6 @@ class ListController extends Controller
 
 	public function listSubscribe(UserList $userList)
 	{
-		$this->middleware('csrf');
-		$this->middleware('auth');
-
 		if(!isset($userList->id)) {
 			return ['error' => '404'];
 		}
@@ -279,9 +294,6 @@ class ListController extends Controller
 
 	public function listUnsubscribe(UserList $userList)
 	{
-		$this->middleware('csrf');
-		$this->middleware('auth');
-
 		if(!isset($userList->id)) {
 			return ['error' => '404'];
 		}

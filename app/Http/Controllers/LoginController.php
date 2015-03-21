@@ -31,7 +31,7 @@ class LoginController extends Controller {
 		$steam64BitId = str_replace("http://steamcommunity.com/openid/id/", "", $steamuser['steamid'] );
 
 		// Try to grab user if it exists
-		$user = User::whereSmallId(Steam::toSmallId($steam64BitId))->first();
+		$user = User::whereSmallId((int) Steam::toSmallId($steam64BitId))->first();
 
 		$steamAPI = new SteamAPI('info');
 		$steamAPI->setSteamId($steam64BitId);
@@ -50,7 +50,7 @@ class LoginController extends Controller {
 		if(!isset($user->id))
 		{
 			$user = new User;
-			$user->small_id = (string) Steam::toSmallId($userSteamInfo->steamid);
+			$user->small_id = (int) Steam::toSmallId($userSteamInfo->steamid);
 		}
 
 		$user->display_name = (string) $userSteamInfo->personaname;
