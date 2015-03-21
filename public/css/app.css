@@ -6381,6 +6381,7 @@ body {
   .flash .title {
     margin-top: 20px;
     float: left;
+    width: 0;
     text-align: left;
   }
 }
