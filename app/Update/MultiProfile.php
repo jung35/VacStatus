@@ -54,7 +54,6 @@ class MultiProfile
 	protected function updateCache($smallId, $data)
 	{
 		unset($data['times_checked']);
-		unset($data['times_added']);
 		unset($data['login_check']);
 		unset($data['profile_description']);
 

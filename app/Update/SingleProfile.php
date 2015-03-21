@@ -149,8 +149,6 @@ class SingleProfile extends BaseUpdate
 
 	protected function updateCache($data)
 	{
-		unset($data['times_checked']);
-		unset($data['times_added']);
 		unset($data['login_check']);
 
 		parent::updateCache($data);
@@ -329,7 +327,7 @@ class SingleProfile extends BaseUpdate
 		/* Finished inserting / updating into the DB! */
 
 		/* Check to see if this user has an account in vacstatus */
-		$user = User::whereSmallId($this->smallId)->first();
+		$user = User::where('small_id', $this->smallId)->first();
 
 		/* getting the number of times checked and added */
 
