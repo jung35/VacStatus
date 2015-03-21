@@ -210,14 +210,14 @@ var Subscription = React.createClass({
 										<div className={"form-group " + emailColor}>
 											<label htmlFor="subcribeEmail" className="col-sm-2 control-label">Email</label>
 											<div className={ emailInputSmall ? "col-sm-8 " : "col-sm-10"}>
-												<input type="email" className="form-control" id="subcribeEmail" ref="subcribeEmail" placeholder="Email" defaultValue={ data.userMail.email } />
+												<input type="email" className="form-control" id="subcribeEmail" ref="subcribeEmail" placeholder="Email" defaultValue={ data.userMail ? data.userMail.email:'' } />
 											</div>
 											{ emailButton }
 										</div>
 										<div className={"form-group " + pushBulletColor}>
 											<label htmlFor="subcribePushBullet" className="col-sm-2 control-label">Pushbullet</label>
 											<div className={ pushBulletInputSmall ? "col-sm-8" : "col-sm-10"}>
-												<input type="email" className="form-control" id="subcribePushBullet" ref="subcribePushBullet" placeholder="PushBullet Email" defaultValue={ data.userMail.pushbullet } />
+												<input type="email" className="form-control" id="subcribePushBullet" ref="subcribePushBullet" placeholder="PushBullet Email" defaultValue={ data.userMail ? data.userMail.pushbullet:'' } />
 											</div>
 											{ pushBulletButton }
 										</div>

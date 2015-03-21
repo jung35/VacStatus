@@ -210,14 +210,14 @@ var Subscription = React.createClass({displayName: "Subscription",
 										React.createElement("div", {className: "form-group " + emailColor}, 
 											React.createElement("label", {htmlFor: "subcribeEmail", className: "col-sm-2 control-label"}, "Email"), 
 											React.createElement("div", {className:  emailInputSmall ? "col-sm-8 " : "col-sm-10"}, 
-												React.createElement("input", {type: "email", className: "form-control", id: "subcribeEmail", ref: "subcribeEmail", placeholder: "Email", defaultValue:  data.userMail.email})
+												React.createElement("input", {type: "email", className: "form-control", id: "subcribeEmail", ref: "subcribeEmail", placeholder: "Email", defaultValue:  data.userMail ? data.userMail.email:''})
 											), 
 											emailButton 
 										), 
 										React.createElement("div", {className: "form-group " + pushBulletColor}, 
 											React.createElement("label", {htmlFor: "subcribePushBullet", className: "col-sm-2 control-label"}, "Pushbullet"), 
 											React.createElement("div", {className:  pushBulletInputSmall ? "col-sm-8" : "col-sm-10"}, 
-												React.createElement("input", {type: "email", className: "form-control", id: "subcribePushBullet", ref: "subcribePushBullet", placeholder: "PushBullet Email", defaultValue:  data.userMail.pushbullet})
+												React.createElement("input", {type: "email", className: "form-control", id: "subcribePushBullet", ref: "subcribePushBullet", placeholder: "PushBullet Email", defaultValue:  data.userMail ? data.userMail.pushbullet:''})
 											), 
 											pushBulletButton 
 										), 
