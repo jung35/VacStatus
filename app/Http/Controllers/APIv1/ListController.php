@@ -90,7 +90,11 @@ class ListController extends Controller
 				->leftjoin('user_list', 'user_list.user_id', '=', 'users.id')
 				->leftjoin('user_list_profile', 'user_list.id', '=', 'user_list_profile.user_list_id')
 				->leftjoin('profile', 'profile.small_id', '=', 'users.small_id')
-				->leftjoin('subscription', 'subscription.user_list_id', '=', 'user_list.id')
+				->leftJoin('subscription', function($join)
+				{
+					$join->on('subscription.user_list_id', '=', 'user_list.id')
+						->whereNull('subscription.deleted_at');
+				})
 				->having('users_in_list', '>', 0)
 				->get([
 					'profile.id as profile_id',
