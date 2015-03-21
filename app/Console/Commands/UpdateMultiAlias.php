@@ -39,6 +39,20 @@ class UpdateMultiAlias extends Command {
 
 			$profile->alias = json_encode($steamAlias);
 			$profile->save();
+
+			$cacheName = "profile_$profile->small_id}";
+
+			if(Cache::has($cachName))
+			{
+				$profileCache = Cache::get($cacheName);
+				$profileCache['alias'] = Steam::friendlyAlias($steamAlias);
+
+				if(Cache::has($cacheName)) Cache::forget($cacheName);
+
+				$expireTime = Carbon::now()->addMinutes(60);
+
+				Cache::put($cacheName, $profileCache, $expireTime);
+			}
 		}
 	}
 
