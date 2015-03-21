@@ -179,7 +179,7 @@ var Profile = React.createClass({displayName: "Profile",
 							React.createElement("div", {className: "row"}, 
 								React.createElement("div", {className: "col-xs-12"}, 
 									 data.site_admin >= 1 ? React.createElement("div", {className: "label label-warning"}, "Admin") : '', 
-									 data.donation >= 10 ? React.createElement("div", {className: "label label-success"}, "Donator") : '', 
+									 data.donation >= 1 ? React.createElement("div", {className: "label label-success"}, "Donator") : '', 
 									 data.beta >= 1 ? React.createElement("div", {className: "label label-primary"}, "Beta") : ''
 								)
 							)
