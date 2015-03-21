@@ -55,6 +55,12 @@ class SettingsController extends Controller
 		$user = Auth::user();
 		$userMail = $user->UserMail;
 
+		if(!isset($userMail->id))
+		{
+			$userMail = new UserMail;
+			$userMail->user_id = $user->id;
+		}
+
 		$sendVerificationTo = [];
 
 		$rules = array('email' => 'email');
