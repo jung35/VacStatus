@@ -182,8 +182,13 @@ class MultiProfile
 
 			if(is_null($profile))
 			{
-				$profile = new Profile;
-				$profile->small_id = $smallId;
+				$profile = Profile::whereSmallId((int) $smallId)->first();
+				
+				if(!isset($profile->id))
+				{
+					$profile = new Profile;
+					$profile->small_id = $smallId;
+				}
 
 				if(isset($steamInfo->timecreated)) // people like to hide their info because smurf or hack
 				{
