@@ -6,13 +6,14 @@ use Symfony\Component\Console\Input\InputArgument;
 
 use VacStatus\Update\SubscriptionCheck;
 
-use Pushbullet\Pushbullet;
+use PHPushbullet\PHPushbullet;
 
+use Mail;
 use Cache;
 
 class ListChecker extends Command
 {
-	protected $name = 'list';
+	protected $name = 'listCheck';
 	protected $description = 'Checks subscription and sends email if a player is caught.';
 	protected $checkerCacheName = "last_checked_subscription";
  	protected $log;
@@ -45,7 +46,7 @@ class ListChecker extends Command
 			$email = $toSend['send']['email'];
 			$profiles = $toSend['profiles'];
 
-			Mail::send('emails.verification', [
+			Mail::send('emails.hacker', [
 				'profiles' => $profiles
 			], function($message) use ($email) {
 				$message->to($email)->subject('Bans were found from your subscribed lists!');
@@ -56,8 +57,10 @@ class ListChecker extends Command
 
 		if($toSend['send']['pushbullet'])
 		{
-			$pushbullet = new Pushbullet(env('PUSHBULLET_API'));
+			$pushbullet = new PHPushbullet(env('PUSHBULLET_API'));
 			$profiles = $toSend['profiles'];
+
+			$message = "";
 
 			foreach($profiles as $k => $profile)
 			{
@@ -66,10 +69,10 @@ class ListChecker extends Command
 			}
 
 			$message .= (count($profiles) > 1 ? " were " : " was")." Trade, Community, and/or VAC banned from your lists";
-
+			
 			$pushbullet
-				->contact($toSend['send']['pushbullet'])
-				->pushNote("Bans were found from your subscribed lists!", $message);
+				->user($toSend['send']['pushbullet'])
+				->note("Bans were found from your subscribed lists!", $message);
 
 			$this->log->addInfo('Pushbullet Sent!');
 		}

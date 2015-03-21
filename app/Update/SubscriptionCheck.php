@@ -55,7 +55,7 @@ class SubscriptionCheck
 				'user_list.title',
 
 				'subscription.id as sub_id',
-		      	'subscription.updated_at'
+				'subscription.updated_at'
 			]);
 
 		$userListIds = [];
@@ -73,9 +73,9 @@ class SubscriptionCheck
 			->whereNull('user_list_profile.deleted_at')
 			->distinct()
 			->get([
-		     	'user_list_profile.user_list_id',
+				'user_list_profile.user_list_id',
 
-		     	'profile.id',
+				'profile.id',
 				'profile.display_name',
 				'profile.small_id',
 				'profile.avatar_thumb',
@@ -102,13 +102,15 @@ class SubscriptionCheck
 
 	public function run()
 	{
-		$this->check();
+		$send = $this->check();
 
 		$toUpdate = Subscription::whereIn('id', $this->subscriptionIds)->get();
 		foreach($toUpdate as $subscription)
 		{
 			$subscription->touch();
 		}
+
+		return $send;
 	}
 
 	private function check()
@@ -174,8 +176,18 @@ class SubscriptionCheck
 				$profile->community != $profileBan['community'] ||
 				$profile->trade != $profileBan['trade'])
 			{
-			 	$oldProfileBan = ProfileBan::where('profile_id', $profile->id)->first();
-			 	$oldProfileBan->save($profileBan);
+
+				$oldProfileBan = ProfileBan::where('profile_id', $profile->id)->first();
+				$oldProfileBan->vac = $profileBan['vac'];
+				$oldProfileBan->community = $profileBan['community'];
+				$oldProfileBan->trade = $profileBan['trade'];
+				$oldProfileBan->vac_banned_on = $profileBan['vac_banned_on'];
+				$oldProfileBan->save();
+
+				$profile->vac = $profileBan['vac'];
+				$profile->community = $profileBan['community'];
+				$profile->trade = $profileBan['trade'];
+				$profile->vac_banned_on = $profileBan['vac_banned_on'];
 
 				$profilesToSendForNotification[$profile->id] = $profile;
 			}

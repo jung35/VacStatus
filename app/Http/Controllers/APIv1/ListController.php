@@ -47,9 +47,13 @@ class ListController extends Controller
 		$userId = Auth::user()->id;
 		$myLists = UserList::where('user_list.user_id', $userId)
 			->leftjoin('user_list_profile as ulp_1', 'ulp_1.user_list_id', '=', 'user_list.id')
-			->leftjoin('subscription', 'subscription.user_list_id', '=', 'user_list.id')
 			->groupBy('user_list.id')
 			->orderBy('user_list.id', 'desc')
+			->leftJoin('subscription', function($join)
+			{
+				$join->on('subscription.user_list_id', '=', 'user_list.id')
+					->whereNull('subscription.deleted_at');
+			})
 			->whereNull('ulp_1.deleted_at')
 			->get([
 				'user_list.id',
@@ -225,7 +229,7 @@ class ListController extends Controller
 				'user_list.id',
 				'user_list.title',
 				'user_list.privacy',
-	      	]);
+			]);
 	}
 
 	public function deleteCustomList(UserList $userList)

@@ -17,7 +17,7 @@ class MultiProfile
 {
 	protected $profiles;
 	protected $profileCacheName = "profile_";
-	protected $cacheLength = 1;
+	protected $cacheLength = 60;
 	protected $refreshProfiles = [];
 
 	function __construct($profiles)
@@ -123,7 +123,7 @@ class MultiProfile
 			->leftjoin('user_list_profile', 'user_list_profile.profile_id', '=', 'profile.id')
 			->whereNull('user_list_profile.deleted_at')
 			->get([
-		        'profile.id',
+				'profile.id',
 				'profile.small_id',
 				'profile.display_name',
 				'profile.privacy',
@@ -177,7 +177,7 @@ class MultiProfile
 
 			$steamInfo = $steamInfos[$keys['steamInfos']];
 			$steamBan = $steamBans[$keys['steamBans']];
-
+			
 			$profile = $profiles->where('small_id', (int) $smallId)->first();
 
 			if(is_null($profile))
@@ -218,7 +218,7 @@ class MultiProfile
 				if($profileBan->vac > $steamBan->NumberOfVACBans)
 				{
 					$skipProfileBan = false;
-			  		$profileBan->unban = true;
+					$profileBan->unban = true;
 				}
 			}
 			
