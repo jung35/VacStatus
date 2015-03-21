@@ -56,6 +56,7 @@ class MultiProfile
 		unset($data['times_checked']);
 		unset($data['times_added']);
 		unset($data['login_check']);
+		unset($data['profile_description']);
 
 		$cacheName = $this->profileCacheName.$smallId;
 		if(Cache::has($cacheName)) Cache::forget($cacheName);

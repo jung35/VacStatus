@@ -44,6 +44,11 @@ var List = React.createClass({
 		};
 	},
 
+	componentDidUpdate: function()
+	{
+		$('[data-toggle="tooltip"]').tooltip()
+	},
+
 	submitDeleteUserToServer: function(profile)
 	{
 		$.ajax({
@@ -145,7 +150,7 @@ var List = React.createClass({
 			{
 				list = data.list.map(function(profile, index)
 				{
-					var auth, specialColors;
+					var auth, specialColors, profile_description;
 
 					if(auth_check) {
 						if(data.my_list) {
@@ -168,13 +173,18 @@ var List = React.createClass({
 					if(profile.donation >= 10.0) specialColors = "donator-name";
 					if(profile.site_admin) specialColors = "admin-name";
 
+					if(profile.profile_description)
+					{
+						profile_description = <i className="fa fa-eye pointer" data-toggle="tooltip" data-placement="right" title={ profile.profile_description }></i>
+					}
+
 					return (
 						<tr key={ index }>
 							<td className="user_avatar">
 								{ auth }<img src={profile.avatar_thumb} />
 							</td>
 							<td className="user_name">
-								<a className={specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
+								{ profile_description } <a className={specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
 							</td>
 							<td className="user_vac_ban text-center">
 								<span className={"text-" + (profile.vac > 0 ? "danger" : "success")}>

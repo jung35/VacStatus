@@ -44,6 +44,11 @@ var List = React.createClass({displayName: "List",
 		};
 	},
 
+	componentDidUpdate: function()
+	{
+		$('[data-toggle="tooltip"]').tooltip()
+	},
+
 	submitDeleteUserToServer: function(profile)
 	{
 		$.ajax({
@@ -145,7 +150,7 @@ var List = React.createClass({displayName: "List",
 			{
 				list = data.list.map(function(profile, index)
 				{
-					var auth, specialColors;
+					var auth, specialColors, profile_description;
 
 					if(auth_check) {
 						if(data.my_list) {
@@ -168,13 +173,18 @@ var List = React.createClass({displayName: "List",
 					if(profile.donation >= 10.0) specialColors = "donator-name";
 					if(profile.site_admin) specialColors = "admin-name";
 
+					if(profile.profile_description)
+					{
+						profile_description = React.createElement("i", {className: "fa fa-eye pointer", "data-toggle": "tooltip", "data-placement": "right", title:  profile.profile_description})
+					}
+
 					return (
 						React.createElement("tr", {key: index }, 
 							React.createElement("td", {className: "user_avatar"}, 
 								auth, React.createElement("img", {src: profile.avatar_thumb})
 							), 
 							React.createElement("td", {className: "user_name"}, 
-								React.createElement("a", {className: specialColors, href: "/u/" + profile.steam_64_bit, target: "_blank"}, profile.display_name)
+								profile_description, " ", React.createElement("a", {className: specialColors, href: "/u/" + profile.steam_64_bit, target: "_blank"}, profile.display_name)
 							), 
 							React.createElement("td", {className: "user_vac_ban text-center"}, 
 								React.createElement("span", {className: "text-" + (profile.vac > 0 ? "danger" : "success")}, 

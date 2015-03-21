@@ -77,6 +77,7 @@ class CustomList
 			->orderBy('ulp_1.id', 'desc')
 			->get([
 		      	'ulp_1.profile_name',
+		      	'ulp_1.profile_description',
 
 				'profile.id',
 				'profile.display_name',
@@ -136,21 +137,22 @@ class CustomList
 			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
 
 			$return['list'][] = [
-				'id'			=> $userListProfile->id,
-				'display_name'	=> $userListProfile->profile_name?:$userListProfile->display_name,
-				'avatar_thumb'	=> $userListProfile->avatar_thumb,
-				'small_id'		=> $userListProfile->small_id,
-				'steam_64_bit'	=> Steam::to64Bit($userListProfile->small_id),
-				'vac'			=> $userListProfile->vac,
-				'vac_banned_on'	=> $vacBanDate->format("M j Y"),
-				'community'		=> $userListProfile->community,
-				'trade'			=> $userListProfile->trade,
-				'site_admin'	=> $userListProfile->site_admin?:0,
-				'donation'		=> $userListProfile->donation?:0,
-				'beta'			=> $userListProfile->beta?:0,
-				'times_added'	=> [
-					'number' => $userListProfile->total,
-					'time' => (new DateTime($userListProfile->created_at))->format("M j Y")
+				'id'					=> $userListProfile->id,
+				'display_name'			=> $userListProfile->profile_name?:$userListProfile->display_name,
+				'avatar_thumb'			=> $userListProfile->avatar_thumb,
+				'small_id'				=> $userListProfile->small_id,
+				'steam_64_bit'			=> Steam::to64Bit($userListProfile->small_id),
+				'vac'					=> $userListProfile->vac,
+				'vac_banned_on'			=> $vacBanDate->format("M j Y"),
+				'community'				=> $userListProfile->community,
+				'trade'					=> $userListProfile->trade,
+				'site_admin'			=> $userListProfile->site_admin?:0,
+				'donation'				=> $userListProfile->donation?:0,
+				'beta'					=> $userListProfile->beta?:0,
+				'profile_description'	=> $userListProfile->profile_description,
+				'times_added'			=> [
+					'number'	=> $userListProfile->total,
+					'time'		=> (new DateTime($userListProfile->created_at))->format("M j Y")
 				],
 			];
 		}
