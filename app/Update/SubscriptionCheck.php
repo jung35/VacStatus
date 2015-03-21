@@ -78,10 +78,10 @@ class SubscriptionCheck
 				'profile.avatar_thumb',
 
 				'profile_ban.vac',
-				'profile_ban.vac_days',
 				'profile_ban.community',
 				'profile_ban.trade',
 				'profile_ban.unban',
+				'profile_ban.created_at',
 				'profile_ban.updated_at',
 				'profile_ban.vac_banned_on',
 			]);
@@ -124,7 +124,10 @@ class SubscriptionCheck
 			$userListProfiles = $profiles->where('user_list_id', $userList->id);
 			foreach($userListProfiles as $profile)
 			{
-				if($userList->updated_at->timestamp < $profile->updated_at->timestamp && $profile->updated_at->timestamp <= time() && $userList->updated_at->timestamp != $userList->created_at->timestamp)
+				if($userList->updated_at->timestamp < $profile->updated_at->timestamp
+				   && $profile->updated_at->timestamp <= time()
+				   && $profile->updated_at->timestamp != $profile->created_at->timestamp
+				   && $userList->updated_at->timestamp != $userList->created_at->timestamp)
 				{ 
 					$profilesToSendForNotification[$profile->id] = $profile;
 				}
