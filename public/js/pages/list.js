@@ -192,10 +192,10 @@ var List = React.createClass({displayName: "List",
 								)
 							), 
 							React.createElement("td", {className: "user_community_ban text-center hidden-sm"}, 
-								React.createElement("span", {className: "fa fa-"+(data.community >= 1 ? 'check' : 'times')+" text-" + (data.community >= 1 ? 'danger' : 'success')})
+								React.createElement("span", {className: "fa fa-"+(profile.community >= 1 ? 'check' : 'times')+" text-" + (profile.community >= 1 ? 'danger' : 'success')})
 							), 
 							React.createElement("td", {className: "user_trade_ban text-center hidden-sm"}, 
-								React.createElement("span", {className: "fa fa-"+(data.trade >= 1 ? 'check' : 'times')+" text-" + (data.trade >= 1  ? 'danger' : 'success')})
+								React.createElement("span", {className: "fa fa-"+(profile.trade >= 1 ? 'check' : 'times')+" text-" + (profile.trade >= 1  ? 'danger' : 'success')})
 							), 	
 							React.createElement("td", {className: "user_track_number text-center"}, 
 								 profile.times_added.number
