@@ -118,8 +118,8 @@ var Donate = React.createClass({
 										<input type="hidden" name="cmd" value="_donations" />
 										<input type="hidden" name="item_name" value="Donation" />
 										<input type="hidden" name="business" value="jung3o@yahoo.com" />
-										<input type="hidden" name="notify_url" value={ url + "/api/v1/donate/ipn" } />
-										<input type="hidden" name="return" value="{{ url('/donate') }}" />
+										<input type="hidden" name="notify_url" value="https://vacstat.us/api/v1/donate/ipn" />
+										<input type="hidden" name="return" value="https://vacstat.us/donate" />
 										<input type="hidden" name="rm" value="2" />
 										<input type="hidden" name="custom" value={ small_id } />
 										<input type="hidden" name="no_note" value="1" />
