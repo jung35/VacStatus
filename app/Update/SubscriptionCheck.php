@@ -157,6 +157,8 @@ class SubscriptionCheck
 
 		foreach($getSmallIds as $k => $smallId)
 		{
+			if(!isset($indexSave[$smallId])) continue;
+			
 			$steamBan = $steamBans[$indexSave[$smallId]];
 			$profile = $profiles->where('small_id', $smallId)->first();
 
