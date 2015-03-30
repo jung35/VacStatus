@@ -36,12 +36,9 @@ class ListChecker extends Command
 
 		$toSend = $subscriptionCheck->run();
 
-		if(!$toSend || isset($toSend['error']))
-		{
-			$this->log->addInfo('Nothing was sent!');
-			return;
-		}
+		if(!$toSend || isset($toSend['error'])) return;
 
+		$this->log->addInfo('------------------------');
 		if($toSend['send']['email'])
 		{
 			$email = $toSend['send']['email'];
@@ -79,6 +76,7 @@ class ListChecker extends Command
 		}
 
 		$this->log->addInfo('EVERYTHING WAS SENT!');
+		$this->log->addInfo('------------------------');
 	}
 
 }
