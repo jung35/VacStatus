@@ -52,7 +52,7 @@ class User extends Model implements AuthenticatableContract
 	{
 		if($this->isAdmin()) return 999;
 
-		if($this->donation >= DonationPerk::getPerkAmount('list_1')) return 20;
+		if($this->donation >= DonationPerk::getPerkAmount('list_1')) return 5;
 
 		if($this->beta == 1) return 3;
 
@@ -63,33 +63,33 @@ class User extends Model implements AuthenticatableContract
 	{
 		if($this->isAdmin()) return 999;
 
-		if($this->donation >= DonationPerk::getPerkAmount('user_1')) return 75;
+		if($this->donation >= DonationPerk::getPerkAmount('user_1')) return 200;
 
-		if($this->beta == 1) return 35;
+		if($this->beta == 1) return 150;
 
-		return 30;
+		return 130;
 	}
 
 	public function unlockSearch()
 	{
 		if($this->isAdmin()) return 999;
 
-		if($this->donation >= DonationPerk::getPerkAmount('search_1')) return 70;
+		if($this->donation >= DonationPerk::getPerkAmount('search_1')) return 100;
 
-		if($this->beta == 1) return 50;
+		if($this->beta == 1) return 75;
 
-		return 30;
+		return 50;
 	}
 
 	public function unlockSubscription()
 	{
 		if($this->isAdmin()) return 999;
 
-		if($this->donation >= DonationPerk::getPerkAmount('subscription')) return 30;
+		if($this->donation >= DonationPerk::getPerkAmount('subscription')) return 5;
 
-		if($this->beta == 1) return 10;
+		if($this->beta == 1) return 3;
 
-		return 5;
+		return 1;
 	}
 
 	public function canMakeList()

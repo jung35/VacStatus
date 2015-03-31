@@ -13,6 +13,7 @@ use VacStatus\Update\CustomList;
 
 use Validator;
 use Input;
+use Auth;
 
 class ListUserController extends Controller
 {
@@ -37,18 +38,24 @@ class ListUserController extends Controller
 			return ['error' => $validator->errors()->all()[0]];
 		}
 
-		$userList = UserList::where('user_list.id', $input['list_id'])
-			->checkExistingUser($input['profile_id'])
-			->first([
-			      'user_list_profile.id'
-	      	]);
+		$userListProfile = UserListProfile::where('user_list_id', (int) $input['list_id'])->get();
 
-		if(isset($userList->id))
+		if(Auth::user()->unlockUser() <= $userListProfile->count())
+		{
+			return ['error' => 'You have reached the maximum users in a list'];
+		}
+
+		$userListProfile = $userListProfile
+			->where('profile_id', (int) $input['profile_id'])
+			->where('deleted_at', null)
+			->first();
+
+		if(isset($userListProfile->id))
 		{
 			return ['error' => 'This user already exists on the list!'];
 		}
 
-		$profile = Profile::where('id', $input['profile_id'])->first();
+		$profile = Profile::where('id', (int) $input['profile_id'])->first();
 
 		$userListProfile = new UserListProfile;
 		$userListProfile->user_list_id = $input['list_id'];

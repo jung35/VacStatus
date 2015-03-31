@@ -6663,6 +6663,9 @@ textarea {
 .list-page .list-table td {
   vertical-align: middle;
 }
+.list-page .list-table .user_name a {
+  word-break: break-all;
+}
 .list-page a {
   color: #212121;
 }
