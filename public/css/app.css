@@ -6508,6 +6508,9 @@ hr.divider {
 .pointer {
   cursor: pointer;
 }
+textarea {
+  resize: vertical;
+}
 /* 300,400,600,700 */
 .home-page .hero {
   background: #212121 url(/img/steam-logo.png) no-repeat center top;
