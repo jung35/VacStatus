@@ -208,25 +208,42 @@ Route::group(['prefix' => 'api'], function()
 
 		Route::group(['prefix' => 'settings', 'middleware' => 'auth'], function()
 		{
-			get('/', [
-				'as' => 'api.v1.settings',
-				'uses' => 'SettingsController@subscribeIndex'
-			]);
+			Route::group(['prefix' => 'subscribe'], function()
+			{
+				get('/', [
+					'as' => 'api.v1.settings.subscribe',
+					'uses' => 'SettingsController@subscribeIndex'
+				]);
 
-			post('/subscribe', [
-				'as' => 'api.v1.settings.subscribe',
-				'uses' => 'SettingsController@makeSubscription'
-			]);
+				post('/', [
+					'as' => 'api.v1.settings.subscribe',
+					'uses' => 'SettingsController@makeSubscription'
+				]);
 
-			delete('/subscribe/email', [
-				'as' => 'api.v1.settings.subscribe.email.delete',
-				'uses' => 'SettingsController@deleteEmail'
-			]);
+				delete('/email', [
+					'as' => 'api.v1.settings.subscribe.email.delete',
+					'uses' => 'SettingsController@deleteEmail'
+				]);
 
-			delete('/subscribe/pushbullet', [
-				'as' => 'api.v1.settings.subscribe.pushbullet.delete',
-				'uses' => 'SettingsController@deletePushBullet'
-			]);
+				delete('/pushbullet', [
+					'as' => 'api.v1.settings.subscribe.pushbullet.delete',
+					'uses' => 'SettingsController@deletePushBullet'
+				]);
+			});
+
+
+			Route::group(['prefix' => 'userkey'], function()
+			{
+				get('/', [
+					'as' => 'api.v1.settings.userkey',
+					'uses' => 'SettingsController@showUserKey'
+				]);
+
+				post('/', [
+					'as' => 'api.v1.settings.userkey.new',
+					'uses' => 'SettingsController@newUserKey'
+				]);
+			});
 		});
 	});
 });

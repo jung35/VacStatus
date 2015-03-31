@@ -92,7 +92,7 @@ var Subscription = React.createClass({
 	fetchSubscription: function()
 	{
 		$.ajax({
-			url: '/api/v1/settings',
+			url: '/api/v1/settings/subscribe',
 			dataType: 'json',
 			success: function(data) {
 				this.setState({data: data});
@@ -199,43 +199,36 @@ var Subscription = React.createClass({
 			}
 
 			return (
-				<div className="container">
-					<div className="row">
-						<div className="col-xs-12">
-							<h1>Settings</h1>
+				<div className="row">
+					<div className="col-xs-12 col-md-6">
+						<h3>Receive Updates <small>&mdash; You only need to enter in one of them</small></h3>
+						<form onSubmit={this.handleSubmit} className="settings-form form-horizontal">
+							<div className={"form-group " + emailColor}>
+								<label htmlFor="subcribeEmail" className="col-sm-2 control-label">Email</label>
+								<div className={ emailInputSmall ? "col-sm-8 " : "col-sm-10"}>
+									<input type="email" className="form-control" id="subcribeEmail" ref="subcribeEmail" placeholder="Email" defaultValue={ data.userMail ? data.userMail.email:'' } />
+								</div>
+								{ emailButton }
+							</div>
+							<div className={"form-group " + pushBulletColor}>
+								<label htmlFor="subcribePushBullet" className="col-sm-2 control-label">Pushbullet</label>
+								<div className={ pushBulletInputSmall ? "col-sm-8" : "col-sm-10"}>
+									<input type="email" className="form-control" id="subcribePushBullet" ref="subcribePushBullet" placeholder="PushBullet Email" defaultValue={ data.userMail ? data.userMail.pushbullet:'' } />
+								</div>
+								{ pushBulletButton }
+							</div>
+							<div className="form-group">
+								<div className="col-sm-offset-2 col-sm-10">
+									<button className="btn btn-block btn-primary">Save Settings</button>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div className="col-xs-12 col-md-6">
+						<h3>Subscribed Lists <small>&mdash; You need to subscribe a list to receive notification</small></h3>
+						<div className="subscribed-list">
 							<div className="row">
-								<div className="col-xs-12 col-md-6">
-									<h3>Receive Updates <small>&mdash; You only need to enter in one of them</small></h3>
-									<form onSubmit={this.handleSubmit} className="subscribe-form form-horizontal">
-										<div className={"form-group " + emailColor}>
-											<label htmlFor="subcribeEmail" className="col-sm-2 control-label">Email</label>
-											<div className={ emailInputSmall ? "col-sm-8 " : "col-sm-10"}>
-												<input type="email" className="form-control" id="subcribeEmail" ref="subcribeEmail" placeholder="Email" defaultValue={ data.userMail ? data.userMail.email:'' } />
-											</div>
-											{ emailButton }
-										</div>
-										<div className={"form-group " + pushBulletColor}>
-											<label htmlFor="subcribePushBullet" className="col-sm-2 control-label">Pushbullet</label>
-											<div className={ pushBulletInputSmall ? "col-sm-8" : "col-sm-10"}>
-												<input type="email" className="form-control" id="subcribePushBullet" ref="subcribePushBullet" placeholder="PushBullet Email" defaultValue={ data.userMail ? data.userMail.pushbullet:'' } />
-											</div>
-											{ pushBulletButton }
-										</div>
-										<div className="form-group">
-											<div className="col-sm-offset-2 col-sm-10">
-												<button className="btn btn-block btn-primary">Save Settings</button>
-											</div>
-										</div>
-									</form>			
-								</div>
-								<div className="col-xs-12 col-md-6">
-									<h3>Subscribed Lists <small>&mdash; You need to subscribe a list to receive notification</small></h3>
-									<div className="subscribed-list">
-										<div className="row">
-											{ userLists }
-										</div>
-									</div>
-								</div>
+								{ userLists }
 							</div>
 						</div>
 					</div>

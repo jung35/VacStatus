@@ -10,7 +10,7 @@ class SettingsController extends Controller
 {
 	public function subscriptionPage()
 	{
-		return view('settings/subscription');
+		return view('settings/settings');
 	}
 
 	public function subscriptionVerify($email, $verifyKey)

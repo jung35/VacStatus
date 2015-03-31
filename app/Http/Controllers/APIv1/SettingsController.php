@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use VacStatus\Http\Controllers\Controller;
 use VacStatus\Http\Requests;
 
+use VacStatus\Models\User;
 use VacStatus\Models\UserList;
 use VacStatus\Models\UserMail;
 
@@ -17,7 +18,6 @@ class SettingsController extends Controller
 {
 	public function subscribeIndex()
 	{
-		$this->middleware('auth');
 
 		$user = Auth::User();
 
@@ -48,8 +48,6 @@ class SettingsController extends Controller
 
 	public function makeSubscription()
 	{
-		$this->middleware('csrf');
-		$this->middleware('auth');
 
 		$email = Input::get('email');
 		$pushBullet = Input::get('push_bullet');
@@ -105,7 +103,7 @@ class SettingsController extends Controller
 
 		if(count($sendVerificationTo) == 0) return $this->subscribeIndex();
 
-		if(!$userMail->save()) return ['error', 'There was an error trying to save the emails'];
+		if(!$userMail->save()) return ['error' => 'There was an error trying to save the emails'];
 
 		foreach($sendVerificationTo as $email) {
 			Mail::send('emails.verification', [
@@ -120,9 +118,6 @@ class SettingsController extends Controller
 
 	public function deleteEmail()
 	{
-		$this->middleware('csrf');
-		$this->middleware('auth');
-
 		$user = Auth::user();
 		$userMail = $user->UserMail;
 
@@ -136,9 +131,6 @@ class SettingsController extends Controller
 
 	public function deletePushBullet()
 	{
-		$this->middleware('csrf');
-		$this->middleware('auth');
-
 		$user = Auth::user();
 		$userMail = $user->UserMail;
 
@@ -148,5 +140,30 @@ class SettingsController extends Controller
 		$userMail->save();
 
 		return $this->subscribeIndex();
+	}
+
+	public function showUserKey()
+	{
+		$user = Auth::user();
+
+		return [$user->user_key];
+	}
+
+	public function newUserKey()
+	{
+		$user = Auth::user();
+
+		$users = User::whereNotNull('user_key')->get();
+		while(true) {
+			$userKey = str_random(32);
+			$exist = $users->where('user_key', $userKey)->first();
+			if(!isset($exist->id)) {
+				$user->user_key = $userKey;
+				$user->save();
+				break;
+			}
+		}
+
+		return [$user->user_key];
 	}
 }
