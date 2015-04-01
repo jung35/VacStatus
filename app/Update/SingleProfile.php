@@ -134,7 +134,7 @@ class SingleProfile extends BaseUpdate
 
 	function __construct($smallId)
 	{
-		$this->smallId = $smallId;
+		$this->smallId = (int) $smallId;
 		$this->cacheName = "profile_$smallId";
 	}
 

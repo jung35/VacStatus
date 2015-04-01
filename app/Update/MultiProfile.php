@@ -181,11 +181,11 @@ class MultiProfile
 			$steamInfo = $steamInfos[$keys['steamInfos']];
 			$steamBan = $steamBans[$keys['steamBans']];
 			
-			$profile = $profiles->where('small_id', (int) $smallId)->first();
+			$profile = $profiles->where('small_id', $smallId)->first();
 
 			if(is_null($profile))
 			{
-				$profile = Profile::whereSmallId((int) $smallId)->first();
+				$profile = Profile::whereSmallId($smallId)->first();
 				
 				if(!isset($profile->id))
 				{
