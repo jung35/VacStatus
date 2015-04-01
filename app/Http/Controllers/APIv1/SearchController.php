@@ -22,7 +22,6 @@ class SearchController extends Controller
 		if(!Cache::has($searchCache)) return ['error' => 'no values'];
 
 		$search = Cache::pull($searchCache);
-		Cache::forget($searchCache);
 		
 		$statusChecker = array_filter(explode("\n", $search));
 		$statusConfirm = false;
@@ -54,7 +53,7 @@ class SearchController extends Controller
 			}
 		} else if(count($search) > 30)
 		{
-			return ['error' => 'Too many profiles listed in search box.'];
+			return ['error' => 'Too many profiles listed in search box for a guest.'];
 		}
 
 		if(!is_array($search))
