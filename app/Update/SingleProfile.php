@@ -289,12 +289,13 @@ class SingleProfile extends BaseUpdate
 		/* Time to do profile_old_alias */
 		/* Checks to make sure if there is already a same name before inserting new name */
 		$profileOldAlias = $profile->ProfileOldAlias()->whereProfileId($profile->id)->orderBy('id','desc')->get();
+		$currentTime = new DateTime();
 
 		if($profileOldAlias->count() == 0)
 		{
 			$profileOldAlias = new ProfileOldAlias;
 			$profileOldAlias->profile_id = $profile->id;
-			$profileOldAlias->seen = time();
+			$profileOldAlias->seen = $currentTime->format('Y-m-d');
 			$profileOldAlias->seen_alias = $profile->display_name;
 			$profileOldAlias->save();
 		} else {
@@ -316,13 +317,17 @@ class SingleProfile extends BaseUpdate
 
 			if(!$match && $recent + Steam::$UPDATE_TIME < time())
 			{
+				$currentTime = new DateTime();
+
 				$newAlias = new ProfileOldAlias;
 				$newAlias->profile_id = $profile->id;
-				$newAlias->seen = time();
+				$newAlias->seen = $currentTime->format('Y-m-d');
 				$newAlias->seen_alias = $profile->display_name;
 				$profile->ProfileOldAlias()->save($newAlias);
 			}
 		}
+
+		$profileOldAlias = $profile->ProfileOldAlias()->whereProfileId($profile->id)->orderBy('id','desc')->get();
 
 		/* Finished inserting / updating into the DB! */
 
