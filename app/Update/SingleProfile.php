@@ -327,6 +327,8 @@ class SingleProfile extends BaseUpdate
 			}
 		}
 
+		$profileOldAlias = $profile->ProfileOldAlias()->whereProfileId($profile->id)->orderBy('id','desc')->get();
+
 		/* Finished inserting / updating into the DB! */
 
 		/* Check to see if this user has an account in vacstatus */
