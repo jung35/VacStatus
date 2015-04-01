@@ -176,7 +176,7 @@ class Steam {
 			foreach ($tmp as $key => $item)
 			{
 				// This should never reach to the end of the array
-				if(!isset($tmp[$key+1])) continue;
+				if(!isset($tmp[$key+1])) return ['error' => 'Invalid input'];
 
 				if ($item == 'profiles')
 				{
