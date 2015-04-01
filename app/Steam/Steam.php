@@ -170,12 +170,11 @@ class Steam {
 			return ['error' => 'Invalid Steam ID'];
 		} else if ($p = strrpos($data, '/'))
 		{
-			$tmp = explode('/',$data);
+			$tmp = array_values(array_filter(explode('/',$data)));
 			$a = null;
 
 			foreach ($tmp as $key => $item)
 			{
-				// This should never reach to the end of the array
 				if(!isset($tmp[$key+1]) || empty($tmp[$key+1])) return ['error' => 'Invalid input'];
 
 				if ($item == 'profiles')
