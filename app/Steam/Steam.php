@@ -175,6 +175,9 @@ class Steam {
 
 			foreach ($tmp as $key => $item)
 			{
+				// This should never reach to the end of the array
+				if(!isset($tmp[$key+1])) continue;
+
 				if ($item == 'profiles')
 				{
 					$a = $tmp[$key+1];
