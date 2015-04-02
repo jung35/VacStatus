@@ -86,3 +86,4 @@ var News = React.createClass({
 });
 
 React.render(<News />, document.getElementById('news'));
+React.render(<ListHandler />, document.getElementById('listHandler'));
