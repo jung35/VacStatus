@@ -149,7 +149,8 @@ var List = React.createClass({
 			smallActionBar,
 			listElement,
 			showListAction,
-			listExtraInfo;
+			listExtraInfo,
+			steam_64_bit_list = [];
 
 		data = this.state.data;
 
@@ -170,6 +171,8 @@ var List = React.createClass({
 				list = data.list.map(function(profile, index)
 				{
 					var auth, specialColors, profile_description;
+
+					steam_64_bit_list.push(profile.steam_64_bit);
 
 					if(auth_check) {
 						if(data.my_list) {
@@ -267,6 +270,7 @@ var List = React.createClass({
 								<button className="btn btn-block btn-info" data-toggle="modal" data-target="#addAllUsers">Add All Users to List</button>
 							</div>
 						</div>
+						<div id="searchUsers" className="hidden">{ steam_64_bit_list.join(" ") }</div>
 					</div>
 				);
 				smallActionBar = (

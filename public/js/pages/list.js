@@ -149,7 +149,8 @@ var List = React.createClass({displayName: "List",
 			smallActionBar,
 			listElement,
 			showListAction,
-			listExtraInfo;
+			listExtraInfo,
+			steam_64_bit_list = [];
 
 		data = this.state.data;
 
@@ -170,6 +171,8 @@ var List = React.createClass({displayName: "List",
 				list = data.list.map(function(profile, index)
 				{
 					var auth, specialColors, profile_description;
+
+					steam_64_bit_list.push(profile.steam_64_bit);
 
 					if(auth_check) {
 						if(data.my_list) {
@@ -266,7 +269,8 @@ var List = React.createClass({displayName: "List",
 							React.createElement("div", {className: "col-xs-6 col-lg-12"}, 
 								React.createElement("button", {className: "btn btn-block btn-info", "data-toggle": "modal", "data-target": "#addAllUsers"}, "Add All Users to List")
 							)
-						)
+						), 
+						React.createElement("div", {id: "searchUsers", className: "hidden"},  steam_64_bit_list.join(" ") )
 					)
 				);
 				smallActionBar = (
