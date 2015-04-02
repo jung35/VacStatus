@@ -155,7 +155,7 @@ class Steam {
 
 		if(!$statusConfirm)
 		{
-			$search = array_filter(preg_split("/[\s\n]+/", $search));
+			$search = array_filter(preg_split("/[,\s\n]+/", $search));
 		} else {
 			$search = array_filter($searchArray);
 		}
