@@ -6508,6 +6508,9 @@ hr.divider {
 .pointer {
   cursor: pointer;
 }
+textarea {
+  resize: vertical;
+}
 /* 300,400,600,700 */
 .home-page .hero {
   background: #212121 url(/img/steam-logo.png) no-repeat center top;
@@ -6659,6 +6662,9 @@ hr.divider {
 }
 .list-page .list-table td {
   vertical-align: middle;
+}
+.list-page .list-table .user_name a {
+  word-break: break-all;
 }
 .list-page a {
   color: #212121;
@@ -6908,39 +6914,39 @@ hr.divider {
   font-size: 2em;
   text-align: center;
 }
-.subscription-settings {
+.settings {
   margin-bottom: 20px;
 }
-.subscription-settings .subscribe-form {
+.settings .settings-form {
   margin-top: 20px;
 }
-.subscription-settings .subscribe-form label {
+.settings .settings-form label {
   font-weight: 600;
 }
-.subscription-settings .subscribe-form .form-group .col-sm-8 {
+.settings .settings-form .form-group .col-sm-8 {
   padding-right: 3px;
 }
-.subscription-settings .subscribe-form .form-group .col-sm-2 {
+.settings .settings-form .form-group .col-sm-2 {
   padding-left: 3px;
 }
-.subscription-settings .subscribed-list {
+.settings .subscribed-list {
   margin-top: 20px;
 }
-.subscription-settings .subscribed-list a {
+.settings .subscribed-list a {
   display: block;
   color: #212121;
   text-decoration: none;
 }
-.subscription-settings .subscribed-list a:hover .panel-body {
+.settings .subscribed-list a:hover .panel-body {
   background: #F5F5F5;
 }
-.subscription-settings .subscribed-list .panel-default {
+.settings .subscribed-list .panel-default {
   margin-bottom: 0;
 }
-.subscription-settings .subscribed-list .list-name {
+.settings .subscribed-list .list-name {
   font-size: 1.3em;
   font-weight: 600;
 }
-.subscription-settings .subscribed-list .list-author {
+.settings .subscribed-list .list-author {
   font-size: 1.1em;
 }

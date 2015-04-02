@@ -1,5 +1,4 @@
 var steam64BitId = $('#profile').data('steam64bitid');
-var auth_check = $('meta[name=auth]').attr("content");
 
 var Profile = React.createClass({
 	fetchProfile: function()

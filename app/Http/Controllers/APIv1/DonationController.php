@@ -108,30 +108,32 @@ class DonationController extends Controller
         $verifier->setIpnMessage($ipnMessage);
         $verifier->setEnvironment('production');
         $listener->setVerifier($verifier);
-        $listener->listen(function() use ($listener, $ipnMessage) {
+        $listener->listen(function() use ($listener, $ipnMessage)
+        {
             $resp = $listener->getVerifier()->getVerificationResponse();
             $amount = $ipnMessage['mc_gross'];
             $smallId = $ipnMessage['custom'];
-            if($ipnMessage['payment_status'] == 'Completed')
-            {
-                if(is_numeric($smallId)) {
-                    $user = User::whereSmallId($smallId)->first();
-                    $user->addDonation($amount);
-                    if(!$user->save()) {
-                        return;
-                    }
-                }
-            }
+            $user = "";
+
+            if($ipnMessage['payment_status'] != 'Completed') return;
+
             $donationLog = new DonationLog;
             $donationLog->status = $ipnMessage['payment_status'];
-            $donationLog->amount = $amount - $ipnMessage['mc_fee '];
+            $donationLog->amount = $amount - $ipnMessage['mc_fee'];
             $donationLog->original_amount = $amount;
-            if(is_numeric($smallId) && isset($user) && $user->getId()) {
-                $donationLog->small_id = $smallId;
+
+            if(is_numeric($smallId)) {
+                $user = User::whereSmallId($smallId)->first();
+                if(isset($user->id))
+                {
+                    $user->donation += $amount;
+                    $user->save();
+                    $donationLog->small_id = $smallId;
+                }
             }
-            if(!$donationLog->save()) {
-                return;
-            }
+
+            $donationLog->save();
+
         }, function() use ($listener, $ipnMessage) {
             $report = $listener->getReport();
             $resp = $listener->getVerifier()->getVerificationResponse();

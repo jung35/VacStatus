@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use VacStatus\Http\Controllers\Controller;
 use VacStatus\Http\Requests;
 
+use VacStatus\Models\User;
 use VacStatus\Models\UserList;
 use VacStatus\Models\UserMail;
 
@@ -17,8 +18,6 @@ class SettingsController extends Controller
 {
 	public function subscribeIndex()
 	{
-		$this->middleware('auth');
-
 		$user = Auth::User();
 
 		$userMail = $user->UserMail;
@@ -46,10 +45,9 @@ class SettingsController extends Controller
 		return compact('userMail', 'userLists');
 	}
 
-	public function makeSubscription()
+	public function makeSubscription(Request $request)
 	{
-		$this->middleware('csrf');
-		$this->middleware('auth');
+		if($request->input('_key')) return ['error' => 'forbidden'];
 
 		$email = Input::get('email');
 		$pushBullet = Input::get('push_bullet');
@@ -105,7 +103,7 @@ class SettingsController extends Controller
 
 		if(count($sendVerificationTo) == 0) return $this->subscribeIndex();
 
-		if(!$userMail->save()) return ['error', 'There was an error trying to save the emails'];
+		if(!$userMail->save()) return ['error' => 'There was an error trying to save the emails'];
 
 		foreach($sendVerificationTo as $email) {
 			Mail::send('emails.verification', [
@@ -118,10 +116,9 @@ class SettingsController extends Controller
 		return $this->subscribeIndex();
 	}
 
-	public function deleteEmail()
+	public function deleteEmail(Request $request)
 	{
-		$this->middleware('csrf');
-		$this->middleware('auth');
+		if($request->input('_key')) return ['error' => 'forbidden'];
 
 		$user = Auth::user();
 		$userMail = $user->UserMail;
@@ -134,10 +131,9 @@ class SettingsController extends Controller
 		return $this->subscribeIndex();
 	}
 
-	public function deletePushBullet()
+	public function deletePushBullet(Request $request)
 	{
-		$this->middleware('csrf');
-		$this->middleware('auth');
+		if($request->input('_key')) return ['error' => 'forbidden'];
 
 		$user = Auth::user();
 		$userMail = $user->UserMail;
@@ -148,5 +144,32 @@ class SettingsController extends Controller
 		$userMail->save();
 
 		return $this->subscribeIndex();
+	}
+
+	public function showUserKey()
+	{
+		$user = Auth::user();
+
+		return [$user->user_key];
+	}
+
+	public function newUserKey(Request $request)
+	{
+		if($request->input('_key')) return ['error' => 'forbidden'];
+
+		$user = Auth::user();
+
+		$users = User::whereNotNull('user_key')->get();
+		while(true) {
+			$userKey = str_random(32);
+			$exist = $users->where('user_key', $userKey)->first();
+			if(!isset($exist->id)) {
+				$user->user_key = $userKey;
+				$user->save();
+				break;
+			}
+		}
+
+		return [$user->user_key];
 	}
 }

@@ -92,7 +92,7 @@ var Subscription = React.createClass({displayName: "Subscription",
 	fetchSubscription: function()
 	{
 		$.ajax({
-			url: '/api/v1/settings',
+			url: '/api/v1/settings/subscribe',
 			dataType: 'json',
 			success: function(data) {
 				this.setState({data: data});
@@ -199,43 +199,36 @@ var Subscription = React.createClass({displayName: "Subscription",
 			}
 
 			return (
-				React.createElement("div", {className: "container"}, 
-					React.createElement("div", {className: "row"}, 
-						React.createElement("div", {className: "col-xs-12"}, 
-							React.createElement("h1", null, "Settings"), 
-							React.createElement("div", {className: "row"}, 
-								React.createElement("div", {className: "col-xs-12 col-md-6"}, 
-									React.createElement("h3", null, "Receive Updates ", React.createElement("small", null, "— You only need to enter in one of them")), 
-									React.createElement("form", {onSubmit: this.handleSubmit, className: "subscribe-form form-horizontal"}, 
-										React.createElement("div", {className: "form-group " + emailColor}, 
-											React.createElement("label", {htmlFor: "subcribeEmail", className: "col-sm-2 control-label"}, "Email"), 
-											React.createElement("div", {className:  emailInputSmall ? "col-sm-8 " : "col-sm-10"}, 
-												React.createElement("input", {type: "email", className: "form-control", id: "subcribeEmail", ref: "subcribeEmail", placeholder: "Email", defaultValue:  data.userMail ? data.userMail.email:''})
-											), 
-											emailButton 
-										), 
-										React.createElement("div", {className: "form-group " + pushBulletColor}, 
-											React.createElement("label", {htmlFor: "subcribePushBullet", className: "col-sm-2 control-label"}, "Pushbullet"), 
-											React.createElement("div", {className:  pushBulletInputSmall ? "col-sm-8" : "col-sm-10"}, 
-												React.createElement("input", {type: "email", className: "form-control", id: "subcribePushBullet", ref: "subcribePushBullet", placeholder: "PushBullet Email", defaultValue:  data.userMail ? data.userMail.pushbullet:''})
-											), 
-											pushBulletButton 
-										), 
-										React.createElement("div", {className: "form-group"}, 
-											React.createElement("div", {className: "col-sm-offset-2 col-sm-10"}, 
-												React.createElement("button", {className: "btn btn-block btn-primary"}, "Save Settings")
-											)
-										)
-									)			
+				React.createElement("div", {className: "row"}, 
+					React.createElement("div", {className: "col-xs-12 col-md-6"}, 
+						React.createElement("h3", null, "Receive Updates ", React.createElement("small", null, "— You only need to enter in one of them")), 
+						React.createElement("form", {onSubmit: this.handleSubmit, className: "settings-form form-horizontal"}, 
+							React.createElement("div", {className: "form-group " + emailColor}, 
+								React.createElement("label", {htmlFor: "subcribeEmail", className: "col-sm-2 control-label"}, "Email"), 
+								React.createElement("div", {className:  emailInputSmall ? "col-sm-8 " : "col-sm-10"}, 
+									React.createElement("input", {type: "email", className: "form-control", id: "subcribeEmail", ref: "subcribeEmail", placeholder: "Email", defaultValue:  data.userMail ? data.userMail.email:''})
 								), 
-								React.createElement("div", {className: "col-xs-12 col-md-6"}, 
-									React.createElement("h3", null, "Subscribed Lists ", React.createElement("small", null, "— You need to subscribe a list to receive notification")), 
-									React.createElement("div", {className: "subscribed-list"}, 
-										React.createElement("div", {className: "row"}, 
-											userLists 
-										)
-									)
+								emailButton 
+							), 
+							React.createElement("div", {className: "form-group " + pushBulletColor}, 
+								React.createElement("label", {htmlFor: "subcribePushBullet", className: "col-sm-2 control-label"}, "Pushbullet"), 
+								React.createElement("div", {className:  pushBulletInputSmall ? "col-sm-8" : "col-sm-10"}, 
+									React.createElement("input", {type: "email", className: "form-control", id: "subcribePushBullet", ref: "subcribePushBullet", placeholder: "PushBullet Email", defaultValue:  data.userMail ? data.userMail.pushbullet:''})
+								), 
+								pushBulletButton 
+							), 
+							React.createElement("div", {className: "form-group"}, 
+								React.createElement("div", {className: "col-sm-offset-2 col-sm-10"}, 
+									React.createElement("button", {className: "btn btn-block btn-primary"}, "Save Settings")
 								)
+							)
+						)
+					), 
+					React.createElement("div", {className: "col-xs-12 col-md-6"}, 
+						React.createElement("h3", null, "Subscribed Lists ", React.createElement("small", null, "— You need to subscribe a list to receive notification")), 
+						React.createElement("div", {className: "subscribed-list"}, 
+							React.createElement("div", {className: "row"}, 
+								userLists 
 							)
 						)
 					)

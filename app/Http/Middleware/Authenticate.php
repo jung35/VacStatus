@@ -40,6 +40,9 @@ class Authenticate {
 			}
 			else
 			{
+				$thisRoute = explode('.', $request->route()->getName());
+				if($thisRoute[0] == 'api') return ['error' => 'forbidden'];
+
 				return redirect()->guest('auth/login');
 			}
 		}

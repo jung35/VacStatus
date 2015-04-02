@@ -1,6 +1,3 @@
-var _token = $('meta[name=_token]').attr("content");
-var auth_check = $('meta[name=auth]').attr("content");
-
 var ListHandler = React.createClass({displayName: "ListHandler",
 	submitNewListToServer: function(data)
 	{
@@ -122,6 +119,33 @@ var ListHandler = React.createClass({displayName: "ListHandler",
 		});
 	},
 
+	submitSearchUserToServer: function(data)
+	{
+		var searchUsers = $('#searchUsers').text();
+
+		$.ajax({
+			url: '/api/v1/list/add/many',
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				_token: _token,
+				search: searchUsers,
+				list_id: data.list_id,
+				description: data.description
+			},
+			success: function(data) {
+				if(data.error) {
+					notif.add('danger', data.error).run();
+				} else {
+					notif.add('success', 'Users have been added to the list!').run();
+				}
+			}.bind(this),
+				error: function(xhr, status, err) {
+				notif.add('danger', err).run();
+			}.bind(this)
+		});
+	},
+
 	fetchLists: function()
 	{
 		if(!auth_check) return;
@@ -169,6 +193,10 @@ var ListHandler = React.createClass({displayName: "ListHandler",
 				React.createElement(AddUserToList, {
 					myList: this.state.lists, 
 					AddUserSend: this.submitNewUserToServer}
+				), 
+				React.createElement(AddUsersFromSearch, {
+					myList: this.state.lists, 
+					addSearchUsers: this.submitSearchUserToServer}
 				)
 			)
 		);
@@ -387,3 +415,64 @@ var AddUserToList = React.createClass({displayName: "AddUserToList",
 		);
 	}
 });
+
+var AddUsersFromSearch = React.createClass({displayName: "AddUsersFromSearch",
+	handleSubmit: function(e)
+	{
+		e.preventDefault();
+
+		var list_id = this.refs.addUserList.getDOMNode().value.trim(),
+			description = this.refs.addUserDescription.getDOMNode().value.trim();
+
+		if (!list_id) {
+			notif.add('danger', 'Please select a list!').run();
+			return;
+		}
+
+		this.props.addSearchUsers({
+			list_id: list_id,
+			description: description
+		});
+
+		this.refs.addUserDescription.getDOMNode().value = '';
+
+		$('#addAllUsers').modal('hide');
+	},
+
+	render: function() {
+		var listOptions = this.props.myList.map(function(list, key) {
+			return React.createElement("option", {key: key, value:  list.id},  list.title);
+		});
+
+		return (
+			React.createElement("div", {className: "modal fade", id: "addAllUsers", tabIndex: "-1", role: "dialog"}, 
+				React.createElement("div", {className: "modal-dialog"}, 
+					React.createElement("div", {className: "modal-content"}, 
+						React.createElement("div", {className: "modal-header"}, 
+							React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal"}, React.createElement("span", null, "×")), 
+							React.createElement("h4", {className: "modal-title"}, "Add All Users to List")
+						), 
+						React.createElement("form", {onSubmit: this.handleSubmit}, 
+							React.createElement("div", {className: "modal-body"}, 
+								React.createElement("div", {className: "form-group"}, 
+									React.createElement("label", {htmlFor: "addUser-list"}, "Select a List"), 
+									React.createElement("select", {id: "addUser-list", ref: "addUserList", className: "form-control"}, 
+									listOptions 
+									)
+								), 
+								React.createElement("div", {className: "form-group"}, 
+									React.createElement("label", {htmlFor: "addUser-description"}, "Description"), 
+									React.createElement("textarea", {id: "addUser-description", ref: "addUserDescription", className: "form-control", placeholder: "Few words to remind you who this person is."})
+								)
+							), 
+							React.createElement("div", {className: "modal-footer"}, 
+								React.createElement("button", {type: "button", className: "btn btn-default", "data-dismiss": "modal"}, "Close"), 
+								React.createElement("button", {type: "submit", className: "btn btn-primary"}, "Add Users")
+							)
+						)
+					)
+				)
+			)
+		);
+	}
+})

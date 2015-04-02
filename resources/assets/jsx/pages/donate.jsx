@@ -1,5 +1,3 @@
-var auth_check = $('meta[name=auth]').attr("content");
-
 var Donate = React.createClass({
 
 	fetchDonate: function()

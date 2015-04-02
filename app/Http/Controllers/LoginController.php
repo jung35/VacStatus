@@ -47,25 +47,6 @@ class LoginController extends Controller {
 
 		$userSteamInfo = $userSteamInfo->response->players[0];
 
-		if(!isset($user->id))
-		{
-			$user = new User;
-			$user->small_id = (int) Steam::toSmallId($userSteamInfo->steamid);
-		}
-
-		$user->display_name = (string) $userSteamInfo->personaname;
-
-		$smallId = Steam::toSmallId($steam64BitId);
-		$singleProfile = new SingleProfile($smallId);
-		$singleProfile->getProfile();
-
-		if(!$user->save())
-		{
-			return redirect()
-				->intended('/')
-				->with('error', 'There was an error adding user to database');
-		}
-
 		$steamAPI = new SteamAPI('friends');
 		$steamAPI->setSteamId($steam64BitId);
 
@@ -90,9 +71,27 @@ class LoginController extends Controller {
 			}
 		}
 
+		if(!isset($user->id))
+		{
+			$user = new User;
+			$user->small_id = Steam::toSmallId($userSteamInfo->steamid);
+		}
+
+		$user->display_name = (string) $userSteamInfo->personaname;
+		$user->friendslist = json_encode($simpleFriends);
+
+		$smallId = Steam::toSmallId($steam64BitId);
+		$singleProfile = new SingleProfile($smallId);
+		$singleProfile->getProfile();
+
+		if(!$user->save())
+		{
+			return redirect()
+				->intended('/')
+				->with('error', 'There was an error adding user to database');
+		}
+
 		Auth::login($user, true);
-		$userId = $user->id;
-		Cache::forever("friendsList_{$user->id}", $simpleFriends);
 
 		return redirect()
 			->intended('/list')

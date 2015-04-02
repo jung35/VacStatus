@@ -3,6 +3,10 @@
 use Closure;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
 
+use Auth;
+use Route;
+use VacStatus\Models\User;
+
 class VerifyCsrfToken extends BaseVerifier {
 
 	/**
@@ -14,6 +18,23 @@ class VerifyCsrfToken extends BaseVerifier {
 	 */
 	public function handle($request, Closure $next)
 	{
+		$userKey = $request->input('_key');
+		if($userKey && !empty($userKey))
+		{
+			$user = User::where('user_key', $userKey)->first();
+
+			if(isset($user->id))
+			{
+				Auth::login($user);
+
+				$response = $next($request);
+
+				Auth::logout();
+
+				return $response;
+			}
+		}
+
 		return parent::handle($request, $next);
 	}
 

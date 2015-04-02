@@ -9,6 +9,8 @@ class UserListProfile extends Model
 	
 	protected $table = 'user_list_profile';
 
+    protected $fillable = ['profile_id', 'profile_name', 'profile_description'];
+
     protected $dates = ['deleted_at'];
 
 	public function UserList()

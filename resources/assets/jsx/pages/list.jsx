@@ -1,6 +1,5 @@
 var grab = $('#list').data('grab'),
-	searchKey = $('#list').data('search'),
-	auth_check = $('meta[name=auth]').attr("content");
+	searchKey = $('#list').data('search');
 
 var List = React.createClass({
 	UpdateListTitle: function(newData)
@@ -121,6 +120,26 @@ var List = React.createClass({
 		});
 	},
 
+	submitManyUsersToServer: function(data)
+	{
+		$.ajax({
+			url: '/api/v1/list/add/many',
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				_token: _token,
+				search: data.search,
+				description: data.description,
+				list_id: grab
+			},
+			success: function(data) {
+				this.setState({data: data});
+			}.bind(this),
+				error: function(xhr, status, err) {
+				notif.add('danger', err).run();
+			}.bind(this)
+		});
+	},
 
 	render: function()
 	{
@@ -130,7 +149,8 @@ var List = React.createClass({
 			smallActionBar,
 			listElement,
 			showListAction,
-			listExtraInfo;
+			listExtraInfo,
+			steam_64_bit_list = [];
 
 		data = this.state.data;
 
@@ -151,6 +171,8 @@ var List = React.createClass({
 				list = data.list.map(function(profile, index)
 				{
 					var auth, specialColors, profile_description;
+
+					steam_64_bit_list.push(profile.steam_64_bit);
 
 					if(auth_check) {
 						if(data.my_list) {
@@ -238,9 +260,46 @@ var List = React.createClass({
 				);
 			}
 
+			if(grab == "search")
+			{
+				var eListAction = (
+					<div className="list-action-container">
+						<hr className="divider" />
+						<div className="row">
+							<div className="col-xs-6 col-lg-12">
+								<button className="btn btn-block btn-info" data-toggle="modal" data-target="#addAllUsers">Add All Users to List</button>
+							</div>
+						</div>
+						<div id="searchUsers" className="hidden">{ steam_64_bit_list.join(" ") }</div>
+					</div>
+				);
+				smallActionBar = (
+					<div className="list-action-bar hidden-lg">
+						<div className="container">
+							<div className="row">
+								<div className="col-xs-12">
+									<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
+									<div id="list-actions" className="list-actions collapse">
+										{ eListAction }
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				)
+
+				showListAction = (
+					<div className="col-lg-3">
+						<div className="list-actions visible-lg-block">
+							{ eListAction }
+						</div>
+					</div>
+				);
+			}
+
 			if(auth_check && data.author)
 			{
-				var eListAction = <ListAction ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} data={data} />;
+				var eListAction = <ListAction addMany={this.submitManyUsersToServer} ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} data={data} />;
 				smallActionBar = (
 					<div className="list-action-bar hidden-lg">
 						<div className="container">
@@ -318,9 +377,22 @@ var ListAction = React.createClass({
 		this.props.ListUnsubscribe();
 	},
 
+	addMany: function(e)
+	{
+		e.preventDefault();
+
+		var search = this.refs.search.getDOMNode().value.trim();
+		var description = this.refs.description.getDOMNode().value.trim();
+
+		this.props.addMany({search: search, description: description});
+
+		this.refs.search.getDOMNode().value = '';
+		this.refs.description.getDOMNode().value = '';
+	},
+
 	render: function()
 	{
-		var data, editList, subButton;
+		var data, editList, subButton, addUsers;
 
 		data = this.props.data;
 
@@ -329,7 +401,27 @@ var ListAction = React.createClass({
 			if(data.my_list) {
 				editList = (
 					<div className="col-xs-6 col-lg-12">
-						<button className="btn btn-block" data-toggle="modal" data-target="#editListModal">Edit List</button>
+						<button className="btn btn-block btn-info" data-toggle="modal" data-target="#editListModal">Edit List</button>
+					</div>
+				);
+
+				addUsers = (
+					<div className="col-xs-6 col-lg-12"><br />
+						<form onSubmit={this.addMany}>
+							<div className="form-group">
+								<label className="label-control">
+									<strong>Add Users to List</strong>
+								</label>
+								<textarea ref="search" className="form-control" rows="10"
+placeholder="2 ways to search: =================================
+ - type in steam URL/id/profile and split them in spaces or newlines or both =================================
+ - Type 'status' on console and paste the output here"></textarea>
+							</div>
+							<div className="form-group">
+								<textarea ref="description" className="form-control" rows="3" placeholder="A little description to help remember"></textarea>
+							</div>
+							<button className="btn btn-block btn-primary form-control">Add Users</button>
+						</form>
 					</div>
 				);
 			}
@@ -367,6 +459,7 @@ var ListAction = React.createClass({
 					<div className="row">
 						{ editList }
 						{ subButton }
+						{ addUsers }
 					</div>
 				</div>
 			);

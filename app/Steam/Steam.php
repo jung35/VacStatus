@@ -38,7 +38,7 @@ class Steam {
 			$smallIds = [];
 			foreach($steam64BitId as $key => $value)
 			{
-				$smallIds[$key] = explode('.', bcsub($value,'76561197960265728'))[0];
+				$smallIds[$key] = (int) explode('.', bcsub($value,'76561197960265728'))[0];
 			}
 
 			return $smallIds;
@@ -47,7 +47,7 @@ class Steam {
 		if(is_numeric($steam64BitId))
 		{
 			$steam64BitId .= '';
-			return explode('.', bcsub($steam64BitId,'76561197960265728'))[0];
+			return (int) explode('.', bcsub($steam64BitId,'76561197960265728'))[0];
 		}
 
 		return ['type' => 'error'];
@@ -60,7 +60,7 @@ class Steam {
 			$steam64BitIds = [];
 			foreach($smallId as $key => $value)
 			{
-				$steam64BitIds[$key] = explode('.', bcadd($value,'76561197960265728'))[0];
+				$steam64BitIds[$key] = ''.explode('.', bcadd($value,'76561197960265728'))[0];
 			}
 
 			return $steam64BitIds;
@@ -69,7 +69,7 @@ class Steam {
 		if(is_numeric($smallId))
 		{
 			$smallId .= '';
-			return explode('.', bcadd($smallId,'76561197960265728'))[0];
+			return ''.explode('.', bcadd($smallId,'76561197960265728'))[0];
 		}
 
 		return ['type' => 'error'];
@@ -134,6 +134,33 @@ class Steam {
 		}
 
 		return $newAlias;
+	}
+
+	public static function parseSearch($search) 
+	{
+		$statusChecker = array_filter(explode("\n", $search));
+		$statusConfirm = false;
+		$searchArray = array();
+
+		foreach($statusChecker as $status)
+		{
+			if(substr(trim($status), 0, 1) == "#")
+			{
+				preg_match("(STEAM_.*?\s)", trim($status), $foundSteam);
+				if(count($foundSteam) == 0) continue;
+				$searchArray[] = $foundSteam[0];
+				$statusConfirm = true;
+			}
+		}
+
+		if(!$statusConfirm)
+		{
+			$search = array_filter(preg_split("/[\s\n]+/", $search));
+		} else {
+			$search = array_filter($searchArray);
+		}
+
+		return $search;
 	}
 
 	public static function findUser($data)
