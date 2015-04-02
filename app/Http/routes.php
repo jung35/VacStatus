@@ -21,7 +21,7 @@ Route::group(['prefix' => 'auth'], function()
 
 get('/list', [
 	'as' => 'list.list',
-    'middleware' => 'auth',
+	'middleware' => 'auth',
 	'uses' => 'PagesController@listListPage'
 ]);
 
@@ -86,7 +86,7 @@ post('/search', [
 Route::group(['prefix' => 'settings'], function()
 {
 	get('/', [
-	    'middleware' => 'auth',
+		'middleware' => 'auth',
 		'as' => 'settings',
 		'uses' => 'SettingsController@subscriptionPage'
 	]);
@@ -114,7 +114,7 @@ Route::group(['prefix' => 'api'], function()
 		Route::group(['prefix' => 'list'], function()
 		{
 			get('/simple', [
-	    		'middleware' => 'auth',
+				'middleware' => 'auth',
 				'as' => 'api.v1.list.simple',
 				'uses' => 'ListController@mySimpleList'
 			]);
@@ -130,7 +130,7 @@ Route::group(['prefix' => 'api'], function()
 			]);
 
 			get('/', [
-	    		'middleware' => 'auth',
+				'middleware' => 'auth',
 				'as' => 'api.v1.list.list',
 				'uses' => 'ListController@listList'
 			]);
@@ -145,6 +145,11 @@ Route::group(['prefix' => 'api'], function()
 			//
 			Route::group(['middleware' => 'auth'], function()
 			{
+				post('/add/many', [
+					 'as' => 'api.v1.list.user.add.many',
+					'uses' => 'ListUserController@addManyToList'
+				]);
+
 				post('/add', [
 					'as' => 'api.v1.list.user.add',
 					'uses' => 'ListUserController@addToList'

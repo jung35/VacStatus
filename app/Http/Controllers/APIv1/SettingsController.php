@@ -18,7 +18,6 @@ class SettingsController extends Controller
 {
 	public function subscribeIndex()
 	{
-
 		$user = Auth::User();
 
 		$userMail = $user->UserMail;
@@ -46,8 +45,9 @@ class SettingsController extends Controller
 		return compact('userMail', 'userLists');
 	}
 
-	public function makeSubscription()
+	public function makeSubscription(Request $request)
 	{
+		if($request->input('_key')) return ['error' => 'forbidden'];
 
 		$email = Input::get('email');
 		$pushBullet = Input::get('push_bullet');
@@ -116,8 +116,10 @@ class SettingsController extends Controller
 		return $this->subscribeIndex();
 	}
 
-	public function deleteEmail()
+	public function deleteEmail(Request $request)
 	{
+		if($request->input('_key')) return ['error' => 'forbidden'];
+
 		$user = Auth::user();
 		$userMail = $user->UserMail;
 
@@ -129,8 +131,10 @@ class SettingsController extends Controller
 		return $this->subscribeIndex();
 	}
 
-	public function deletePushBullet()
+	public function deletePushBullet(Request $request)
 	{
+		if($request->input('_key')) return ['error' => 'forbidden'];
+
 		$user = Auth::user();
 		$userMail = $user->UserMail;
 
@@ -149,8 +153,10 @@ class SettingsController extends Controller
 		return [$user->user_key];
 	}
 
-	public function newUserKey()
+	public function newUserKey(Request $request)
 	{
+		if($request->input('_key')) return ['error' => 'forbidden'];
+
 		$user = Auth::user();
 
 		$users = User::whereNotNull('user_key')->get();

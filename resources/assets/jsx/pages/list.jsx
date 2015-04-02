@@ -120,6 +120,26 @@ var List = React.createClass({
 		});
 	},
 
+	submitManyUsersToServer: function(data)
+	{
+		$.ajax({
+			url: '/api/v1/list/add/many',
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				_token: _token,
+				search: data.search,
+				description: data.description,
+				list_id: grab
+			},
+			success: function(data) {
+				this.setState({data: data});
+			}.bind(this),
+				error: function(xhr, status, err) {
+				notif.add('danger', err).run();
+			}.bind(this)
+		});
+	},
 
 	render: function()
 	{
@@ -275,7 +295,7 @@ var List = React.createClass({
 
 			if(auth_check && data.author)
 			{
-				var eListAction = <ListAction ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} data={data} />;
+				var eListAction = <ListAction addMany={this.submitManyUsersToServer} ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} data={data} />;
 				smallActionBar = (
 					<div className="list-action-bar hidden-lg">
 						<div className="container">
@@ -353,6 +373,19 @@ var ListAction = React.createClass({
 		this.props.ListUnsubscribe();
 	},
 
+	addMany: function(e)
+	{
+		e.preventDefault();
+
+		var search = this.refs.search.getDOMNode().value.trim();
+		var description = this.refs.description.getDOMNode().value.trim();
+
+		this.props.addMany({search: search, description: description});
+
+		this.refs.search.getDOMNode().value = '';
+		this.refs.description.getDOMNode().value = '';
+	},
+
 	render: function()
 	{
 		var data, editList, subButton, addUsers;
@@ -370,17 +403,20 @@ var ListAction = React.createClass({
 
 				addUsers = (
 					<div className="col-xs-6 col-lg-12"><br />
-						<form>
+						<form onSubmit={this.addMany}>
 							<div className="form-group">
-								<label for="add-users-to-custom-list" className="label-control">
+								<label className="label-control">
 									<strong>Add Users to List</strong>
 								</label>
-								<textarea id="add-users-to-custom-list" className="form-control" rows="10"
+								<textarea ref="search" className="form-control" rows="10"
 placeholder="2 ways to search: =================================
  - type in steam URL/id/profile and split them in spaces or newlines or both =================================
  - Type 'status' on console and paste the output here"></textarea>
-								<button className="btn btn-block btn-primary form-control">Add Users</button>
 							</div>
+							<div className="form-group">
+								<textarea ref="description" className="form-control" rows="3" placeholder="A little description to help remember"></textarea>
+							</div>
+							<button className="btn btn-block btn-primary form-control">Add Users</button>
 						</form>
 					</div>
 				);

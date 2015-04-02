@@ -136,6 +136,33 @@ class Steam {
 		return $newAlias;
 	}
 
+	public static function parseSearch($search) 
+	{
+		$statusChecker = array_filter(explode("\n", $search));
+		$statusConfirm = false;
+		$searchArray = array();
+
+		foreach($statusChecker as $status)
+		{
+			if(substr(trim($status), 0, 1) == "#")
+			{
+				preg_match("(STEAM_.*?\s)", trim($status), $foundSteam);
+				if(count($foundSteam) == 0) continue;
+				$searchArray[] = $foundSteam[0];
+				$statusConfirm = true;
+			}
+		}
+
+		if(!$statusConfirm)
+		{
+			$search = array_filter(preg_split("/[\s\n]+/", $search));
+		} else {
+			$search = array_filter($searchArray);
+		}
+
+		return $search;
+	}
+
 	public static function findUser($data)
 	{
 		$data = strtolower(trim($data));

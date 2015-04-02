@@ -120,6 +120,26 @@ var List = React.createClass({displayName: "List",
 		});
 	},
 
+	submitManyUsersToServer: function(data)
+	{
+		$.ajax({
+			url: '/api/v1/list/add/many',
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				_token: _token,
+				search: data.search,
+				description: data.description,
+				list_id: grab
+			},
+			success: function(data) {
+				this.setState({data: data});
+			}.bind(this),
+				error: function(xhr, status, err) {
+				notif.add('danger', err).run();
+			}.bind(this)
+		});
+	},
 
 	render: function()
 	{
@@ -275,7 +295,7 @@ var List = React.createClass({displayName: "List",
 
 			if(auth_check && data.author)
 			{
-				var eListAction = React.createElement(ListAction, {ListSubscribe: this.submitSubscriptionToServer, ListUnsubscribe: this.submitUnsubscriptionToServer, data: data});
+				var eListAction = React.createElement(ListAction, {addMany: this.submitManyUsersToServer, ListSubscribe: this.submitSubscriptionToServer, ListUnsubscribe: this.submitUnsubscriptionToServer, data: data});
 				smallActionBar = (
 					React.createElement("div", {className: "list-action-bar hidden-lg"}, 
 						React.createElement("div", {className: "container"}, 
@@ -353,6 +373,19 @@ var ListAction = React.createClass({displayName: "ListAction",
 		this.props.ListUnsubscribe();
 	},
 
+	addMany: function(e)
+	{
+		e.preventDefault();
+
+		var search = this.refs.search.getDOMNode().value.trim();
+		var description = this.refs.description.getDOMNode().value.trim();
+
+		this.props.addMany({search: search, description: description});
+
+		this.refs.search.getDOMNode().value = '';
+		this.refs.description.getDOMNode().value = '';
+	},
+
 	render: function()
 	{
 		var data, editList, subButton, addUsers;
@@ -370,17 +403,20 @@ var ListAction = React.createClass({displayName: "ListAction",
 
 				addUsers = (
 					React.createElement("div", {className: "col-xs-6 col-lg-12"}, React.createElement("br", null), 
-						React.createElement("form", null, 
+						React.createElement("form", {onSubmit: this.addMany}, 
 							React.createElement("div", {className: "form-group"}, 
-								React.createElement("label", {for: "add-users-to-custom-list", className: "label-control"}, 
+								React.createElement("label", {className: "label-control"}, 
 									React.createElement("strong", null, "Add Users to List")
 								), 
-								React.createElement("textarea", {id: "add-users-to-custom-list", className: "form-control", rows: "10", 
+								React.createElement("textarea", {ref: "search", className: "form-control", rows: "10", 
 placeholder: "2 ways to search: =================================" + ' ' +
  "- type in steam URL/id/profile and split them in spaces or newlines or both =================================" + ' ' +
- "- Type 'status' on console and paste the output here"}), 
-								React.createElement("button", {className: "btn btn-block btn-primary form-control"}, "Add Users")
-							)
+ "- Type 'status' on console and paste the output here"})
+							), 
+							React.createElement("div", {className: "form-group"}, 
+								React.createElement("textarea", {ref: "description", className: "form-control", rows: "3", placeholder: "A little description to help remember"})
+							), 
+							React.createElement("button", {className: "btn btn-block btn-primary form-control"}, "Add Users")
 						)
 					)
 				);
