@@ -40,7 +40,9 @@ class ListController extends Controller
 			'friends_list' => []
 		];
 
-		$userId = Auth::user()->id;
+		$user = Auth::user();
+
+		$userId = $user->id;
 		$myLists = UserList::where('user_list.user_id', $userId)
 			->leftjoin('user_list_profile as ulp_1', 'ulp_1.user_list_id', '=', 'user_list.id')
 			->groupBy('user_list.id')
@@ -73,11 +75,9 @@ class ListController extends Controller
 			];
 		}
 
-		$friendsListCacheName = "friendsList_{$userId}";
-
-		if(Cache::has($friendsListCacheName))
+		if(isset($user->friendslist))
 		{
-			$friendsList = Cache::get($friendsListCacheName);
+			$friendsList = json_decode($user->friendslist);
 
 			$myfriendsLists = User::whereIn('users.small_id', $friendsList)
 				->whereNotIn('user_list.privacy', [3])

@@ -1,6 +1,5 @@
 var grab = $('#list').data('grab'),
-	searchKey = $('#list').data('search'),
-	auth_check = $('meta[name=auth]').attr("content");
+	searchKey = $('#list').data('search');
 
 var List = React.createClass({displayName: "List",
 	UpdateListTitle: function(newData)

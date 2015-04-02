@@ -38,7 +38,7 @@ class Steam {
 			$smallIds = [];
 			foreach($steam64BitId as $key => $value)
 			{
-				$smallIds[$key] = explode('.', bcsub($value,'76561197960265728'))[0];
+				$smallIds[$key] = (int) explode('.', bcsub($value,'76561197960265728'))[0];
 			}
 
 			return $smallIds;
@@ -47,7 +47,7 @@ class Steam {
 		if(is_numeric($steam64BitId))
 		{
 			$steam64BitId .= '';
-			return explode('.', bcsub($steam64BitId,'76561197960265728'))[0];
+			return (int) explode('.', bcsub($steam64BitId,'76561197960265728'))[0];
 		}
 
 		return ['type' => 'error'];
@@ -60,7 +60,7 @@ class Steam {
 			$steam64BitIds = [];
 			foreach($smallId as $key => $value)
 			{
-				$steam64BitIds[$key] = explode('.', bcadd($value,'76561197960265728'))[0];
+				$steam64BitIds[$key] = ''.explode('.', bcadd($value,'76561197960265728'))[0];
 			}
 
 			return $steam64BitIds;
@@ -69,7 +69,7 @@ class Steam {
 		if(is_numeric($smallId))
 		{
 			$smallId .= '';
-			return explode('.', bcadd($smallId,'76561197960265728'))[0];
+			return ''.explode('.', bcadd($smallId,'76561197960265728'))[0];
 		}
 
 		return ['type' => 'error'];

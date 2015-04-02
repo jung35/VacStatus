@@ -1,6 +1,3 @@
-var _token = $('meta[name=_token]').attr("content");
-var auth_check = $('meta[name=auth]').attr("content");
-
 var ListHandler = React.createClass({displayName: "ListHandler",
 	submitNewListToServer: function(data)
 	{
