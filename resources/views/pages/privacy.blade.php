@@ -32,4 +32,9 @@
 			</div>
 		</div>
 	</div>
+	<div id="listHandler"></div>
+@stop
+
+@section('js')
+	<script src="/js/pages/home.js"></script>
 @stop
