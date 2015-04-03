@@ -53,10 +53,12 @@ var ListPortal = React.createClass({displayName: "ListPortal",
 					var privacy, privacy_color;
 					switch(list.privacy)
 					{
+						case "3":
 						case 3:
 							privacy = "Private";
 							privacy_color = "danger";
 							break;
+						case "2":
 						case 2:
 							privacy = "Friends Only";
 							privacy_color = "warning";
