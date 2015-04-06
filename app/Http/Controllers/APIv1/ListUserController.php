@@ -86,7 +86,8 @@ class ListUserController extends Controller
 			->where('profile_id', $input['profile_id'])
 			->first();
 		
-		if(!$userListProfile->delete()) {
+		if(!isset($userListProfile->id) || !$userListProfile->delete())
+		{
 			return ['error' => 'There was an error trying to remove user from list.'];
 		}
 
