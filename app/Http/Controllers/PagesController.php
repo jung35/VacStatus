@@ -55,6 +55,12 @@ class PagesController extends Controller {
 			->withGrab('latest');
 	}
 
+	public function latestVACPage()
+	{
+		return view('pages/list')
+			->withGrab('latest_vac');
+	}
+
 	public function customListPage($listId)
 	{
 		return view('pages/list')

@@ -36,6 +36,9 @@
 				<li class="@setActiveLink('tracked.latest')">
 					<a href="{{ route('tracked.latest') }}">Latest Added</a>
 				</li>
+				<li class="@setActiveLink('tracked.latest_vac')">
+					<a href="{{ route('tracked.latest_vac') }}">Latest VAC Bans</a>
+				</li>
 			@endif
 				<li class="@setActiveLink('search')">
 					<a href="#searchModal" data-toggle="modal">Look Up Users</a>

@@ -35,6 +35,11 @@ get('/list/latest', [
 	'uses' => 'PagesController@latestTrackedPage'
 ]);
 
+get('/list/latest/vac', [
+	'as' => 'tracked.latest_vac',
+	'uses' => 'PagesController@latestVACPage'
+]);
+
 get('/list/{listId}', [
 	'as' => 'tracked.custom',
 	'uses' => 'PagesController@customListPage'
@@ -127,6 +132,11 @@ Route::group(['prefix' => 'api'], function()
 			get('/latest', [
 				'as' => 'api.v1.tracked.latest',
 				'uses' => 'ListController@latestTracked'
+			]);
+
+			get('/latest_vac', [
+				'as' => 'api.v1.tracked.latest_vac',
+				'uses' => 'ListController@latestVAC'
 			]);
 
 			get('/', [
