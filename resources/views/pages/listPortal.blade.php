@@ -9,6 +9,7 @@
 						<h3>Special Lists</h3>
 						<a href="/list/most">Most Tracked Users</a>
 						<a href="/list/latest">Latest Added Users</a>
+						<a href="/list/latest/vac">Latest VAC Banned Users</a>
 					</div>
 				</div>
 				<div class="col-xs-12">
