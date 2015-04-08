@@ -26,10 +26,10 @@ class LatestVAC extends BaseUpdate
 
 	public function getLatestVAC()
 	{
-		// if(!$this->canUpdate()) {
-		// 	$return = $this->grabCache();
-		// 	if($return !== false) return $return;
-		// }
+		if(!$this->canUpdate()) {
+			$return = $this->grabCache();
+			if($return !== false) return $return;
+		}
 
 		return $this->grabFromDB();
 	}
