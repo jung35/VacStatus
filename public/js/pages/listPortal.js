@@ -133,7 +133,8 @@ var ListPortal = React.createClass({displayName: "ListPortal",
 					React.createElement("div", {className: "special-list"}, 
 						React.createElement("h3", null, "Special Lists"), 
 						React.createElement("a", {href: "/list/most"}, "Most Tracked Users"), 
-						React.createElement("a", {href: "/list/latest"}, "Latest Added Users")
+						React.createElement("a", {href: "/list/latest"}, "Latest Added Users"), 
+						React.createElement("a", {href: "/list/latest/vac"}, "Latest VAC Bans")
 					)
 				), 
 				React.createElement("div", {className: "col-xs-12"}, 

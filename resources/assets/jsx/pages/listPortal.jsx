@@ -134,6 +134,7 @@ var ListPortal = React.createClass({
 						<h3>Special Lists</h3>
 						<a href="/list/most">Most Tracked Users</a>
 						<a href="/list/latest">Latest Added Users</a>
+						<a href="/list/latest/vac">Latest VAC Bans</a>
 					</div>
 				</div>
 				<div className="col-xs-12">

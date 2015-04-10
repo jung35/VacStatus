@@ -7,6 +7,7 @@ use VacStatus\Http\Requests;
 use VacStatus\Update\MostTracked;
 use VacStatus\Update\LatestTracked;
 use VacStatus\Update\CustomList;
+use VacStatus\Update\LatestVAC;
 
 use VacStatus\Models\User;
 use VacStatus\Models\UserList;
@@ -159,6 +160,18 @@ class ListController extends Controller
 		$return = [
 			'title' => 'Latest Tracked Users',
 			'list' => $latestTracked->getLatestTracked()
+		];
+
+		return $return;
+	}
+
+	public function latestVAC()
+	{
+		$latestVac = new LatestVAC();
+
+		$return = [
+			'title' => 'Latest VAC Banned Users',
+			'list' => $latestVac->getLatestVAC()
 		];
 
 		return $return;
