@@ -114,23 +114,24 @@ class ListController extends Controller
 
 			foreach($myfriendsLists as $myfriendsList)
 			{
+				if(!isset($myfriendsList->profile_id) || empty($myfriendsList->profile_id)) continue;
 				$return['friends_list'][] = [
-					'profile_id' => $myfriendsList->profile_id,
-					'display_name' => $myfriendsList->display_name,
-					'avatar_thumb' => $myfriendsList->avatar_thumb,
-					'steam_64_bit' => Steam::to64bit($myfriendsList->small_id),
+					'profile_id'	=> $myfriendsList->profile_id,
+					'display_name'	=> $myfriendsList->display_name,
+					'avatar_thumb'	=> $myfriendsList->avatar_thumb,
+					'steam_64_bit'	=> Steam::to64bit($myfriendsList->small_id),
 
-					'user_list_id' => $myfriendsList->user_list_id,
-					'title' => $myfriendsList->title,
-					'privacy' => $myfriendsList->privacy,
-					'created_at' => $myfriendsList->created_at->format("M j Y"),
+					'user_list_id'	=> $myfriendsList->user_list_id,
+					'title'			=> $myfriendsList->title,
+					'privacy'		=> $myfriendsList->privacy,
+					'created_at'	=> $myfriendsList->created_at->format("M j Y"),
 					
 					'site_admin'	=> $myfriendsList->site_admin?:0,
 					'donation'		=> $myfriendsList->donation?:0,
 					'beta'			=> $myfriendsList->beta?:0,
 
-					'users_in_list' => $myfriendsList->users_in_list,
-					'sub_count' => $myfriendsList->sub_count,
+					'users_in_list'	=> $myfriendsList->users_in_list,
+					'sub_count'		=> $myfriendsList->sub_count,
 				];
 			}
 		}
