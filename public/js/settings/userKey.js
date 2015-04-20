@@ -64,7 +64,7 @@ var UserKey = React.createClass({displayName: "UserKey",
 				React.createElement("div", {className: "form-group"}, 
 					React.createElement("label", {htmlFor: "userKeyInput", className: "col-sm-2 control-label"}, "Key"), 
 					React.createElement("div", {className: "col-sm-8"}, 
-						React.createElement("input", {disabled: true, type: "text", className: "form-control", id: "userKeyInput", ref: "userKeyInput", placeholder: "Press to Generate Key", value: userKeyValue })
+						React.createElement("input", {readonly: true, type: "text", className: "form-control", id: "userKeyInput", ref: "userKeyInput", placeholder: "Press to Generate Key", value: userKeyValue })
 					), 
 					React.createElement("div", {className: "col-sm-2"}, 
 						React.createElement("button", {className: "btn btn-block btn-primary"}, "Generate")
