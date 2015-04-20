@@ -155,7 +155,7 @@ Route::group(['prefix' => 'api'], function()
 			//
 			Route::group(['middleware' => 'auth'], function()
 			{
-				post('/add/many', [
+				Route::any('/add/many', [
 					 'as' => 'api.v1.list.user.add.many',
 					'uses' => 'ListUserController@addManyToList'
 				]);
