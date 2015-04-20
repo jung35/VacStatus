@@ -2,6 +2,7 @@
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use VacStatus\Models\User;
 
 class Authenticate {
 
@@ -41,7 +42,20 @@ class Authenticate {
 			else
 			{
 				$thisRoute = explode('.', $request->route()->getName());
-				if($thisRoute[0] == 'api') return ['error' => 'forbidden'];
+				if($thisRoute[0] == 'api')
+				{
+					$userKey = $request->input('_key');
+					if($userKey && !empty($userKey))
+					{
+						$user = User::where('user_key', $userKey)->first();
+
+						if(isset($user->id))
+						{
+							return $next($request);
+						}
+					}
+					return ['error' => 'forbidden'];
+				}
 
 				return redirect()->guest('auth/login');
 			}
