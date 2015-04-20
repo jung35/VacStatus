@@ -6950,3 +6950,7 @@ textarea {
 .settings .subscribed-list .list-author {
   font-size: 1.1em;
 }
+#userKeyInput.form-control[readonly] {
+  background-color: #fff;
+  cursor: text;
+}

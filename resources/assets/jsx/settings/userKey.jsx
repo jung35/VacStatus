@@ -64,7 +64,7 @@ var UserKey = React.createClass({
 				<div className="form-group">
 					<label htmlFor="userKeyInput" className="col-sm-2 control-label">Key</label>
 					<div className="col-sm-8">
-						<input disabled type="text" className="form-control" id="userKeyInput" ref="userKeyInput" placeholder="Press to Generate Key" value={ userKeyValue } />
+						<input readonly type="text" className="form-control" id="userKeyInput" ref="userKeyInput" placeholder="Press to Generate Key" value={ userKeyValue } />
 					</div>
 					<div className="col-sm-2">
 						<button className="btn btn-block btn-primary">Generate</button>
