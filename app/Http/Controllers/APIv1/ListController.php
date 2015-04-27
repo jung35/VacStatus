@@ -273,6 +273,8 @@ class ListController extends Controller
 
 	public function deleteCustomList(UserList $userList)
 	{
+		if($userList->user_id !== Auth::user()->id) return ['error' => 'forbidden'];
+		
 		$userList->UserListProfile()->delete();
 		
 		if(!$userList->delete()) {
