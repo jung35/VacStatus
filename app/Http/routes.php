@@ -218,7 +218,7 @@ Route::group(['prefix' => 'api'], function()
 				'uses' => 'DonationController@index'
 			]);
 
-			Route::any('/ipn', array('uses' => 'DonationController@IPNAction'));
+			Route::any('/ipn', ['uses' => 'DonationController@IPNAction']);
 		});
 
 		Route::group(['prefix' => 'settings', 'middleware' => 'auth'], function()
