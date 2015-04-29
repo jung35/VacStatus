@@ -150,7 +150,7 @@ var Profile = React.createClass({
 												</li>
 												<li>
 													<div className="row">
-														<div className="col-xs-6 text-right"><strong>Vac Ban</strong></div>
+														<div className="col-xs-6 text-right"><strong>VAC / Game Ban</strong></div>
 														<div className="col-xs-6"><div className={"text-" + (data.vac > 0 ? 'danger' : 'success') }>{ data.vac > 0 ? data.vac_banned_on : 'Normal'}</div></div>
 													</div>
 												</li>
@@ -236,7 +236,7 @@ var Profile = React.createClass({
 									<div className="content text-center">
 										<div className="row">
 											<div className="col-xs-6 col-md-12">
-												<strong># of VAC Bans</strong><br />
+												<strong># of VAC &amp; Game Bans</strong><br />
 													{ data.vac }
 											</div>
 										</div>
