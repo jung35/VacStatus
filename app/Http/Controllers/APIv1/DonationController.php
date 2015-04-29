@@ -109,11 +109,11 @@ class DonationController extends Controller
 
 		$listener->onVerified(function (MessageVerifiedEvent $event) {
 			$ipnMessage = $event->getMessage();
-			if($ipnMessage->payment_status != 'Completed') return;
+			if($ipnMessage->get('payment_status') != 'Completed') return;
 
-			$original_amount = $ipnMessage->mc_gross;
-			$amount_sub = $ipnMessage->mc_fee;
-			$smallId = $ipnMessage->custom;
+			$original_amount = $ipnMessage->get('mc_gross');
+			$amount_sub = $ipnMessage->get('mc_fee');
+			$smallId = $ipnMessage->get('custom');
 
 			$donationLog = new DonationLog;
 			$donationLog->status = 'Completed';
