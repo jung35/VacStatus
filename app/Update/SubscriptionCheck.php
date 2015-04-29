@@ -168,7 +168,7 @@ class SubscriptionCheck
 			$newVacBanDate->sub(new DateInterval("P{$steamBan->DaysSinceLastBan}D"));
 
 			$profileBan = [];
-			$profileBan['vac'] = $steamBan->NumberOfVACBans;
+			$profileBan['vac'] = (int) $steamBan->NumberOfVACBans + (int) $steamBan->NumberOfGameBans;
 			$profileBan['community'] = $steamBan->CommunityBanned;
 			$profileBan['trade'] = $steamBan->EconomyBan != 'none';
 			$profileBan['vac_banned_on'] = $newVacBanDate->format('Y-m-d');
