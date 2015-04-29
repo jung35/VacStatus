@@ -35,6 +35,11 @@ class VerifyCsrfToken extends BaseVerifier {
 			}
 		}
 
+		if($request->is('api/v1/donate/ipn'))
+		{
+			return $next($request);
+		}
+
 		return parent::handle($request, $next);
 	}
 
