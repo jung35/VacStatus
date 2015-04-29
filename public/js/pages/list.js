@@ -342,7 +342,7 @@ var List = React.createClass({displayName: "List",
 										React.createElement("tr", null, 
 											React.createElement("th", {width: "80"}), 
 											React.createElement("th", null, "User"), 
-											React.createElement("th", {className: "text-center", width: "120"}, "VAC Ban"), 
+											React.createElement("th", {className: "text-center", width: "140"}, "VAC / Game Ban"), 
 											React.createElement("th", {className: "text-center hidden-sm", width: "140"}, "Community Ban"), 
 											React.createElement("th", {className: "text-center hidden-sm", width: "100"}, "Trade Ban"), 
 											React.createElement("th", {className: "text-center", width: "100"}, "Tracked By")

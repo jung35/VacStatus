@@ -150,7 +150,7 @@ var Profile = React.createClass({displayName: "Profile",
 												), 
 												React.createElement("li", null, 
 													React.createElement("div", {className: "row"}, 
-														React.createElement("div", {className: "col-xs-6 text-right"}, React.createElement("strong", null, "Vac Ban")), 
+														React.createElement("div", {className: "col-xs-6 text-right"}, React.createElement("strong", null, "VAC / Game Ban")), 
 														React.createElement("div", {className: "col-xs-6"}, React.createElement("div", {className: "text-" + (data.vac > 0 ? 'danger' : 'success') },  data.vac > 0 ? data.vac_banned_on : 'Normal'))
 													)
 												), 
@@ -236,7 +236,7 @@ var Profile = React.createClass({displayName: "Profile",
 									React.createElement("div", {className: "content text-center"}, 
 										React.createElement("div", {className: "row"}, 
 											React.createElement("div", {className: "col-xs-6 col-md-12"}, 
-												React.createElement("strong", null, "# of VAC Bans"), React.createElement("br", null), 
+												React.createElement("strong", null, "# of VAC & Game Bans"), React.createElement("br", null), 
 													 data.vac
 											)
 										)

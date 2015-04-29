@@ -342,7 +342,7 @@ var List = React.createClass({
 										<tr>
 											<th width="80"></th>
 											<th>User</th>
-											<th className="text-center" width="120">VAC Ban</th>
+											<th className="text-center" width="140">VAC / Game Ban</th>
 											<th className="text-center hidden-sm" width="140">Community Ban</th>
 											<th className="text-center hidden-sm" width="100">Trade Ban</th>
 											<th className="text-center" width="100">Tracked By</th>
