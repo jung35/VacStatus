@@ -215,6 +215,8 @@ class MultiProfile
 			$newVacBanDate = new DateTime();
 			$newVacBanDate->sub(new DateInterval("P{$steamBan->DaysSinceLastBan}D"));
 
+			$combinedBan = (int) $steamBan->NumberOfVACBans + (int) $steamBan->NumberOfGameBans;
+
 			if(!isset($profileBan->id))
 			{
 				$profileBan = new ProfileBan;
@@ -223,14 +225,15 @@ class MultiProfile
 			} else {
 				$skipProfileBan = $profileBan->skipProfileBanUpdate($steamBan);
 
-				if($profileBan->vac > $steamBan->NumberOfVACBans)
+
+				if($profileBan->vac > $combinedBan)
 				{
 					$skipProfileBan = false;
 					$profileBan->unban = true;
 				}
 			}
 			
-			$profileBan->vac = $steamBan->NumberOfVACBans;
+			$profileBan->vac = $combinedBan;
 			$profileBan->community = $steamBan->CommunityBanned;
 			$profileBan->trade = $steamBan->EconomyBan != 'none';
 			$profileBan->vac_banned_on = $newVacBanDate->format('Y-m-d');
@@ -330,7 +333,7 @@ class MultiProfile
 				'privacy'			=> $steamInfo->communityvisibilitystate,
 				'alias'				=> Steam::friendlyAlias(json_decode($profile->alias)),
 				'created_at'		=> $profile->created_at ? $profile->created_at->format("M j Y") : null,
-				'vac'				=> $steamBan->NumberOfVACBans,
+				'vac'				=> $combinedBan,
 				'vac_banned_on'		=> $vacBanDate->format("M j Y"),
 				'community'			=> $steamBan->CommunityBanned,
 				'trade'				=> $steamBan->EconomyBan != 'none',
