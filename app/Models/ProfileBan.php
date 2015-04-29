@@ -48,7 +48,7 @@ class ProfileBan extends Model
 	public function skipProfileBanUpdate($steamBan)
 	{
 
-		if($this->vac != $steamBan->NumberOfVACBans ||
+		if($this->vac != (int) $steamBan->NumberOfVACBans + (int) $steamBan->NumberOfGameBans ||
 			$this->community != $steamBan->CommunityBanned ||
 			$this->trade != ($steamBan->EconomyBan != 'none'))
 		{
