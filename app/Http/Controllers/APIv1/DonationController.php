@@ -104,7 +104,6 @@ class DonationController extends Controller
 	{
 		$listener = new ListenerBuilder;
 
-		$listener->useSandbox();
 		$listener = $listener->build();
 
 		$listener->onVerified(function (MessageVerifiedEvent $event) {
