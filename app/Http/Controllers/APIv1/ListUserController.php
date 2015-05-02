@@ -111,6 +111,7 @@ class ListUserController extends Controller
 
 		$validProfile = Array();
 		$invalidProfile = Array();
+
 		foreach($search as $potentialProfile)
 		{
 			$steam3Id = Steam::findUser($potentialProfile);
@@ -165,8 +166,10 @@ class ListUserController extends Controller
 		$profiles = Profile::whereIn('small_id', $smallIds)->get();
 
 		$toAddtoList = [];
-		foreach($profiles as $profile)
+		foreach($profiles as $k => $profile)
 		{
+			if(Auth::user()->unlockUser() <= $userList->UserListProfile()->count() + $k) break;
+
 			$toAddtoList[] = new UserListProfile([
        			"profile_id" => $profile->id,
 				"profile_name" => $profile->display_name,
