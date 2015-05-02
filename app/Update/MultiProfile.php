@@ -229,6 +229,7 @@ class MultiProfile
 				if($profileBan->vac > $combinedBan)
 				{
 					$skipProfileBan = false;
+					$profileBan->timestamps = false;
 					$profileBan->unban = true;
 				}
 			}

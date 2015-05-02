@@ -9,6 +9,8 @@ class ProfileBan extends Model
 {
 	protected $table = 'profile_ban';
 
+	 public $timestamps = true;
+
 	public function Profile()
 	{
 		return $this->belongsTo('VacStatus\Models\Profile', 'profile_id', 'id');

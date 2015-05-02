@@ -162,17 +162,15 @@ class SubscriptionCheck
 			$steamBan = $steamBans[$indexSave[$smallId]];
 			$profile = $profiles->where('small_id', $smallId)->first();
 
-			$skipProfileBan = false;
-
 			$newVacBanDate = new DateTime();
 			$newVacBanDate->sub(new DateInterval("P{$steamBan->DaysSinceLastBan}D"));
 
-			$profileBan = [];
-			$profileBan['vac'] = (int) $steamBan->NumberOfVACBans + (int) $steamBan->NumberOfGameBans;
-			$profileBan['community'] = $steamBan->CommunityBanned;
-			$profileBan['trade'] = $steamBan->EconomyBan != 'none';
-			$profileBan['vac_banned_on'] = $newVacBanDate->format('Y-m-d');
-
+			$profileBan = [
+				'vac' => (int) $steamBan->NumberOfVACBans + (int) $steamBan->NumberOfGameBans,
+				'community' => $steamBan->CommunityBanned,
+				'trade' => $steamBan->EconomyBan != 'none',
+				'vac_banned_on' => $newVacBanDate->format('Y-m-d')
+			];
 
 			if($profile->vac != $profileBan['vac'] ||
 				$profile->community != $profileBan['community'] ||
@@ -180,6 +178,13 @@ class SubscriptionCheck
 			{
 
 				$oldProfileBan = ProfileBan::where('profile_id', $profile->id)->first();
+
+				if($profile->vac > $profileBan['vac'])
+				{
+					$oldProfileBan->timestamps = false;
+					$oldProfileBan->unban = true;
+				}
+
 				$oldProfileBan->vac = $profileBan['vac'];
 				$oldProfileBan->community = $profileBan['community'];
 				$oldProfileBan->trade = $profileBan['trade'];
