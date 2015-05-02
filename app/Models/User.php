@@ -61,13 +61,13 @@ class User extends Model implements AuthenticatableContract
 
 	public function unlockUser()
 	{
-		if($this->isAdmin()) return 999;
+		if($this->isAdmin()) return 99999;
 
-		if($this->donation >= DonationPerk::getPerkAmount('user_1')) return 200;
+		if($this->donation >= DonationPerk::getPerkAmount('user_1')) return 1500;
 
-		if($this->beta == 1) return 150;
+		if($this->beta == 1) return 700;
 
-		return 130;
+		return 500;
 	}
 
 	public function unlockSearch()
