@@ -142,6 +142,11 @@ var List = React.createClass({displayName: "List",
 		});
 	},
 
+	actionChangePage: function(page)
+	{
+		this.setState({data: this.state.data, page: page});
+	},
+
 	render: function()
 	{
 		var data,
@@ -304,6 +309,7 @@ var List = React.createClass({displayName: "List",
 								), 
 								listExtraInfo 
 							), 
+
 							React.createElement("div", {className: "table-responsive"}, 
 								React.createElement("table", {className: "table list-table"}, 
 									React.createElement("thead", null, 
@@ -316,12 +322,11 @@ var List = React.createClass({displayName: "List",
 											React.createElement("th", {className: "text-center", width: "100"}, "Tracked By")
 										)
 									), 
-									React.createElement("tbody", null, 
-										React.createElement(DisplayPage, {page: page, list: sortedList, myList: data.my_list, deleteUserFromList: this.submitDeleteUserToServer})
-									)
+									React.createElement(DisplayPage, {page: page, list: sortedList, myList: data.my_list, deleteUserFromList: this.submitDeleteUserToServer})
 								)
 							), 
-							React.createElement(ListPagination, {page: page, list: sortedList})
+
+							React.createElement(ListPagination, {listChangePage: this.actionChangePage, page: page, list: sortedList})
 						), 
 						showListAction 
 					)
@@ -439,15 +444,58 @@ placeholder: "2 ways to search: =================================" + ' ' +
 });
 
 var ListPagination = React.createClass({displayName: "ListPagination",
+	changePage: function(page)
+	{
+		console.log(page);
+
+		this.props.listChangePage(page);
+	},
+
 	render: function()
 	{
+		var list,
+		page,
+		pagePrev,
+		pageNext,
+		pageList;
+
 		list = this.props.list;
 		page = this.props.page;
-		page = page <= 1 ? 1 : page;
+		page = page <= 1 || page > list.length ? 1 : page;
 
 		if(list.length <= 1) return React.createElement("div", null);
 
-		return React.createElement("div", null);
+		pagePrev = (
+			React.createElement("li", {className:  page != 1 ? "" : "disabled"}, 
+				React.createElement("a", {onClick:  page != 1 ? this.changePage.bind(this, page - 1) : ""}, 
+					React.createElement("span", null, "«")
+				)
+			)
+		);
+
+		pageNext = (
+			React.createElement("li", {className:  page < list.length ? "" : "disabled"}, 
+				React.createElement("a", {onClick:  page < list.length ? this.changePage.bind(this, page + 1) : ""}, 
+					React.createElement("span", null, "»")
+				)
+			)
+		);
+
+		pageList = [];
+
+		for(var p = 1; p <= list.length; p++)
+		{
+			pageList.push(React.createElement("li", {key: p, className: p == page ? "active" : ""}, React.createElement("a", {onClick: this.changePage.bind(this, p)}, p )));
+		}
+
+		return (
+		React.createElement("nav", {className: "pull-right"}, 
+			React.createElement("ul", {className: "pagination"}, 
+				pagePrev, 
+				pageList, 
+				pageNext 
+			)
+		));
 	}
 });
 
@@ -462,7 +510,7 @@ var DisplayPage = React.createClass({displayName: "DisplayPage",
 	{
 		list = this.props.list;
 		page = this.props.page;
-		page = page <= 1 ? 1 : page;
+		page = page <= 1 || page > list.length ? 1 : page;
 
 		pagedList = list[page - 1].map(function(profile, index)
 		{
@@ -495,7 +543,7 @@ var DisplayPage = React.createClass({displayName: "DisplayPage",
 			}
 
 			return (
-				React.createElement("tr", {key: index }, 
+				React.createElement("tr", {key:  profile.id}, 
 					React.createElement("td", {className: "user_avatar"}, 
 						auth, React.createElement("img", {src: profile.avatar_thumb})
 					), 
@@ -520,7 +568,7 @@ var DisplayPage = React.createClass({displayName: "DisplayPage",
 			);
 		}.bind(this));
 
-		return React.createElement("div", null, pagedList );
+		return React.createElement("tbody", null, pagedList );
 	}
 });
 

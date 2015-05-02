@@ -142,6 +142,11 @@ var List = React.createClass({
 		});
 	},
 
+	actionChangePage: function(page)
+	{
+		this.setState({data: this.state.data, page: page});
+	},
+
 	render: function()
 	{
 		var data,
@@ -304,6 +309,7 @@ var List = React.createClass({
 								</div>
 								{ listExtraInfo }
 							</div>
+
 							<div className="table-responsive">
 								<table className="table list-table">
 									<thead>
@@ -316,12 +322,11 @@ var List = React.createClass({
 											<th className="text-center" width="100">Tracked By</th>
 										</tr>
 									</thead>
-									<tbody>
-										<DisplayPage page={page} list={sortedList} myList={data.my_list} deleteUserFromList={this.submitDeleteUserToServer}/>
-									</tbody>
+									<DisplayPage page={page} list={sortedList} myList={data.my_list} deleteUserFromList={this.submitDeleteUserToServer}/>
 								</table>
 							</div>
-							<ListPagination page={page} list={sortedList}/>
+
+							<ListPagination listChangePage={this.actionChangePage} page={page} list={sortedList}/>
 						</div>
 						{ showListAction }
 					</div>
@@ -439,15 +444,58 @@ placeholder="2 ways to search: =================================
 });
 
 var ListPagination = React.createClass({
+	changePage: function(page)
+	{
+		console.log(page);
+
+		this.props.listChangePage(page);
+	},
+
 	render: function()
 	{
+		var list,
+		page,
+		pagePrev,
+		pageNext,
+		pageList;
+
 		list = this.props.list;
 		page = this.props.page;
-		page = page <= 1 ? 1 : page;
+		page = page <= 1 || page > list.length ? 1 : page;
 
 		if(list.length <= 1) return <div></div>;
 
-		return <div></div>;
+		pagePrev = (
+			<li className={ page != 1 ? "" : "disabled" }>
+				<a onClick={ page != 1 ? this.changePage.bind(this, page - 1) : ""}>
+					<span>&laquo;</span>
+				</a>
+			</li>
+		);
+
+		pageNext = (
+			<li className={ page < list.length ? "" : "disabled" }>
+				<a onClick={ page < list.length ? this.changePage.bind(this, page + 1) : "" }>
+					<span>&raquo;</span>
+				</a>
+			</li>
+		);
+
+		pageList = [];
+
+		for(var p = 1; p <= list.length; p++)
+		{
+			pageList.push(<li key={ p } className={p == page ? "active" : "" }><a onClick={this.changePage.bind(this, p)}>{ p }</a></li>);
+		}
+
+		return (
+		<nav className="pull-right">
+			<ul className="pagination">
+				{ pagePrev }
+				{ pageList }
+				{ pageNext }
+			</ul>
+		</nav>);
 	}
 });
 
@@ -462,7 +510,7 @@ var DisplayPage = React.createClass({
 	{
 		list = this.props.list;
 		page = this.props.page;
-		page = page <= 1 ? 1 : page;
+		page = page <= 1 || page > list.length ? 1 : page;
 
 		pagedList = list[page - 1].map(function(profile, index)
 		{
@@ -495,7 +543,7 @@ var DisplayPage = React.createClass({
 			}
 
 			return (
-				<tr key={ index }>
+				<tr key={ profile.id }>
 					<td className="user_avatar">
 						{ auth }<img src={profile.avatar_thumb} />
 					</td>
@@ -520,7 +568,7 @@ var DisplayPage = React.createClass({
 			);
 		}.bind(this));
 
-		return <div>{ pagedList }</div>;
+		return <tbody>{ pagedList }</tbody>;
 	}
 });
 
