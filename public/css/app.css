@@ -6656,6 +6656,7 @@ textarea {
 }
 .list-page .list-table {
   font-size: 1.1em;
+  margin-bottom: 0;
 }
 .list-page .list-table th {
   font-weight: 600;
@@ -6682,6 +6683,9 @@ textarea {
 .list-page .userListModify {
   font-size: 1.2em;
   margin-right: 10px;
+}
+.list-page .pagination a {
+  cursor: pointer;
 }
 .profile-page {
   cursor: default;
