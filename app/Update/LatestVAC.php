@@ -37,7 +37,7 @@ class LatestVAC extends BaseUpdate
 	private function grabFromDB()
 	{
 		$userListProfiles = UserListProfile::orderBy('profile_ban.vac_banned_on', 'desc')
-			->take(20)
+			->take(100)
 			->leftjoin('profile', 'user_list_profile.profile_id', '=', 'profile.id')
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
