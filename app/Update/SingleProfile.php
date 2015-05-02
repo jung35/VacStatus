@@ -276,7 +276,8 @@ class SingleProfile extends BaseUpdate
 
 			if($profileBan->vac > $combinedBan)
 			{
-			  $profileBan->unban = true;
+				$profileBan->timestamps = false;
+				$profileBan->unban = true;
 			}
 		}
 
