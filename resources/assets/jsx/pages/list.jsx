@@ -8,7 +8,7 @@ var List = React.createClass({
 		data.title = newData.newTitle;
 		data.privacy = newData.newPrivacy;
 
-		this.setState({data: data});
+		this.setState({data: data, page: this.state.page});
 	},
 
 	fetchList: function()
@@ -23,7 +23,7 @@ var List = React.createClass({
 			url: url,
 			dataType: 'json',
 			success: function(data) {
-				this.setState({data: data});
+				this.setState({data: data, page: this.state.page});
 			}.bind(this),
 			error: function(xhr, status, err) {
 				console.error(this.props.url, status, err.toString());
@@ -39,7 +39,8 @@ var List = React.createClass({
 	getInitialState: function()
 	{
 		return {
-			data: null
+			data: null,
+			page: 0
 		};
 	},
 
@@ -65,7 +66,7 @@ var List = React.createClass({
 					notif.add('danger', data.error).run();
 				} else {
 					notif.add('success', 'User has been removed from the list!').run();
-					this.setState({data: data});
+					this.setState({data: data, page: this.state.page});
 				}
 			}.bind(this),
 				error: function(xhr, status, err) {
@@ -111,7 +112,7 @@ var List = React.createClass({
 					notif.add('danger', data.error).run();
 				} else {
 					notif.add('success', 'You have unsubscribed from the list!').run();
-					this.setState({data: data});
+					this.setState({data: data, page: this.state.page});
 				}
 			}.bind(this),
 				error: function(xhr, status, err) {
@@ -133,7 +134,7 @@ var List = React.createClass({
 				list_id: grab
 			},
 			success: function(data) {
-				this.setState({data: data});
+				this.setState({data: data, page: this.state.page});
 			}.bind(this),
 				error: function(xhr, status, err) {
 				notif.add('danger', err).run();
@@ -144,8 +145,10 @@ var List = React.createClass({
 	render: function()
 	{
 		var data,
+			page,
 			author,
 			list,
+			sortedList,
 			smallActionBar,
 			listElement,
 			showListAction,
@@ -153,6 +156,7 @@ var List = React.createClass({
 			steam_64_bit_list = [];
 
 		data = this.state.data;
+		page = this.state.page;
 
 		if(data !== null)
 		{
@@ -164,67 +168,6 @@ var List = React.createClass({
 			if(data.author)
 			{
 				author = <div><small>By: { data.author }</small></div>;
-			}
-
-			if(data.list !== null && data.list !== undefined)
-			{
-				list = data.list.map(function(profile, index)
-				{
-					var auth, specialColors, profile_description;
-
-					steam_64_bit_list.push(profile.steam_64_bit);
-
-					if(auth_check) {
-						if(data.my_list) {
-							auth = (
-								<span className="pointer userListModify open-addUserModal" onClick={this.submitDeleteUserToServer.bind(this, profile)} data-id={ profile.id }>
-									<span className="fa fa-minus faText-align text-danger"></span>
-								</span>
-							);
-						} else {
-							auth = (
-								<a className="userListModify open-addUserModal" href="#addUserModal" data-toggle="modal" data-id={ profile.id }>
-									<span className="fa fa-plus faText-align text-primary"></span>
-								</a>
-							);
-						}
-					}
-
-					specialColors = "";
-					if(profile.beta >= 1) specialColors = "beta-name";
-					if(profile.donation >= 10.0) specialColors = "donator-name";
-					if(profile.site_admin >= 1) specialColors = "admin-name";
-
-					if(profile.profile_description)
-					{
-						profile_description = <i className="fa fa-eye pointer" data-toggle="tooltip" data-placement="right" title={ profile.profile_description }></i>
-					}
-
-					return (
-						<tr key={ index }>
-							<td className="user_avatar">
-								{ auth }<img src={profile.avatar_thumb} />
-							</td>
-							<td className="user_name">
-								{ profile_description } <a className={specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
-							</td>
-							<td className="user_vac_ban text-center">
-								<span className={"text-" + (profile.vac > 0 ? "danger" : "success")}>
-									{ profile.vac > 0 ? profile.vac_banned_on : <span className="fa fa-times"></span> }
-								</span>
-							</td>
-							<td className="user_community_ban text-center hidden-sm">
-								<span className={"fa fa-"+(profile.community >= 1 ? 'check' : 'times')+" text-" + (profile.community >= 1 ? 'danger' : 'success')}></span>
-							</td>
-							<td className="user_trade_ban text-center hidden-sm">
-								<span className={"fa fa-"+(profile.trade >= 1 ? 'check' : 'times')+" text-" + (profile.trade >= 1  ? 'danger' : 'success')}></span>
-							</td>	
-							<td className="user_track_number text-center">
-								{ profile.times_added.number }
-							</td>
-						</tr>
-					);
-				}.bind(this));
 			}
 
 			if(data.privacy)
@@ -258,6 +201,14 @@ var List = React.createClass({
 						</div>
 					</div>
 				);
+			}
+
+			if(data.list !== null && data.list !== undefined)
+			{
+				data.list.map(function(profile, index)
+				{
+					steam_64_bit_list.push(profile.steam_64_bit);
+				});
 			}
 
 			if(grab == "search")
@@ -324,6 +275,23 @@ var List = React.createClass({
 				);
 			}
 
+			sortedList = [];
+			if(data.list !== null && data.list !== undefined)
+			{
+				for(var y = 0; y < Math.ceil(data.list.length/20); y++)
+				{
+					for(var x = 0; x < 20; x++)
+					{
+						if(x === 0) sortedList[y] = [];
+
+						var playerItem = data.list[(y*20)+x];
+						if(playerItem === undefined) break;
+
+						sortedList[y].push(playerItem);
+					}
+				}
+			}
+
 			listElement = (
 				<div className="container">
 					<div className="row">
@@ -349,10 +317,11 @@ var List = React.createClass({
 										</tr>
 									</thead>
 									<tbody>
-										{ list }
+										<DisplayPage page={page} list={sortedList} myList={data.my_list} deleteUserFromList={this.submitDeleteUserToServer}/>
 									</tbody>
 								</table>
 							</div>
+							<ListPagination page={page} list={sortedList}/>
 						</div>
 						{ showListAction }
 					</div>
@@ -468,5 +437,93 @@ placeholder="2 ways to search: =================================
 		return <div></div>
 	}
 });
+
+var ListPagination = React.createClass({
+	render: function()
+	{
+		list = this.props.list;
+		page = this.props.page;
+		page = page <= 1 ? 1 : page;
+
+		if(list.length <= 1) return <div></div>;
+
+		return <div></div>;
+	}
+});
+
+var DisplayPage = React.createClass({
+
+	sendDeleteUserFromList: function(profile)
+	{
+		this.props.deleteUserFromList(profile);
+	},
+
+	render: function()
+	{
+		list = this.props.list;
+		page = this.props.page;
+		page = page <= 1 ? 1 : page;
+
+		pagedList = list[page - 1].map(function(profile, index)
+		{
+			var auth, specialColors, profile_description;
+
+			if(auth_check) {
+				if(this.props.myList) {
+					auth = (
+						<span className="pointer userListModify open-addUserModal" onClick={this.sendDeleteUserFromList.bind(this, profile)} data-id={ profile.id }>
+							<span className="fa fa-minus faText-align text-danger"></span>
+						</span>
+					);
+				} else {
+					auth = (
+						<a className="userListModify open-addUserModal" href="#addUserModal" data-toggle="modal" data-id={ profile.id }>
+							<span className="fa fa-plus faText-align text-primary"></span>
+						</a>
+					);
+				}
+			}
+
+			specialColors = "";
+			if(profile.beta >= 1) specialColors = "beta-name";
+			if(profile.donation >= 10.0) specialColors = "donator-name";
+			if(profile.site_admin >= 1) specialColors = "admin-name";
+
+			if(profile.profile_description)
+			{
+				profile_description = <i className="fa fa-eye pointer" data-toggle="tooltip" data-placement="right" title={ profile.profile_description }></i>
+			}
+
+			return (
+				<tr key={ index }>
+					<td className="user_avatar">
+						{ auth }<img src={profile.avatar_thumb} />
+					</td>
+					<td className="user_name">
+						{ profile_description } <a className={specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
+					</td>
+					<td className="user_vac_ban text-center">
+						<span className={"text-" + (profile.vac > 0 ? "danger" : "success")}>
+							{ profile.vac > 0 ? profile.vac_banned_on : <span className="fa fa-times"></span> }
+						</span>
+					</td>
+					<td className="user_community_ban text-center hidden-sm">
+						<span className={"fa fa-"+(profile.community >= 1 ? 'check' : 'times')+" text-" + (profile.community >= 1 ? 'danger' : 'success')}></span>
+					</td>
+					<td className="user_trade_ban text-center hidden-sm">
+						<span className={"fa fa-"+(profile.trade >= 1 ? 'check' : 'times')+" text-" + (profile.trade >= 1  ? 'danger' : 'success')}></span>
+					</td>	
+					<td className="user_track_number text-center">
+						{ profile.times_added.number }
+					</td>
+				</tr>
+			);
+		}.bind(this));
+
+		return <div>{ pagedList }</div>;
+	}
+});
+
+
 
 React.render(<List />, document.getElementById('list'));
