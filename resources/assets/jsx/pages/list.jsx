@@ -463,7 +463,7 @@ var ListPagination = React.createClass({
 		page = this.props.page;
 		page = page <= 1 || page > list.length ? 1 : page;
 
-		if(list.length <= 1) return <div></div>;
+		if(list.length <= 1 || list === undefined) return <div></div>;
 
 		pagePrev = (
 			<li className={ page != 1 ? "" : "disabled" }>
@@ -511,6 +511,14 @@ var DisplayPage = React.createClass({
 		list = this.props.list;
 		page = this.props.page;
 		page = page <= 1 || page > list.length ? 1 : page;
+
+		if(list === undefined) return (
+			<tbody>
+				<tr>
+					<td colspan="6">This list is empty</td>
+				</tr>
+			</tbody>
+		);
 
 		pagedList = list[page - 1].map(function(profile, index)
 		{
