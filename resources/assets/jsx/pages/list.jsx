@@ -516,7 +516,9 @@ var DisplayPage = React.createClass({
 			return (
 				<tbody>
 					<tr>
-						<td colSpan="6">This list is empty</td>
+						<td colSpan="6" className="text-center">
+							<i>This list is empty</i>
+						</td>
 					</tr>
 				</tbody>
 			);
