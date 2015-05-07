@@ -40,30 +40,6 @@ elixir.extend('react', function (src, options) {
 	return this.queueTask('react');
 });
 
-
-elixir.extend('img', function (src, options) {
-
-	var config = this,
-		defaultOptions = {
-			debug : ! config.production,
-			srcDir: config.assetsDir + 'img',
-			output: 'public/img'
-		};
-
-	options = _.extend(defaultOptions, options);
-	src     = "./" + utilities.buildGulpSrc(src, options.srcDir, '/**/*.*');
-	options = _.extend(defaultOptions, options);
-
-	gulp.task('img', function () {
-		gulp.src(src).pipe(gulp.dest(options.output));
-	});
-
-	this.registerWatcher('img', options.srcDir + '/**/*.*');
-
-	return this.queueTask('img');
-});
-
-
 elixir(function(mix) {
-	mix.less('app.less').react().img();
+	mix.less('app.less').react();
 });
