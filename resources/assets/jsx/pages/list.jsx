@@ -512,13 +512,15 @@ var DisplayPage = React.createClass({
 		page = this.props.page;
 		page = page <= 1 || page > list.length ? 1 : page;
 
-		if(list === undefined) return (
-			<tbody>
-				<tr>
-					<td colspan="6">This list is empty</td>
-				</tr>
-			</tbody>
-		);
+		if(list === undefined) {
+			return (
+				<tbody>
+					<tr>
+						<td colSpan="6">This list is empty</td>
+					</tr>
+				</tbody>
+			);
+		}
 
 		pagedList = list[page - 1].map(function(profile, index)
 		{
