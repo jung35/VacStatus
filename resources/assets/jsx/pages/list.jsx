@@ -463,7 +463,7 @@ var ListPagination = React.createClass({
 		page = this.props.page;
 		page = page <= 1 || page > list.length ? 1 : page;
 
-		if(list.length <= 1 || list === undefined) return <div></div>;
+		if(list.length <= 1 || list[0] === undefined) return <div></div>;
 
 		pagePrev = (
 			<li className={ page != 1 ? "" : "disabled" }>
@@ -512,7 +512,7 @@ var DisplayPage = React.createClass({
 		page = this.props.page;
 		page = page <= 1 || page > list.length ? 1 : page;
 
-		if(list === undefined) {
+		if(list[0] === undefined) {
 			return (
 				<tbody>
 					<tr>
