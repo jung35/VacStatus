@@ -557,7 +557,7 @@ var DisplayPage = React.createClass({
 			return (
 				<tr key={ profile.id }>
 					<td className="user_avatar">
-						{ auth }<img src={profile.avatar_thumb} />
+						{ auth }<a className={specialColors} href={"/u/" + profile.steam_64_bit} target="_blank"><img src={profile.avatar_thumb} /></a>
 					</td>
 					<td className="user_name">
 						{ profile_description } <a className={specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
