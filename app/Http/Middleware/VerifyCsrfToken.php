@@ -23,6 +23,11 @@ class VerifyCsrfToken extends BaseVerifier {
 		{
 			$user = User::where('user_key', $userKey)->first();
 
+			if(Auth::check())
+			{
+				$prevuser = Auth::user();
+			}
+
 			if(isset($user->id))
 			{
 				Auth::login($user);
@@ -30,6 +35,8 @@ class VerifyCsrfToken extends BaseVerifier {
 				$response = $next($request);
 
 				Auth::logout();
+
+				if(isset($prevuser) && isset($prevuser->id)) Auth::login($prevuser);
 
 				return $response;
 			}
