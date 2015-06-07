@@ -26,6 +26,7 @@ class VerifyCsrfToken extends BaseVerifier {
 			if(Auth::check())
 			{
 				$prevuser = Auth::user();
+				Auth::logout();
 			}
 
 			if(isset($user->id))
