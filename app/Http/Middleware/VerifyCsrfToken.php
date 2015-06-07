@@ -41,8 +41,11 @@ class VerifyCsrfToken extends BaseVerifier {
 
 				return $response;
 			} else {
-				if(isset($prevuser) && isset($prevuser->id)) Auth::login($prevuser);
+				$response = $next($request);
 			}
+			
+			if(isset($prevuser) && isset($prevuser->id)) Auth::login($prevuser);
+			return $response;
 		}
 
 		if($request->is('api/v1/donate/ipn'))
