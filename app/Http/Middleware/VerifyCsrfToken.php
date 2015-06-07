@@ -40,6 +40,8 @@ class VerifyCsrfToken extends BaseVerifier {
 				if(isset($prevuser) && isset($prevuser->id)) Auth::login($prevuser);
 
 				return $response;
+			} else {
+				if(isset($prevuser) && isset($prevuser->id)) Auth::login($prevuser);
 			}
 		}
 
