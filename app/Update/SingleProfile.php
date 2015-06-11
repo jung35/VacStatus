@@ -143,6 +143,7 @@ class SingleProfile extends BaseUpdate
 		if($this->canUpdate()) return $this->updateUsingAPI();
 
 		$return = $this->grabCache();
+
 		if($return !== false) return $return;
 		return $this->grabFromDB();
 	}
@@ -235,15 +236,10 @@ class SingleProfile extends BaseUpdate
 			$profile = new Profile;
 			$profile->small_id = $this->smallId;
 
-			if(isset($steamInfo->timecreated)) // people like to hide their info because smurf or hack
-			{
-				$profile->profile_created = $steamInfo->timecreated;
-			}
+			if(isset($steamInfo->timecreated)) $profile->profile_created = $steamInfo->timecreated;
 		} else {
 			// Make sure to update if this was private and now suddenly public
-			if(empty($profile->profile_created) && isset($steamInfo->timecreated)) {
-				$profile->profile_created = $steamInfo->timecreated;
-			}
+			if(empty($profile->profile_created) && isset($steamInfo->timecreated)) $profile->profile_created = $steamInfo->timecreated;
 		}
 
 		$profile->display_name = $steamInfo->personaname;
@@ -306,16 +302,15 @@ class SingleProfile extends BaseUpdate
 			$recent = 0;
 			foreach($profileOldAlias as $oldAlias)
 			{
-				if(is_object($oldAlias))
-				{
-					if($oldAlias->seen_alias == $profile->display_name)
-					{
-						$match = true;
-						break;
-					}
+				if(!is_object($oldAlias)) continue;
 
-					$recent = $oldAlias->compareTime($recent);
+				if($oldAlias->seen_alias == $profile->display_name)
+				{
+					$match = true;
+					break;
 				}
+
+				$recent = $oldAlias->compareTime($recent);
 			}
 
 			if(!$match && $recent + Steam::$UPDATE_TIME < time())
@@ -402,9 +397,9 @@ class SingleProfile extends BaseUpdate
 			'vac_banned_on'		=> $newVacBanDate->format("M j Y"),
 			'community'			=> $steamBan->CommunityBanned,
 			'trade'				=> $steamBan->EconomyBan != 'none',
-			'site_admin'		=> isset($user->id) ? $user->site_admin : 0,
-			'donation'			=> isset($user->id) ? $user->donation : 0,
-			'beta'				=> isset($user->id) ? $user->beta : 0,
+			'site_admin'		=> (int) isset($user->id) ? $user->site_admin : 0,
+			'donation'			=> (int) isset($user->id) ? $user->donation : 0,
+			'beta'				=> (int) isset($user->id) ? $user->beta : 0,
 			'profile_old_alias'	=> $oldAliasArray,
 			'times_checked'		=> $currentProfileCheck,
 			'times_added'		=> $profileTimesAdded,
@@ -500,9 +495,9 @@ class SingleProfile extends BaseUpdate
 			'community'			=> $profile->community,
 			'trade'				=> $profile->trade,
 			
-			'site_admin'		=> $profile->site_admin,
-			'donation'			=> $profile->donation,
-			'beta'				=> $profile->beta,
+			'site_admin'		=> (int) $profile->site_admin?:0,
+			'donation'			=> (int) $profile->donation?:0,
+			'beta'				=> (int) $profile->beta?:0,
 
 			'profile_old_alias'	=> $oldAliasArray,
 			'times_checked'		=> $currentProfileCheck,

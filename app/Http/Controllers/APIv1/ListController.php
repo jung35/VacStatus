@@ -43,8 +43,7 @@ class ListController extends Controller
 
 		$user = Auth::user();
 
-		$userId = $user->id;
-		$myLists = UserList::where('user_list.user_id', $userId)
+		$myLists = UserList::where('user_list.user_id', $user->id)
 			->leftjoin('user_list_profile as ulp_1', 'ulp_1.user_list_id', '=', 'user_list.id')
 			->groupBy('user_list.id')
 			->orderBy('user_list.id', 'desc')
@@ -66,13 +65,13 @@ class ListController extends Controller
 		foreach($myLists as $myList)
 		{
 			$return['my_list'][] = [
-				'id' => $myList->id,
-				'title' => $myList->title,
-				'privacy' => $myList->privacy,
-				'created_at' => $myList->created_at->format("M j Y"),
+				'id'			=> $myList->id,
+				'title'			=> $myList->title,
+				'privacy'		=> $myList->privacy,
+				'created_at'	=> $myList->created_at->format("M j Y"),
 				
-				'users_in_list' => $myList->users_in_list,
-				'sub_count' => $myList->sub_count,
+				'users_in_list'	=> $myList->users_in_list,
+				'sub_count'		=> $myList->sub_count,
 			];
 		}
 
@@ -127,9 +126,9 @@ class ListController extends Controller
 					'privacy'		=> $myfriendsList->privacy,
 					'created_at'	=> $myfriendsList->created_at->format("M j Y"),
 					
-					'site_admin'	=> $myfriendsList->site_admin?:0,
-					'donation'		=> $myfriendsList->donation?:0,
-					'beta'			=> $myfriendsList->beta?:0,
+					'site_admin'	=> (int) $myfriendsList->site_admin?:0,
+					'donation'		=> (int) $myfriendsList->donation?:0,
+					'beta'			=> (int) $myfriendsList->beta?:0,
 
 					'users_in_list'	=> $myfriendsList->users_in_list,
 					'sub_count'		=> $myfriendsList->sub_count,
@@ -258,13 +257,13 @@ class ListController extends Controller
 		foreach($myLists as $myList)
 		{
 			$return[] = [
-				'id' => $myList->id,
-				'title' => $myList->title,
-				'privacy' => $myList->privacy,
-				'created_at' => $myList->created_at->format("M j Y"),
+				'id'			=> $myList->id,
+				'title'			=> $myList->title,
+				'privacy'		=> $myList->privacy,
+				'created_at'	=> $myList->created_at->format("M j Y"),
 				
-				'users_in_list' => $myList->users_in_list,
-				'sub_count' => $myList->sub_count,
+				'users_in_list'	=> $myList->users_in_list,
+				'sub_count'		=> $myList->sub_count,
 			];
 		}
 

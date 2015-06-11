@@ -25,39 +25,32 @@ class ListChecker extends Command
 	}
 
 	public function fire()
-	{
-		$lastCheckedSubscription = -1;
-		
-		if(Cache::has('last_checked_subscription')) $lastCheckedSubscription = Cache::pull('last_checked_subscription');
-
-		$subscriptionCheck = new SubscriptionCheck($lastCheckedSubscription);
+	{ 
+		$subscriptionCheck = new SubscriptionCheck(-1 /* Cache::pull('last_checked_subscription', -1) */);
 
 		Cache::forever('last_checked_subscription', $subscriptionCheck->setSubscription());
 
-		$toSend = $subscriptionCheck->run();
-
-		if(!$toSend || isset($toSend['error'])) return;
-
-		$this->log->addInfo('------------------------');
-		if($toSend['send']['email'])
+		if(!$subscriptionCheck->run())
 		{
-			$email = $toSend['send']['email'];
-			$profiles = $toSend['profiles'];
-
+			// $subscriptionCheck->errorMessage();
+			return; // Todo: Log this
+		}
+		
+		// send mail if email exists
+		$subscriptionCheck->sendEmail(function($email, $profiles)
+		{
 			Mail::send('emails.hacker', [
 				'profiles' => $profiles
 			], function($message) use ($email) {
 				$message->to($email)->subject('Bans were found from your subscribed lists!');
 			});
 
-			$this->log->addInfo('Email Sent!');
-		}
+		});
 
-		if($toSend['send']['pushbullet'])
+		// just like sending email, send pushbullet if the subscribed user has it
+		$subscriptionCheck->sendPushBullet(function($email, $profiles)
 		{
 			$pushbullet = new PHPushbullet(env('PUSHBULLET_API'));
-			$profiles = $toSend['profiles'];
-
 			$message = "";
 
 			foreach($profiles as $k => $profile)
@@ -67,16 +60,9 @@ class ListChecker extends Command
 			}
 
 			$message .= (count($profiles) > 1 ? " were " : " was")." Trade, Community, and/or VAC banned from your lists";
-			
-			$pushbullet
-				->user($toSend['send']['pushbullet'])
-				->note("Bans were found from your subscribed lists!", $message);
+			$pushbullet->user($email)->note("Bans were found from your subscribed lists!", $message);
 
-			$this->log->addInfo('Pushbullet Sent!');
-		}
-
-		$this->log->addInfo('EVERYTHING WAS SENT!');
-		$this->log->addInfo('------------------------');
+		});
 	}
 
 }

@@ -24,15 +24,9 @@ class SteamAPI {
 		$this->type = $type;
 		$this->url = $this->steamURL[$type];
 
-		if($type != 'alias')
-		{
-			$this->url .= "?key=".Steam::getAPI();
-		}
+		if($type != 'alias') $this->url .= "?key=".Steam::getAPI();
 
-		if($type == 'friends')
-		{
-			$this->url .= "&relationship=friend";
-		}
+		if($type == 'friends') $this->url .= "&relationship=friend";
 	}
 
 	public function setSmallId($smallId)
@@ -44,10 +38,7 @@ class SteamAPI {
 
 	public function setSteamId($steam64BitId)
 	{
-		if(is_array($steam64BitId))
-		{
-			$steam64BitId = implode(',', $steam64BitId);
-		}
+		if(is_array($steam64BitId)) $steam64BitId = implode(',', $steam64BitId);
 
 		switch($this->type)
 		{
@@ -62,7 +53,6 @@ class SteamAPI {
 				break;
 			default:
 				$this->url .= "&steamids=$steam64BitId";
-				break;
 		}
 
 		return $this;

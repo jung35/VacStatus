@@ -45,9 +45,9 @@ class DonationController extends Controller
 				'small_id' => $donation->small_id,
 				'steam_64_bit' => Steam::to64bit($donation->small_id),
 
-				'donation' => $donation->donation,
-				'beta' => $donation->beta,
-				'site_admin' => $donation->site_admin,
+				'donation' => (int) $donation->donation,
+				'beta' => (int) $donation->beta,
+				'site_admin' => (int) $donation->site_admin,
 			];
 		}
 
@@ -74,9 +74,9 @@ class DonationController extends Controller
 				'small_id' => $donation->small_id,
 				'steam_64_bit' => Steam::to64bit($donation->small_id),
 
-				'donation' => $donation->donation,
-				'beta' => $donation->beta,
-				'site_admin' => $donation->site_admin,
+				'donation' => (int) $donation->donation,
+				'beta' => (int) $donation->beta,
+				'site_admin' => (int) $donation->site_admin,
 			];
 		}
 
@@ -127,6 +127,7 @@ class DonationController extends Controller
 					$user->donation += $original_amount;
 					$user->save();
 					$donationLog->small_id = $smallId;
+					Cache::forget("profile_{$small_id}");
 				}
 			}
 

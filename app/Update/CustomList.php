@@ -113,33 +113,27 @@ class CustomList
 		$canSub = false;
 		$subscription = null;
 
-		if(\Auth::check())
+		if(Auth::check())
 		{
-			$user = \Auth::user();
+			$user = Auth::user();
 			$userMail = $user->UserMail;
 			$subscription = $user->Subscription
 				->where('user_list_id', $userList->id)
 				->first();
 
-			if($userMail)
-			{
-				if($userMail->verify == "verified" || $userMail->pushbullet_verify == "verified")
-				{
-					$canSub = true;
-				}
-			}
+			if($userMail && $userMail->verify == "verified" || $userMail->pushbullet_verify == "verified") $canSub = true;
 		}
 
 		$return = [
-			'id' => $userList->id,
-			'title' => $userList->title,
-			'author' => $userList->user->display_name,
-			'my_list' => $this->myList(),
-			'can_sub' => $canSub,
-			'subscription' => $subscription,
-			'privacy' => $userList->privacy,
-			'sub_count' => isset($userListProfiles[0]) ? $userListProfiles[0]->sub_count : 0,
-			'list' => []
+			'id'			=> $userList->id,
+			'title'			=> $userList->title,
+			'author'		=> $userList->user->display_name,
+			'my_list'		=> $this->myList(),
+			'can_sub'		=> $canSub,
+			'subscription'	=> $subscription,
+			'privacy'		=> $userList->privacy,
+			'sub_count'		=> isset($userListProfiles[0]) ? $userListProfiles[0]->sub_count : 0,
+			'list'			=> [],
 		];
 
 		foreach($userListProfiles as $userListProfile)
@@ -157,9 +151,9 @@ class CustomList
 				'vac_banned_on'			=> $vacBanDate->format("M j Y"),
 				'community'				=> $userListProfile->community,
 				'trade'					=> $userListProfile->trade,
-				'site_admin'			=> $userListProfile->site_admin?:0,
-				'donation'				=> $userListProfile->donation?:0,
-				'beta'					=> $userListProfile->beta?:0,
+				'site_admin'			=> (int) $userListProfile->site_admin?:0,
+				'donation'				=> (int) $userListProfile->donation?:0,
+				'beta'					=> (int) $userListProfile->beta?:0,
 				'profile_description'	=> $userListProfile->profile_description,
 				'times_added'			=> [
 					'number'	=> $userListProfile->total,

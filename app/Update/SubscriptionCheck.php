@@ -29,17 +29,16 @@ class SubscriptionCheck
 	private $userLists;
 	private $subscriptionIds;
 	private $profiles;
+	private $error;
+
+	private $sendEmail;
+	private $sendPushbullet;
+	private $sendProfiles;
 
 	public function __construct($lastCheckedSubscription)
 	{
 		$userMail = UserMail::whereRaw('user_mail.id > ? and (user_mail.verify = ? or user_mail.pushbullet_verify = ?)', array($lastCheckedSubscription, 'verified', 'verified'))
 			->first();
-
-		if(!isset($userMail->id))
-		{
-			$userMail = UserMail::whereRaw('user_mail.id > ? and (user_mail.verify = ? or user_mail.pushbullet_verify = ?)', array(-1, 'verified', 'verified'))
-				->first();
-		}
 
 		$userLists = Subscription::where('subscription.user_id', $userMail->user_id)
 			->whereNull('user_list.deleted_at')
@@ -48,23 +47,15 @@ class SubscriptionCheck
 			->distinct()
 			->get([
 				'user_list.id',
-				'user_list.title',
 
 				'subscription.id as sub_id',
 				'subscription.created_at',
 				'subscription.updated_at'
 			]);
 
-		$userListIds = [];
-		$subscriptionIds = [];
+		$subscriptionIds = $userLists->lists('sub_id');
 
-		foreach($userLists as $userList)
-		{
-			$userListIds[] = $userList->id;
-			$subscriptionIds[] = $userList->sub_id;
-		}
-
-		$profiles = UserListProfile::whereIn('user_list_profile.user_list_id', $userListIds)
+		$profiles = UserListProfile::whereIn('user_list_profile.user_list_id', $userLists->lists('id'))
 			->leftJoin('profile', 'user_list_profile.profile_id', '=', 'profile.id')
 			->leftJoin('profile_ban', 'profile_ban.profile_id', '=', 'profile.id')
 			->whereNull('user_list_profile.deleted_at')
@@ -97,15 +88,19 @@ class SubscriptionCheck
 		return $this->userMail->id;
 	}
 
+	public function errorMessage()
+	{
+		if($this->error) return $this->error;
+
+		return false;
+	}
+
 	public function run()
 	{
 		$send = $this->check();
 
 		$toUpdate = Subscription::whereIn('id', $this->subscriptionIds)->get();
-		foreach($toUpdate as $subscription)
-		{
-			$subscription->touch();
-		}
+		foreach($toUpdate as $subscription) $subscription->touch();
 
 		return $send;
 	}
@@ -132,10 +127,7 @@ class SubscriptionCheck
 					$profilesToSendForNotification[$profile->id] = $profile;
 				}
 
-				if(!in_array($profile->small_id, $getSmallIds))
-				{
-					$getSmallIds[] = $profile->small_id;
-				}
+				if(!in_array($profile->small_id, $getSmallIds)) $getSmallIds[] = $profile->small_id;
 			}
 		}
 
@@ -144,8 +136,17 @@ class SubscriptionCheck
 		$steamAPI->setSmallId($getSmallIds);
 		$steamBans = $steamAPI->run();
 
-		if($steamAPI->error()) return ['error' => $steamAPI->errorMessage()];
-		if(!isset($steamBans->players[0])) return ['error' => 'profile_null'];
+		if($steamAPI->error()) 
+		{
+			$this->error = $steamAPI->errorMessage();
+			return false;
+		}
+
+		if(!isset($steamBans->players[0]))
+		{
+			$this->error = 'profile_null';
+			return false;
+		}
 
 		$steamBans = $steamBans->players;
 
@@ -181,7 +182,7 @@ class SubscriptionCheck
 
 				if($profile->vac > $profileBan['vac'])
 				{
-					$oldProfileBan->timestamps = false;
+					$oldProfileBan->timestamps = false; // Dont notify when user is unbanned (Maybe this can be an option in the future)
 					$oldProfileBan->unban = true;
 				}
 
@@ -200,17 +201,35 @@ class SubscriptionCheck
 			}
 		}
 
-		if(count($profilesToSendForNotification) == 0) return ['error' => 'No method of sending'];
+		if(count($profilesToSendForNotification) == 0) 
+		{
+			$this->error = 'no_notify_method';
+			return false;
+		}
 
-		$userInfo = [
-			'send' => [
-				'email' => $userMail->verify == "verified" ? $userMail->email : false,
-				'pushbullet' => $userMail->pushbullet_verify == "verified" ? $userMail->pushbullet : false,
-			],
-			'profiles' => $profilesToSendForNotification
-		];
+		$this->sendEmail = $userMail->verify == "verified" ? $userMail->email : false;
+		$this->sendPushbullet = $userMail->pushbullet_verify == "verified" ? $userMail->pushbullet : false;
+		$this->sendProfiles = $profilesToSendForNotification;
 
-		return $userInfo;
+		return true;
+	}
+
+	public function sendEmail($cb)
+	{
+		$email = $this->sendMail;
+
+		if(!$email) return;
+
+		return $cb($email, $this->sendProfiles);
+	}
+
+	public function sendPushbullet($cb)
+	{
+		$email = $this->sendPushbullet;
+
+		if(!$email) return;
+
+		return $cb($email, $this->sendProfiles);
 	}
 
 

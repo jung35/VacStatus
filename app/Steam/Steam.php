@@ -17,18 +17,15 @@ class Steam {
 
 	public static function canUpdate($smallId)
 	{
-		if(Cache::has("profile_$smallId")) {
-			if(Cache::get("profile_$smallId") + self::$UPDATE_TIME > time()) {
-				return false;
-			}
-		}
+		if(Cache::has("profile_$smallId")
+		   && Cache::get("profile_$smallId") + self::$UPDATE_TIME > time()) return false;
+
 		return true;
 	}
 
 	public static function setUpdate($smallId)
 	{
 		Cache::put("profile_$smallId", time(), self::$UPDATE_TIME / 60);
-		return;
 	}
 
 	public static function toSmallId($steam64BitId)
@@ -96,10 +93,7 @@ class Steam {
 
 	public static function toSteam3Id($steam64BitId)
 	{
-		if(is_numeric($steam64BitId))
-		{
-			return 'U:1:'.self::toSmallId($steam64BitId);
-		}
+		if(is_numeric($steam64BitId)) return 'U:1:'.self::toSmallId($steam64BitId);
 
 		return ['type' => 'error'];
 	}
@@ -121,9 +115,9 @@ class Steam {
 
 	public static function friendlyAlias($aliases)
 	{
-		$newAlias = [];
-
 		if(is_null($aliases)) return [];
+
+		$newAlias = [];
 
 		foreach($aliases as $alias)
 		{
@@ -148,30 +142,26 @@ class Steam {
 			{
 				preg_match("(STEAM_.*?\s)", trim($status), $foundSteam);
 				if(count($foundSteam) == 0) continue;
+
 				$searchArray[] = $foundSteam[0];
 				$statusConfirm = true;
 			}
 		}
 
-		if(!$statusConfirm)
-		{
-			$search = array_filter(preg_split("/[,\s\n]+/", $search));
-		} else {
-			$search = array_filter($searchArray);
-		}
+		if(!$statusConfirm) return array_filter(preg_split("/[,\s\n]+/", $search));
 
-		return $search;
+		return array_filter($searchArray);
 	}
 
 	public static function findUser($data)
 	{
 		$data = strtolower(trim($data));
 
-		if (empty($data)) return ['error' => 'Invalid or empty input'];
+		if(empty($data)) return ['error' => 'Invalid or empty input'];
 
-		if (strlen($data) > 100) return ['error' => 'Field too long'];
+		if(strlen($data) > 100) return ['error' => 'Field too long'];
 		
-		if (substr($data, 0, 6) == 'steam_')
+		if(substr($data, 0, 6) == 'steam_')
 		{
 			$tmp = explode(':', $data);
 

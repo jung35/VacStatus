@@ -35,12 +35,8 @@ class Authenticate {
 	{
 		if ($this->auth->guest())
 		{
-			if ($request->ajax())
-			{
-				return response('Unauthorized.', 401);
-			}
-			else
-			{
+			if ($request->ajax()) return response('Unauthorized.', 401);
+			else {
 				$thisRoute = explode('.', $request->route()->getName());
 				if($thisRoute[0] == 'api')
 				{
@@ -49,10 +45,7 @@ class Authenticate {
 					{
 						$user = User::where('user_key', $userKey)->first();
 
-						if(isset($user->id))
-						{
-							return $next($request);
-						}
+						if(isset($user->id)) return $next($request);
 					}
 					return ['error' => 'forbidden'];
 				}

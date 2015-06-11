@@ -26,7 +26,8 @@ class LatestVAC extends BaseUpdate
 
 	public function getLatestVAC()
 	{
-		if(!$this->canUpdate()) {
+		if(!$this->canUpdate())
+		{
 			$return = $this->grabCache();
 			if($return !== false) return $return;
 		}
@@ -64,16 +65,6 @@ class LatestVAC extends BaseUpdate
 				\DB::raw('count(user_list_profile.id) as total'),
 			]);
 
-		$profileIds = [];
-		foreach($userListProfiles as $userListProfile)
-		{
-			$profileIds[] = $userListProfile->id;
-		}
-
-		$all = UserListProfile::whereIn('profile_id', $profileIds)
-			->orderBy('id', 'desc')
-			->get();
-
 		$return = [];
 
 		foreach($userListProfiles as $userListProfile)
@@ -90,9 +81,9 @@ class LatestVAC extends BaseUpdate
 				'vac_banned_on'	=> $vacBanDate->format("M j Y"),
 				'community'		=> $userListProfile->community,
 				'trade'			=> $userListProfile->trade,
-				'site_admin'	=> $userListProfile->site_admin?:0,
-				'donation'		=> $userListProfile->donation?:0,
-				'beta'			=> $userListProfile->beta?:0,
+				'site_admin'	=> (int) $userListProfile->site_admin?:0,
+				'donation'		=> (int) $userListProfile->donation?:0,
+				'beta'			=> (int) $userListProfile->beta?:0,
 				'times_added'	=> [
 					'number' => $userListProfile->total,
 					'time' => (new DateTime($userListProfile->created_at))->format("M j Y")

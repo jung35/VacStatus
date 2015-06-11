@@ -32,11 +32,8 @@ class MultiProfile
 
 		if(isset($updatedProfiles['error']))
 		{
-			if($updatedProfiles['error'] == 'profile_null'){
-				$updatedProfiles = [];
-			} else {
-				return ['error' => $updatedProfiles['error']];
-			}
+			if($updatedProfiles['error'] == 'profile_null') $updatedProfiles = [];
+			else return ['error' => $updatedProfiles['error']];
 		}
 
 		return array_replace($this->profiles, $updatedProfiles);
@@ -71,10 +68,7 @@ class MultiProfile
 
 		foreach($this->profiles as $k => $profile)
 		{
-			if(!$this->canUpdate($profile['small_id']))
-			{
-				if(count($profile) != 1) continue;
-			}
+			if(!$this->canUpdate($profile['small_id']) && count($profile) != 1) continue;
 
 			$refreshProfiles[] = [
 				'profile_key' => $k,
@@ -147,13 +141,6 @@ class MultiProfile
 				\DB::raw('max(user_list_profile.created_at) as last_added_created_at'),
 				\DB::raw('count(user_list_profile.id) as total')
 			]);
-
-		$profileIds = [];
-
-		foreach($getSmallId as $small_id)
-		{
-			$profileIds[] = $profiles->where('small_id', $small_id)->first();
-		}
 
 		$indexSave = [];
 
@@ -255,18 +242,18 @@ class MultiProfile
 			} else {
 				$match = false;
 				$recent = 0;
+
 				foreach($profileOldAlias as $oldAlias)
 				{
-					if(is_object($oldAlias))
-					{
-						if($oldAlias->seen_alias == $profile->display_name)
-						{
-							$match = true;
-							break;
-						}
+					if(!is_object($oldAlias)) continue;
 
-						$recent = $oldAlias->compareTime($recent);
+					if($oldAlias->seen_alias == $profile->display_name)
+					{
+						$match = true;
+						break;
 					}
+
+					$recent = $oldAlias->compareTime($recent);
 				}
 
 				if(!$match && $recent + Steam::$UPDATE_TIME < time())
@@ -297,6 +284,7 @@ class MultiProfile
 					];
 					break;
 				}
+
 				$oldAliasArray[] = [
 					"newname" => $oldAlias->seen_alias,
 					"timechanged" => $oldAlias->seen->format("M j Y")
@@ -310,10 +298,7 @@ class MultiProfile
 				'time' => date("M j Y", time())
 			];
 
-			if(Cache::has($profileCheckCache.$profile->smallId))
-			{
-				$currentProfileCheck = Cache::get($profileCheckCache.$profile->smallId);
-			}
+			if(Cache::has($profileCheckCache.$profile->smallId)) $currentProfileCheck = Cache::get($profileCheckCache.$profile->smallId);
 
 			$newProfileCheck = [
 				'number' => $currentProfileCheck['number'] + 1,
@@ -338,13 +323,13 @@ class MultiProfile
 				'vac_banned_on'		=> $vacBanDate->format("M j Y"),
 				'community'			=> $steamBan->CommunityBanned,
 				'trade'				=> $steamBan->EconomyBan != 'none',
-				'site_admin'		=> $profile->site_admin?:0,
-				'donation'			=> $profile->donation?:0,
-				'beta'				=> $profile->beta?:0,
+				'site_admin'		=> (int) $profile->site_admin?:0,
+				'donation'			=> (int) $profile->donation?:0,
+				'beta'				=> (int) $profile->beta?:0,
 				'profile_old_alias'	=> $oldAliasArray,
 				'times_checked'		=> $currentProfileCheck,
 				'times_added'		=> [
-					'number' => $profile->total?:0,
+					'number' => (int) $profile->total?:0,
 					'time' => (new DateTime($profile->last_added_created_at))->format("M j Y")
 				],
 			];

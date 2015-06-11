@@ -108,9 +108,9 @@ class SearchController extends Controller
 				'vac_banned_on'	=> $vacBanDate->format("M j Y"),
 				'community'		=> $profile->community,
 				'trade'			=> $profile->trade,
-				'site_admin'	=> $profile->site_admin?:0,
-				'donation'		=> $profile->donation?:0,
-				'beta'			=> $profile->beta?:0,
+				'site_admin'	=> (int) $profile->site_admin?:0,
+				'donation'		=> (int) $profile->donation?:0,
+				'beta'			=> (int) $profile->beta?:0,
 				'times_added'	=> [
 					'number' => $profile->total?:0,
 					'time' => (new DateTime($profile->created_at))->format("M j Y")
