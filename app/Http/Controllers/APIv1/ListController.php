@@ -296,6 +296,11 @@ class ListController extends Controller
 			return ['error' => 'You have reached the maximum subsciption limit!'];
 		}
 
+		if(Subscription::whereUserId($user->id)->whereUserListId($userList->id)->exists())
+		{
+			return ['error' => 'You are already subscribed to the list.'];
+		}
+
 		$subscription = new Subscription;
 		$subscription->user_id = $user->id;
 		$subscription->user_list_id = $userList->id;
