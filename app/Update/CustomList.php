@@ -26,24 +26,16 @@ class CustomList
 
 		if(Auth::check()) 
 		{
-			$userId = Auth::User()->id;
+			$user = Auth::User();
+			$userFriends = json_decode($user->friendslist);
 
-			$friendsListCacheName = "friendsList_{$userId}";
-			if($userId != $userList->user_id && !Cache::has($friendsListCacheName) && $userList->privacy == 2)
+			if($user->id != $userList->user_id &&
+				(!in_array($userList->small_id, $userFriends) && $userList->privacy == 2 || $userList->privacy == 3))
 			{
-				$this->error = "list_no_permission"; return;
+				$this->error = "list_no_permission";
+				return;
 			}
-			
-			$friendsList = Cache::get($friendsListCacheName);
 
-			if($userId != $userList->user_id)
-			{
-				if(($userList->privacy == 3) ||
-					($userList->privacy == 2 && !in_array($userList->user->small_id, $friendsList)))
-				{
-					$this->error = "list_no_permission"; return;
-				}
-			}
 		} else if($userList->privacy == 2 || $userList->privacy == 3)
 		{
 			$this->error = "list_no_permission"; return;
