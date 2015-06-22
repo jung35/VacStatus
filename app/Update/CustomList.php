@@ -112,8 +112,8 @@ class CustomList
 			$subscription = $user->Subscription
 				->where('user_list_id', $userList->id)
 				->first();
-
-			if($userMail && $userMail->verify == "verified" || $userMail->pushbullet_verify == "verified") $canSub = true;
+			if($userMail->exists() &&
+			   ($userMail->verify == "verified" || $userMail->pushbullet_verify == "verified")) $canSub = true;
 		}
 
 		$return = [
