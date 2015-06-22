@@ -7,6 +7,7 @@ use Carbon;
 use DateTime;
 use Auth;
 
+use VacStatus\Models\User;
 use VacStatus\Models\UserList;
 use VacStatus\Models\UserListProfile;
 
