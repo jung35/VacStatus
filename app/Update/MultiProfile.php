@@ -166,6 +166,9 @@ class MultiProfile
 			$keys = $indexSave[$smallId];
 
 			$steamInfo = $steamInfos[$keys['steamInfos']];
+
+			if(!isset($keys['steamBans'])) continue; // right now dont let this user get through. Figure out a better method
+
 			$steamBan = $steamBans[$keys['steamBans']];
 			
 			$profile = $profiles->where('small_id', $smallId)->first();

@@ -38,7 +38,7 @@ class LoginController extends Controller {
 
 		$userSteamInfo = $steamAPI->run();
 
-		if(isset($userSteamInfo->type) && $userSteamInfo->type == 'error')
+		if(isset($userSteamInfo->type) && $userSteamInfo->type == 'error' || !isset($userSteamInfo->response->players[0]))
 		{
 			return redirect()
 				->intended('/')
