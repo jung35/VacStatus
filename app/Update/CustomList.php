@@ -29,11 +29,15 @@ class CustomList
 			$user = Auth::User();
 			$userFriends = json_decode($user->friendslist);
 
-			if($user->id != $userList->user_id &&
-				(!in_array($userList->small_id, $userFriends) && $userList->privacy == 2 || $userList->privacy == 3))
+
+			if($user->id != $userList->user_id)
 			{
-				$this->error = "list_no_permission";
-				return;
+				$listAuthor = User::whereId($userList->user_id)->first();
+				if(($listAuthor->exists() && !in_array($listAuthor->small_id, $userFriends) && $userList->privacy == 2) || $userList->privacy == 3)
+				{
+					$this->error = "list_no_permission";
+					return;
+				}
 			}
 
 		} else if($userList->privacy == 2 || $userList->privacy == 3)
