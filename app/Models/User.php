@@ -13,6 +13,8 @@ class User extends Model implements AuthenticatableContract
 
 	protected $table = 'users';
 
+	protected $fillable = array('small_id');
+
 	public function isAdmin()
 	{
 		return $this->site_admin >= 1;

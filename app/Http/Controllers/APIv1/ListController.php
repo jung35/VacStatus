@@ -323,8 +323,7 @@ class ListController extends Controller
 		$subscription = Subscription::whereUserListId($userList->id)
 			->whereUserId($user->id)
 			->first();
-
-		$subscription->delete();
+		if(is_object($subscription)) $subscription->delete();
 		
 		$customList = new CustomList($userList);
 		if($customList->error()) return $customList->error();
