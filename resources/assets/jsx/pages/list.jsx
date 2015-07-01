@@ -80,7 +80,6 @@ var List = React.createClass({
 			url: '/api/v1/list/subscribe/' + this.state.data.id,
 			dataType: 'json',
 			type: 'POST',
-			data: },
 			success: function(data) {
 				if(data.error) {
 					notif.add('danger', data.error).run();
