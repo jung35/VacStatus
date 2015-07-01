@@ -11,7 +11,7 @@ use VacStatus\Models\User;
 use Mdb\PayPal\Ipn\Event\MessageVerifiedEvent;
 use Mdb\PayPal\Ipn\ListenerBuilder\Guzzle\InputStreamListenerBuilder as ListenerBuilder;
 
-
+use Cache;
 use Auth;
 
 use VacStatus\Steam\Steam;
@@ -127,7 +127,7 @@ class DonationController extends Controller
 					$user->donation += $original_amount;
 					$user->save();
 					$donationLog->small_id = $smallId;
-					Cache::forget("profile_{$small_id}");
+					Cache::forget("profile_{$smallId}");
 				}
 			}
 

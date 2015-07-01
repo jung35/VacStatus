@@ -23,35 +23,37 @@ class VerifyCsrfToken extends BaseVerifier {
 		{
 			$user = User::where('user_key', $userKey)->first();
 
-			if(Auth::check())
-			{
-				$prevuser = Auth::user();
-				Auth::logout();
-			}
-
-			if(isset($user->id))
-			{
-				Auth::login($user);
-
-				$response = $next($request);
-
-				Auth::logout();
-
-				if(isset($prevuser) && isset($prevuser->id)) Auth::login($prevuser);
-
-				return $response;
-			} else {
-				$response = $next($request);
-			}
+			if($user->exists()) Auth::once($user);
 			
-			if(isset($prevuser) && isset($prevuser->id)) Auth::login($prevuser);
-			return $response;
+			return $next($request);
+
+			// if(Auth::check())
+			// {
+			// 	$prevuser = Auth::user();
+			// 	Auth::logout();
+			// }
+
+			// if($user->exists())
+			// {
+			// 	Auth::login($user);
+
+			// 	$response = $next($request);
+
+			// 	Auth::logout();
+
+			// 	if(isset($prevuser) && isset($prevuser->id)) Auth::login($prevuser);
+
+			// 	return $response;
+			// } else {
+			// 	$response = $next($request);
+			// }
+			
+			// if(isset($prevuser)) Auth::login($prevuser);
+
+			// return $response;
 		}
 
-		if($request->is('api/v1/donate/ipn'))
-		{
-			return $next($request);
-		}
+		if($request->is('api/v1/donate/ipn')) return $next($request);
 
 		return parent::handle($request, $next);
 	}

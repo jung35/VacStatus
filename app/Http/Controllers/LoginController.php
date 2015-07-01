@@ -20,18 +20,15 @@ class LoginController extends Controller {
 	
 	public function login()
 	{
-		if(Auth::viaRemember())
+		if(Auth::check() || Auth::viaRemember())
 		{
 			return redirect()
 				->intended('/list')
-				->with('success','You have Successfully logged in.');
+				->with('success','You have Successfully logged in!');
 		}
 
 		$steamuser = SteamAuth::Auth();
 		$steam64BitId = str_replace("http://steamcommunity.com/openid/id/", "", $steamuser['steamid'] );
-
-		// Try to grab user if it exists
-		$user = User::whereSmallId((int) Steam::toSmallId($steam64BitId))->first();
 
 		$steamAPI = new SteamAPI('info');
 		$steamAPI->setSteamId($steam64BitId);
@@ -52,13 +49,6 @@ class LoginController extends Controller {
 
 		$userSteamFriends = $steamAPI->run();
 
-		if(isset($userSteamInfo->type) && $userSteamInfo->type == 'error')
-		{
-			return redirect()
-				->intended('/')
-				->with('error', 'There was an error trying to communicate with Steam Server.');
-		}
-
 		$simpleFriends = [];
 
 		if(isset($userSteamFriends->friendslist))
@@ -71,16 +61,20 @@ class LoginController extends Controller {
 			}
 		}
 
-		if(!isset($user->id))
+		$smallId = Steam::toSmallId($steam64BitId);
+		
+		// Try to grab user if it exists
+		$user = User::where('small_id', $smallId)->first();
+
+		if(!$user->exists())
 		{
 			$user = new User;
-			$user->small_id = Steam::toSmallId($userSteamInfo->steamid);
+			$user->small_id = $smallId;
 		}
 
-		$user->display_name = (string) $userSteamInfo->personaname;
+		$user->display_name = $userSteamInfo->personaname;
 		$user->friendslist = json_encode($simpleFriends);
 
-		$smallId = Steam::toSmallId($steam64BitId);
 		$singleProfile = new SingleProfile($smallId);
 		$singleProfile->getProfile();
 
