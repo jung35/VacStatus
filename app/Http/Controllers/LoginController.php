@@ -62,15 +62,9 @@ class LoginController extends Controller {
 		}
 
 		$smallId = Steam::toSmallId($steam64BitId);
-		
-		// Try to grab user if it exists
-		$user = User::where('small_id', $smallId)->first();
 
-		if(!$user->exists())
-		{
-			$user = new User;
-			$user->small_id = $smallId;
-		}
+		// Try to grab user or create new one
+		$user = User::firstOrCreate(['small_id' => $smallId]);
 
 		$user->display_name = $userSteamInfo->personaname;
 		$user->friendslist = json_encode($simpleFriends);
