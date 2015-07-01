@@ -64,7 +64,9 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
 <script>
-	var _token = $('meta[name=_token]').attr("content");
+	$.ajaxSetup({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') }
+    });
 	var auth_check = $('meta[name=auth]').attr("content");
 </script>
 <script src="/js/notification.js"></script>

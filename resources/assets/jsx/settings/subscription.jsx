@@ -16,7 +16,6 @@ var Subscription = React.createClass({
 			url: '/api/v1/settings/subscribe',
 			type: 'POST',
 			data: {
-				_token: _token,
 				email: email,
 				push_bullet: push_bullet
 			},
@@ -43,7 +42,6 @@ var Subscription = React.createClass({
 			url: '/api/v1/settings/subscribe/email',
 			type: 'POST',
 			data: {
-				_token: _token,
 				_method: 'DELETE'
 			},
 			dataType: 'json',
@@ -70,7 +68,6 @@ var Subscription = React.createClass({
 			url: '/api/v1/settings/subscribe/pushbullet',
 			type: 'POST',
 			data: {
-				_token: _token,
 				_method: 'DELETE'
 			},
 			dataType: 'json',

@@ -56,7 +56,6 @@ var List = React.createClass({
 			dataType: 'json',
 			type: 'POST',
 			data: {
-				_token: _token,
 				_method: 'DELETE',
 				list_id: this.state.data.id,
 				profile_id: profile.id
@@ -81,7 +80,7 @@ var List = React.createClass({
 			url: '/api/v1/list/subscribe/' + this.state.data.id,
 			dataType: 'json',
 			type: 'POST',
-			data: { _token: _token, },
+			data: },
 			success: function(data) {
 				if(data.error) {
 					notif.add('danger', data.error).run();
@@ -104,7 +103,6 @@ var List = React.createClass({
 			dataType: 'json',
 			type: 'POST',
 			data: {
-				_token: _token,
 				_method: 'DELETE',
 			},
 			success: function(data) {
@@ -128,7 +126,6 @@ var List = React.createClass({
 			dataType: 'json',
 			type: 'POST',
 			data: {
-				_token: _token,
 				search: data.search,
 				description: data.description,
 				list_id: grab

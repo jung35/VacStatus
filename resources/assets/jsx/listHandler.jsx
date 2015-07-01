@@ -6,7 +6,6 @@ var ListHandler = React.createClass({
 			dataType: 'json',
 			type: 'POST',
 			data: {
-				_token: _token,
 				title: data.title,
 				privacy: data.privacy
 			},
@@ -37,7 +36,6 @@ var ListHandler = React.createClass({
 			dataType: 'json',
 			type: 'POST',
 			data: {
-				_token: _token,
 				title: data.title,
 				privacy: data.privacy
 			},
@@ -63,7 +61,6 @@ var ListHandler = React.createClass({
 			dataType: 'json',
 			type: 'POST',
 			data: {
-				_token: _token,
 				list_id: data.list_id,
 				description: data.description,
 				profile_id: data.profile_id
@@ -102,7 +99,6 @@ var ListHandler = React.createClass({
 			dataType: 'json',
 			type: 'POST',
 			data: {
-				_token: _token,
 				_method: 'DELETE'
 			},
 			success: function(data) {
@@ -128,7 +124,6 @@ var ListHandler = React.createClass({
 			dataType: 'json',
 			type: 'POST',
 			data: {
-				_token: _token,
 				search: searchUsers,
 				list_id: data.list_id,
 				description: data.description

@@ -20,9 +20,6 @@ var UserKey = React.createClass({
 		$.ajax({
 			url: '/api/v1/settings/userkey',
 			type: 'POST',
-			data: {
-				_token: _token,
-			},
 			dataType: 'json',
 			success: function(data) {
 				this.setState({data: data});
