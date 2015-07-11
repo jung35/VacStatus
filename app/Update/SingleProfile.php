@@ -270,6 +270,13 @@ class SingleProfile extends BaseUpdate
 		} else {
 			$skipProfileBan = $profileBan->skipProfileBanUpdate($steamBan);
 
+			if($profileBan->vac != (int) $steamBan->NumberOfVACBans + (int) $steamBan->NumberOfGameBans
+			   && $profileBan->vac_banned_on->format('Y-m-d') !== $newVacBanDate->format('Y-m-d'))
+			{
+				$skipProfileBan = false;
+				$profileBan->timestamps = false;
+			}
+
 			if($profileBan->vac > $combinedBan)
 			{
 				$profileBan->timestamps = false;

@@ -8,6 +8,8 @@ use DateInterval;
 class ProfileBan extends Model
 {
 	protected $table = 'profile_ban';
+	
+	protected $dates = ['vac_banned_on'];
 
 	 public $timestamps = true;
 
