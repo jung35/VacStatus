@@ -14,9 +14,28 @@ use VacStatus\Update\SingleProfile;
 
 use Cache;
 use Auth;
-use SteamAuth;
+use Socialite;
 
 class LoginController extends Controller {
+
+	public function sendToSteam()
+	{
+		if(Auth::check() || Auth::viaRemember())
+		{
+			return redirect()
+				->intended('/list')
+				->with('success','You have Successfully logged in!');
+		}
+
+		return Socialite::driver('steam')->redirect();
+	}
+
+	public function handleSteamLogin()
+	{
+        $user = Socialite::driver('steam')->user();
+
+        dd($user);
+	}
 	
 	public function login()
 	{

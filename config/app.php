@@ -136,6 +136,10 @@ return [
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 
+		'Illuminate\Broadcasting\BroadcastServiceProvider', // upgrading to laravel 5.1
+
+		Laravel\Socialite\SocialiteServiceProvider::class,
+
 		/*
 		 * Application Service Providers...
 		 */
@@ -145,7 +149,6 @@ return [
 		'VacStatus\Providers\EventServiceProvider',
 		'VacStatus\Providers\RouteServiceProvider',
 		'VacStatus\Providers\BladeServiceProvider',
-		'sgtaziz\SteamAuth\SteamAuthServiceProvider',
 
 	],
 
@@ -195,8 +198,8 @@ return [
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
 		'Carbon' 	=> 'Carbon\Carbon',
-		'SteamAuth' => 'sgtaziz\SteamAuth\Facades\SteamAuth',
 
+		'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 	],
 
 ];

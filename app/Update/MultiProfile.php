@@ -359,7 +359,7 @@ class MultiProfile
 
 		Cache::forever($updateAliasCacheName.$randomString, $getSmallId);
 
-		shell_exec('php artisan update:alias '. $randomString .' > /dev/null 2>/dev/null &');
+		exec('php artisan update:alias '. $randomString .' > /dev/null 2>/dev/null &');
 
 		return $newProfiles;
 	}

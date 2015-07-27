@@ -7,7 +7,7 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="logo">
-						VacStat.us
+						VacStatus<!-- Not VacStat :( -->
 						<div class="sub-text">
 							Keep track of people's VAC status in a list
 						</div>

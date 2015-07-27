@@ -1,6 +1,11 @@
-<?php namespace VacStatus\Providers;
+<?php
+
+namespace VacStatus\Providers;
 
 use Illuminate\Support\ServiceProvider;
+
+use VacStatus\Socialite\SteamProvider;
+
 class AppServiceProvider extends ServiceProvider {
 
 	/**
@@ -10,7 +15,14 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		//
+        $socialite = $this->app->make('Laravel\Socialite\Contracts\Factory');
+        $socialite->extend(
+            'steam',
+            function ($app) use ($socialite) {
+                $config = $app['config']['services.steam'];
+                return $socialite->buildProvider(SteamProvider::class, $config);
+            }
+        );
 	}
 
 	/**

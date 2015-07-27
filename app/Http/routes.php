@@ -9,7 +9,12 @@ Route::group(['prefix' => 'auth'], function()
 {
 	get('/login', [
 		'as' => 'auth.login',
-		'uses' => 'LoginController@login'
+		'uses' => 'LoginController@sendToSteam'
+	]);
+
+	get('/check', [
+		'as' => 'auth.check',
+		'uses' => 'LoginController@handleSteamLogin'
 	]);
 
 	get('/logout', [
@@ -276,6 +281,11 @@ Route::group([
 	post('/announcement', [
 		'as' => 'admin.announcement.save',
 		'uses' => 'MainController@announcementSave'
+	]);
+
+	get('log/{filename}', [
+		'as' => 'admin.log',
+		'uses' => 'MainController@viewLog'
 	]);
 
 	Route::group(['prefix' => 'db'], function()
