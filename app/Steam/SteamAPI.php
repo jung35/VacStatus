@@ -4,6 +4,8 @@ use VacStatus\Steam\Steam;
 use Cache;
 use Carbon;
 
+use GuzzleHttp\Client;
+
 class SteamAPI {
 
 	protected $url;
@@ -32,7 +34,7 @@ class SteamAPI {
 	public function setSmallId($smallId)
 	{
 		$this->setSteamId(Steam::to64Bit($smallId));
-		
+
 		return $this;
 	}
 
@@ -67,17 +69,9 @@ class SteamAPI {
 
 		Cache::increment($cache_name);
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_URL, $this->url);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,0);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-
 		try {
-			$data = curl_exec($ch);
+			$client = new Client();
+			$request = $client->get($this->url);
 		} catch(Exception $e) {
 			$this->error = true;
 			$this->errorMessage = 'api_conn_err';
@@ -89,7 +83,7 @@ class SteamAPI {
 		}
 
 		curl_close($ch);
-		$data = json_decode($data);
+		$data = json_decode($request->getBody());
 
 		if(!is_object($data) && !is_array($data))
 		{
