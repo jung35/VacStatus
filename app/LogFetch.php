@@ -14,24 +14,6 @@ class LogFetch {
 		$this->logPath = base_path()."/storage/logs/";
 	}
 
-/************************\
-|                        |
-|   REGEX TO PARSE LOG   |
-|________________________|
-
-	/
-		\[
-			(?<time>(?:[0-9]|\-|\:|\s)*?)
-		\]
-		(?:\s)
-		(?<type>.*?)
-		(?:.\s)
-		(?<message>.*?)
-		(?:\nStack trace:\n)
-		(?<trace>(?:#\d.*(?:\n|))*)
-	/g
-*/
-
 	public function __toString()
 	{
 		$logPath = $this->logPath;
@@ -87,7 +69,6 @@ class LogFetch {
 					$line = str_replace("\r", "", $line);
 					$line = str_replace(base_path()."/", "", $line);
 					$logTemp['trace'][] = $line;
-					break;
 			}
 		}
 
