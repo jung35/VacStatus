@@ -82,7 +82,6 @@ class SteamAPI {
 			];
 		}
 
-		curl_close($ch);
 		$data = json_decode($request->getBody());
 
 		if(!is_object($data) && !is_array($data))

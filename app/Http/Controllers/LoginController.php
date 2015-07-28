@@ -32,9 +32,9 @@ class LoginController extends Controller {
 
 	public function handleSteamLogin()
 	{
-    	$user = Socialite::driver('steam')->user();
+    	$socUser = Socialite::driver('steam')->user();
 
-    	if(is_null($user->getId()))
+    	if(is_null($socUser->getId()))
     	{
 			return redirect()
 				->intended('/')
@@ -42,7 +42,7 @@ class LoginController extends Controller {
     	}
 
         $steamAPI = new SteamAPI('friends');
-		$steamAPI->setSteamId($user->getId());
+		$steamAPI->setSteamId($socUser->getId());
 		$userSteamFriends = $steamAPI->run();
 		
 		$simpleFriends = [];
@@ -52,12 +52,12 @@ class LoginController extends Controller {
 			$simpleFriends = $this->getFriends($userSteamFriends->friendslist->friends);
 		}
 
-		$smallId = Steam::toSmallId($user->getId());
+		$smallId = Steam::toSmallId($socUser->getId());
 
 		// Try to grab user or create new one
 		$user = User::firstOrNew(['small_id' => $smallId]);
 
-		$user->display_name = $user->getNickname();
+		$user->display_name = $socUser->getNickname();
 		$user->friendslist = json_encode($simpleFriends);
 
 		$singleProfile = new SingleProfile($smallId);
