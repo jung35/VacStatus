@@ -12,9 +12,4 @@ class ProfileOldAlias extends Model
 	{
 		return $this->belongsTo('VacStatus\Models\Profile', 'profile_id', 'id');
 	}
-
-	public function compareTime($time)
-	{
-		return is_object($time) && $time->timestamp < $this->seen->timestamp ? $this->seen : $time;
-	}
 }

@@ -106,7 +106,7 @@ class Steam {
 	}
 
 	public static function aliasSort($a, $b) {
-		return strcmp(self::aliasTimeConvert($b->timechanged), self::aliasTimeConvert($a->timechanged));
+		return strcmp(self::aliasTimeConvert($b['timechanged']), self::aliasTimeConvert($a['timechanged']));
 	}
 
 	public static function aliasTimeConvert($time) {
@@ -122,8 +122,8 @@ class Steam {
 		foreach($aliases as $alias)
 		{
     		$newAlias[] = [
-    			'newname' => $alias->newname,
-    			'timechanged' => date('M j Y', strtotime(str_replace("@", "", $alias->timechanged)))
+    			'newname' => $alias['newname'],
+    			'timechanged' => date('M j Y', strtotime(str_replace("@", "", $alias['timechanged'])))
 			];
 		}
 

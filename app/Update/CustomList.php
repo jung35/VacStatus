@@ -22,7 +22,8 @@ class CustomList
 	{
 		if(!isset($userList->id))
 		{
-			$this->error = "list_invalid"; return;
+			$this->error = "list_invalid";
+			return;
 		}
 
 		if(Auth::check()) 
@@ -43,7 +44,8 @@ class CustomList
 
 		} else if($userList->privacy == 2 || $userList->privacy == 3)
 		{
-			$this->error = "list_no_permission"; return;
+			$this->error = "list_no_permission";
+			return;
 		}
 
 		$this->userList = $userList;
@@ -159,7 +161,7 @@ class CustomList
 			];
 		}
 
-		$multiProfile = new MultiProfile($return['list']);
+		$multiProfile = new MultiProfile($return['list'], $userList->id);
 		$return['list'] = $multiProfile->run();
 
 		return $return;

@@ -41,15 +41,14 @@ class LoginController extends Controller {
 				->with('error', 'There was an error trying to communicate with Steam Server.');
     	}
 
-        $steamAPI = new SteamAPI('friends');
-		$steamAPI->setSteamId($socUser->getId());
-		$userSteamFriends = $steamAPI->run();
+        $steamAPI = new SteamAPI($socUser->getId());
+		$userSteamFriends = $steamAPI->fetch('friends');
 		
 		$simpleFriends = [];
 
-		if(isset($userSteamFriends->friendslist))
+		if(isset($userSteamFriends['friendslist']))
 		{
-			$simpleFriends = $this->getFriends($userSteamFriends->friendslist->friends);
+			$simpleFriends = $this->getFriends($userSteamFriends['friendslist']['friends']);
 		}
 
 		$smallId = Steam::toSmallId($socUser->getId());
@@ -92,7 +91,7 @@ class LoginController extends Controller {
 
 		foreach($friends as $friend)
 		{
-			$return[] = Steam::toSmallId($friend->steamid);
+			$return[] = Steam::toSmallId($friend['steamid']);
 		}
 
 		return $return;

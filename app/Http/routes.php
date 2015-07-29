@@ -339,3 +339,8 @@ Route::model('news', 'VacStatus\Models\News', function()
 {
 	return ['error' => '404'];
 });
+
+Event::listen('illuminate.query', function($query)
+{
+    // var_dump($query);
+});

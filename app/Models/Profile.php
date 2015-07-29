@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Model;
 class Profile extends Model
 {
 	protected $table = 'profile';
+	
+	protected $fillable = ['small_id'];
 
 	protected $dates = ['vac_banned_on'];
 

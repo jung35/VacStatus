@@ -67,23 +67,27 @@ var Profile = React.createClass({
 					break;
 			}
 
-			alias_history = data.profile_old_alias.map(function(alias, index) {
-				return (
-					<tr key={index}>
-						<td>{ alias.timechanged }</td>
-						<td>{ alias.newname }</td>
-					</tr>
-				);
-			});
+			if(data.profile_old_alias) {
+				alias_history = data.profile_old_alias.map(function(alias, index) {
+					return (
+						<tr key={index}>
+							<td>{ alias.timechanged }</td>
+							<td>{ alias.newname }</td>
+						</tr>
+					);
+				});
+			} 
 
-			alias_recent = data.alias.map(function(alias, index) {
-				return (
-					<tr key={index}>
-						<td>{ alias.timechanged }</td>
-						<td>{ alias.newname }</td>
-					</tr>
-				);
-			});
+			if(data.alias) {
+				alias_recent = data.alias.map(function(alias, index) {
+					return (
+						<tr key={index}>
+							<td>{ alias.timechanged }</td>
+							<td>{ alias.newname }</td>
+						</tr>
+					);
+				});
+			}
 
 			return (
 				<div className="profile-start">
@@ -252,11 +256,11 @@ var Profile = React.createClass({
 											</div>
 											<div className="col-xs-6 col-md-4">
 												<strong>Times Checked</strong><br />
-													{ data.times_checked.number } <sub>{ data.times_checked.number ? "(" + data.times_checked.time + ")" : ''}</sub>
+													{ data.times_checked && data.times_checked.number ? data.times_checked.number : 0 } <sub>{ data.times_checked && data.times_checked.time ? "(" + data.times_checked.time + ")" : ''}</sub>
 											</div>
 											<div className="col-xs-12 col-md-4">
 												<strong>Times Added</strong><br />
-													{ data.times_added.number } <sub>{ data.times_added.number ? "(" + data.times_added.time + ")" : ''}</sub>
+													{ data.times_added && data.times_added.number ? data.times_added.number : 0 } <sub>{ data.times_added && data.times_added.time ? "(" + data.times_added.time + ")" : ''}</sub>
 											</div>
 										</div>
 									</div>

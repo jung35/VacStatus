@@ -8,8 +8,6 @@ use GuzzleHttp\Client;
 
 class SteamAPI {
 
-	protected $url;
-	protected $type;
 	protected $steamURL = [
 		'info'		=> 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/',
 		'friends'	=> 'http://api.steampowered.com/ISteamUser/GetFriendList/v0001/',
@@ -18,49 +16,44 @@ class SteamAPI {
 		'alias'		=> 'http://steamcommunity.com/profiles/{steam64BitId}/ajaxaliases'
 	];
 
-	private $error = false;
-	private $errorMessage = '';
+	private $steam64BitId;
 
-	function __construct($type)
+	function __construct($steamId, $isSmallId = false)
 	{
-		$this->type = $type;
-		$this->url = $this->steamURL[$type];
+		if($isSmallId) $steamId = Steam::to64Bit($steamId);
+		if(is_array($steamId)) $steamId = implode(',', $steamId);
 
-		if($type != 'alias') $this->url .= "?key=".Steam::getAPI();
-
-		if($type == 'friends') $this->url .= "&relationship=friend";
+		$this->steam64BitId = $steamId;
 	}
 
-	public function setSmallId($smallId)
+	private function getUser($type)
 	{
-		$this->setSteamId(Steam::to64Bit($smallId));
+		$steam64BitId = $this->steam64BitId;
 
-		return $this;
-	}
-
-	public function setSteamId($steam64BitId)
-	{
-		if(is_array($steam64BitId)) $steam64BitId = implode(',', $steam64BitId);
-
-		switch($this->type)
+		switch($type)
 		{
 			case 'friends':
-				$this->url .= "&steamid=$steam64BitId";
-				break;
+				return "&relationship=friend&steamid={$steam64BitId}";
 			case 'vanityUrl':
-				$this->url .= "&vanityurl=$steam64BitId";
-				break;
-			case 'alias':
-				$this->url = preg_replace('/\{steam64BitId\}/', $steam64BitId, $this->url);
-				break;
+				return "&vanityurl={$steam64BitId}";
 			default:
-				$this->url .= "&steamids=$steam64BitId";
+				return "&steamids={$steam64BitId}";
 		}
 
-		return $this;
+		return false;
 	}
 
-	public function run()
+	private function getKey()
+	{
+		return "?key=" . Steam::getAPI();
+	}
+
+	private function error($reason)
+	{
+		return [ 'error' => $reason ];
+	}
+
+	private function setCache()
 	{
 		$cache_name = 'steamAPICalls';
 		$expiresAt = Carbon::today()->addDay();
@@ -68,43 +61,34 @@ class SteamAPI {
 		if(!Cache::has($cache_name)) Cache::put($cache_name, 0, $expiresAt);
 
 		Cache::increment($cache_name);
+	}
+
+	public function fetch($type)
+	{
+		$this->setCache();
+
+		if(!isset($this->steamURL[$type])) return $this->error('invalid_type');
+
+		if($type !== 'alias')
+		{
+			$url = $this->steamURL[$type] . $this->getKey() . $this->getUser($type);
+		} else {
+			$url = preg_replace('/\{steam64BitId\}/', $this->steam64BitId, $this->steamURL[$type]);
+		}
 
 		try {
 			$client = new Client();
-			$request = $client->get($this->url);
-		} catch(Exception $e) {
-			$this->error = true;
-			$this->errorMessage = 'api_conn_err';
-
-			return (object) [
-				'type' => 'error',
-				'data' => $this->errorMessage
-			];
+			$request = $client->get($url);
 		}
-
-		$data = json_decode($request->getBody());
-
-		if(!is_object($data) && !is_array($data))
+		catch(Exception $e)
 		{
-			$this->error = true;
-			$this->errorMessage = 'api_data_err';
-
-			return (object) [
-				'type' => 'error',
-				'data' => $this->errorMessage
-			];
+			return $this->error('api_conn_err');
 		}
+
+		$data = json_decode($request->getBody(), true);
+
+		if(!is_array($data)) return $this->error('api_data_err');
 
 		return $data;
-	}
-
-	public function error()
-	{
-		return $this->error;
-	}
-
-	public function errorMessage()
-	{
-		return $this->errorMessage;
 	}
 }
