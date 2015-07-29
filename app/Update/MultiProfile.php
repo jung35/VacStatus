@@ -223,11 +223,6 @@ class MultiProfile extends BaseUpdate
 			 */
 			$profile = $profiles->where('small_id', $smallId)->first();
 
-			if($this->customList)
-			{
-				$userDescription = $userDescriptions->where('profile_id', $profile->id)->first();
-			}
-
 			if(is_null($profile))
 			{
 				$profile = Profile::firstOrNew(['small_id' => $smallId]);
@@ -244,6 +239,11 @@ class MultiProfile extends BaseUpdate
 
 			$profileBan = $profileBans->where('profile_id', $profile->id)->first();
 			$profileOldAlias = $profileOldAliases->where('profile_id', $profile->id)->all();
+
+			if($this->customList)
+			{
+				$userDescription = $userDescriptions->where('profile_id', $profile->id)->first();
+			}
 
 			/**
 			 * Now start inserting profile's ban data if needed by comparing
