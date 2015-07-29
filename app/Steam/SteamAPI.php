@@ -78,7 +78,7 @@ class SteamAPI {
 
 		try {
 			$client = new Client();
-			$request = $client->get($url]);
+			$request = $client->get($url);
 		}
 		catch(\Exception $e)
 		{
