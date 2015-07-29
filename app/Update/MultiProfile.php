@@ -342,6 +342,8 @@ class MultiProfile extends BaseUpdate
 					"newname" => $newAlias->seen_alias,
 					"timechanged" => $newAlias->seen->format("M j Y")
 				];
+
+				unset($newAlias);
 			}
 
 			$steam64BitId = Steam::to64Bit($profile->small_id);
