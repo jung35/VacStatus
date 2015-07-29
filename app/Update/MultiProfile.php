@@ -222,8 +222,6 @@ class MultiProfile extends BaseUpdate
 			 * if this one doesnt save for some reason
 			 */
 			$profile = $profiles->where('small_id', $smallId)->first();
-			$profileBan = $profileBans->where('profile_id', $profile->id)->first();
-			$profileOldAlias = $profileOldAliases->where('profile_id', $profile->id)->all();
 
 			if($this->customList)
 			{
@@ -232,7 +230,7 @@ class MultiProfile extends BaseUpdate
 
 			if(is_null($profile))
 			{
-				$profile = Profile::firstOrNew(['small_id' => $this->smallId]);
+				$profile = Profile::firstOrNew(['small_id' => $smallId]);
 
 				if(isset($steamInfo['timecreated']))  $profile->profile_created = $steamInfo['timecreated'];
 			}
@@ -243,6 +241,9 @@ class MultiProfile extends BaseUpdate
 			$profile->privacy = $steamInfo['communityvisibilitystate'];
 
 			if(!$profile->save()) continue;
+
+			$profileBan = $profileBans->where('profile_id', $profile->id)->first();
+			$profileOldAlias = $profileOldAliases->where('profile_id', $profile->id)->all();
 
 			/**
 			 * Now start inserting profile's ban data if needed by comparing

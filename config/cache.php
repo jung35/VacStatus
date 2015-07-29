@@ -74,6 +74,6 @@ return [
 	|
 	*/
 
-	'prefix' => 'vacstatus',
+	'prefix' => 'laravel',
 
 ];

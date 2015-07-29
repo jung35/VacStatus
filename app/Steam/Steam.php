@@ -207,14 +207,14 @@ class Steam {
 
 			if (is_numeric($a) && preg_match('/7656119/', $a)) return ['success' => $a];
 			else {
-				$steamAPI = new SteamAPI('vanityUrl');
-				$steamVanityUrl = $steamAPI->setSteamId($data)->run();
+				$steamAPI = new SteamAPI($data);
+				$steamVanityUrl = $steamAPI->fetch('vanityUrl');
 
-				if(isset($steamVanityUrl->type) && $steamVanityUrl->type == 'error'
-					|| !isset($steamVanityUrl->response->steamid)
-						&& $steamVanityUrl->response->success == 42) return ['error' => 'Invalid input'];
+				if(isset($steamVanityUrl['type']) && $steamVanityUrl['type'] == 'error'
+					|| !isset($steamVanityUrl['response']['steamid'])
+						&& $steamVanityUrl['response']['success'] == 42) return ['error' => 'Invalid input'];
 
-				$steamid64 = (string) $steamVanityUrl->response->steamid;
+				$steamid64 = (string) $steamVanityUrl['response']['steamid'];
 
 				if (!preg_match('/7656119/', $steamid64)) return ['error' => 'Invalid link'];
 				else return ['success' => $steamid64];
@@ -226,17 +226,17 @@ class Steam {
 		}
 		else
 		{
-			$steamAPI = new SteamAPI('vanityUrl');
-			$steamVanityUrl = $steamAPI->setSteamId($data)->run();
+			$steamAPI = new SteamAPI($data);
+			$steamVanityUrl = $steamAPI->fetch('vanityUrl');
 
-			if(isset($steamVanityUrl->type) && $steamVanityUrl->type == 'error' ||
-			   !isset($steamVanityUrl->response) ||
-			   !isset($steamVanityUrl->response->steamid) && $steamVanityUrl->response->success == 42)
+			if(isset($steamVanityUrl['type']) && $steamVanityUrl['type'] == 'error'
+			   || !isset($steamVanityUrl['response']) ||
+			   !isset($steamVanityUrl['response']['steamid']) && $steamVanityUrl['response']['success'] == 42)
 			{
 				return ['error' => 'Invalid input'];
 			}
 
-			$steamid64 = (string) $steamVanityUrl->response->steamid;
+			$steamid64 = (string) $steamVanityUrl['response']['steamid'];
 
 			if (!preg_match('/7656119/', $steamid64)) return ['error' => 'Invalid input'];
 			else return ['success' => $steamid64];

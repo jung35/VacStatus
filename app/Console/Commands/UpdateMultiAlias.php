@@ -4,9 +4,12 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-use Cache;
+use VacStatus\Steam\Steam;
 use VacStatus\Steam\SteamAPI;
 use VacStatus\Models\Profile;
+
+use Cache;
+use Carbon;
 
 class UpdateMultiAlias extends Command {
 
@@ -30,19 +33,18 @@ class UpdateMultiAlias extends Command {
 
 		foreach($profiles as $profile)
 		{
-			$steamAPI = new SteamAPI('alias');
-			$steamAPI->setSmallId($profile->small_id);
-			$steamAlias = $steamAPI->run();
+			$steamAPI = new SteamAPI($profile->small_id, true);
+			$steamAlias = $steamAPI->fetch('alias');
 
-			if($steamAPI->error()) { $steamAlias = []; }
-			else { usort($steamAlias, array('VacStatus\Steam\Steam', 'aliasSort')); }
+			if(!isset($steamInfos['error'])) usort($steamAlias, array('VacStatus\Steam\Steam', 'aliasSort'));
+			else $steamAlias = [];
 
 			$profile->alias = json_encode($steamAlias);
 			$profile->save();
 
-			$cacheName = "profile_$profile->small_id}";
+			$cacheName = "profile_{$profile->small_id}";
 
-			if(!Cache::has($cachName)) continue;
+			if(!Cache::has($cacheName)) continue;
 			
 			$profileCache = Cache::get($cacheName);
 			$profileCache['alias'] = Steam::friendlyAlias($steamAlias);
