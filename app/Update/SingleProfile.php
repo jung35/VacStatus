@@ -309,14 +309,14 @@ class SingleProfile extends BaseUpdate
 				'profile.alias',
 				'profile.created_at',
 
-				'ISNULL(profile_ban.vac, 0)',
+				'profile_ban.vac',
 				'profile_ban.vac_banned_on',
-				'ISNULL(profile_ban.community, 0)',
-				'ISNULL(profile_ban.trade, 0)',
+				'profile_ban.community',
+				'profile_ban.trade',
 
-				'ISNULL(users.site_admin, 0)',
-				'ISNULL(users.donation, 0)',
-				'ISNULL(users.beta, 0)',
+				'users.site_admin',
+				'users.donation',
+				'users.beta',
 			]);
 
 		$steam64BitId = Steam::to64Bit($profile->small_id);
