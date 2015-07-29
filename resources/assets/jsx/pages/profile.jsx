@@ -254,10 +254,6 @@ var Profile = React.createClass({
 												<strong>First Checked</strong><br />
 													{ data.created_at }
 											</div>
-											<div className="col-xs-6 col-md-4">
-												<strong>Times Checked</strong><br />
-													{ data.times_checked && data.times_checked.number ? data.times_checked.number : 0 } <sub>{ data.times_checked && data.times_checked.time ? "(" + data.times_checked.time + ")" : ''}</sub>
-											</div>
 											<div className="col-xs-12 col-md-4">
 												<strong>Times Added</strong><br />
 													{ data.times_added && data.times_added.number ? data.times_added.number : 0 } <sub>{ data.times_added && data.times_added.time ? "(" + data.times_added.time + ")" : ''}</sub>
