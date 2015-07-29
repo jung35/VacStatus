@@ -80,7 +80,7 @@ class SteamAPI {
 			$client = new Client();
 			$request = $client->get($url, ['http_errors' => false]);
 		}
-		catch(Exception $e)
+		catch(\Exception $e)
 		{
 			return $this->error('api_conn_err');
 		}
