@@ -88,21 +88,21 @@ class SubscriptionCheck
 		return $this->userMail->id;
 	}
 
-	public function errorMessage()
+	protected function error($reason)
 	{
-		if($this->error) return $this->error;
-
-		return false;
+		return ['error' => $reason ];
 	}
 
 	public function run()
 	{
 		$send = $this->check();
 
+		if(isset($send['error'])) return false;
+
 		$toUpdate = Subscription::whereIn('id', $this->subscriptionIds)->get();
 		foreach($toUpdate as $subscription) $subscription->touch();
 
-		return $send;
+		return true;
 	}
 
 	private function check()
@@ -132,23 +132,13 @@ class SubscriptionCheck
 		}
 
 
-		$steamAPI = new SteamAPI('ban');
-		$steamAPI->setSmallId($getSmallIds);
-		$steamBans = $steamAPI->run();
+		$steamAPI = new SteamAPI($getSmallIds, true);
+		$steamBans = $steamAPI->fetch('ban');
 
-		if($steamAPI->error()) 
-		{
-			$this->error = $steamAPI->errorMessage();
-			return false;
-		}
+		if(isset($steamBan['error'])) return $this->error($steamBan['error']);
+		if(!isset($steamBan['players'][0])) return $this->error('profile_null');
 
-		if(!isset($steamBans->players[0]))
-		{
-			$this->error = 'profile_null';
-			return false;
-		}
-
-		$steamBans = $steamBans->players;
+		$steamBans = $steamBans['players'];
 
 		$indexSave = [];
 		foreach($steamBans as $k => $ban)
@@ -164,12 +154,14 @@ class SubscriptionCheck
 			$profile = $profiles->where('small_id', $smallId)->first();
 
 			$newVacBanDate = new DateTime();
-			$newVacBanDate->sub(new DateInterval("P{$steamBan->DaysSinceLastBan}D"));
+			$newVacBanDate->sub(new DateInterval("P{$steamBan['DaysSinceLastBan']}D"));
+
+			$combinedBan = (int) $steamBan['NumberOfVACBans'] + (int) $steamBan['NumberOfGameBans'];
 
 			$profileBan = [
-				'vac' => (int) $steamBan->NumberOfVACBans + (int) $steamBan->NumberOfGameBans,
-				'community' => $steamBan->CommunityBanned,
-				'trade' => $steamBan->EconomyBan != 'none',
+				'vac' => $combinedBan,
+				'community' => $steamBan['CommunityBanned'],
+				'trade' => $steamBan['EconomyBan'] != 'none',
 				'vac_banned_on' => $newVacBanDate->format('Y-m-d')
 			];
 
@@ -201,11 +193,7 @@ class SubscriptionCheck
 			}
 		}
 
-		if(count($profilesToSendForNotification) == 0) 
-		{
-			$this->error = 'no_notify_method';
-			return false;
-		}
+		if(count($profilesToSendForNotification) == 0) return $this->error('no_notify_method');
 
 		$this->sendEmail = $userMail->verify == "verified" ? $userMail->email : false;
 		$this->sendPushbullet = $userMail->pushbullet_verify == "verified" ? $userMail->pushbullet : false;
