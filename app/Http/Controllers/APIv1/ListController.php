@@ -148,7 +148,6 @@ class ListController extends Controller
 			'list' => $mostTracked->getMostTracked()
 		];
 
-
 		return $return;
 	}
 
