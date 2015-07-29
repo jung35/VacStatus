@@ -9,7 +9,12 @@ Route::group(['prefix' => 'auth'], function()
 {
 	get('/login', [
 		'as' => 'auth.login',
-		'uses' => 'LoginController@login'
+		'uses' => 'LoginController@sendToSteam'
+	]);
+
+	get('/check', [
+		'as' => 'auth.check',
+		'uses' => 'LoginController@handleSteamLogin'
 	]);
 
 	get('/logout', [
@@ -278,6 +283,11 @@ Route::group([
 		'uses' => 'MainController@announcementSave'
 	]);
 
+	get('log/{filename}', [
+		'as' => 'admin.log',
+		'uses' => 'MainController@viewLog'
+	]);
+
 	Route::group(['prefix' => 'db'], function()
 	{
 		get('/', [
@@ -328,4 +338,9 @@ Route::model('userList', 'VacStatus\Models\UserList', function()
 Route::model('news', 'VacStatus\Models\News', function()
 {
 	return ['error' => '404'];
+});
+
+Event::listen('illuminate.query', function($query)
+{
+    // var_dump($query);
 });

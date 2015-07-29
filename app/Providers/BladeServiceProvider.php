@@ -7,10 +7,8 @@ class BladeServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        Blade::extend(function($view, $compiler)
-        {
-            $pattern = $compiler->createOpenMatcher('setActiveLink');
-            return preg_replace($pattern, '$1<?php echo Route::currentRouteName() == $2) ? \'active\' : \'\';  ?>', $view);
+        Blade::directive('setActiveLink', function($expression) {
+            return "<?php echo Route::currentRouteName() == {$expression}) ? \'active\' : \'\';  ?>";
         });
     }
 

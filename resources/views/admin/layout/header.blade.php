@@ -12,9 +12,6 @@
 					<li class="@setActiveLink('admin.db')">
 						<a href="{{ route('admin.db') }}">Database</a>
 					</li>
-					<li class="@setActiveLink('admin.logs')">
-						<a href="#">Logs</a>
-					</li>
 				</ul>
 			</div>
 		</div>

@@ -14,11 +14,11 @@ use VacStatus\Update\SingleProfile;
 
 use Cache;
 use Auth;
-use SteamAuth;
+use Socialite;
 
 class LoginController extends Controller {
-	
-	public function login()
+
+	public function sendToSteam()
 	{
 		if(Auth::check() || Auth::viaRemember())
 		{
@@ -27,46 +27,36 @@ class LoginController extends Controller {
 				->with('success','You have Successfully logged in!');
 		}
 
-		$steamuser = SteamAuth::Auth();
-		$steam64BitId = str_replace("http://steamcommunity.com/openid/id/", "", $steamuser['steamid'] );
+		return Socialite::driver('steam')->redirect();
+	}
 
-		$steamAPI = new SteamAPI('info');
-		$steamAPI->setSteamId($steam64BitId);
+	public function handleSteamLogin()
+	{
+    	$socUser = Socialite::driver('steam')->user();
 
-		$userSteamInfo = $steamAPI->run();
-
-		if(isset($userSteamInfo->type) && $userSteamInfo->type == 'error' || !isset($userSteamInfo->response->players[0]))
-		{
+    	if(is_null($socUser->getId()))
+    	{
 			return redirect()
 				->intended('/')
 				->with('error', 'There was an error trying to communicate with Steam Server.');
-		}
+    	}
 
-		$userSteamInfo = $userSteamInfo->response->players[0];
-
-		$steamAPI = new SteamAPI('friends');
-		$steamAPI->setSteamId($steam64BitId);
-
-		$userSteamFriends = $steamAPI->run();
-
+        $steamAPI = new SteamAPI($socUser->getId());
+		$userSteamFriends = $steamAPI->fetch('friends');
+		
 		$simpleFriends = [];
 
-		if(isset($userSteamFriends->friendslist))
+		if(isset($userSteamFriends['friendslist']))
 		{
-			$userSteamFriends = $userSteamFriends->friendslist->friends;
-
-			foreach($userSteamFriends as $userSteamFriend)
-			{
-				$simpleFriends[] = Steam::toSmallId($userSteamFriend->steamid);
-			}
+			$simpleFriends = $this->getFriends($userSteamFriends['friendslist']['friends']);
 		}
 
-		$smallId = Steam::toSmallId($steam64BitId);
+		$smallId = Steam::toSmallId($socUser->getId());
 
 		// Try to grab user or create new one
-		$user = User::firstOrCreate(['small_id' => $smallId]);
+		$user = User::firstOrNew(['small_id' => $smallId]);
 
-		$user->display_name = $userSteamInfo->personaname;
+		$user->display_name = $socUser->getNickname();
 		$user->friendslist = json_encode($simpleFriends);
 
 		$singleProfile = new SingleProfile($smallId);
@@ -93,5 +83,17 @@ class LoginController extends Controller {
 
 		return redirect()
 			->route('home');
+    }
+
+    private function getFriends(array $friends)
+    {
+    	$return = [];
+
+		foreach($friends as $friend)
+		{
+			$return[] = Steam::toSmallId($friend['steamid']);
+		}
+
+		return $return;
     }
 }

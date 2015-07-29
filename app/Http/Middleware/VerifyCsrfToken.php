@@ -18,10 +18,9 @@ class VerifyCsrfToken extends BaseVerifier {
 	 */
 	public function handle($request, Closure $next)
 	{
-		$userKey = $request->input('_key');
-		if($userKey && !empty($userKey))
+		if($request->has('_key'))
 		{
-			$user = User::where('user_key', $userKey)->first();
+			$user = User::where('user_key', $request->input('_key'))->first();
 
 			if(Auth::check())
 			{
@@ -29,7 +28,7 @@ class VerifyCsrfToken extends BaseVerifier {
 				Auth::logout();
 			}
 
-			if($user->exists())
+			if(isset($user->id))
 			{
 				Auth::login($user);
 

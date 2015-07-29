@@ -9,6 +9,8 @@ class ProfileBan extends Model
 {
 	protected $table = 'profile_ban';
 	
+	protected $fillable = ['profile_id'];
+	
 	protected $dates = ['vac_banned_on'];
 
 	 public $timestamps = true;
@@ -51,10 +53,11 @@ class ProfileBan extends Model
 
 	public function skipProfileBanUpdate($steamBan)
 	{
-
-		if($this->vac != (int) $steamBan->NumberOfVACBans + (int) $steamBan->NumberOfGameBans ||
-			$this->community != $steamBan->CommunityBanned ||
-			$this->trade != ($steamBan->EconomyBan != 'none'))
+		$combinedBan = (int) $steamBan['NumberOfVACBans'] + (int) $steamBan['NumberOfGameBans'];
+		
+		if($this->vac !=  $combinedBan ||
+			$this->community != $steamBan['CommunityBanned'] ||
+			$this->trade != ($steamBan['EconomyBan'] != 'none'))
 		{
 			return false;
 		}

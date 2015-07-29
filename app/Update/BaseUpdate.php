@@ -30,4 +30,9 @@ class BaseUpdate
 
 		return false;
 	}
+
+	protected function error($reason)
+	{
+		return ['error' => $reason ];
+	}
 }

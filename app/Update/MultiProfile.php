@@ -1,28 +1,29 @@
 <?php namespace VacStatus\Update;
 
-use Cache;
-use Carbon;
-use DateTime;
-use DateInterval;
-
-use VacStatus\Steam\Steam;
-use VacStatus\Steam\SteamAPI;
-
 use VacStatus\Models\Profile;
 use VacStatus\Models\ProfileOldAlias;
 use VacStatus\Models\UserListProfile;
 use VacStatus\Models\ProfileBan;
 
-class MultiProfile
+use VacStatus\Steam\Steam;
+use VacStatus\Steam\SteamAPI;
+
+use Cache;
+use Carbon;
+use DateTime;
+use DateInterval;
+
+class MultiProfile extends BaseUpdate
 {
 	protected $profiles;
-	protected $profileCacheName = "profile_";
-	protected $cacheLength = 60;
+	protected $cacheName = "profile_";
 	protected $refreshProfiles = [];
+	private $customList;
 
-	function __construct($profiles)
+	function __construct($profiles, $customList = false)
 	{
 		$this->profiles = $profiles;
+		$this->customList = $customList;
 	}
 
 	public function run()
@@ -33,28 +34,22 @@ class MultiProfile
 		if(isset($updatedProfiles['error']))
 		{
 			if($updatedProfiles['error'] == 'profile_null') $updatedProfiles = [];
-			else return ['error' => $updatedProfiles['error']];
+			else return $this->error($updatedProfiles['error']);
 		}
 
 		return array_replace($this->profiles, $updatedProfiles);
 	}
 
-	private function canUpdate($smallId)
+	protected function canUpdate($smallId = 0)
 	{
-		$cacheName = $this->profileCacheName.$smallId;
-
-		if(Cache::has($cacheName)) return false;
+		if(Cache::has($this->cacheName . $smallId)) return false;
 
 		return true;
 	}
 
-	protected function updateCache($smallId, $data)
+	protected function updateCache($smallId = 0, $data = [])
 	{
-		unset($data['times_checked']);
-		unset($data['login_check']);
-		unset($data['profile_description']);
-
-		$cacheName = $this->profileCacheName.$smallId;
+		$cacheName = $this->cacheName . $smallId;
 		if(Cache::has($cacheName)) Cache::forget($cacheName);
 
 		$expireTime = Carbon::now()->addMinutes($this->cacheLength);
@@ -79,8 +74,49 @@ class MultiProfile
 		$this->refreshProfiles = $refreshProfiles;
 	}
 
+	private function cleanOldAlias($profileOldAlias)
+	{
+		$oldAliasArray = [];
+
+		foreach($profileOldAlias as $k => $oldAlias)
+		{
+			$oldAliasArray[] = [
+				"newname" => $oldAlias->seen_alias,
+				"timechanged" => $oldAlias->seen->format("M j Y")
+			];
+		}
+
+		return $oldAliasArray;
+	}
+
+	private function getTimesChecked($smallId)
+	{
+
+		$profileCheckCache = "profile_checked_" . $smallId;
+
+		$currentProfileCheck = [
+			'number' => 0,
+			'time' => date("M j Y", time())
+		];
+
+		if(Cache::has($profileCheckCache)) $currentProfileCheck = Cache::get($profileCheckCache);
+
+		$newProfileCheck = [
+			'number' => $currentProfileCheck['number'] + 1,
+			'time' => date("M j Y", time())
+		];
+
+		Cache::forever($profileCheckCache, $newProfileCheck);
+
+		return $currentProfileCheck;
+	}
+
 	private function updateUsingAPI()
 	{
+		/**
+		 * Sort out the small ID and save the key each profile belongs to
+		 * The API doesn't like to give the data in the order requestd.
+		 */
 		$getSmallId = [];
 		foreach($this->refreshProfiles as $profile)
 		{
@@ -91,30 +127,35 @@ class MultiProfile
 			$toSaveKey[$smallId] = $key;
 		}
 
-		/* grab 'info' from web api and handle errors */
-		$steamAPI = new SteamAPI('info');
-		$steamAPI->setSmallId($getSmallId);
-		$steamInfos = $steamAPI->run();
+		/**
+		 * Prepare the STEAM WEB API call
+		 */
+		$steamAPI = new SteamAPI($getSmallId, true);
 
-		if($steamAPI->error()) return ['error' => $steamAPI->errorMessage()];
-		if(!isset($steamInfos->response->players[0])) return ['error' => 'profile_null'];
-		// simplify the variable
-		$steamInfos = $steamInfos->response->players;
+		/**
+		 * Grab 'info' from STEAM WEB API
+		 * Stops if there is an error
+		 */
+		$steamInfos = $steamAPI->fetch('info');
 
-		/* grab 'ban' from web api and handle errors */
-		$steamAPI = new SteamAPI('ban');
-		$steamAPI->setSmallId($getSmallId);
-		$steamBans = $steamAPI->run();
+		if(isset($steamInfos['error'])) return $this->error($steamInfos['error']);
+		if(!isset($steamInfos['response']['players'][0])) return $this->error('profile_null');
 
-		if($steamAPI->error()) return ['error' => $steamAPI->errorMessage()];
-		if(!isset($steamBans->players[0])) return ['error' => 'profile_null'];
+		$steamInfos = $steamInfos['response']['players'];
 
-		$steamBans = $steamBans->players;
+		/**
+		 * Grab 'ban' from STEAM WEB API
+		 * Stops if there is an error
+		 */
+		$steamBans = $steamAPI->fetch('ban');
 
-		// whereIn('profile.small_id', $getSmallId)->	
+		if(isset($steamBans['error'])) return $this->error($steamBans['error']);
+		if(!isset($steamBans['players'][0])) return $this->error('profile_null');
+
+		$steamBans = $steamBans['players'];
+
 		$profiles = Profile::whereIn('profile.small_id', $getSmallId)
 			->groupBy('profile.id')
-			->leftjoin('profile_ban', 'profile_ban.profile_id', '=', 'profile.id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
 			->leftjoin('user_list_profile', 'user_list_profile.profile_id', '=', 'profile.id')
 			->whereNull('user_list_profile.deleted_at')
@@ -129,11 +170,6 @@ class MultiProfile
 				'profile.alias',
 				'profile.created_at',
 
-				'profile_ban.community',
-				'profile_ban.vac',
-				'profile_ban.trade',
-				'profile_ban.unban',
-
 				'users.site_admin',
 				'users.donation',
 				'users.beta',
@@ -142,70 +178,94 @@ class MultiProfile
 				\DB::raw('count(user_list_profile.id) as total')
 			]);
 
+		$profileBans = ProfileBan::whereIn('profile_id', $profiles->lists('id'))->get();
+		$profileOldAliases = ProfileOldAlias::whereIn('profile_id', $profiles->lists('id'))->get();
+
+		if($this->customList)
+		{
+			$userDescriptions = UserListProfile::whereUserListId($this->customList)->get();
+		}
+
 		$indexSave = [];
 
 		foreach($steamInfos as $k => $info)
 		{
-			$indexSave[Steam::toSmallId($info->steamid)] = ['steamInfos' => $k];
+			$indexSave[Steam::toSmallId($info['steamid'])] = ['steamInfos' => $k];
 		}
 
 		foreach($steamBans as $k => $ban)
 		{
 			// Lets just not update if api didn't return for this user
-			if(!isset($indexSave[Steam::toSmallId($ban->SteamId)])) continue;
-			$indexSave[Steam::toSmallId($ban->SteamId)]['steamBans'] = $k;
+			if(!isset($indexSave[Steam::toSmallId($ban['SteamId'])])) continue;
+			$indexSave[Steam::toSmallId($ban['SteamId'])]['steamBans'] = $k;
 		}
 
 		$newProfiles = [];
 
 		foreach($getSmallId as $k => $smallId)
 		{
-			// api didn't give values for this user
-			if(!isset($indexSave[$smallId])) continue;
+			
+			if(!isset($indexSave[$smallId])) continue; // api didn't give values for this user
 
 			$keys = $indexSave[$smallId];
 
+			if(!isset($keys['steamBans'])) continue;
+
 			$steamInfo = $steamInfos[$keys['steamInfos']];
-
-			if(!isset($keys['steamBans'])) continue; // right now dont let this user get through. Figure out a better method
-
 			$steamBan = $steamBans[$keys['steamBans']];
-			
+
+			/**
+			 * Match profile
+			 * or create a new class (but don't save yet)
+			 * 
+			 * Dont break, but move on to next profile
+			 * if this one doesnt save for some reason
+			 */
 			$profile = $profiles->where('small_id', $smallId)->first();
+
+			if($this->customList)
+			{
+				$userDescription = $userDescriptions->where('profile_id', $profile->id)->first();
+			}
 
 			if(is_null($profile))
 			{
-				$profile = Profile::whereSmallId($smallId)->first();
-				
-				if(!isset($profile->id))
-				{
-					$profile = new Profile;
-					$profile->small_id = $smallId;
-				}
+				$profile = Profile::firstOrNew(['small_id' => $smallId]);
 
-				if(isset($steamInfo->timecreated)) // people like to hide their info because smurf or hack
-				{
-					$profile->profile_created = $steamInfo->timecreated;
-				}
+				if(isset($steamInfo['timecreated']))  $profile->profile_created = $steamInfo['timecreated'];
 			}
 
-			$profile->display_name = $steamInfo->personaname;
-			$profile->avatar = Steam::imgToHTTPS($steamInfo->avatarfull);
-			$profile->avatar_thumb = Steam::imgToHTTPS($steamInfo->avatar);
-			$profile->privacy = $steamInfo->communityvisibilitystate;
+			$profile->display_name = $steamInfo['personaname'];
+			$profile->avatar = Steam::imgToHTTPS($steamInfo['avatarfull']);
+			$profile->avatar_thumb = Steam::imgToHTTPS($steamInfo['avatar']);
+			$profile->privacy = $steamInfo['communityvisibilitystate'];
 
-			$profile->save();
+			if(!$profile->save()) continue;
 
-			$profileBan = $profile->ProfileBan;
+			$profileBan = $profileBans->where('profile_id', $profile->id)->first();
+			$profileOldAlias = $profileOldAliases->where('profile_id', $profile->id)->all();
 
-			// Dont update the profile_ban if there is nothing to update
-			// This has to do with in the future when I check for new bans to notify/email
+			/**
+			 * Now start inserting profile's ban data if needed by comparing
+			 */
+			
+			/**
+			 * Dont update the profile_ban if there is nothing to update
+			 * This has to do with in the future when checking for new bans to notify/email
+			 */
 			$skipProfileBan = false;
 
-			$newVacBanDate = new DateTime();
-			$newVacBanDate->sub(new DateInterval("P{$steamBan->DaysSinceLastBan}D"));
+			/**
+			 * Because this had to be done more manually, check to see if the data
+			 * should be updated quietly before calling for ProfileBan
+			 */
+			$updateTimestamp = true;
+			$profileWasUnbanned = false;
 
-			$combinedBan = (int) $steamBan->NumberOfVACBans + (int) $steamBan->NumberOfGameBans;
+			$newVacBanDate = new DateTime();
+			$newVacBanDate->sub(new DateInterval("P{$steamBan['DaysSinceLastBan']}D"));
+
+			$combinedBan = (int) $steamBan['NumberOfVACBans'] + (int) $steamBan['NumberOfGameBans'];
 
 			if(!isset($profileBan->id))
 			{
@@ -215,13 +275,12 @@ class MultiProfile
 			} else {
 				$skipProfileBan = $profileBan->skipProfileBanUpdate($steamBan);
 
-				if($profileBan->vac != (int) $steamBan->NumberOfVACBans + (int) $steamBan->NumberOfGameBans
+				if($profileBan->vac != $combinedBan
 				   && $profileBan->vac_banned_on->format('Y-m-d') !== $newVacBanDate->format('Y-m-d'))
 				{
 					$skipProfileBan = false;
 					$profileBan->timestamps = false;
 				}
-
 				if($profileBan->vac > $combinedBan)
 				{
 					$skipProfileBan = false;
@@ -229,123 +288,109 @@ class MultiProfile
 					$profileBan->unban = true;
 				}
 			}
-			
+
 			$profileBan->vac = $combinedBan;
-			$profileBan->community = $steamBan->CommunityBanned;
-			$profileBan->trade = $steamBan->EconomyBan != 'none';
+			$profileBan->community = $steamBan['CommunityBanned'];
+			$profileBan->trade = $steamBan['EconomyBan'] != 'none';
 			$profileBan->vac_banned_on = $newVacBanDate->format('Y-m-d');
 
 			if(!$skipProfileBan) $profile->ProfileBan()->save($profileBan);
 
-			/* Time to do profile_old_alias */
-			/* Checks to make sure if there is already a same name before inserting new name */
-			$profileOldAlias = $profile->ProfileOldAlias()->whereProfileId($profile->id)->orderBy('id','desc')->get();
+			/**
+			 * Add current alias to the DB
+			 */
+			$currentTime = new DateTime();
 
-			if($profileOldAlias->count() == 0)
+			if(count($profileOldAlias) == 0)
 			{
-				$profileOldAlias = new ProfileOldAlias;
-				$profileOldAlias->profile_id = $profile->id;
-				$profileOldAlias->seen = time();
-				$profileOldAlias->seen_alias = $profile->display_name;
-				$profileOldAlias->save();
+				$newAlias = new ProfileOldAlias;
+				$newAlias->profile_id = $profile->id;
+				$newAlias->seen = $currentTime->format('Y-m-d');
+				$newAlias->seen_alias = $profile->display_name;
 			} else {
-				$match = false;
-				$recent = 0;
+				$matchFound = false;
 
 				foreach($profileOldAlias as $oldAlias)
 				{
 					if(!is_object($oldAlias)) continue;
 
+					// Compare the current display name with the alias
+					// that current exists on the DB
 					if($oldAlias->seen_alias == $profile->display_name)
 					{
-						$match = true;
+						$matchFound = true;
 						break;
 					}
-
-					$recent = $oldAlias->compareTime($recent);
 				}
 
-				if(!$match && $recent + Steam::$UPDATE_TIME < time())
+				if(!$matchFound)
 				{
 					$newAlias = new ProfileOldAlias;
 					$newAlias->profile_id = $profile->id;
 					$newAlias->seen = time();
 					$newAlias->seen_alias = $profile->display_name;
-					$profile->ProfileOldAlias()->save($newAlias);
 				}
+			}
+
+			$oldAliasArray = $this->cleanOldAlias($profileOldAlias);
+
+			if(isset($newAlias)) 
+			{
+				$profile->ProfileOldAlias()->save($newAlias);
+
+				$oldAliasArray[] = [
+					"newname" => $newAlias->seen_alias,
+					"timechanged" => $newAlias->seen->format("M j Y")
+				];
 			}
 
 			$steam64BitId = Steam::to64Bit($profile->small_id);
 
-			$vacBanDate = new DateTime();
-			$vacBanDate->sub(new DateInterval("P{$steamBan->DaysSinceLastBan}D"));
-
-			$oldAliasArray = [];
-
-
-			foreach($profileOldAlias as $k => $oldAlias)
-			{
-				if(!is_object($oldAlias))
-				{
-					$oldAliasArray[] = [
-						"newname" => $profileOldAlias->seen_alias,
-						"timechanged" => $profileOldAlias->seen->format("M j Y")
-					];
-					break;
-				}
-
-				$oldAliasArray[] = [
-					"newname" => $oldAlias->seen_alias,
-					"timechanged" => $oldAlias->seen->format("M j Y")
-				];
-			}
-
-			$profileCheckCache = "profile_checked_";
-
-			$currentProfileCheck = [
-				'number' => 0,
-				'time' => date("M j Y", time())
-			];
-
-			if(Cache::has($profileCheckCache.$profile->smallId)) $currentProfileCheck = Cache::get($profileCheckCache.$profile->smallId);
-
-			$newProfileCheck = [
-				'number' => $currentProfileCheck['number'] + 1,
-				'time' => date("M j Y", time())
-			];
-
-			Cache::forever($profileCheckCache.$profile->smallId, $newProfileCheck);
-
 			$return = [
 				'id'				=> $profile->id,
-				'display_name'		=> $steamInfo->personaname,
-				'avatar'			=> Steam::imgToHTTPS($steamInfo->avatarfull),
-				'avatar_thumb'		=> Steam::imgToHTTPS($steamInfo->avatar),
+				'display_name'		=> $profile->display_name,
+				'avatar'			=> $profile->avatar,
+				'avatar_thumb'		=> $profile->avatar_thumb,
 				'small_id'			=> $profile->small_id,
 				'steam_64_bit'		=> $steam64BitId,
 				'steam_32_bit'		=> Steam::to32Bit($steam64BitId),
-				'profile_created'	=> isset($steamInfo->timecreated) ? date("M j Y", $steamInfo->timecreated) : "Unknown",
-				'privacy'			=> $steamInfo->communityvisibilitystate,
-				'alias'				=> Steam::friendlyAlias(json_decode($profile->alias)),
-				'created_at'		=> $profile->created_at ? $profile->created_at->format("M j Y") : null,
+				'profile_created'	=> isset($profile->profile_created) ? date("M j Y", $profile->profile_created) : "Unknown",
+				'privacy'			=> $profile->privacy,
+				'alias'				=> Steam::friendlyAlias(json_decode($profile->alias, true)),
+				'created_at'		=> $profile->created_at->format("M j Y"),
+
 				'vac'				=> $combinedBan,
-				'vac_banned_on'		=> $vacBanDate->format("M j Y"),
-				'community'			=> $steamBan->CommunityBanned,
-				'trade'				=> $steamBan->EconomyBan != 'none',
-				'site_admin'		=> (int) $profile->site_admin?:0,
-				'donation'			=> (int) $profile->donation?:0,
-				'beta'				=> (int) $profile->beta?:0,
-				'profile_old_alias'	=> $oldAliasArray,
-				'times_checked'		=> $currentProfileCheck,
+				'vac_banned_on'		=> $profileBan->vac_banned_on->format("M j Y"),
+				'community'			=> $profileBan->community,
+				'trade'				=> $profileBan->trade,
+
+				'site_admin'		=> $profile->site_admin ?: 0,
+				'donation'			=> $profile->donation ?: 0,
+				'beta'				=> $profile->beta ?: 0,
+				'profile_old_alias'	=> array_reverse($oldAliasArray),
+
+				'times_checked'		=> $this->getTimesChecked($profile->smallId),
 				'times_added'		=> [
-					'number' => (int) $profile->total?:0,
+					'number' => $profile->total ?: 0,
 					'time' => (new DateTime($profile->last_added_created_at))->format("M j Y")
 				],
 			];
 
-			$newProfiles[$toSaveKey[$profile->small_id]] = $return;
-
 			$this->updateCache($profile->small_id, $return);
+
+			if($this->customList) {
+				if($userDescription->profile_name)
+				{
+					$return['display_name'] = $userDescription->profile_name;
+				}
+
+				if($userDescription->profile_description)
+				{
+					$return['profile_description'] = $userDescription->profile_description;
+				}
+			}
+
+			$newProfiles[$toSaveKey[$profile->small_id]] = $return;
 		}
 
 		// Send somewhere else to update alias
@@ -353,13 +398,13 @@ class MultiProfile
 		$randomString = str_random(12);
 		$updateAliasCacheName = "update_alias_";
 
-		if(Cache::has($updateAliasCacheName.$randomString))
-			while(Cache::has($updateAliasCacheName.$randomString))
+		if(Cache::has($updateAliasCacheName . $randomString))
+			while(Cache::has($updateAliasCacheName . $randomString))
 				$randomString = str_random(12);
 
 		Cache::forever($updateAliasCacheName.$randomString, $getSmallId);
 
-		shell_exec('php artisan update:alias '. $randomString .' > /dev/null 2>/dev/null &');
+		exec('php ' . base_path() . '/artisan update:alias '. $randomString .' > /dev/null 2>/dev/null &');
 
 		return $newProfiles;
 	}
