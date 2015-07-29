@@ -146,7 +146,6 @@ return [
 		'VacStatus\Providers\AppServiceProvider',
 		'VacStatus\Providers\BusServiceProvider',
 		'VacStatus\Providers\ConfigServiceProvider',
-		'VacStatus\Providers\EventServiceProvider',
 		'VacStatus\Providers\RouteServiceProvider',
 		'VacStatus\Providers\BladeServiceProvider',
 
