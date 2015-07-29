@@ -41,7 +41,6 @@ class SingleProfile extends BaseUpdate
 		$profileCache = Cache::get($this->cacheName);
 
 		$profileCache['times_added'] = $this->getTimesAdded($profileCache['id']);
-		$profileCache['times_checked'] = $this->getTimesChecked();
 
 		return $profileCache;
 	}
@@ -56,28 +55,6 @@ class SingleProfile extends BaseUpdate
 			'number' => $gettingCount->count(),
 			'time' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y") : null
 		];
-	}
-
-	private function getTimesChecked()
-	{
-
-		$profileCheckCache = "profile_checked_" . $this->smallId;
-
-		$currentProfileCheck = [
-			'number' => 0,
-			'time' => date("M j Y", time())
-		];
-
-		if(Cache::has($profileCheckCache)) $currentProfileCheck = Cache::get($profileCheckCache);
-
-		$newProfileCheck = [
-			'number' => $currentProfileCheck['number'] + 1,
-			'time' => date("M j Y", time())
-		];
-
-		Cache::forever($profileCheckCache, $newProfileCheck);
-
-		return $currentProfileCheck;
 	}
 
 	private function cleanOldAlias($profileOldAlias)
@@ -285,7 +262,6 @@ class SingleProfile extends BaseUpdate
 			'profile_old_alias'	=> array_reverse($oldAliasArray),
 
 			'times_added'		=> $this->getTimesAdded($profile->id),
-			'times_checked'		=> $this->getTimesChecked(),
 		];
 
 		/* YAY nothing broke :D time to return the data (and update cache) */
@@ -344,7 +320,6 @@ class SingleProfile extends BaseUpdate
 
 			'profile_old_alias'	=> array_reverse($oldAliasArray),
 			'times_added'		=> $this->getTimesAdded($profile->id),
-			'times_checked'		=> $this->getTimesChecked(),
 		];
 
 		return $return;

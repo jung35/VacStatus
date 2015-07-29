@@ -89,28 +89,6 @@ class MultiProfile extends BaseUpdate
 		return $oldAliasArray;
 	}
 
-	private function getTimesChecked($smallId)
-	{
-
-		$profileCheckCache = "profile_checked_" . $smallId;
-
-		$currentProfileCheck = [
-			'number' => 0,
-			'time' => date("M j Y", time())
-		];
-
-		if(Cache::has($profileCheckCache)) $currentProfileCheck = Cache::get($profileCheckCache);
-
-		$newProfileCheck = [
-			'number' => $currentProfileCheck['number'] + 1,
-			'time' => date("M j Y", time())
-		];
-
-		Cache::forever($profileCheckCache, $newProfileCheck);
-
-		return $currentProfileCheck;
-	}
-
 	private function updateUsingAPI()
 	{
 		/**
@@ -371,7 +349,6 @@ class MultiProfile extends BaseUpdate
 				'beta'				=> $profile->beta ?: 0,
 				'profile_old_alias'	=> array_reverse($oldAliasArray),
 
-				'times_checked'		=> $this->getTimesChecked($profile->smallId),
 				'times_added'		=> [
 					'number' => $profile->total ?: 0,
 					'time' => (new DateTime($profile->last_added_created_at))->format("M j Y")
