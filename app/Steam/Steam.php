@@ -115,7 +115,7 @@ class Steam {
 
 	public static function friendlyAlias($aliases)
 	{
-		if(is_null($aliases)) return [];
+		if(is_null($aliases) || !is_array($aliases) || count($aliases) == 0) return [];
 
 		$newAlias = [];
 
