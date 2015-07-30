@@ -199,7 +199,7 @@ class MultiProfile extends BaseUpdate
 			 * Dont break, but move on to next profile
 			 * if this one doesnt save for some reason
 			 */
-			$profile = $profiles->where('small_id', $smallId)->first();
+			$profile = $profiles->where('small_id', (string) $smallId)->first();
 
 			if(is_null($profile))
 			{
@@ -215,12 +215,12 @@ class MultiProfile extends BaseUpdate
 
 			if(!$profile->save()) continue;
 
-			$profileBan = $profileBans->where('profile_id', $profile->id)->first();
-			$profileOldAlias = $profileOldAliases->where('profile_id', $profile->id)->all();
+			$profileBan = $profileBans->where('profile_id', (string) $profile->id)->first();
+			$profileOldAlias = $profileOldAliases->where('profile_id', (string) $profile->id)->all();
 
 			if($this->customList)
 			{
-				$userDescription = $userDescriptions->where('profile_id', $profile->id)->first();
+				$userDescription = $userDescriptions->where('profile_id', (string) $profile->id)->first();
 			}
 
 			/**
