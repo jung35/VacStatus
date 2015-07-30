@@ -215,12 +215,12 @@ class MultiProfile extends BaseUpdate
 
 			if(!$profile->save()) continue;
 
-			$profileBan = $profileBans->where('profile_id', (string) $profile->id)->first();
-			$profileOldAlias = $profileOldAliases->where('profile_id', (string) $profile->id)->all();
+			$profileBan = $profileBans->where('profile_id', $profile->id)->first();
+			$profileOldAlias = $profileOldAliases->where('profile_id', $profile->id)->all();
 
 			if($this->customList)
 			{
-				$userDescription = $userDescriptions->where('profile_id', (string) $profile->id)->first();
+				$userDescription = $userDescriptions->where('profile_id', $profile->id)->first();
 			}
 
 			/**

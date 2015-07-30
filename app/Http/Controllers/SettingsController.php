@@ -16,8 +16,8 @@ class SettingsController extends Controller
 	public function subscriptionVerify($email, $verifyKey)
 	{
 		$userMail = UserMail::whereRaw('(email = ? and verify = ?) or (pushbullet = ? and pushbullet_verify = ?)', [
-   			$email, $verifyKey, $email, $verifyKey
-   			])->first();
+			$email, $verifyKey, $email, $verifyKey
+			])->first();
 
 		if(!isset($userMail->id))
 		{

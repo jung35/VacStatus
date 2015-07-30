@@ -3,6 +3,8 @@
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
+use Illuminate\Session\TokenMismatchException;
+
 class Handler extends ExceptionHandler {
 
 	/**
@@ -24,6 +26,7 @@ class Handler extends ExceptionHandler {
 	 */
 	public function report(Exception $e)
 	{
+
 		return parent::report($e);
 	}
 
@@ -36,6 +39,9 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Exception $e)
 	{
+		if ($e instanceof TokenMismatchException) {
+			\Log::info('TokenMismatchException', [$request->url()]);
+		}
 		return parent::render($request, $e);
 	}
 
