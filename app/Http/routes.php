@@ -342,5 +342,5 @@ Route::model('news', 'VacStatus\Models\News', function()
 
 Event::listen('illuminate.query', function($query)
 {
-    var_dump($query);
+    // var_dump($query);
 });

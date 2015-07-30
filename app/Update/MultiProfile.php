@@ -200,7 +200,6 @@ class MultiProfile extends BaseUpdate
 			 * if this one doesnt save for some reason
 			 */
 			$profile = $profiles->where('small_id', $smallId)->first();
-			dump($profile);
 
 			if(is_null($profile))
 			{
