@@ -204,9 +204,9 @@ class MultiProfile extends BaseUpdate
 			if(is_null($profile))
 			{
 				$profile = Profile::firstOrNew(['small_id' => $smallId]);
-
-				if(isset($steamInfo['timecreated']))  $profile->profile_created = $steamInfo['timecreated'];
 			}
+
+			if(isset($steamInfo['timecreated']))  $profile->profile_created = $steamInfo['timecreated'];
 
 			$profile->display_name = $steamInfo['personaname'];
 			$profile->avatar = Steam::imgToHTTPS($steamInfo['avatarfull']);
@@ -350,7 +350,7 @@ class MultiProfile extends BaseUpdate
 				'profile_old_alias'	=> array_reverse($oldAliasArray),
 
 				'times_added'		=> [
-					'number' => $profile->total ?: 0,
+					'number' => $profile->total,
 					'time' => (new DateTime($profile->last_added_created_at))->format("M j Y")
 				],
 			];

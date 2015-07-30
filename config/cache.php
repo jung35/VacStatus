@@ -74,6 +74,6 @@ return [
 	|
 	*/
 
-	'prefix' => 'vacstatus',
+	'prefix' => env('CACHE_DRIVER', 'vacstatus'),
 
 ];

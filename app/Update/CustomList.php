@@ -1,7 +1,5 @@
 <?php namespace VacStatus\Update;
 
-use VacStatus\Update\MultiProfile;
-
 use Cache;
 use Carbon;
 use DateTime;
