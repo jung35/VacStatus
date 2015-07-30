@@ -5,6 +5,8 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 use Illuminate\Session\TokenMismatchException;
 
+use Auth;
+
 class Handler extends ExceptionHandler {
 
 	/**
@@ -26,6 +28,9 @@ class Handler extends ExceptionHandler {
 	 */
 	public function report(Exception $e)
 	{
+		if ($e instanceof TokenMismatchException) {
+			return;
+		}
 
 		return parent::report($e);
 	}
@@ -40,8 +45,13 @@ class Handler extends ExceptionHandler {
 	public function render($request, Exception $e)
 	{
 		if ($e instanceof TokenMismatchException) {
-			\Log::info('TokenMismatchException', [$request->url()]);
+			\Log::info('TokenMismatchException', [
+           		'url' => $request->url(),
+           		'inputs' => $request->all(),
+           		'auth' => Auth::check() ? Auth::user()->id : null
+           	]);
 		}
+
 		return parent::render($request, $e);
 	}
 
