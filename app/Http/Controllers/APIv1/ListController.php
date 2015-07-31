@@ -24,6 +24,8 @@ class ListController extends Controller
 {
 	public function mySimpleList()
 	{
+		if(!Auth::check()) return [];
+
 		$myList = UserList::where('user_id', Auth::user()->id)
 			->orderBy('id', 'desc')
 			->get([
@@ -40,6 +42,8 @@ class ListController extends Controller
 			'my_list' => [],
 			'friends_list' => []
 		];
+
+		if(!Auth::check()) return $return;
 
 		$user = Auth::user();
 

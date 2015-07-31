@@ -36,7 +36,7 @@ class UpdateMultiAlias extends Command {
 			$steamAPI = new SteamAPI($profile->small_id, true);
 			$steamAlias = $steamAPI->fetch('alias');
 
-			if(!isset($steamInfos['error'])) usort($steamAlias, array('VacStatus\Steam\Steam', 'aliasSort'));
+			if(!isset($steamAlias['error'])) usort($steamAlias, array('VacStatus\Steam\Steam', 'aliasSort'));
 			else $steamAlias = [];
 
 			$profile->alias = json_encode($steamAlias);

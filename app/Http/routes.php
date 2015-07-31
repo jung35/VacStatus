@@ -26,7 +26,6 @@ Route::group(['prefix' => 'auth'], function()
 
 get('/list', [
 	'as' => 'list.list',
-	'middleware' => 'auth',
 	'uses' => 'PagesController@listListPage'
 ]);
 
@@ -49,7 +48,6 @@ get('/list/{listId}', [
 	'as' => 'tracked.custom',
 	'uses' => 'PagesController@customListPage'
 ]);
-
 
 get('/list/{useless}/{listId}', function($soUSLESS, $listId) {
 	return Redirect::route('tracked.custom', $listId, 301); 
@@ -123,8 +121,12 @@ Route::group(['prefix' => 'api'], function()
 
 		Route::group(['prefix' => 'list'], function()
 		{
+			get('/', [
+				'as' => 'api.v1.list.list',
+				'uses' => 'ListController@listList'
+			]);
+
 			get('/simple', [
-				'middleware' => 'auth',
 				'as' => 'api.v1.list.simple',
 				'uses' => 'ListController@mySimpleList'
 			]);
@@ -142,12 +144,6 @@ Route::group(['prefix' => 'api'], function()
 			get('/latest_vac', [
 				'as' => 'api.v1.tracked.latest_vac',
 				'uses' => 'ListController@latestVAC'
-			]);
-
-			get('/', [
-				'middleware' => 'auth',
-				'as' => 'api.v1.list.list',
-				'uses' => 'ListController@listList'
 			]);
 
 			get('/{userList}', [

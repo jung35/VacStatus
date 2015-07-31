@@ -21,25 +21,16 @@
 				<li class="@setActiveLink('news')">
 					<a href="{{ route('news') }}">News</a>
 				</li>
-
-			@if(\Auth::check())
 				<li class="@setActiveLink('list.list')">
 					<a href="{{ route('list.list') }}">Lists</a>
 				</li>
+
+			@if(\Auth::check())
 				<li>
 					<a href="#createListModal" data-toggle="modal">Create List</a>
 				</li>
-			@else
-				<li class="@setActiveLink('tracked.most')">
-					<a href="{{ route('tracked.most') }}">Most Tracked</a>
-				</li>
-				<li class="@setActiveLink('tracked.latest')">
-					<a href="{{ route('tracked.latest') }}">Latest Added</a>
-				</li>
-				<li class="@setActiveLink('tracked.latest_vac')">
-					<a href="{{ route('tracked.latest_vac') }}">Latest VAC Bans</a>
-				</li>
 			@endif
+
 				<li class="@setActiveLink('search')">
 					<a href="#searchModal" data-toggle="modal">Look Up Users</a>
 				</li>

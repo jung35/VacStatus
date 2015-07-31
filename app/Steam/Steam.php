@@ -121,6 +121,8 @@ class Steam {
 
 		foreach($aliases as $alias)
 		{
+			if(!isset($alias['newname']) || !isset($alias['timechanged'])) continue;
+
     		$newAlias[] = [
     			'newname' => $alias['newname'],
     			'timechanged' => date('M j Y', strtotime(str_replace("@", "", $alias['timechanged'])))
