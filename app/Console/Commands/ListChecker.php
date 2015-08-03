@@ -16,12 +16,12 @@ class ListChecker extends Command
 	protected $name = 'listCheck';
 	protected $description = 'Checks subscription and sends email if a player is caught.';
 	protected $checkerCacheName = "last_checked_subscription";
- 	protected $log;
+	protected $log;
 
 	public function __construct()
 	{
 		parent::__construct();
-        $this->log = \Log::getMonolog();
+		$this->log = \Log::getMonolog();
 	}
 
 	public function fire()
@@ -32,8 +32,12 @@ class ListChecker extends Command
 
 		if(!$subscriptionCheck->run())
 		{
-			// $subscriptionCheck->errorMessage();
-			return; // Todo: Log this
+			\Log::error('ListChecker', [
+				'userMail ID' => $subscriptionCheck->setSubscription(),
+				'message' => $subscriptionCheck->errorMessage()
+			]);
+
+			return;
 		}
 		
 		// send mail if email exists
@@ -55,8 +59,8 @@ class ListChecker extends Command
 
 			foreach($profiles as $k => $profile)
 			{
-                if ($k + 1 != count($profiles)) $message .= $profile->display_name.", ";
-                else $message .= (count($profiles) > 1 ? "and " : "") . $profile->display_name;
+				if ($k + 1 != count($profiles)) $message .= $profile->display_name.", ";
+				else $message .= (count($profiles) > 1 ? "and " : "") . $profile->display_name;
 			}
 
 			$message .= (count($profiles) > 1 ? " were " : " was")." Trade, Community, and/or VAC banned from your lists";

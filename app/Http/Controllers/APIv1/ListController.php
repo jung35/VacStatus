@@ -148,8 +148,8 @@ class ListController extends Controller
 		$mostTracked = new MostTracked;
 
 		$return = [
-			'title' => 'Most Tracked Users',	
-			'list' => $mostTracked->getMostTracked()
+			'list_info' => [ 'title' => 'Most Tracked Users' ],
+			'profiles' => $mostTracked->getMostTracked()
 		];
 
 		return $return;
@@ -160,8 +160,8 @@ class ListController extends Controller
 		$latestTracked = new LatestTracked();
 
 		$return = [
-			'title' => 'Latest Tracked Users',
-			'list' => $latestTracked->getLatestTracked()
+			'list_info' => [ 'title' => 'Latest Tracked Users' ],
+			'profiles' => $latestTracked->getLatestTracked()
 		];
 
 		return $return;
@@ -172,8 +172,8 @@ class ListController extends Controller
 		$latestVac = new LatestVAC();
 
 		$return = [
-			'title' => 'Latest VAC Banned Users',
-			'list' => $latestVac->getLatestVAC()
+			'list_info' => [ 'title' => 'Latest VAC Banned Users' ],
+			'profiles' => $latestVac->getLatestVAC()
 		];
 
 		return $return;

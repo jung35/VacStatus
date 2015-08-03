@@ -40,6 +40,14 @@ class SubscriptionCheck
 		$userMail = UserMail::whereRaw('user_mail.id > ? and (user_mail.verify = ? or user_mail.pushbullet_verify = ?)', array($lastCheckedSubscription, 'verified', 'verified'))
 			->first();
 
+		if(!isset($userMail->user_id))
+		{
+			$lastCheckedSubscription = -1;
+
+			$userMail = UserMail::whereRaw('user_mail.id > ? and (user_mail.verify = ? or user_mail.pushbullet_verify = ?)', array($lastCheckedSubscription, 'verified', 'verified'))
+				->first();
+		}
+
 		$userLists = Subscription::where('subscription.user_id', $userMail->user_id)
 			->whereNull('user_list.deleted_at')
 			->whereNull('subscription.deleted_at')
@@ -93,11 +101,20 @@ class SubscriptionCheck
 		return ['error' => $reason ];
 	}
 
+	public function errorMessage()
+	{
+		return $this->error;
+	}
+
 	public function run()
 	{
 		$send = $this->check();
 
-		if(isset($send['error'])) return false;
+		if(isset($send['error'])) 
+		{
+			$this->error = $send['error'];
+			return false;
+		}
 
 		$toUpdate = Subscription::whereIn('id', $this->subscriptionIds)->get();
 		foreach($toUpdate as $subscription) $subscription->touch();
@@ -135,15 +152,15 @@ class SubscriptionCheck
 		$steamAPI = new SteamAPI($getSmallIds, true);
 		$steamBans = $steamAPI->fetch('ban');
 
-		if(isset($steamBan['error'])) return $this->error($steamBan['error']);
-		if(!isset($steamBan['players'][0])) return $this->error('profile_null');
+		if(isset($steamBans['error'])) return $this->error($steamBans['error']);
+		if(!isset($steamBans['players'][0])) return $this->error('profile_null');
 
 		$steamBans = $steamBans['players'];
 
 		$indexSave = [];
 		foreach($steamBans as $k => $ban)
 		{
-			$indexSave[Steam::toSmallId($ban->SteamId)] = $k;
+			$indexSave[Steam::toSmallId($ban['SteamId'])] = $k;
 		}
 
 		foreach($getSmallIds as $k => $smallId)
@@ -204,7 +221,7 @@ class SubscriptionCheck
 
 	public function sendEmail($cb)
 	{
-		$email = $this->sendMail;
+		$email = $this->sendEmail;
 
 		if(!$email) return;
 

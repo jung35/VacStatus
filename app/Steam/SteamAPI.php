@@ -78,7 +78,7 @@ class SteamAPI {
 
 		try {
 			$client = new Client();
-			$request = $client->get($url);
+			$request = $client->get($url, ['connect_timeout' => 0, 'timeout' => 10]);
 		}
 		catch(\Exception $e)
 		{

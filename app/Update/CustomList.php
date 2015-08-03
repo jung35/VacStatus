@@ -122,15 +122,17 @@ class CustomList
 		}
 
 		$return = [
-			'id'			=> $userList->id,
-			'title'			=> $userList->title,
-			'author'		=> $userList->user->display_name,
-			'my_list'		=> $this->myList(),
-			'can_sub'		=> $canSub,
-			'subscription'	=> $subscription,
-			'privacy'		=> $userList->privacy,
-			'sub_count'		=> isset($userListProfiles[0]) ? $userListProfiles[0]->sub_count : 0,
-			'list'			=> [],
+			'list_info' => [
+				'id'			=> $userList->id,
+				'title'			=> $userList->title,
+				'author'		=> $userList->user->display_name,
+				'my_list'		=> $this->myList(),
+				'can_sub'		=> $canSub,
+				'subscription'	=> $subscription,
+				'privacy'		=> $userList->privacy,
+				'sub_count'		=> isset($userListProfiles[0]) ? $userListProfiles[0]->sub_count : 0,
+			],
+			'profiles'			=> [],
 		];
 
 		foreach($userListProfiles as $userListProfile)
@@ -138,7 +140,7 @@ class CustomList
 			if(is_null($userListProfile->id)) continue;
 			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
 
-			$return['list'][] = [
+			$return['profiles'][] = [
 				'id'					=> $userListProfile->id,
 				'display_name'			=> $userListProfile->profile_name?:$userListProfile->display_name,
 				'avatar_thumb'			=> $userListProfile->avatar_thumb,
@@ -159,8 +161,8 @@ class CustomList
 			];
 		}
 
-		$multiProfile = new MultiProfile($return['list'], $userList->id);
-		$return['list'] = $multiProfile->run();
+		$multiProfile = new MultiProfile($return['profiles'], $userList->id);
+		$return['profiles'] = $multiProfile->run();
 
 		return $return;
 	}

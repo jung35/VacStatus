@@ -4,26 +4,24 @@ var grab = $('#list').data('grab'),
 var List = React.createClass({
 	UpdateListTitle: function(newData)
 	{
-		var data = this.state.data;
-		data.title = newData.newTitle;
-		data.privacy = newData.newPrivacy;
-
-		this.setState({data: data, page: this.state.page});
+		this.setState($.extend({}, this.state, {
+			list_info: {
+				title: newData.newTitle,
+				privacy: newData.newPrivacy
+			}
+		}));
 	},
 
 	fetchList: function()
 	{
 		var url = '/api/v1/list/'+grab;
-		if(grab == 'search')
-		{
-			url = 'api/v1/search/'+searchKey
-		}
+		if(grab == 'search') url = 'api/v1/search/'+searchKey
 
 		$.ajax({
 			url: url,
 			dataType: 'json',
 			success: function(data) {
-				this.setState({data: data, page: this.state.page});
+				this.setState($.extend({}, this.state, data));
 			}.bind(this),
 			error: function(xhr, status, err) {
 				console.error(this.props.url, status, err.toString());
@@ -38,10 +36,7 @@ var List = React.createClass({
 
 	getInitialState: function()
 	{
-		return {
-			data: null,
-			page: 0
-		};
+		return { list_info: {}, profiles: [], page: 0 };
 	},
 
 	componentDidUpdate: function()
@@ -65,7 +60,7 @@ var List = React.createClass({
 					notif.add('danger', data.error).run();
 				} else {
 					notif.add('success', 'User has been removed from the list!').run();
-					this.setState({data: data, page: this.state.page});
+					this.setState($.extend({}, this.state, data));
 				}
 			}.bind(this),
 				error: function(xhr, status, err) {
@@ -85,7 +80,7 @@ var List = React.createClass({
 					notif.add('danger', data.error).run();
 				} else {
 					notif.add('success', 'You have subscribed to the list!').run();
-					this.setState({data: data});
+					this.setState($.extend({}, this.state, data));
 				}
 			}.bind(this),
 				error: function(xhr, status, err) {
@@ -109,7 +104,7 @@ var List = React.createClass({
 					notif.add('danger', data.error).run();
 				} else {
 					notif.add('success', 'You have unsubscribed from the list!').run();
-					this.setState({data: data, page: this.state.page});
+					this.setState($.extend({}, this.state, data));
 				}
 			}.bind(this),
 				error: function(xhr, status, err) {
@@ -130,7 +125,7 @@ var List = React.createClass({
 				list_id: grab
 			},
 			success: function(data) {
-				this.setState({data: data, page: this.state.page});
+				this.setState($.extend({}, this.state, data));
 			}.bind(this),
 				error: function(xhr, status, err) {
 				notif.add('danger', err).run();
@@ -140,7 +135,31 @@ var List = React.createClass({
 
 	actionChangePage: function(page)
 	{
-		this.setState({data: this.state.data, page: page});
+		this.setState($.extend({}, this.state, {page: page}));
+	},
+
+	listPrivacy: function(privacy)
+	{
+		var type = {};
+		switch(privacy)
+		{
+			case "3":
+			case 3:
+				type.name = "Private";
+				type.color = "danger";
+				break;
+			case "2":
+			case 2:
+				type.name = "Friends Only";
+				type.color = "warning";
+				break;
+			default:
+				type.name = "Public";
+				type.color = "success";
+				break;
+		}
+
+		return type;
 	},
 
 	render: function()
@@ -156,179 +175,146 @@ var List = React.createClass({
 			listExtraInfo,
 			steam_64_bit_list = [];
 
-		data = this.state.data;
+		var listInfo, profiles, page,
+			author, privacy, listDetails;
+
+		listInfo = this.state.list_info;
+		profiles = this.state.profiles;
 		page = this.state.page;
 
-		if(data !== null)
+		if(listInfo.author) author = <div><small>By: { listInfo.author }</small></div>;
+
+		if(listInfo.privacy)
 		{
-			if(data.error)
-			{
-				return <h1 className="text-center">{data.error}</h1>
-			}
+			privacy = this.listPrivacy(listInfo.privacy);
 
-			if(data.author)
-			{
-				author = <div><small>By: { data.author }</small></div>;
-			}
-
-			if(data.privacy)
-			{
-				var privacy, privacy_color;
-
-				switch(data.privacy)
-				{
-					case "3":
-					case 3:
-						privacy = "Private";
-						privacy_color = "danger";
-						break;
-					case "2":
-					case 2:
-						privacy = "Friends Only";
-						privacy_color = "warning";
-						break;
-					case "1":
-					case 1:
-						privacy = "Public";
-						privacy_color = "success";
-						break;
-				}
-
-				listExtraInfo = (
-					<div className="col-xs-12 col-md-6">
-						<div className="list-extra-info text-right">
-							<div className={"list-type text-" + privacy_color}>{ privacy } List</div>
-							<div>Subscribed Users: { data.sub_count }</div>
-						</div>
-					</div>
-				);
-			}
-
-			if(data.list !== null && data.list !== undefined)
-			{
-				data.list.map(function(profile, index)
-				{
-					steam_64_bit_list.push(profile.steam_64_bit);
-				});
-			}
-
-			if(grab == "search")
-			{
-				var eListAction = (
-					<div className="list-action-container">
-						<hr className="divider" />
-						<div className="row">
-							<div className="col-xs-6 col-lg-12">
-								<button className="btn btn-block btn-info" data-toggle="modal" data-target="#addAllUsers">Add All Users to List</button>
-							</div>
-						</div>
-						<div id="searchUsers" className="hidden">{ steam_64_bit_list.join(" ") }</div>
-					</div>
-				);
-				smallActionBar = (
-					<div className="list-action-bar hidden-lg">
-						<div className="container">
-							<div className="row">
-								<div className="col-xs-12">
-									<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
-									<div id="list-actions" className="list-actions collapse">
-										{ eListAction }
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				)
-
-				showListAction = (
-					<div className="col-lg-3">
-						<div className="list-actions visible-lg-block">
-							{ eListAction }
-						</div>
-					</div>
-				);
-			}
-
-			if(auth_check && data.author)
-			{
-				var eListAction = <ListAction addMany={this.submitManyUsersToServer} ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} data={data} />;
-				smallActionBar = (
-					<div className="list-action-bar hidden-lg">
-						<div className="container">
-							<div className="row">
-								<div className="col-xs-12">
-									<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
-									<div id="list-actions" className="list-actions collapse">
-										{ eListAction }
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				)
-
-				showListAction = (
-					<div className="col-lg-3">
-						<div className="list-actions visible-lg-block">
-							{ eListAction }
-						</div>
-					</div>
-				);
-			}
-
-			sortedList = [];
-			if(data.list !== null && data.list !== undefined)
-			{
-				for(var y = 0; y < Math.ceil(data.list.length/20); y++)
-				{
-					for(var x = 0; x < 20; x++)
-					{
-						if(x === 0) sortedList[y] = [];
-
-						var playerItem = data.list[(y*20)+x];
-						if(playerItem === undefined) break;
-
-						sortedList[y].push(playerItem);
-					}
-				}
-			}
-
-			listElement = (
-				<div className="container">
-					<div className="row">
-						<div className={"col-xs-12" + (showListAction ? " col-lg-9": "" )}>
-							<div className="row">
-								<div className="col-xs-12 col-md-6">
-									<h2 className="list-title">
-										{ data.title } { author }
-									</h2>
-								</div>
-								{ listExtraInfo }
-							</div>
-
-							<div className="table-responsive">
-								<table className="table list-table">
-									<thead>
-										<tr>
-											<th width="80"></th>
-											<th>User</th>
-											<th className="text-center" width="140">VAC / Game Ban</th>
-											<th className="text-center hidden-sm" width="140">Community Ban</th>
-											<th className="text-center hidden-sm" width="100">Trade Ban</th>
-											<th className="text-center" width="100">Tracked By</th>
-										</tr>
-									</thead>
-									<DisplayPage page={page} list={sortedList} myList={data.my_list} deleteUserFromList={this.submitDeleteUserToServer}/>
-								</table>
-							</div>
-
-							<ListPagination listChangePage={this.actionChangePage} page={page} list={sortedList}/>
-						</div>
-						{ showListAction }
+			listDetails = (
+				<div className="col-xs-12 col-md-6">
+					<div className="list-extra-info text-right">
+						<div className={"list-type text-" + privacy.color}>{ privacy.name } List</div>
+						<div>Subscribed Users: { listInfo.sub_count }</div>
 					</div>
 				</div>
 			);
 		}
+
+		if(grab == "search")
+		{
+			var eListAction = (
+				<div className="list-action-container">
+					<hr className="divider" />
+					<div className="row">
+						<div className="col-xs-6 col-lg-12">
+							<button className="btn btn-block btn-info" data-toggle="modal" data-target="#addAllUsers">Add All Users to List</button>
+						</div>
+					</div>
+					<div id="searchUsers" className="hidden">{ profiles.map(function(p) { return p.steam_64_bit; }).join(" ") }</div>
+				</div>
+			);
+
+			smallActionBar = (
+				<div className="list-action-bar hidden-lg">
+					<div className="container">
+						<div className="row">
+							<div className="col-xs-12">
+								<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
+								<div id="list-actions" className="list-actions collapse">
+									{ eListAction }
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			)
+
+			showListAction = (
+				<div className="col-lg-3">
+					<div className="list-actions visible-lg-block">
+						{ eListAction }
+					</div>
+				</div>
+			);
+		}
+
+		if(auth_check && listInfo.author)
+		{
+			var eListAction = <ListAction addMany={this.submitManyUsersToServer} ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} data={data} />;
+			smallActionBar = (
+				<div className="list-action-bar hidden-lg">
+					<div className="container">
+						<div className="row">
+							<div className="col-xs-12">
+								<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
+								<div id="list-actions" className="list-actions collapse">
+									{ eListAction }
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			)
+
+			showListAction = (
+				<div className="col-lg-3">
+					<div className="list-actions visible-lg-block">
+						{ eListAction }
+					</div>
+				</div>
+			);
+		}
+
+		sortedList = [];
+		if(data.list !== null && data.list !== undefined)
+		{
+			for(var y = 0; y < Math.ceil(data.list.length/20); y++)
+			{
+				for(var x = 0; x < 20; x++)
+				{
+					if(x === 0) sortedList[y] = [];
+
+					var playerItem = data.list[(y*20)+x];
+					if(playerItem === undefined) break;
+
+					sortedList[y].push(playerItem);
+				}
+			}
+		}
+
+		listElement = (
+			<div className="container">
+				<div className="row">
+					<div className={"col-xs-12" + (showListAction ? " col-lg-9": "" )}>
+						<div className="row">
+							<div className="col-xs-12 col-md-6">
+								<h2 className="list-title">
+									{ data.title } { author }
+								</h2>
+							</div>
+							{ listExtraInfo }
+						</div>
+
+						<div className="table-responsive">
+							<table className="table list-table">
+								<thead>
+									<tr>
+										<th width="80"></th>
+										<th>User</th>
+										<th className="text-center" width="140">VAC / Game Ban</th>
+										<th className="text-center hidden-sm" width="140">Community Ban</th>
+										<th className="text-center hidden-sm" width="100">Trade Ban</th>
+										<th className="text-center" width="100">Tracked By</th>
+									</tr>
+								</thead>
+								<DisplayPage page={page} list={sortedList} myList={data.my_list} deleteUserFromList={this.submitDeleteUserToServer}/>
+							</table>
+						</div>
+
+						<ListPagination listChangePage={this.actionChangePage} page={page} list={sortedList}/>
+					</div>
+					{ showListAction }
+				</div>
+			</div>
+		);
 
 		return (
 			<div>{ smallActionBar } { listElement } <ListHandler UpdateListTitle={this.UpdateListTitle} editData={this.state.data} /></div>
@@ -442,8 +428,6 @@ placeholder="2 ways to search: =================================
 var ListPagination = React.createClass({
 	changePage: function(page)
 	{
-		console.log(page);
-
 		this.props.listChangePage(page);
 	},
 
