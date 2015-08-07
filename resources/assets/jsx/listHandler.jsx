@@ -156,9 +156,9 @@ var ListHandler = React.createClass({
 		});
 	},
 
-	updateLists: function(lists)
+	updateLists: function(list_info)
 	{
-		this.setState({lists: lists});
+		this.setState({list_info: list_info});
 	},
 
 	componentDidMount: function()
@@ -169,7 +169,7 @@ var ListHandler = React.createClass({
 	getInitialState: function()
 	{
 		return {
-			lists: []
+			list_info: []
 		};
 	},
 
@@ -186,11 +186,11 @@ var ListHandler = React.createClass({
 					DeleteListSend={this.submitDeletedListToServer}
 				/>
 				<AddUserToList
-					myList={this.state.lists}
+					myList={this.state.list_info}
 					AddUserSend={this.submitNewUserToServer}
 				/>
 				<AddUsersFromSearch
-					myList={this.state.lists}
+					myList={this.state.list_info}
 					addSearchUsers={this.submitSearchUserToServer}
 				/>
 			</div>
@@ -290,47 +290,48 @@ var EditList = React.createClass({
 
 	render: function()
 	{
-		var editData = this.props.editData;
+		var editData; 
 
-		if(editData !== null && editData !== undefined)
+		editData = this.props.editData;
+
+		if(editData == null || editData.title == null)
 		{
-			return (
-				<div className="modal fade" id="editListModal" tabIndex="-1" role="dialog">
-					<div className="modal-dialog">
-						<div className="modal-content">
-							<div className="modal-header">
-								<button type="button" className="close" data-dismiss="modal"><span>&times;</span></button>
-								<h4 className="modal-title">Edit List</h4>
-							</div>
-							<form onSubmit={this.handleSubmit}>
-								<div className="modal-body">
-									<div className="form-group">
-										<label htmlFor="createList-title">List Name</label>
-										<input id="createList-title" ref="editListTitle" className="form-control" type="text" defaultValue={ editData.title } />
-									</div>
-									<div className="form-group">
-										<label htmlFor="createList-privacy">List Permission</label>
-										<select id="createList-privacy" ref="editListPrivacy" className="form-control" defaultValue={ editData.privacy }>
-											<option value="1">Public</option>
-											<option value="2">Friends Only</option>
-											<option value="3">Private</option>
-										</select>
-									</div>
-								</div>
-								<div className="modal-footer">
-									<button type="button" onClick={this.handleDelete} className="btn btn-danger pull-left">Delete</button>
-									<button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-									<button type="submit" className="btn btn-primary">Save changes</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			);
+			return <div></div>;
 		}
 
-		return <div></div>;
-
+		return (
+			<div className="modal fade" id="editListModal" tabIndex="-1" role="dialog">
+				<div className="modal-dialog">
+					<div className="modal-content">
+						<div className="modal-header">
+							<button type="button" className="close" data-dismiss="modal"><span>&times;</span></button>
+							<h4 className="modal-title">Edit List</h4>
+						</div>
+						<form onSubmit={ this.handleSubmit }>
+							<div className="modal-body">
+								<div className="form-group">
+									<label htmlFor="createList-title">List Name</label>
+									<input id="createList-title" ref="editListTitle" className="form-control" type="text" defaultValue={ editData.title } />
+								</div>
+								<div className="form-group">
+									<label htmlFor="createList-privacy">List Permission</label>
+									<select id="createList-privacy" ref="editListPrivacy" className="form-control" defaultValue={ editData.privacy }>
+										<option value="1">Public</option>
+										<option value="2">Friends Only</option>
+										<option value="3">Private</option>
+									</select>
+								</div>
+							</div>
+							<div className="modal-footer">
+								<button type="button" onClick={ this.handleDelete} className="btn btn-danger pull-left">Delete</button>
+								<button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+								<button type="submit" className="btn btn-primary">Save changes</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		);
 	}
 });
 

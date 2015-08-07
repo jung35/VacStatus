@@ -4,12 +4,13 @@ var grab = $('#list').data('grab'),
 var List = React.createClass({
 	UpdateListTitle: function(newData)
 	{
-		this.setState($.extend({}, this.state, {
-			list_info: {
-				title: newData.newTitle,
-				privacy: newData.newPrivacy
-			}
-		}));
+		this.state.list_info = $.extend({}, this.state.list_info, {
+			title: newData.newTitle,
+			privacy: newData.newPrivacy
+		});
+
+
+		this.setState(this.state);
 	},
 
 	fetchList: function()
@@ -72,7 +73,7 @@ var List = React.createClass({
 	submitSubscriptionToServer: function()
 	{
 		$.ajax({
-			url: '/api/v1/list/subscribe/' + this.state.data.id,
+			url: '/api/v1/list/subscribe/' + this.state.list_info.id,
 			dataType: 'json',
 			type: 'POST',
 			success: function(data) {
@@ -93,7 +94,7 @@ var List = React.createClass({
 	submitUnsubscriptionToServer: function()
 	{
 		$.ajax({
-			url: '/api/v1/list/subscribe/' + this.state.data.id,
+			url: '/api/v1/list/subscribe/' + this.state.list_info.id,
 			dataType: 'json',
 			type: 'POST',
 			data: {
@@ -228,7 +229,7 @@ var List = React.createClass({
 			);
 		}
 
-		if(auth_check && listInfo.author)
+		if(auth_check && listInfo.id !== undefined)
 		{
 			var eListAction = <ListAction addMany={this.submitManyUsersToServer} ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} listInfo={listInfo} />;
 			
@@ -310,7 +311,7 @@ var List = React.createClass({
 		);
 
 		return (
-			<div>{ smallActionBar } { listElement } <ListHandler UpdateListTitle={this.UpdateListTitle} editData={this.state.data} /></div>
+			<div>{ smallActionBar } { listElement } <ListHandler UpdateListTitle={this.UpdateListTitle} editData={ listInfo } /></div>
 		);
 	}
 });
@@ -346,76 +347,76 @@ var ListAction = React.createClass({
 
 		listInfo = this.props.listInfo;
 
-		if(listInfo !== null)
+		if(listInfo == null || listInfo.id == null)
 		{
-			if(listInfo.my_list) {
-				editList = (
-					<div className="col-xs-6 col-lg-12">
-						<button className="btn btn-block btn-info" data-toggle="modal" data-target="#editListModal">Edit List</button>
-					</div>
-				);
+			return <div></div>;
+		}
 
-				addUsers = (
-					<div className="col-xs-6 col-lg-12"><br />
-						<form onSubmit={this.addMany}>
-							<div className="form-group">
-								<label className="label-control">
-									<strong>Add Users to List</strong>
-								</label>
-								<textarea ref="search" className="form-control" rows="10"
-placeholder="2 ways to search: =================================
- - type in steam URL/id/profile and split them in spaces or newlines or both =================================
- - Type 'status' on console and paste the output here"></textarea>
-							</div>
-							<div className="form-group">
-								<textarea ref="description" className="form-control" rows="3" placeholder="A little description to help remember"></textarea>
-							</div>
-							<button className="btn btn-block btn-primary form-control">Add Users</button>
-						</form>
-					</div>
-				);
-			}
-
-			subButton = (
+		if(listInfo.my_list) {
+			editList = (
 				<div className="col-xs-6 col-lg-12">
-					<button className="btn btn-block" disabled="disabled">Subscribe to List</button>
-					<div className="text-center">
-						<small><i>Please go to settings and verify email</i></small>
-					</div>
+					<button className="btn btn-block btn-info" data-toggle="modal" data-target="#editListModal">Edit List</button>
 				</div>
 			);
 
-			if(listInfo.can_sub)
-			{
-				subButton = (
-					<div className="col-xs-6 col-lg-12">
-						<button onClick={ this.doSub } className="btn btn-block btn-primary">Subscribe to List</button>
-					</div>
-				);
-
-				if(listInfo.subscription !== null) 
-				{
-					subButton = (
-						<div className="col-xs-6 col-lg-12">
-							<button onClick={ this.doUnsub } className="btn btn-block btn-danger">Unubscribe to List</button>
+			addUsers = (
+				<div className="col-xs-6 col-lg-12"><br />
+					<form onSubmit={this.addMany}>
+						<div className="form-group">
+							<label className="label-control">
+								<strong>Add Users to List</strong>
+							</label>
+							<textarea ref="search" className="form-control" rows="10"
+placeholder="2 ways to search: =================================
+- type in steam URL/id/profile and split them in spaces or newlines or both =================================
+- Type 'status' on console and paste the output here"></textarea>
 						</div>
-					);
-				}
-			}
-
-			return (
-				<div className="list-action-container">
-					<hr className="divider" />
-					<div className="row">
-						{ editList }
-						{ subButton }
-						{ addUsers }
-					</div>
+						<div className="form-group">
+							<textarea ref="description" className="form-control" rows="3" placeholder="A little description to help remember"></textarea>
+						</div>
+						<button className="btn btn-block btn-primary form-control">Add Users</button>
+					</form>
 				</div>
 			);
 		}
 
-		return <div></div>
+		subButton = (
+			<div className="col-xs-6 col-lg-12">
+				<button className="btn btn-block" disabled="disabled">Subscribe to List</button>
+				<div className="text-center">
+					<small><i>Please go to settings and verify email</i></small>
+				</div>
+			</div>
+		);
+
+		if(listInfo.can_sub)
+		{
+			subButton = (
+				<div className="col-xs-6 col-lg-12">
+					<button onClick={ this.doSub } className="btn btn-block btn-primary">Subscribe to List</button>
+				</div>
+			);
+
+			if(listInfo.subscription !== null) 
+			{
+				subButton = (
+					<div className="col-xs-6 col-lg-12">
+						<button onClick={ this.doUnsub } className="btn btn-block btn-danger">Unubscribe to List</button>
+					</div>
+				);
+			}
+		}
+
+		return (
+			<div className="list-action-container">
+				<hr className="divider" />
+				<div className="row">
+					{ editList }
+					{ subButton }
+					{ addUsers }
+				</div>
+			</div>
+		);
 	}
 });
 
@@ -490,7 +491,18 @@ var DisplayPage = React.createClass({
 
 		page = page <= 1 || page > list.length ? 1 : page;
 
-		console.log(list, page, listInfo);
+		if(listInfo.title == null)
+		{
+			return (
+				<tbody>
+					<tr>
+						<td colSpan="6" className="text-center">
+							<b>Loading List....</b>
+						</td>
+					</tr>
+				</tbody>
+			);
+		}
 
 		if(list[0] === undefined)
 		{
