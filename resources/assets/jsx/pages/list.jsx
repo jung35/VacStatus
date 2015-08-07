@@ -52,7 +52,7 @@ var List = React.createClass({
 			type: 'POST',
 			data: {
 				_method: 'DELETE',
-				list_id: this.state.data.id,
+				list_id: this.state.list_info.id,
 				profile_id: profile.id
 			},
 			success: function(data) {
@@ -164,19 +164,11 @@ var List = React.createClass({
 
 	render: function()
 	{
-		var data,
-			page,
-			author,
-			list,
-			sortedList,
-			smallActionBar,
-			listElement,
-			showListAction,
-			listExtraInfo,
-			steam_64_bit_list = [];
 
 		var listInfo, profiles, page,
-			author, privacy, listDetails;
+			author, privacy, listDetails,
+			sortedList, smallActionBar,
+			listElement, showListAction;
 
 		listInfo = this.state.list_info;
 		profiles = this.state.profiles;
@@ -238,7 +230,8 @@ var List = React.createClass({
 
 		if(auth_check && listInfo.author)
 		{
-			var eListAction = <ListAction addMany={this.submitManyUsersToServer} ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} data={data} />;
+			var eListAction = <ListAction addMany={this.submitManyUsersToServer} ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} listInfo={listInfo} />;
+			
 			smallActionBar = (
 				<div className="list-action-bar hidden-lg">
 					<div className="container">
@@ -264,15 +257,15 @@ var List = React.createClass({
 		}
 
 		sortedList = [];
-		if(data.list !== null && data.list !== undefined)
+		if(profiles !== null && profiles !== undefined)
 		{
-			for(var y = 0; y < Math.ceil(data.list.length/20); y++)
+			for(var y = 0; y < Math.ceil(profiles.length/20); y++)
 			{
 				for(var x = 0; x < 20; x++)
 				{
 					if(x === 0) sortedList[y] = [];
 
-					var playerItem = data.list[(y*20)+x];
+					var playerItem = profiles[(y*20)+x];
 					if(playerItem === undefined) break;
 
 					sortedList[y].push(playerItem);
@@ -287,10 +280,10 @@ var List = React.createClass({
 						<div className="row">
 							<div className="col-xs-12 col-md-6">
 								<h2 className="list-title">
-									{ data.title } { author }
+									{ listInfo.title } { author }
 								</h2>
 							</div>
-							{ listExtraInfo }
+							{ listDetails }
 						</div>
 
 						<div className="table-responsive">
@@ -305,7 +298,7 @@ var List = React.createClass({
 										<th className="text-center" width="100">Tracked By</th>
 									</tr>
 								</thead>
-								<DisplayPage page={page} list={sortedList} myList={data.my_list} deleteUserFromList={this.submitDeleteUserToServer}/>
+								<DisplayPage page={page} list={sortedList} listInfo={listInfo} deleteUserFromList={this.submitDeleteUserToServer}/>
 							</table>
 						</div>
 
@@ -348,13 +341,14 @@ var ListAction = React.createClass({
 
 	render: function()
 	{
-		var data, editList, subButton, addUsers;
+		var listInfo, editList,
+		subButton, addUsers;
 
-		data = this.props.data;
+		listInfo = this.props.listInfo;
 
-		if(data !== null)
+		if(listInfo !== null)
 		{
-			if(data.my_list) {
+			if(listInfo.my_list) {
 				editList = (
 					<div className="col-xs-6 col-lg-12">
 						<button className="btn btn-block btn-info" data-toggle="modal" data-target="#editListModal">Edit List</button>
@@ -391,7 +385,7 @@ placeholder="2 ways to search: =================================
 				</div>
 			);
 
-			if(data.can_sub)
+			if(listInfo.can_sub)
 			{
 				subButton = (
 					<div className="col-xs-6 col-lg-12">
@@ -399,7 +393,7 @@ placeholder="2 ways to search: =================================
 					</div>
 				);
 
-				if(data.subscription !== null) 
+				if(listInfo.subscription !== null) 
 				{
 					subButton = (
 						<div className="col-xs-6 col-lg-12">
@@ -488,11 +482,18 @@ var DisplayPage = React.createClass({
 
 	render: function()
 	{
+		var list, page, listInfo;
+
 		list = this.props.list;
 		page = this.props.page;
+		listInfo = this.props.listInfo;
+
 		page = page <= 1 || page > list.length ? 1 : page;
 
-		if(list[0] === undefined) {
+		console.log(list, page, listInfo);
+
+		if(list[0] === undefined)
+		{
 			return (
 				<tbody>
 					<tr>
@@ -509,7 +510,7 @@ var DisplayPage = React.createClass({
 			var auth, specialColors, profile_description;
 
 			if(auth_check) {
-				if(this.props.myList) {
+				if(listInfo.my_list) {
 					auth = (
 						<span className="pointer userListModify open-addUserModal" onClick={this.sendDeleteUserFromList.bind(this, profile)} data-id={ profile.id }>
 							<span className="fa fa-minus faText-align text-danger"></span>

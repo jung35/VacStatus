@@ -36,6 +36,7 @@ class ListController extends Controller
 
 		return $myList;
 	}
+
 	public function listList()
 	{
 		$return = [

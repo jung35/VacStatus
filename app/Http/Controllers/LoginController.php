@@ -82,7 +82,8 @@ class LoginController extends Controller {
         Auth::logout();
 
 		return redirect()
-			->route('home');
+			->route('home')
+			->with('success','You have Successfully logged out.');
     }
 
     private function getFriends(array $friends)
