@@ -191,70 +191,73 @@ var List = React.createClass({
 			);
 		}
 
-		if(grab == "search")
+		if(auth_check)
 		{
-			var eListAction = (
-				<div className="list-action-container">
-					<hr className="divider" />
-					<div className="row">
-						<div className="col-xs-6 col-lg-12">
-							<button className="btn btn-block btn-info" data-toggle="modal" data-target="#addAllUsers">Add All Users to List</button>
-						</div>
-					</div>
-					<div id="searchUsers" className="hidden">{ profiles.map(function(p) { return p.steam_64_bit; }).join(" ") }</div>
-				</div>
-			);
-
-			smallActionBar = (
-				<div className="list-action-bar hidden-lg">
-					<div className="container">
+			if(grab == "search")
+			{
+				var eListAction = (
+					<div className="list-action-container">
+						<hr className="divider" />
 						<div className="row">
-							<div className="col-xs-12">
-								<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
-								<div id="list-actions" className="list-actions collapse">
-									{ eListAction }
+							<div className="col-xs-6 col-lg-12">
+								<button className="btn btn-block btn-info" data-toggle="modal" data-target="#addAllUsers">Add All Users to List</button>
+							</div>
+						</div>
+						<div id="searchUsers" className="hidden">{ profiles.map(function(p) { return p.steam_64_bit; }).join(" ") }</div>
+					</div>
+				);
+
+				smallActionBar = (
+					<div className="list-action-bar hidden-lg">
+						<div className="container">
+							<div className="row">
+								<div className="col-xs-12">
+									<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
+									<div id="list-actions" className="list-actions collapse">
+										{ eListAction }
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			)
+				)
 
-			showListAction = (
-				<div className="col-lg-3">
-					<div className="list-actions visible-lg-block">
-						{ eListAction }
+				showListAction = (
+					<div className="col-lg-3">
+						<div className="list-actions visible-lg-block">
+							{ eListAction }
+						</div>
 					</div>
-				</div>
-			);
-		}
+				);
+			}
 
-		if(auth_check && listInfo.id !== undefined)
-		{
-			var eListAction = <ListAction addMany={this.submitManyUsersToServer} ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} listInfo={listInfo} />;
-			
-			smallActionBar = (
-				<div className="list-action-bar hidden-lg">
-					<div className="container">
-						<div className="row">
-							<div className="col-xs-12">
-								<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
-								<div id="list-actions" className="list-actions collapse">
-									{ eListAction }
+			if(listInfo.id !== undefined)
+			{
+				var eListAction = <ListAction addMany={this.submitManyUsersToServer} ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} listInfo={listInfo} />;
+				
+				smallActionBar = (
+					<div className="list-action-bar hidden-lg">
+						<div className="container">
+							<div className="row">
+								<div className="col-xs-12">
+									<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
+									<div id="list-actions" className="list-actions collapse">
+										{ eListAction }
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			)
+				)
 
-			showListAction = (
-				<div className="col-lg-3">
-					<div className="list-actions visible-lg-block">
-						{ eListAction }
+				showListAction = (
+					<div className="col-lg-3">
+						<div className="list-actions visible-lg-block">
+							{ eListAction }
+						</div>
 					</div>
-				</div>
-			);
+				);
+			}
 		}
 
 		sortedList = [];
