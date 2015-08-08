@@ -122,8 +122,8 @@ class SearchController extends Controller
 		$profilesParsed = $multiProfile->run();
 
 		$return = [
-			'title' => 'Search Result',
-			'list' => $profilesParsed
+			'list_info' => [ 'title' => 'Search Result' ],
+			'profiles' => $profilesParsed
 		];
 
 		return $return;
