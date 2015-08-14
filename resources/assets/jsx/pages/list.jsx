@@ -209,7 +209,6 @@ var List = React.createClass({
 
 			if(displayName.toLowerCase().indexOf(searchValue.toLowerCase()) == -1) return;
 
-			console.log(val.vac_bans == 0 && val.game_bans == 0);
 			switch(filter)
 			{
 				case 1:
@@ -273,8 +272,6 @@ var List = React.createClass({
 		{
 			storageDisplayPerPage = localStorage.vacstatusDisplayPerPage;
 		}
-
-		console.log(storageDisplayPerPage);
 
 		eListAction = [
 			<div key="searchList" className="form-group">
@@ -663,6 +660,7 @@ var DisplayPage = React.createClass({
 					</td>
 					<td className="user_name">
 						{ profile_description } <a className={specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
+						<div className="username_subtext">{ profile.steam_64_bit }{ profile.added_at ? ' -- ' + profile.added_at : '' }</div>
 					</td>
 					<td className="user_last_ban_day text-center">
 						<span className={"text-" + (profile.vac_bans > 0 || profile.game_bans > 0 ? "danger" : "")}>

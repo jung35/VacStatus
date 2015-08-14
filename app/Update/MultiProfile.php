@@ -165,7 +165,7 @@ class MultiProfile extends BaseUpdate
 
 			if($this->customList)
 			{
-				$userDescriptions = UserListProfile::whereUserListId($this->customList)->get();
+				$userListProfiles = UserListProfile::whereUserListId($this->customList)->get();
 			}
 
 			$indexSave = [];
@@ -222,7 +222,7 @@ class MultiProfile extends BaseUpdate
 
 				if($this->customList)
 				{
-					$userDescription = $userDescriptions->where('profile_id', $profile->id)->first();
+					$userListProfile = $userListProfiles->where('profile_id', $profile->id)->first();
 				}
 
 				/**
@@ -367,14 +367,19 @@ class MultiProfile extends BaseUpdate
 				$this->updateCache($profile->small_id, $return);
 
 				if($this->customList) {
-					if($userDescription->profile_name)
+					if($userListProfile->profile_name)
 					{
-						$return['display_name'] = $userDescription->profile_name;
+						$return['display_name'] = $userListProfile->profile_name;
 					}
 
-					if($userDescription->profile_description)
+					if($userListProfile->profile_description)
 					{
-						$return['profile_description'] = $userDescription->profile_description;
+						$return['profile_description'] = $userListProfile->profile_description;
+					}
+
+					if($userListProfile->created_at)
+					{
+						$return['added_at'] = $userListProfile->created_at->format("M j Y");
 					}
 				}
 

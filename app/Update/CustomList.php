@@ -86,6 +86,7 @@ class CustomList
 			->get([
 		      	'ulp_1.profile_name',
 		      	'ulp_1.profile_description',
+		      	'ulp_1.created_at as added_at',
 
 				'profile.id',
 				'profile.display_name',
@@ -156,6 +157,7 @@ class CustomList
 				'donation'				=> (int) $userListProfile->donation?:0,
 				'beta'					=> (int) $userListProfile->beta?:0,
 				'profile_description'	=> $userListProfile->profile_description,
+				'added_at'				=> (new DateTime($userListProfile->added_at))->format("M j Y"),
 				'times_added'			=> [
 					'number'	=> $userListProfile->total,
 					'time'		=> (new DateTime($userListProfile->created_at))->format("M j Y")
