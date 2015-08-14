@@ -287,9 +287,9 @@ var List = React.createClass({
 									<tr>
 										<th width="80"></th>
 										<th>User</th>
-										<th className="text-center" width="140">VAC / Game Ban</th>
-										<th className="text-center hidden-sm" width="140">Community Ban</th>
-										<th className="text-center hidden-sm" width="100">Trade Ban</th>
+										<th className="text-center" width="140">Last Ban Date</th>
+										<th className="text-center hidden-sm" width="100">Vac Bans</th>
+										<th className="text-center hidden-sm" width="100">Game Bans</th>
 										<th className="text-center" width="100">Tracked By</th>
 									</tr>
 								</thead>
@@ -574,16 +574,16 @@ var DisplayPage = React.createClass({
 					<td className="user_name">
 						{ profile_description } <a className={specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
 					</td>
-					<td className="user_vac_ban text-center">
-						<span className={"text-" + (profile.vac > 0 ? "danger" : "success")}>
-							{ profile.vac > 0 ? profile.vac_banned_on : <span className="fa fa-times"></span> }
+					<td className="user_last_ban_day text-center">
+						<span className={"text-" + (profile.vac_bans > 0 || profile.game_bans > 0 ? "danger" : "")}>
+							{ profile.vac_bans > 0 || profile.game_bans > 0 ? profile.last_ban_date : "" }
 						</span>
 					</td>
-					<td className="user_community_ban text-center hidden-sm">
-						<span className={"fa fa-"+(profile.community >= 1 ? 'check' : 'times')+" text-" + (profile.community >= 1 ? 'danger' : 'success')}></span>
+					<td className="user_vac_bans text-center hidden-sm">
+						{ profile.vac_bans > 0 ? profile.vac_bans : '-'}
 					</td>
-					<td className="user_trade_ban text-center hidden-sm">
-						<span className={"fa fa-"+(profile.trade >= 1 ? 'check' : 'times')+" text-" + (profile.trade >= 1  ? 'danger' : 'success')}></span>
+					<td className="user_game_bans text-center hidden-sm">
+						{ profile.game_bans > 0 ? profile.game_bans : '-'}
 					</td>	
 					<td className="user_track_number text-center">
 						{ profile.times_added.number }

@@ -11,18 +11,18 @@ class ProfileBan extends Model
 	
 	protected $fillable = ['profile_id'];
 	
-	protected $dates = ['vac_banned_on'];
+	protected $dates = ['last_ban_date'];
 
-	 public $timestamps = true;
+	public $timestamps = true;
 
 	public function Profile()
 	{
 		return $this->belongsTo('VacStatus\Models\Profile', 'profile_id', 'id');
 	}
 
-	public function isVacBanned()
+	public function isVacGameBanned()
 	{
-		return $this->vac > 0;
+		return $this->vac_bans > 0 || $this->game_bans > 0;
 	}
 
 	public function isCommunityBanned()
@@ -35,33 +35,19 @@ class ProfileBan extends Model
 		return $this->trade;
 	}
 
-	public function getVac()
+	public function getVacBans()
 	{
-		return $this->vac;
+		return $this->vac_bans;
+	}
+
+	public function getGameBans()
+	{
+		return $this->game_bans;
 	}
 
 	public function getVacDays()
 	{
-		$date = new DateTime($this->vac_banned_on);
+		$date = new DateTime($this->last_ban_date);
 		return $this->isVacBanned() ? $date->format('M j Y') : 'None';
-	}
-
-	public function isUnbanned()
-	{
-		return $this->unban;
-	}
-
-	public function skipProfileBanUpdate($steamBan)
-	{
-		$combinedBan = (int) $steamBan['NumberOfVACBans'] + (int) $steamBan['NumberOfGameBans'];
-		
-		if($this->vac !=  $combinedBan ||
-			$this->community != $steamBan['CommunityBanned'] ||
-			$this->trade != ($steamBan['EconomyBan'] != 'none'))
-		{
-			return false;
-		}
-
-		return true;
 	}
 }

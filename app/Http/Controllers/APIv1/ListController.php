@@ -7,7 +7,9 @@ use VacStatus\Http\Requests;
 use VacStatus\Update\MostTracked;
 use VacStatus\Update\LatestTracked;
 use VacStatus\Update\CustomList;
+
 use VacStatus\Update\LatestVAC;
+use VacStatus\Update\LatestGameBan;
 
 use VacStatus\Models\User;
 use VacStatus\Models\UserList;
@@ -175,6 +177,18 @@ class ListController extends Controller
 		$return = [
 			'list_info' => [ 'title' => 'Latest VAC Banned Users' ],
 			'profiles' => $latestVac->getLatestVAC()
+		];
+
+		return $return;
+	}
+
+	public function latestGameBan()
+	{
+		$latestGameBan = new LatestGameBan();
+
+		$return = [
+			'list_info' => [ 'title' => 'Latest Game Banned Users' ],
+			'profiles' => $latestGameBan->getLatestGameBan()
 		];
 
 		return $return;

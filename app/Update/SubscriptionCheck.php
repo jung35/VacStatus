@@ -76,13 +76,13 @@ class SubscriptionCheck
 				'profile.small_id',
 				'profile.avatar_thumb',
 
-				'profile_ban.vac',
+				'profile_ban.vac_bans',
+				'profile_ban.game_bans',
+				'profile_ban.last_ban_date',
 				'profile_ban.community',
 				'profile_ban.trade',
-				'profile_ban.unban',
 				'profile_ban.created_at',
 				'profile_ban.updated_at',
-				'profile_ban.vac_banned_on',
 			]);
 
 		$this->profiles = $profiles;
@@ -170,41 +170,51 @@ class SubscriptionCheck
 			$steamBan = $steamBans[$indexSave[$smallId]];
 			$profile = $profiles->where('small_id', $smallId)->first();
 
-			$newVacBanDate = new DateTime();
-			$newVacBanDate->sub(new DateInterval("P{$steamBan['DaysSinceLastBan']}D"));
+			$apiLatestBanDate = new DateTime();
+			$apiLatestBanDate->sub(new DateInterval("P{$steamBan['DaysSinceLastBan']}D"));
 
-			$combinedBan = (int) $steamBan['NumberOfVACBans'] + (int) $steamBan['NumberOfGameBans'];
+			$apiVacBans = (int) $steamBan['NumberOfVACBans'];
+			$apiGameBans = (int) $steamBan['NumberOfGameBans'];
 
 			$profileBan = [
-				'vac' => $combinedBan,
+				'vac_bans' => $apiVacBans,
+				'game_bans' => $apiGameBans,
+				'last_ban_date' => $apiLatestBanDate->format('Y-m-d'),
 				'community' => $steamBan['CommunityBanned'],
 				'trade' => $steamBan['EconomyBan'] != 'none',
-				'vac_banned_on' => $newVacBanDate->format('Y-m-d')
 			];
 
-			if($profile->vac != $profileBan['vac'] ||
-				$profile->community != $profileBan['community'] ||
-				$profile->trade != $profileBan['trade'])
+			if($profile->vac_bans != $profileBan['vac_bans']
+			   || $profile->game_bans != $profileBan['game_bans']
+			   || $profile->community != $profileBan['community']
+			   || $profile->trade != $profileBan['trade'])
 			{
-
 				$oldProfileBan = ProfileBan::where('profile_id', $profile->id)->first();
 
-				if($profile->vac > $profileBan['vac'])
+				if($this->community != $steamBan['CommunityBanned']
+				   || $this->trade != ($steamBan['EconomyBan'] != 'none'))
 				{
-					$oldProfileBan->timestamps = false; // Dont notify when user is unbanned (Maybe this can be an option in the future)
-					$oldProfileBan->unban = true;
+					$oldProfileBan->timestamps = false;
 				}
 
-				$oldProfileBan->vac = $profileBan['vac'];
+				if($profile->vac_bans > $profileBan['vac_bans']
+				   || $profile->game_bans > $profileBan['game_bans'])
+				{
+					$oldProfileBan->timestamps = false;
+				}
+
+				$oldProfileBan->vac_bans = $profileBan['vac_bans'];
+				$oldProfileBan->game_bans = $profileBan['game_bans'];
 				$oldProfileBan->community = $profileBan['community'];
+				$oldProfileBan->last_ban_date = $profileBan['last_ban_date'];
 				$oldProfileBan->trade = $profileBan['trade'];
-				$oldProfileBan->vac_banned_on = $profileBan['vac_banned_on'];
 				$oldProfileBan->save();
 
-				$profile->vac = $profileBan['vac'];
+				$profile->vac_bans = $profileBan['vac_bans'];
+				$profile->game_bans = $profileBan['game_bans'];
+				$profile->last_ban_date = $profileBan['last_ban_date'];
 				$profile->community = $profileBan['community'];
 				$profile->trade = $profileBan['trade'];
-				$profile->vac_banned_on = $profileBan['vac_banned_on'];
 
 				$profilesToSendForNotification[$profile->id] = $profile;
 			}

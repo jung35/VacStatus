@@ -170,6 +170,7 @@ var ListPortal = React.createClass({
 							<a href="/list/most">Most Tracked Users</a>
 							<a href="/list/latest">Latest Added Users</a>
 							<a href="/list/latest/vac">Latest VAC Bans</a>
+							<a href="/list/latest/game">Latest Game Bans</a>
 						</div>
 					</div>
 				</div>

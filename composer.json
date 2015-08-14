@@ -10,8 +10,9 @@
 		"mike182uk/paypal-ipn-listener" : "~3.0",
 		"predis/predis": "1.1.*@dev",
 		"michelf/php-markdown": "1.5.0",
-    "joetannenbaum/phpushbullet": "~1.0",
-		"laravel/socialite": "^2.0"
+    	"joetannenbaum/phpushbullet": "~1.0",
+		"laravel/socialite": "^2.0",
+		"doctrine/dbal": "^2.5"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",

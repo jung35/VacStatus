@@ -28,32 +28,36 @@ class UpdateMultiAlias extends Command {
 		if(!Cache::has($cacheName)) return;
 
 		$smallIds = Cache::pull($cacheName);
-
-		$profiles = Profile::whereIn('small_id', $smallIds)->get();
-
-		foreach($profiles as $profile)
+		
+		foreach(array_chunk($smallIds, 100) as $chunkedSmallIds)
 		{
-			$steamAPI = new SteamAPI($profile->small_id, true);
-			$steamAlias = $steamAPI->fetch('alias');
 
-			if(!isset($steamAlias['error'])) usort($steamAlias, array('VacStatus\Steam\Steam', 'aliasSort'));
-			else $steamAlias = [];
+			$profiles = Profile::whereIn('small_id', $chunkedSmallIds)->get();
 
-			$profile->alias = json_encode($steamAlias);
-			$profile->save();
+			foreach($profiles as $profile)
+			{
+				$steamAPI = new SteamAPI($profile->small_id, true);
+				$steamAlias = $steamAPI->fetch('alias');
 
-			$cacheName = "profile_{$profile->small_id}";
+				if(!isset($steamAlias['error'])) usort($steamAlias, array('VacStatus\Steam\Steam', 'aliasSort'));
+				else $steamAlias = [];
 
-			if(!Cache::has($cacheName)) continue;
-			
-			$profileCache = Cache::get($cacheName);
-			$profileCache['alias'] = Steam::friendlyAlias($steamAlias);
+				$profile->alias = json_encode($steamAlias);
+				$profile->save();
 
-			if(Cache::has($cacheName)) Cache::forget($cacheName);
+				$cacheName = "profile_{$profile->small_id}";
 
-			$expireTime = Carbon::now()->addMinutes(60);
+				if(!Cache::has($cacheName)) continue;
+				
+				$profileCache = Cache::get($cacheName);
+				$profileCache['alias'] = Steam::friendlyAlias($steamAlias);
 
-			Cache::put($cacheName, $profileCache, $expireTime);
+				if(Cache::has($cacheName)) Cache::forget($cacheName);
+
+				$expireTime = Carbon::now()->addMinutes(60);
+
+				Cache::put($cacheName, $profileCache, $expireTime);
+			}
 		}
 	}
 

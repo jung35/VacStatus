@@ -10,49 +10,6 @@ use VacStatus\Models\UserListProfile;
 
 use VacStatus\Steam\Steam;
 
-/*
-
-	STEPS TO GET MOST TRACKED USERS
-
-*************************************************************************************************
-
-	->	sql
-	
-*/
-
-/*
-
-	RETURN FORMAT
-
-*************************************************************************************************
-
-	return [
-		user_list_profile.profile_id => [ (There should be many of these)
-			profile.id
-			profile.display_name
-			profile.avatar_thumb
-
-			profile_ban.vac
-				-> this is the number of vac bans
-			profile_ban.vac_banned_on
-				-> see to convert date
-					https://github.com/jung3o/VacStatus/tree/c6e626d8f8ab5f8c99db80f904275c185698c645/app/models/Profile.php#L131
-			profile_ban.community
-			profile_ban.trade
-
-			users.site_admin
-				-> color name (class: .admin-name)
-			users.donation
-				-> color name (class: .donator-name)
-			users.beta
-				-> color name (class: .beta-name)
-		]
-	]
-
-*/
-
-
-
 class MostTracked extends BaseUpdate
 {
 	function __construct()
@@ -79,8 +36,9 @@ class MostTracked extends BaseUpdate
 			'profile.avatar_thumb',
 			'profile.small_id',
 
-			'profile_ban.vac',
-			'profile_ban.vac_banned_on',
+			'profile_ban.vac_bans',
+			'profile_ban.game_bans',
+			'profile_ban.last_ban_date',
 			'profile_ban.community',
 			'profile_ban.trade',
 
@@ -103,7 +61,7 @@ class MostTracked extends BaseUpdate
 
 		foreach($userListProfiles as $userListProfile)
 		{
-			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
+			$lastBanDate = new DateTime($userListProfile->last_ban_date);
 
 			$return[] = [
 				'id'			=> $userListProfile->id,
@@ -111,8 +69,9 @@ class MostTracked extends BaseUpdate
 				'avatar_thumb'	=> $userListProfile->avatar_thumb,
 				'small_id'		=> $userListProfile->small_id,
 				'steam_64_bit'	=> Steam::to64Bit($userListProfile->small_id),
-				'vac'			=> $userListProfile->vac,
-				'vac_banned_on'	=> $vacBanDate->format("M j Y"),
+				'vac_bans'		=> $userListProfile->vac_bans,
+				'game_bans'		=> $userListProfile->game_bans,
+				'last_ban_date'	=> $lastBanDate->format("M j Y"),
 				'community'		=> $userListProfile->community,
 				'trade'			=> $userListProfile->trade,
 				'site_admin'	=> (int) $userListProfile->site_admin?:0,

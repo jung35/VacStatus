@@ -92,8 +92,9 @@ class CustomList
 				'profile.avatar_thumb',
 				'profile.small_id',
 
-				'profile_ban.vac',
-				'profile_ban.vac_banned_on',
+				'profile_ban.vac_bans',
+				'profile_ban.game_bans',
+				'profile_ban.last_ban_date',
 				'profile_ban.community',
 				'profile_ban.trade',
 
@@ -138,7 +139,7 @@ class CustomList
 		foreach($userListProfiles as $userListProfile)
 		{
 			if(is_null($userListProfile->id)) continue;
-			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
+			$lastBanDate = new DateTime($userListProfile->last_ban_date);
 
 			$return['profiles'][] = [
 				'id'					=> $userListProfile->id,
@@ -146,8 +147,9 @@ class CustomList
 				'avatar_thumb'			=> $userListProfile->avatar_thumb,
 				'small_id'				=> $userListProfile->small_id,
 				'steam_64_bit'			=> Steam::to64Bit($userListProfile->small_id),
-				'vac'					=> $userListProfile->vac,
-				'vac_banned_on'			=> $vacBanDate->format("M j Y"),
+				'vac_bans'				=> $userListProfile->vac_bans,
+				'game_bans'				=> $userListProfile->game_bans,
+				'last_ban_date'			=> $lastBanDate->format("M j Y"),
 				'community'				=> $userListProfile->community,
 				'trade'					=> $userListProfile->trade,
 				'site_admin'			=> (int) $userListProfile->site_admin?:0,

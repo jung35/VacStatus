@@ -16,15 +16,15 @@ use VacStatus\Steam\Steam;
  * I am now filtering where last_ban_date IS NOT NULL AND vac > 0 ORDER BY last_ban_date DESC
  */
 
-class LatestVAC extends BaseUpdate
+class LatestGameBan extends BaseUpdate
 {
 	function __construct()
 	{
 		$this->cacheLength = 30;
-		$this->cacheName = "latestVAC";
+		$this->cacheName = "latestGameBan";
 	}
 
-	public function getLatestVAC()
+	public function getLatestGameBan()
 	{
 		if(!$this->canUpdate())
 		{
@@ -44,7 +44,7 @@ class LatestVAC extends BaseUpdate
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
 			->whereNull('user_list_profile.deleted_at')
 			->whereNotNull('profile_ban.last_ban_date')
-			->where('profile_ban.vac_bans', '>', '0')
+			->where('profile_ban.game_bans', '>', '0')
 			->groupBy('profile.id')
 			->get([
 				'profile.id',
