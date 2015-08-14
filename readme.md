@@ -7,5 +7,4 @@ You will need to run `npm install` and `composer install` to install all the dep
 Also you are assumed to know how to use [`laravel 5.1`](http://laravel.com/docs/5.1). No support will be given to install.
 
 ##API
-VacStatus sort of has an API, you can take a look here. https://gist.github.com/jung3o/cc2ff73c64e2933828c5
-If you look at the jsx, you can have access to a lot more. Just nothing that is related to changing the private key.
+This needs to be re-written. Feel free to email `jung3o@yahoo.com` if you want to know how to use the api
