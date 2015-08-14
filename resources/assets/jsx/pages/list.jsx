@@ -1,6 +1,8 @@
 var grab = $('#list').data('grab'),
 	searchKey = $('#list').data('search');
 
+var filterName = ['All', 'Ban', 'No Ban'];
+
 var List = React.createClass({
 	UpdateListTitle: function(newData)
 	{
@@ -172,12 +174,51 @@ var List = React.createClass({
 	{
 		var input = e.target;
 		var searchValue = input.value;
+
+		this.props.searchValue = searchValue;
+
+		this.sortFilters();
+	},
+
+	toggleFilterButton: function()
+	{
+		var filterName = ['All', 'Ban', 'No Ban'];
+		if(this.props.filter == undefined) this.props.filter = 0;
+
+		this.props.filter++;
+
+		if(this.props.filter >= filterName.length)  this.props.filter = 0;
+		$('.btn-filter-list').html('Show: ' + filterName[this.props.filter]);
+
+		this.sortFilters();
+	},
+
+	sortFilters: function()
+	{
+		var searchValue, filter;
 		var profiles = [];
+
+		searchValue = this.props.searchValue;
+		filter = this.props.filter;
+
+		if(searchValue == undefined) searchValue = '';
+		if(filter == undefined) filter = 0;
 
 		this.props.profiles.map(function(val, index) {
 			var displayName = val.display_name;
 
 			if(displayName.toLowerCase().indexOf(searchValue.toLowerCase()) == -1) return;
+
+			console.log(val.vac_bans == 0 && val.game_bans == 0);
+			switch(filter)
+			{
+				case 1:
+					if(val.vac_bans == 0 && val.game_bans == 0) return;
+					break;
+				case 2:
+					if(val.vac_bans > 0 || val.game_bans > 0) return;
+					break;
+			}
 
 			profiles.push(val);
 		});
@@ -242,15 +283,27 @@ var List = React.createClass({
 				</label>
 				<input type="text" className="form-control" placeholder="Search for user in the list" onChange={this.displaySimilar} />
 			</div>,
-			<div key="displayPerPage" className="form-group">
-				<label className="label-control">
-					<strong>Display Users per Page</strong>
-				</label>
-				<select className="form-control" onChange={this.displayPerPage} defaultValue={storageDisplayPerPage}>
-					{[20, 30, 40, 60, 80, 100].map(function(val, index) {
-						return <option key={index}>{ val }</option>
-					})}
-				</select>
+			<div key="extraControls" className="row">
+				<div className="col-xs-6">
+					<div className="form-group">
+						<label className="label-control">
+							<strong>Profiles per Page</strong>
+						</label>
+						<select className="form-control" onChange={this.displayPerPage} defaultValue={storageDisplayPerPage}>
+							{[20, 30, 40, 60, 80, 100].map(function(val, index) {
+								return <option key={index}>{ val }</option>
+							})}
+						</select>
+					</div>
+				</div>
+				<div className="col-xs-6">
+					<div className="form-group">
+						<label className="label-control">
+							<strong>Toggle Filter List</strong>
+						</label>
+						<button className="btn btn-block form-control btn-filter-list" onClick={this.toggleFilterButton}>Show: All</button>
+					</div>
+				</div>
 			</div>
 		];
 
@@ -406,7 +459,9 @@ var ListAction = React.createClass({
 		if(listInfo.my_list) {
 			editList = (
 				<div className="col-xs-6 col-lg-12">
-					<button className="btn btn-block btn-info" data-toggle="modal" data-target="#editListModal">Edit List</button>
+					<div className="form-group">
+						<button className="btn btn-block btn-info" data-toggle="modal" data-target="#editListModal">Edit List</button>
+					</div>
 				</div>
 			);
 
@@ -433,9 +488,11 @@ placeholder="2 ways to search: =================================
 
 		subButton = (
 			<div className="col-xs-6 col-lg-12">
-				<button className="btn btn-block" disabled="disabled">Subscribe to List</button>
-				<div className="text-center">
-					<small><i>Please go to settings and verify email</i></small>
+				<div className="form-group">
+					<button className="btn btn-block" disabled="disabled">Subscribe to List</button>
+					<div className="text-center">
+						<small><i>Please go to settings and verify email</i></small>
+					</div>
 				</div>
 			</div>
 		);
@@ -444,7 +501,9 @@ placeholder="2 ways to search: =================================
 		{
 			subButton = (
 				<div className="col-xs-6 col-lg-12">
-					<button onClick={ this.doSub } className="btn btn-block btn-primary">Subscribe to List</button>
+					<div className="form-group">
+						<button onClick={ this.doSub } className="btn btn-block btn-primary">Subscribe to List</button>
+					</div>
 				</div>
 			);
 
@@ -452,7 +511,9 @@ placeholder="2 ways to search: =================================
 			{
 				subButton = (
 					<div className="col-xs-6 col-lg-12">
-						<button onClick={ this.doUnsub } className="btn btn-block btn-danger">Unubscribe to List</button>
+						<div className="form-group">
+							<button onClick={ this.doUnsub } className="btn btn-block btn-danger">Unubscribe to List</button>
+						</div>
 					</div>
 				);
 			}
@@ -460,11 +521,8 @@ placeholder="2 ways to search: =================================
 
 		return (
 			<div className="row">
-				<div className={editList || subButton ? "form-group" : ""}>
-					{ editList }
-					{ subButton }
-					<div className="clearfix"></div>
-				</div>
+				{ editList }
+				{ subButton }
 				{ addUsers }
 			</div>
 		);
