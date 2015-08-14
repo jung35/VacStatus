@@ -54,7 +54,7 @@ class MostTracked extends BaseUpdate
 			->leftjoin('profile', 'user_list_profile.profile_id', '=', 'profile.id')
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
-			->take(20)
+			->take(40)
 			->get();
 
 		$return = [];
