@@ -23,6 +23,7 @@ var List = React.createClass({
 			dataType: 'json',
 			success: function(data) {
 				this.setState($.extend({}, this.state, data));
+				this.props.profiles = data.profiles;
 			}.bind(this),
 			error: function(xhr, status, err) {
 				console.error(this.props.url, status, err.toString());
@@ -62,6 +63,7 @@ var List = React.createClass({
 				} else {
 					notif.add('success', 'User has been removed from the list!').run();
 					this.setState($.extend({}, this.state, data));
+					this.props.profiles = data.profiles;
 				}
 			}.bind(this),
 				error: function(xhr, status, err) {
@@ -82,6 +84,7 @@ var List = React.createClass({
 				} else {
 					notif.add('success', 'You have subscribed to the list!').run();
 					this.setState($.extend({}, this.state, data));
+					this.props.profiles = data.profiles;
 				}
 			}.bind(this),
 				error: function(xhr, status, err) {
@@ -106,6 +109,7 @@ var List = React.createClass({
 				} else {
 					notif.add('success', 'You have unsubscribed from the list!').run();
 					this.setState($.extend({}, this.state, data));
+					this.props.profiles = data.profiles;
 				}
 			}.bind(this),
 				error: function(xhr, status, err) {
@@ -127,6 +131,7 @@ var List = React.createClass({
 			},
 			success: function(data) {
 				this.setState($.extend({}, this.state, data));
+				this.props.profiles = data.profiles;
 			}.bind(this),
 				error: function(xhr, status, err) {
 				notif.add('danger', err).run();
@@ -163,13 +168,30 @@ var List = React.createClass({
 		return type;
 	},
 
+	displaySimilar: function(e)
+	{
+		var input = e.target;
+		var searchValue = input.value;
+		var profiles = [];
+
+		this.props.profiles.map(function(val, index) {
+			var displayName = val.display_name;
+
+			if(displayName.toLowerCase().indexOf(searchValue.toLowerCase()) == -1) return;
+
+			profiles.push(val);
+		});
+
+		this.setState($.extend({}, this.state, {profiles: profiles}));
+	},
+
 	render: function()
 	{
 
 		var listInfo, profiles, page,
 			author, privacy, listDetails,
-			sortedList, smallActionBar,
-			listElement, showListAction;
+			sortedList, listElement,
+			eListAction;
 
 		listInfo = this.state.list_info;
 		profiles = this.state.profiles;
@@ -191,13 +213,21 @@ var List = React.createClass({
 			);
 		}
 
+		eListAction = [
+			<div key="1" className="form-group">
+				<label className="label-control">
+					<strong>Search List</strong>
+				</label>
+				<input type="text" className="form-control" placeholder="Search for user in the list" onChange={this.displaySimilar} />
+			</div>
+		];
+
 		if(auth_check)
 		{
 			if(grab == "search")
 			{
-				var eListAction = (
-					<div className="list-action-container">
-						<hr className="divider" />
+				eListAction.push(
+					<div key="2">
 						<div className="row">
 							<div className="col-xs-6 col-lg-12">
 								<button className="btn btn-block btn-info" data-toggle="modal" data-target="#addAllUsers">Add All Users to List</button>
@@ -206,57 +236,18 @@ var List = React.createClass({
 						<div id="searchUsers" className="hidden">{ profiles.map(function(p) { return p.steam_64_bit; }).join(" ") }</div>
 					</div>
 				);
-
-				smallActionBar = (
-					<div className="list-action-bar hidden-lg">
-						<div className="container">
-							<div className="row">
-								<div className="col-xs-12">
-									<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
-									<div id="list-actions" className="list-actions collapse">
-										{ eListAction }
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				)
-
-				showListAction = (
-					<div className="col-lg-3">
-						<div className="list-actions visible-lg-block">
-							{ eListAction }
-						</div>
-					</div>
-				);
 			}
 
 			if(listInfo.id !== undefined)
 			{
-				var eListAction = <ListAction addMany={this.submitManyUsersToServer} ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} listInfo={listInfo} />;
-				
-				smallActionBar = (
-					<div className="list-action-bar hidden-lg">
-						<div className="container">
-							<div className="row">
-								<div className="col-xs-12">
-									<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
-									<div id="list-actions" className="list-actions collapse">
-										{ eListAction }
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				)
-
-				showListAction = (
-					<div className="col-lg-3">
-						<div className="list-actions visible-lg-block">
-							{ eListAction }
-						</div>
-					</div>
-				);
+				eListAction.push(
+                 	<ListAction key="3"
+                 		addMany={this.submitManyUsersToServer}
+                 		ListSubscribe={this.submitSubscriptionToServer}
+                 		ListUnsubscribe={this.submitUnsubscriptionToServer}
+                 		listInfo={listInfo}
+                 	/>
+                );
 			}
 		}
 
@@ -280,7 +271,7 @@ var List = React.createClass({
 		listElement = (
 			<div className="container">
 				<div className="row">
-					<div className={"col-xs-12" + (showListAction ? " col-lg-9": "" )}>
+					<div className=" col-lg-9">
 						<div className="row">
 							<div className="col-xs-12 col-md-6">
 								<h2 className="list-title">
@@ -308,13 +299,38 @@ var List = React.createClass({
 
 						<ListPagination listChangePage={this.actionChangePage} page={page} list={sortedList}/>
 					</div>
-					{ showListAction }
+					<div className="col-lg-3">
+						<div className="list-actions visible-lg-block">
+							<div className="list-action-container">
+								<hr className="divider" />
+								{ eListAction }
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		);
 
 		return (
-			<div>{ smallActionBar } { listElement } <ListHandler UpdateListTitle={this.UpdateListTitle} editData={ listInfo } /></div>
+			<div>
+				<div className="list-action-bar hidden-lg">
+					<div className="container">
+						<div className="row">
+							<div className="col-xs-12">
+								<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
+								<div id="list-actions" className="list-actions collapse">
+									<div className="list-action-container">
+										<hr className="divider" />
+										{ eListAction }
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{ listElement }
+				<ListHandler UpdateListTitle={this.UpdateListTitle} editData={ listInfo } />
+			</div>
 		);
 	}
 });
@@ -363,7 +379,7 @@ var ListAction = React.createClass({
 			);
 
 			addUsers = (
-				<div className="col-xs-6 col-lg-12"><br />
+				<div className="col-xs-6 col-lg-12">
 					<form onSubmit={this.addMany}>
 						<div className="form-group">
 							<label className="label-control">
@@ -411,13 +427,13 @@ placeholder="2 ways to search: =================================
 		}
 
 		return (
-			<div className="list-action-container">
-				<hr className="divider" />
-				<div className="row">
+			<div className="row">
+				<div className={editList || subButton ? "form-group" : ""}>
 					{ editList }
 					{ subButton }
-					{ addUsers }
+					<div className="clearfix"></div>
 				</div>
+				{ addUsers }
 			</div>
 		);
 	}
