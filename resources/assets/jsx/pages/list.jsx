@@ -185,13 +185,26 @@ var List = React.createClass({
 		this.setState($.extend({}, this.state, {profiles: profiles}));
 	},
 
+	displayPerPage: function(e)
+	{
+		var input = e.target;
+		var perPageValue = input.value;
+
+		if(typeof(Storage) !== "undefined")
+		{
+			localStorage.vacstatusDisplayPerPage = perPageValue;
+		}
+
+		this.actionChangePage(0);
+	},
+
 	render: function()
 	{
 
 		var listInfo, profiles, page,
 			author, privacy, listDetails,
 			sortedList, listElement,
-			eListAction;
+			eListAction, storageDisplayPerPage;
 
 		listInfo = this.state.list_info;
 		profiles = this.state.profiles;
@@ -213,12 +226,31 @@ var List = React.createClass({
 			);
 		}
 
+		storageDisplayPerPage = 20;
+
+		if(typeof(Storage) !== "undefined" && localStorage.vacstatusDisplayPerPage != undefined)
+		{
+			storageDisplayPerPage = localStorage.vacstatusDisplayPerPage;
+		}
+
+		console.log(storageDisplayPerPage);
+
 		eListAction = [
-			<div key="1" className="form-group">
+			<div key="searchList" className="form-group">
 				<label className="label-control">
 					<strong>Search List</strong>
 				</label>
 				<input type="text" className="form-control" placeholder="Search for user in the list" onChange={this.displaySimilar} />
+			</div>,
+			<div key="displayPerPage" className="form-group">
+				<label className="label-control">
+					<strong>Display Users per Page</strong>
+				</label>
+				<select className="form-control" onChange={this.displayPerPage} defaultValue={storageDisplayPerPage}>
+					{[20, 30, 40, 60, 80, 100].map(function(val, index) {
+						return <option key={index}>{ val }</option>
+					})}
+				</select>
 			</div>
 		];
 
@@ -227,7 +259,7 @@ var List = React.createClass({
 			if(grab == "search")
 			{
 				eListAction.push(
-					<div key="2">
+					<div key="addAllToList">
 						<div className="row">
 							<div className="col-xs-6 col-lg-12">
 								<button className="btn btn-block btn-info" data-toggle="modal" data-target="#addAllUsers">Add All Users to List</button>
@@ -241,7 +273,7 @@ var List = React.createClass({
 			if(listInfo.id !== undefined)
 			{
 				eListAction.push(
-                 	<ListAction key="3"
+                 	<ListAction key="ListAction"
                  		addMany={this.submitManyUsersToServer}
                  		ListSubscribe={this.submitSubscriptionToServer}
                  		ListUnsubscribe={this.submitUnsubscriptionToServer}
@@ -254,13 +286,13 @@ var List = React.createClass({
 		sortedList = [];
 		if(profiles !== null && profiles !== undefined)
 		{
-			for(var y = 0; y < Math.ceil(profiles.length/20); y++)
+			for(var y = 0; y < Math.ceil(profiles.length / storageDisplayPerPage); y++)
 			{
-				for(var x = 0; x < 20; x++)
+				for(var x = 0; x < storageDisplayPerPage; x++)
 				{
 					if(x === 0) sortedList[y] = [];
 
-					var playerItem = profiles[(y*20)+x];
+					var playerItem = profiles[(y * storageDisplayPerPage) + x];
 					if(playerItem === undefined) break;
 
 					sortedList[y].push(playerItem);
