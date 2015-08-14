@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel {
 	protected $commands = [
 		'VacStatus\Console\Commands\UpdateMultiAlias',
 		'VacStatus\Console\Commands\ListChecker',
+		'VacStatus\Console\Commands\profileBanConvert',
 	];
 
 	/**
