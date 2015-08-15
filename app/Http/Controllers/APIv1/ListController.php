@@ -51,8 +51,6 @@ class ListController extends Controller
 		$user = Auth::user();
 
 		$myLists = UserList::where('user_list.user_id', $user->id)
-			// ->whereNull('user_list_profile.deleted_at')
-			// ->leftjoin('user_list_profile', 'user_list_profile.user_list_id', '=', 'user_list.id')
 			->groupBy('user_list.id')
 			->orderBy('user_list.id', 'desc')
 			->leftJoin('user_list_profile', function($join)
@@ -72,7 +70,7 @@ class ListController extends Controller
 				'user_list.created_at',
 				
 				\DB::raw('count(DISTINCT user_list_profile.profile_id) as users_in_list'),
-				\DB::raw('count(distinct subscription.id) as sub_count'),
+				\DB::raw('count(DISTINCT subscription.id) as sub_count'),
 			]);
 
 		foreach($myLists as $myList)
@@ -120,8 +118,8 @@ class ListController extends Controller
 					'users.donation',
 					'users.beta',
 					
-					\DB::raw('count(user_list_profile.created_at) as users_in_list'),
-					\DB::raw('count(Distinct subscription.id) as sub_count'),
+					\DB::raw('count(DISTINCT user_list_profile.profile_id) as users_in_list'),
+					\DB::raw('count(DISTINCT subscription.id) as sub_count'),
 				]);
 
 
