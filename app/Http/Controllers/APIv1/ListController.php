@@ -52,20 +52,21 @@ class ListController extends Controller
 
 		$myLists = UserList::where('user_list.user_id', $user->id)
 			->leftjoin('user_list_profile as ulp_1', 'ulp_1.user_list_id', '=', 'user_list.id')
+			->whereNull('ulp_1.deleted_at')
 			->groupBy('user_list.id')
 			->orderBy('user_list.id', 'desc')
 			->leftJoin('subscription', function($join)
 			{
 				$join->on('subscription.user_list_id', '=', 'user_list.id')
 					->whereNull('subscription.deleted_at');
-			})->whereNull('ulp_1.deleted_at')
+			})
 			->get([
 				'user_list.id',
 				'user_list.title',
 				'user_list.privacy',
 				'user_list.created_at',
 				
-				\DB::raw('count(ulp_1.id) as users_in_list'),
+				\DB::raw('count(ulp_1.created_at) as users_in_list'),
 				\DB::raw('count(distinct subscription.id) as sub_count'),
 			]);
 
