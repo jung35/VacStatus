@@ -165,21 +165,22 @@ class SingleProfile extends BaseUpdate
 				$profileBan->timestamps = false;
 			}
 
-			if($profileBan->last_ban_date->format('Y-m-d') !== $apiLatestBanDate->format('Y-m-d'))
+			if(($profileBan->vac_bans != 0 || $profileBan->game_bans != 0)
+			   && $profileBan->last_ban_date->format('Y-m-d') !== $apiLatestBanDate->format('Y-m-d'))
 			{
-				$profileBan->timestamps = false;
 				$skipProfileBan = false;
+				$profileBan->timestamps = false;
 			}
 
 			if($profileBan->vac_bans != $apiVacBans
 			   || $profileBan->game_bans != $apiGameBans)
 			{
-				$profileBan->timestamps = true;
 				$skipProfileBan = false;
+				$profileBan->timestamps = true;
 			}
 
-			if($profileBan->vac_bans > $apiVacBans
-			   || $profileBan->game_bans > $apiGameBans)
+			if($profileBan->vac_bans >= $apiVacBans
+			   && $profileBan->game_bans >= $apiGameBans)
 			{
 				$profileBan->timestamps = false;
 			}
