@@ -86,14 +86,16 @@ class CustomList
 			->get([
 		      	'ulp_1.profile_name',
 		      	'ulp_1.profile_description',
+		      	'ulp_1.created_at as added_at',
 
 				'profile.id',
 				'profile.display_name',
 				'profile.avatar_thumb',
 				'profile.small_id',
 
-				'profile_ban.vac',
-				'profile_ban.vac_banned_on',
+				'profile_ban.vac_bans',
+				'profile_ban.game_bans',
+				'profile_ban.last_ban_date',
 				'profile_ban.community',
 				'profile_ban.trade',
 
@@ -138,7 +140,7 @@ class CustomList
 		foreach($userListProfiles as $userListProfile)
 		{
 			if(is_null($userListProfile->id)) continue;
-			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
+			$lastBanDate = new DateTime($userListProfile->last_ban_date);
 
 			$return['profiles'][] = [
 				'id'					=> $userListProfile->id,
@@ -146,14 +148,16 @@ class CustomList
 				'avatar_thumb'			=> $userListProfile->avatar_thumb,
 				'small_id'				=> $userListProfile->small_id,
 				'steam_64_bit'			=> Steam::to64Bit($userListProfile->small_id),
-				'vac'					=> $userListProfile->vac,
-				'vac_banned_on'			=> $vacBanDate->format("M j Y"),
+				'vac_bans'				=> $userListProfile->vac_bans,
+				'game_bans'				=> $userListProfile->game_bans,
+				'last_ban_date'			=> $lastBanDate->format("M j Y"),
 				'community'				=> $userListProfile->community,
 				'trade'					=> $userListProfile->trade,
 				'site_admin'			=> (int) $userListProfile->site_admin?:0,
 				'donation'				=> (int) $userListProfile->donation?:0,
 				'beta'					=> (int) $userListProfile->beta?:0,
 				'profile_description'	=> $userListProfile->profile_description,
+				'added_at'				=> (new DateTime($userListProfile->added_at))->format("M j Y"),
 				'times_added'			=> [
 					'number'	=> $userListProfile->total,
 					'time'		=> (new DateTime($userListProfile->created_at))->format("M j Y")

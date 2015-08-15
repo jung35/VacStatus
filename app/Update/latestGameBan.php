@@ -1,6 +1,7 @@
 <?php namespace VacStatus\Update;
 
 use VacStatus\Update\BaseUpdate;
+use VacStatus\Update\MultiProfile;
 
 use Cache;
 use Carbon;
@@ -10,14 +11,20 @@ use VacStatus\Models\UserListProfile;
 
 use VacStatus\Steam\Steam;
 
-class MostTracked extends BaseUpdate
+/*
+ * This is almost an exact copy of LatestTracked.php. The only thing that's different is
+ * I am now filtering where last_ban_date IS NOT NULL AND vac > 0 ORDER BY last_ban_date DESC
+ */
+
+class LatestGameBan extends BaseUpdate
 {
 	function __construct()
 	{
-		$this->cacheName = "mostTracked";
+		$this->cacheLength = 30;
+		$this->cacheName = "latestGameBan";
 	}
 
-	public function getMostTracked()
+	public function getLatestGameBan()
 	{
 		if(!$this->canUpdate())
 		{
@@ -30,32 +37,34 @@ class MostTracked extends BaseUpdate
 
 	private function grabFromDB()
 	{
-		$userListProfiles = UserListProfile::select(
-			'profile.id',
-			'profile.display_name',
-			'profile.avatar_thumb',
-			'profile.small_id',
-
-			'profile_ban.vac_bans',
-			'profile_ban.game_bans',
-			'profile_ban.last_ban_date',
-			'profile_ban.community',
-			'profile_ban.trade',
-
-			'users.site_admin',
-			'users.donation',
-			'users.beta',
-
-			\DB::raw('max(user_list_profile.created_at) as created_at'),
-			\DB::raw('count(user_list_profile.id) as total')
-			)->groupBy('profile.id')
-			->orderBy('total', 'desc')
-			->whereNull('user_list_profile.deleted_at')
+		$userListProfiles = UserListProfile::orderBy('profile_ban.last_ban_date', 'desc')
+			->take(200)
 			->leftjoin('profile', 'user_list_profile.profile_id', '=', 'profile.id')
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
-			->take(40)
-			->get();
+			->whereNull('user_list_profile.deleted_at')
+			->whereNotNull('profile_ban.last_ban_date')
+			->where('profile_ban.game_bans', '>', '0')
+			->groupBy('profile.id')
+			->get([
+				'profile.id',
+				'profile.display_name',
+				'profile.avatar_thumb',
+				'profile.small_id',
+
+				'profile_ban.vac_bans',
+				'profile_ban.game_bans',
+				'profile_ban.last_ban_date',
+				'profile_ban.community',
+				'profile_ban.trade',
+
+				'users.site_admin',
+				'users.donation',
+				'users.beta',
+
+				\DB::raw('max(user_list_profile.created_at) as created_at'),
+				\DB::raw('count(user_list_profile.id) as total'),
+			]);
 
 		$return = [];
 
@@ -88,7 +97,7 @@ class MostTracked extends BaseUpdate
 		$return = $multiProfile->run();
 
 		$this->updateCache($return);
-
+		
 		return $return;
 	}
 }

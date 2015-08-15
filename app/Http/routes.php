@@ -40,8 +40,13 @@ get('/list/latest', [
 ]);
 
 get('/list/latest/vac', [
-	'as' => 'tracked.latest_vac',
+	'as' => 'tracked.latest.vac',
 	'uses' => 'PagesController@latestVACPage'
+]);
+
+get('/list/latest/game', [
+	'as' => 'tracked.latest.game',
+	'uses' => 'PagesController@latestGameBanPage'
 ]);
 
 get('/list/{listId}', [
@@ -142,8 +147,13 @@ Route::group(['prefix' => 'api'], function()
 			]);
 
 			get('/latest_vac', [
-				'as' => 'api.v1.tracked.latest_vac',
+				'as' => 'api.v1.tracked.latest.vac',
 				'uses' => 'ListController@latestVAC'
+			]);
+
+			get('/latest_game_ban', [
+				'as' => 'api.v1.tracked.latest.game',
+				'uses' => 'ListController@latestGameBan'
 			]);
 
 			get('/{userList}', [

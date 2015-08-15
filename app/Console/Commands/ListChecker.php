@@ -63,7 +63,7 @@ class ListChecker extends Command
 				else $message .= (count($profiles) > 1 ? "and " : "") . $profile->display_name;
 			}
 
-			$message .= (count($profiles) > 1 ? " were " : " was")." Trade, Community, and/or VAC banned from your lists";
+			$message .= (count($profiles) > 1 ? " were " : " was")." VAC banned or Game banned from your lists";
 			$pushbullet->user($email)->note("Bans were found from your subscribed lists!", $message);
 
 		});

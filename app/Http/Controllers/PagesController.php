@@ -61,6 +61,12 @@ class PagesController extends Controller {
 			->withGrab('latest_vac');
 	}
 
+	public function latestGameBanPage()
+	{
+		return view('pages/list')
+			->withGrab('latest_game_ban');
+	}
+
 	public function customListPage($listId)
 	{
 		return view('pages/list')

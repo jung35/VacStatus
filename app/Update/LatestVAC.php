@@ -13,7 +13,7 @@ use VacStatus\Steam\Steam;
 
 /*
  * This is almost an exact copy of LatestTracked.php. The only thing that's different is
- * I am now filtering where vac_banned_on IS NOT NULL AND vac > 0 ORDER BY vac_banned_on DESC
+ * I am now filtering where last_ban_date IS NOT NULL AND vac > 0 ORDER BY last_ban_date DESC
  */
 
 class LatestVAC extends BaseUpdate
@@ -37,14 +37,14 @@ class LatestVAC extends BaseUpdate
 
 	private function grabFromDB()
 	{
-		$userListProfiles = UserListProfile::orderBy('profile_ban.vac_banned_on', 'desc')
-			->take(100)
+		$userListProfiles = UserListProfile::orderBy('profile_ban.last_ban_date', 'desc')
+			->take(200)
 			->leftjoin('profile', 'user_list_profile.profile_id', '=', 'profile.id')
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
 			->whereNull('user_list_profile.deleted_at')
-			->whereNotNull('profile_ban.vac_banned_on')
-			->where('profile_ban.vac', '>', '0')
+			->whereNotNull('profile_ban.last_ban_date')
+			->where('profile_ban.vac_bans', '>', '0')
 			->groupBy('profile.id')
 			->get([
 				'profile.id',
@@ -52,8 +52,9 @@ class LatestVAC extends BaseUpdate
 				'profile.avatar_thumb',
 				'profile.small_id',
 
-				'profile_ban.vac',
-				'profile_ban.vac_banned_on',
+				'profile_ban.vac_bans',
+				'profile_ban.game_bans',
+				'profile_ban.last_ban_date',
 				'profile_ban.community',
 				'profile_ban.trade',
 
@@ -69,7 +70,7 @@ class LatestVAC extends BaseUpdate
 
 		foreach($userListProfiles as $userListProfile)
 		{
-			$vacBanDate = new DateTime($userListProfile->vac_banned_on);
+			$lastBanDate = new DateTime($userListProfile->last_ban_date);
 
 			$return[] = [
 				'id'			=> $userListProfile->id,
@@ -77,8 +78,9 @@ class LatestVAC extends BaseUpdate
 				'avatar_thumb'	=> $userListProfile->avatar_thumb,
 				'small_id'		=> $userListProfile->small_id,
 				'steam_64_bit'	=> Steam::to64Bit($userListProfile->small_id),
-				'vac'			=> $userListProfile->vac,
-				'vac_banned_on'	=> $vacBanDate->format("M j Y"),
+				'vac_bans'		=> $userListProfile->vac_bans,
+				'game_bans'		=> $userListProfile->game_bans,
+				'last_ban_date'	=> $lastBanDate->format("M j Y"),
 				'community'		=> $userListProfile->community,
 				'trade'			=> $userListProfile->trade,
 				'site_admin'	=> (int) $userListProfile->site_admin?:0,

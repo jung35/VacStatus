@@ -589,23 +589,29 @@ ip Make the template fluid for portrait or landscape view adaptability. If a flu
 
                         <td valign="top" class="mcnTextContent" style="padding-top:9px; padding-right: 18px; padding-bottom: 9px; padding-left: 18px;">
 
-                            <h1>(Trade / Community / Vac) Bans Were Found!</h1>
+                            <h1>VAC / Game Bans Were Found!</h1>
 
                             <table class="tablebanlist" border="1" width="100%">
                                 <tr>
                                     <th width="32px"></th>
                                     <th></th>
+                                    <th>Last Ban Date</th>
                                     <th>VAC Ban</th>
-                                    <th>Community Ban</th>
-                                    <th>Trade Ban</th>
+                                    <th>Game Ban</th>
                                 </tr>
                                 @foreach($profiles as $profile)
                                 <tr>
                                     <td><img src="{{{ $profile->avatar_thumb }}}"></td>
                                     <td>{{{ $profile->display_name }}}</td>
-                                    <td style="color: {{ $profile->vac ?'red':'green' }};">{{ $profile->vac  ? date_format(new DateTime($profile->vac_banned_on), 'M j Y') : 'NORMAL' }}</td>
-                                    <td style="color: {{ $profile->community ?'red':'green' }};">{{ $profile->community ?'BANNED':'NORMAL' }}</td>
-                                    <td style="color: {{ $profile->trade ?'red':'green' }};">{{ $profile->trade ?'BANNED':'NORMAL' }}</td>
+                                    <td style="color: {{ $profile->vac_bans > 0 || $profile->game_bans > 0 ? 'red' : 'green' }};">
+                                        {{ $profile->vac_bans > 0 || $profile->game_bans > 0 ? date_format(new DateTime($profile->last_ban_date), 'M j Y') : 'NORMAL' }}
+                                    </td>
+                                    <td style="color: {{ $profile->vac_bans > 0 ? 'red' : '' }};">
+                                        {{ $profile->vac_bans) }}
+                                    </td>
+                                    <td style="color: {{ $profile->game_bans > 0 ? 'red' : '' }};">
+                                        {{ $profile->game_bans) }}
+                                    </td>
                                 </tr>
                                 @endforeach
                             </table>

@@ -8,8 +8,6 @@ class Profile extends Model
 	
 	protected $fillable = ['small_id'];
 
-	protected $dates = ['vac_banned_on'];
-
 	public function ProfileOldAlias()
 	{
 		return $this->hasMany('VacStatus\Models\ProfileOldAlias');

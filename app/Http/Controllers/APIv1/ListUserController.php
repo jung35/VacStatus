@@ -153,16 +153,10 @@ class ListUserController extends Controller
 		$userListProfiles = UserListProfile::whereIn('profile.small_id', $smallIds)
 			->leftjoin('profile', 'profile.id', '=', 'user_list_profile.profile_id')
 			->where('user_list_profile.user_list_id', $listId)
-			->where('user_list_profile.deleted_at', null)
-			->get(['profile.small_id', 'profile.id']);
+			->whereNull('user_list_profile.deleted_at')
+			->get(['profile.small_id']);
 
-		$userListProfilesSmallId = [];
-		foreach($userListProfiles as $userListProfile)
-		{
-			$userListProfilesSmallId[] = $userListProfile->small_id;
-		}
-
-		$smallIds = array_diff($smallIds, $userListProfilesSmallId);
+		$smallIds = array_diff($smallIds, $userListProfiles->lists('small_id')->toArray());
 		$profiles = Profile::whereIn('small_id', $smallIds)->get();
 
 		$toAddtoList = [];

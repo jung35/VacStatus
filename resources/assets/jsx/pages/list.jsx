@@ -1,6 +1,8 @@
 var grab = $('#list').data('grab'),
 	searchKey = $('#list').data('search');
 
+var filterName = ['All', 'Ban', 'No Ban'];
+
 var List = React.createClass({
 	UpdateListTitle: function(newData)
 	{
@@ -23,6 +25,7 @@ var List = React.createClass({
 			dataType: 'json',
 			success: function(data) {
 				this.setState($.extend({}, this.state, data));
+				this.props.profiles = data.profiles;
 			}.bind(this),
 			error: function(xhr, status, err) {
 				console.error(this.props.url, status, err.toString());
@@ -62,6 +65,7 @@ var List = React.createClass({
 				} else {
 					notif.add('success', 'User has been removed from the list!').run();
 					this.setState($.extend({}, this.state, data));
+					this.props.profiles = data.profiles;
 				}
 			}.bind(this),
 				error: function(xhr, status, err) {
@@ -82,6 +86,7 @@ var List = React.createClass({
 				} else {
 					notif.add('success', 'You have subscribed to the list!').run();
 					this.setState($.extend({}, this.state, data));
+					this.props.profiles = data.profiles;
 				}
 			}.bind(this),
 				error: function(xhr, status, err) {
@@ -106,6 +111,7 @@ var List = React.createClass({
 				} else {
 					notif.add('success', 'You have unsubscribed from the list!').run();
 					this.setState($.extend({}, this.state, data));
+					this.props.profiles = data.profiles;
 				}
 			}.bind(this),
 				error: function(xhr, status, err) {
@@ -127,6 +133,7 @@ var List = React.createClass({
 			},
 			success: function(data) {
 				this.setState($.extend({}, this.state, data));
+				this.props.profiles = data.profiles;
 			}.bind(this),
 				error: function(xhr, status, err) {
 				notif.add('danger', err).run();
@@ -163,13 +170,81 @@ var List = React.createClass({
 		return type;
 	},
 
+	displaySimilar: function(e)
+	{
+		var input = e.target;
+		var searchValue = input.value;
+
+		this.props.searchValue = searchValue;
+
+		this.sortFilters();
+	},
+
+	toggleFilterButton: function()
+	{
+		var filterName = ['All', 'Ban', 'No Ban'];
+		if(this.props.filter == undefined) this.props.filter = 0;
+
+		this.props.filter++;
+
+		if(this.props.filter >= filterName.length)  this.props.filter = 0;
+		$('.btn-filter-list').html('Show: ' + filterName[this.props.filter]);
+
+		this.sortFilters();
+	},
+
+	sortFilters: function()
+	{
+		var searchValue, filter;
+		var profiles = [];
+
+		searchValue = this.props.searchValue;
+		filter = this.props.filter;
+
+		if(searchValue == undefined) searchValue = '';
+		if(filter == undefined) filter = 0;
+
+		this.props.profiles.map(function(val, index) {
+			var displayName = val.display_name;
+
+			if(displayName.toLowerCase().indexOf(searchValue.toLowerCase()) == -1) return;
+
+			switch(filter)
+			{
+				case 1:
+					if(val.vac_bans == 0 && val.game_bans == 0) return;
+					break;
+				case 2:
+					if(val.vac_bans > 0 || val.game_bans > 0) return;
+					break;
+			}
+
+			profiles.push(val);
+		});
+
+		this.setState($.extend({}, this.state, {profiles: profiles}));
+	},
+
+	displayPerPage: function(e)
+	{
+		var input = e.target;
+		var perPageValue = input.value;
+
+		if(typeof(Storage) !== "undefined")
+		{
+			localStorage.vacstatusDisplayPerPage = perPageValue;
+		}
+
+		this.actionChangePage(0);
+	},
+
 	render: function()
 	{
 
 		var listInfo, profiles, page,
 			author, privacy, listDetails,
-			sortedList, smallActionBar,
-			listElement, showListAction;
+			sortedList, listElement,
+			eListAction, storageDisplayPerPage;
 
 		listInfo = this.state.list_info;
 		profiles = this.state.profiles;
@@ -191,13 +266,50 @@ var List = React.createClass({
 			);
 		}
 
+		storageDisplayPerPage = 20;
+
+		if(typeof(Storage) !== "undefined" && localStorage.vacstatusDisplayPerPage != undefined)
+		{
+			storageDisplayPerPage = localStorage.vacstatusDisplayPerPage;
+		}
+
+		eListAction = [
+			<div key="searchList" className="form-group">
+				<label className="label-control">
+					<strong>Search List</strong>
+				</label>
+				<input type="text" className="form-control" placeholder="Search for user in the list" onChange={this.displaySimilar} />
+			</div>,
+			<div key="extraControls" className="row">
+				<div className="col-xs-6">
+					<div className="form-group">
+						<label className="label-control">
+							<strong>Profiles per Page</strong>
+						</label>
+						<select className="form-control" onChange={this.displayPerPage} defaultValue={storageDisplayPerPage}>
+							{[20, 30, 40, 60, 80, 100].map(function(val, index) {
+								return <option key={index}>{ val }</option>
+							})}
+						</select>
+					</div>
+				</div>
+				<div className="col-xs-6">
+					<div className="form-group">
+						<label className="label-control">
+							<strong>Toggle Filter List</strong>
+						</label>
+						<button className="btn btn-block form-control btn-filter-list" onClick={this.toggleFilterButton}>Show: All</button>
+					</div>
+				</div>
+			</div>
+		];
+
 		if(auth_check)
 		{
 			if(grab == "search")
 			{
-				var eListAction = (
-					<div className="list-action-container">
-						<hr className="divider" />
+				eListAction.push(
+					<div key="addAllToList">
 						<div className="row">
 							<div className="col-xs-6 col-lg-12">
 								<button className="btn btn-block btn-info" data-toggle="modal" data-target="#addAllUsers">Add All Users to List</button>
@@ -206,70 +318,31 @@ var List = React.createClass({
 						<div id="searchUsers" className="hidden">{ profiles.map(function(p) { return p.steam_64_bit; }).join(" ") }</div>
 					</div>
 				);
-
-				smallActionBar = (
-					<div className="list-action-bar hidden-lg">
-						<div className="container">
-							<div className="row">
-								<div className="col-xs-12">
-									<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
-									<div id="list-actions" className="list-actions collapse">
-										{ eListAction }
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				)
-
-				showListAction = (
-					<div className="col-lg-3">
-						<div className="list-actions visible-lg-block">
-							{ eListAction }
-						</div>
-					</div>
-				);
 			}
 
 			if(listInfo.id !== undefined)
 			{
-				var eListAction = <ListAction addMany={this.submitManyUsersToServer} ListSubscribe={this.submitSubscriptionToServer} ListUnsubscribe={this.submitUnsubscriptionToServer} listInfo={listInfo} />;
-				
-				smallActionBar = (
-					<div className="list-action-bar hidden-lg">
-						<div className="container">
-							<div className="row">
-								<div className="col-xs-12">
-									<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
-									<div id="list-actions" className="list-actions collapse">
-										{ eListAction }
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				)
-
-				showListAction = (
-					<div className="col-lg-3">
-						<div className="list-actions visible-lg-block">
-							{ eListAction }
-						</div>
-					</div>
-				);
+				eListAction.push(
+                 	<ListAction key="ListAction"
+                 		addMany={this.submitManyUsersToServer}
+                 		ListSubscribe={this.submitSubscriptionToServer}
+                 		ListUnsubscribe={this.submitUnsubscriptionToServer}
+                 		listInfo={listInfo}
+                 	/>
+                );
 			}
 		}
 
 		sortedList = [];
 		if(profiles !== null && profiles !== undefined)
 		{
-			for(var y = 0; y < Math.ceil(profiles.length/20); y++)
+			for(var y = 0; y < Math.ceil(profiles.length / storageDisplayPerPage); y++)
 			{
-				for(var x = 0; x < 20; x++)
+				for(var x = 0; x < storageDisplayPerPage; x++)
 				{
 					if(x === 0) sortedList[y] = [];
 
-					var playerItem = profiles[(y*20)+x];
+					var playerItem = profiles[(y * storageDisplayPerPage) + x];
 					if(playerItem === undefined) break;
 
 					sortedList[y].push(playerItem);
@@ -280,7 +353,7 @@ var List = React.createClass({
 		listElement = (
 			<div className="container">
 				<div className="row">
-					<div className={"col-xs-12" + (showListAction ? " col-lg-9": "" )}>
+					<div className=" col-lg-9">
 						<div className="row">
 							<div className="col-xs-12 col-md-6">
 								<h2 className="list-title">
@@ -296,9 +369,9 @@ var List = React.createClass({
 									<tr>
 										<th width="80"></th>
 										<th>User</th>
-										<th className="text-center" width="140">VAC / Game Ban</th>
-										<th className="text-center hidden-sm" width="140">Community Ban</th>
-										<th className="text-center hidden-sm" width="100">Trade Ban</th>
+										<th className="text-center" width="140">Last Ban Date</th>
+										<th className="text-center hidden-sm" width="100">Vac Bans</th>
+										<th className="text-center hidden-sm" width="100">Game Bans</th>
 										<th className="text-center" width="100">Tracked By</th>
 									</tr>
 								</thead>
@@ -308,13 +381,38 @@ var List = React.createClass({
 
 						<ListPagination listChangePage={this.actionChangePage} page={page} list={sortedList}/>
 					</div>
-					{ showListAction }
+					<div className="col-lg-3">
+						<div className="list-actions visible-lg-block">
+							<div className="list-action-container">
+								<hr className="divider" />
+								{ eListAction }
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		);
 
 		return (
-			<div>{ smallActionBar } { listElement } <ListHandler UpdateListTitle={this.UpdateListTitle} editData={ listInfo } /></div>
+			<div>
+				<div className="list-action-bar hidden-lg">
+					<div className="container">
+						<div className="row">
+							<div className="col-xs-12">
+								<a href="#" data-toggle="collapse" data-target="#list-actions"><span className="fa fa-bars"></span>&nbsp; Advanced Options</a>
+								<div id="list-actions" className="list-actions collapse">
+									<div className="list-action-container">
+										<hr className="divider" />
+										{ eListAction }
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{ listElement }
+				<ListHandler UpdateListTitle={this.UpdateListTitle} editData={ listInfo } />
+			</div>
 		);
 	}
 });
@@ -358,12 +456,14 @@ var ListAction = React.createClass({
 		if(listInfo.my_list) {
 			editList = (
 				<div className="col-xs-6 col-lg-12">
-					<button className="btn btn-block btn-info" data-toggle="modal" data-target="#editListModal">Edit List</button>
+					<div className="form-group">
+						<button className="btn btn-block btn-info" data-toggle="modal" data-target="#editListModal">Edit List</button>
+					</div>
 				</div>
 			);
 
 			addUsers = (
-				<div className="col-xs-6 col-lg-12"><br />
+				<div className="col-xs-6 col-lg-12">
 					<form onSubmit={this.addMany}>
 						<div className="form-group">
 							<label className="label-control">
@@ -385,9 +485,11 @@ placeholder="2 ways to search: =================================
 
 		subButton = (
 			<div className="col-xs-6 col-lg-12">
-				<button className="btn btn-block" disabled="disabled">Subscribe to List</button>
-				<div className="text-center">
-					<small><i>Please go to settings and verify email</i></small>
+				<div className="form-group">
+					<button className="btn btn-block" disabled="disabled">Subscribe to List</button>
+					<div className="text-center">
+						<small><i>Please go to settings and verify email</i></small>
+					</div>
 				</div>
 			</div>
 		);
@@ -396,7 +498,9 @@ placeholder="2 ways to search: =================================
 		{
 			subButton = (
 				<div className="col-xs-6 col-lg-12">
-					<button onClick={ this.doSub } className="btn btn-block btn-primary">Subscribe to List</button>
+					<div className="form-group">
+						<button onClick={ this.doSub } className="btn btn-block btn-primary">Subscribe to List</button>
+					</div>
 				</div>
 			);
 
@@ -404,20 +508,19 @@ placeholder="2 ways to search: =================================
 			{
 				subButton = (
 					<div className="col-xs-6 col-lg-12">
-						<button onClick={ this.doUnsub } className="btn btn-block btn-danger">Unubscribe to List</button>
+						<div className="form-group">
+							<button onClick={ this.doUnsub } className="btn btn-block btn-danger">Unubscribe to List</button>
+						</div>
 					</div>
 				);
 			}
 		}
 
 		return (
-			<div className="list-action-container">
-				<hr className="divider" />
-				<div className="row">
-					{ editList }
-					{ subButton }
-					{ addUsers }
-				</div>
+			<div className="row">
+				{ editList }
+				{ subButton }
+				{ addUsers }
 			</div>
 		);
 	}
@@ -557,17 +660,18 @@ var DisplayPage = React.createClass({
 					</td>
 					<td className="user_name">
 						{ profile_description } <a className={specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
+						<div className="username_subtext">{ profile.steam_64_bit }{ profile.added_at ? ' — ' + profile.added_at : '' }</div>
 					</td>
-					<td className="user_vac_ban text-center">
-						<span className={"text-" + (profile.vac > 0 ? "danger" : "success")}>
-							{ profile.vac > 0 ? profile.vac_banned_on : <span className="fa fa-times"></span> }
+					<td className="user_last_ban_day text-center">
+						<span className={"text-" + (profile.vac_bans > 0 || profile.game_bans > 0 ? "danger" : "")}>
+							{ profile.vac_bans > 0 || profile.game_bans > 0 ? profile.last_ban_date : "" }
 						</span>
 					</td>
-					<td className="user_community_ban text-center hidden-sm">
-						<span className={"fa fa-"+(profile.community >= 1 ? 'check' : 'times')+" text-" + (profile.community >= 1 ? 'danger' : 'success')}></span>
+					<td className="user_vac_bans text-center hidden-sm">
+						{ profile.vac_bans > 0 ? profile.vac_bans : '-'}
 					</td>
-					<td className="user_trade_ban text-center hidden-sm">
-						<span className={"fa fa-"+(profile.trade >= 1 ? 'check' : 'times')+" text-" + (profile.trade >= 1  ? 'danger' : 'success')}></span>
+					<td className="user_game_bans text-center hidden-sm">
+						{ profile.game_bans > 0 ? profile.game_bans : '-'}
 					</td>	
 					<td className="user_track_number text-center">
 						{ profile.times_added.number }

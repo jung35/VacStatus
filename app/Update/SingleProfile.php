@@ -140,39 +140,47 @@ class SingleProfile extends BaseUpdate
 		 * Dont update the profile_ban if there is nothing to update
 		 * This has to do with in the future when I check for new bans to notify/email
 		 */
-		$skipProfileBan = false;
+		$skipProfileBan = true;
 
-		$newVacBanDate = new DateTime();
-		$newVacBanDate->sub(new DateInterval("P{$steamBan['DaysSinceLastBan']}D"));
-		
-		$combinedBan = (int) $steamBan['NumberOfVACBans'] + (int) $steamBan['NumberOfGameBans'];
+		$apiLatestBanDate = new DateTime();
+		$apiLatestBanDate->sub(new DateInterval("P{$steamBan['DaysSinceLastBan']}D"));
+
+		$apiVacBans = (int) $steamBan['NumberOfVACBans'];
+		$apiGameBans = (int) $steamBan['NumberOfGameBans'];
 
 		if(!isset($profileBan->id))
 		{
 			$profileBan = new ProfileBan;
 			$profileBan->profile_id = $profile->id;
-			$profileBan->unban = false;
+			$skipProfileBan = false;
 		} else {
-			$skipProfileBan = $profileBan->skipProfileBanUpdate($steamBan);
 
-			if($profileBan->vac != $combinedBan
-			   && $profileBan->vac_banned_on->format('Y-m-d') !== $newVacBanDate->format('Y-m-d'))
+			if($profileBan->community != $steamBan['CommunityBanned']
+			   || $profileBan->trade != ($steamBan['EconomyBan'] != 'none'))
 			{
 				$skipProfileBan = false;
 				$profileBan->timestamps = false;
 			}
 
-			if($profileBan->vac > $combinedBan)
+			if($profileBan->vac_bans != $apiVacBans
+			   || $profileBan->game_bans != $apiGameBans)
+			{
+				$profileBan->timestamps = true;
+				$skipProfileBan = false;
+			}
+
+			if($profileBan->vac_bans > $apiVacBans
+			   || $profileBan->game_bans > $apiGameBans)
 			{
 				$profileBan->timestamps = false;
-				$profileBan->unban = true;
 			}
 		}
 
-		$profileBan->vac = $combinedBan;
+		$profileBan->vac_bans = $apiVacBans;
+		$profileBan->game_bans = $apiGameBans;
+		$profileBan->last_ban_date = $apiLatestBanDate->format('Y-m-d');
 		$profileBan->community = $steamBan['CommunityBanned'];
 		$profileBan->trade = $steamBan['EconomyBan'] != 'none';
-		$profileBan->vac_banned_on = $newVacBanDate->format('Y-m-d');
 
 		if(!$skipProfileBan) if(!$profile->ProfileBan()->save($profileBan)) return $this->error('ban_save_error');
 
@@ -251,8 +259,9 @@ class SingleProfile extends BaseUpdate
 			'alias'				=> Steam::friendlyAlias($steamAlias),
 			'created_at'		=> $profile->created_at->format("M j Y"),
 
-			'vac'				=> $combinedBan,
-			'vac_banned_on'		=> $profileBan->vac_banned_on->format("M j Y"),
+			'vac_bans'			=> $profileBan->vac_bans,
+			'game_bans'			=> $profileBan->game_bans,
+			'last_ban_date'		=> $profileBan->last_ban_date->format("M j Y"),
 			'community'			=> $profileBan->community,
 			'trade'				=> $profileBan->trade,
 
@@ -285,8 +294,9 @@ class SingleProfile extends BaseUpdate
 				'profile.alias',
 				'profile.created_at',
 
-				'profile_ban.vac',
-				'profile_ban.vac_banned_on',
+				'profile_ban.vac_bans',
+				'profile_ban.game_bans',
+				'profile_ban.last_ban_date',
 				'profile_ban.community',
 				'profile_ban.trade',
 
@@ -309,8 +319,10 @@ class SingleProfile extends BaseUpdate
 			'privacy'			=> $profile->privacy,
 			'alias'				=> Steam::friendlyAlias(json_decode($profile->alias, true)),
 			'created_at'		=> $profile->created_at->format("M j Y"),
-			'vac'				=> $profile->vac,
-			'vac_banned_on'		=> $profile->vac_banned_on->format("M j Y"),
+
+			'vac_bans'			=> $profile->vac_bans,
+			'game_bans'			=> $profile->game_bans,
+			'last_ban_date'		=> $profile->last_ban_date->format("M j Y"),
 			'community'			=> $profile->community,
 			'trade'				=> $profile->trade,
 			

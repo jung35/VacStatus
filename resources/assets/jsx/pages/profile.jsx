@@ -155,7 +155,11 @@ var Profile = React.createClass({
 												<li>
 													<div className="row">
 														<div className="col-xs-6 text-right"><strong>VAC / Game Ban</strong></div>
-														<div className="col-xs-6"><div className={"text-" + (data.vac > 0 ? 'danger' : 'success') }>{ data.vac > 0 ? data.vac_banned_on : 'Normal'}</div></div>
+														<div className="col-xs-6">
+															<div className={"text-" + (data.vac_bans > 0 || data.game_bans > 0 ? 'danger' : 'success') }>
+																{ data.vac_bans > 0 || data.game_bans > 0 ? data.last_ban_date : 'Normal'}
+															</div>
+														</div>
 													</div>
 												</li>
 												<li>
@@ -235,26 +239,30 @@ var Profile = React.createClass({
 							</div>
 							<hr className="divider" />
 							<div className="row">
-								<div className="col-xs-12 col-md-2 col-md-offset-2">
+								<div className="col-xs-12 col-md-4 col-md-offset-2">
 									<h3 className="title">Extra Info</h3>
 									<div className="content text-center">
 										<div className="row">
-											<div className="col-xs-6 col-md-12">
-												<strong># of VAC &amp; Game Bans</strong><br />
-													{ data.vac }
+											<div className="col-xs-6">
+												<strong># of VAC Bans</strong><br />
+													{ data.vac_bans }
+											</div>
+											<div className="col-xs-6">
+												<strong># of Game Bans</strong><br />
+													{ data.game_bans }
 											</div>
 										</div>
 									</div>
 								</div>
-								<div className="col-xs-12 col-md-6">
+								<div className="col-xs-12 col-md-4">
 									<h3 className="title">VacStatus Info</h3>
 									<div className="content text-center">
 										<div className="row">
-											<div className="col-xs-6 col-md-4">
+											<div className="col-xs-6">
 												<strong>First Checked</strong><br />
 													{ data.created_at }
 											</div>
-											<div className="col-xs-12 col-md-4">
+											<div className="col-xs-6">
 												<strong>Times Added</strong><br />
 													{ data.times_added && data.times_added.number ? data.times_added.number : 0 } <sub>{ data.times_added && data.times_added.time ? "(" + data.times_added.time + ")" : ''}</sub>
 											</div>

@@ -61,8 +61,9 @@ class SearchController extends Controller
 			'profile.small_id',
 			'profile.created_at',
 
-			'profile_ban.vac',
-			'profile_ban.vac_banned_on',
+			'profile_ban.vac_bans',
+			'profile_ban.game_bans',
+			'profile_ban.last_ban_date',
 			'profile_ban.community',
 			'profile_ban.trade',
 
@@ -96,7 +97,7 @@ class SearchController extends Controller
 				continue;
 			}
 
-			$vacBanDate = new DateTime($profile->vac_banned_on);
+			$lastBanDate = new DateTime($profile->last_ban_date);
 
 			$profilesParsed[] = [
 				'id'			=> $profile->id,
@@ -104,8 +105,9 @@ class SearchController extends Controller
 				'avatar_thumb'	=> $profile->avatar_thumb,
 				'small_id'		=> (int) $smallId,
 				'steam_64_bit'	=> Steam::to64Bit($profile->small_id),
-				'vac'			=> $profile->vac,
-				'vac_banned_on'	=> $vacBanDate->format("M j Y"),
+				'vac_bans'		=> $profile->vac_bans,
+				'game_bans'		=> $profile->game_bans,
+				'last_ban_date'	=> $lastBanDate->format("M j Y"),
 				'community'		=> $profile->community,
 				'trade'			=> $profile->trade,
 				'site_admin'	=> (int) $profile->site_admin?:0,

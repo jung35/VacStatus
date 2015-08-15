@@ -7,7 +7,9 @@ use VacStatus\Http\Requests;
 use VacStatus\Update\MostTracked;
 use VacStatus\Update\LatestTracked;
 use VacStatus\Update\CustomList;
+
 use VacStatus\Update\LatestVAC;
+use VacStatus\Update\LatestGameBan;
 
 use VacStatus\Models\User;
 use VacStatus\Models\UserList;
@@ -49,22 +51,26 @@ class ListController extends Controller
 		$user = Auth::user();
 
 		$myLists = UserList::where('user_list.user_id', $user->id)
-			->leftjoin('user_list_profile as ulp_1', 'ulp_1.user_list_id', '=', 'user_list.id')
 			->groupBy('user_list.id')
 			->orderBy('user_list.id', 'desc')
+			->leftJoin('user_list_profile', function($join)
+			{
+				$join->on('user_list_profile.user_list_id', '=', 'user_list.id')
+					->whereNull('user_list_profile.deleted_at');
+			})
 			->leftJoin('subscription', function($join)
 			{
 				$join->on('subscription.user_list_id', '=', 'user_list.id')
 					->whereNull('subscription.deleted_at');
-			})->whereNull('ulp_1.deleted_at')
+			})
 			->get([
 				'user_list.id',
 				'user_list.title',
 				'user_list.privacy',
 				'user_list.created_at',
 				
-				\DB::raw('count(ulp_1.id) as users_in_list'),
-				\DB::raw('count(distinct subscription.id) as sub_count'),
+				\DB::raw('count(DISTINCT user_list_profile.profile_id) as users_in_list'),
+				\DB::raw('count(DISTINCT subscription.id) as sub_count'),
 			]);
 
 		foreach($myLists as $myList)
@@ -112,8 +118,8 @@ class ListController extends Controller
 					'users.donation',
 					'users.beta',
 					
-					\DB::raw('count(user_list_profile.created_at) as users_in_list'),
-					\DB::raw('count(Distinct subscription.id) as sub_count'),
+					\DB::raw('count(DISTINCT user_list_profile.profile_id) as users_in_list'),
+					\DB::raw('count(DISTINCT subscription.id) as sub_count'),
 				]);
 
 
@@ -175,6 +181,18 @@ class ListController extends Controller
 		$return = [
 			'list_info' => [ 'title' => 'Latest VAC Banned Users' ],
 			'profiles' => $latestVac->getLatestVAC()
+		];
+
+		return $return;
+	}
+
+	public function latestGameBan()
+	{
+		$latestGameBan = new LatestGameBan();
+
+		$return = [
+			'list_info' => [ 'title' => 'Latest Game Banned Users' ],
+			'profiles' => $latestGameBan->getLatestGameBan()
 		];
 
 		return $return;
