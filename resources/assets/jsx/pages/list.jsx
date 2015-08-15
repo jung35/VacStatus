@@ -660,7 +660,7 @@ var DisplayPage = React.createClass({
 					</td>
 					<td className="user_name">
 						{ profile_description } <a className={specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
-						<div className="username_subtext">{ profile.steam_64_bit }{ profile.added_at ? ' -- ' + profile.added_at : '' }</div>
+						<div className="username_subtext">{ profile.steam_64_bit }{ profile.added_at ? ' — ' + profile.added_at : '' }</div>
 					</td>
 					<td className="user_last_ban_day text-center">
 						<span className={"text-" + (profile.vac_bans > 0 || profile.game_bans > 0 ? "danger" : "")}>
