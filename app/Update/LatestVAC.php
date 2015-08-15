@@ -44,6 +44,7 @@ class LatestVAC extends BaseUpdate
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
 			->whereNull('user_list_profile.deleted_at')
 			->whereNotNull('profile_ban.last_ban_date')
+			->whereNotNull('profile_ban.vac_bans')
 			->where('profile_ban.vac_bans', '>', '0')
 			->groupBy('profile.id')
 			->get([

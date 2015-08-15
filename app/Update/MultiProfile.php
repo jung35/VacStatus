@@ -260,6 +260,13 @@ class MultiProfile extends BaseUpdate
 						$profileBan->timestamps = false;
 					}
 
+					if($profileBan->last_ban_date->format('Y-m-d') !== $apiLatestBanDate->format('Y-m-d'))
+					{
+						$profileBan->timestamps = false;
+						$skipProfileBan = false;
+					}
+
+
 					if($profileBan->vac_bans != $apiVacBans
 					   || $profileBan->game_bans != $apiGameBans)
 					{

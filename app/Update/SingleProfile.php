@@ -26,7 +26,9 @@ class SingleProfile extends BaseUpdate
 
 	public function getProfile()
 	{
-		if($this->canUpdate()) return $this->updateUsingAPI();
+		return $this->updateUsingAPI();
+		
+		// if($this->canUpdate()) return $this->updateUsingAPI();
 
 		$return = $this->grabCache();
 
@@ -145,6 +147,7 @@ class SingleProfile extends BaseUpdate
 		$apiLatestBanDate = new DateTime();
 		$apiLatestBanDate->sub(new DateInterval("P{$steamBan['DaysSinceLastBan']}D"));
 
+
 		$apiVacBans = (int) $steamBan['NumberOfVACBans'];
 		$apiGameBans = (int) $steamBan['NumberOfGameBans'];
 
@@ -160,6 +163,12 @@ class SingleProfile extends BaseUpdate
 			{
 				$skipProfileBan = false;
 				$profileBan->timestamps = false;
+			}
+
+			if($profileBan->last_ban_date->format('Y-m-d') !== $apiLatestBanDate->format('Y-m-d'))
+			{
+				$profileBan->timestamps = false;
+				$skipProfileBan = false;
 			}
 
 			if($profileBan->vac_bans != $apiVacBans
