@@ -95,18 +95,18 @@ class MultiProfile extends BaseUpdate
 		 * Sort out the small ID and save the key each profile belongs to
 		 * The API doesn't like to give the data in the order requestd.
 		 */
-		$getSmallId = [];
+		$getSmallIds = [];
 		foreach($this->refreshProfiles as $profile)
 		{
 			$smallId = $profile['profile']['small_id'];
 			$key = $profile['profile_key'];
 
-			$getSmallId[] = (int) $smallId;
+			$getSmallIds[] = (int) $smallId;
 			$toSaveKey[$smallId] = $key;
 		}
 
 		$newProfiles = [];
-		foreach(array_chunk($getSmallId, 100) as $chunkedSmallIds)
+		foreach(array_chunk($getSmallIds, 100) as $chunkedSmallIds)
 		{
 
 			/**
@@ -260,22 +260,23 @@ class MultiProfile extends BaseUpdate
 						$profileBan->timestamps = false;
 					}
 
-					if($profileBan->last_ban_date->format('Y-m-d') !== $apiLatestBanDate->format('Y-m-d'))
+					if($profileBan->vac_bans != 0
+					   && $profileBan->game_bans != 0
+					   && $profileBan->last_ban_date->format('Y-m-d') !== $apiLatestBanDate->format('Y-m-d'))
 					{
-						$profileBan->timestamps = false;
 						$skipProfileBan = false;
+						$profileBan->timestamps = false;
 					}
-
 
 					if($profileBan->vac_bans != $apiVacBans
 					   || $profileBan->game_bans != $apiGameBans)
 					{
-						$profileBan->timestamps = true;
 						$skipProfileBan = false;
+						$profileBan->timestamps = true;
 					}
 
-					if($profileBan->vac_bans > $apiVacBans
-					   || $profileBan->game_bans > $apiGameBans)
+					if($profileBan->vac_bans >= $apiVacBans
+					   && $profileBan->game_bans >= $apiGameBans)
 					{
 						$profileBan->timestamps = false;
 					}
@@ -403,7 +404,7 @@ class MultiProfile extends BaseUpdate
 			while(Cache::has($updateAliasCacheName . $randomString))
 				$randomString = str_random(12);
 
-		Cache::forever($updateAliasCacheName.$randomString, $getSmallId);
+		Cache::forever($updateAliasCacheName.$randomString, $getSmallIds);
 
 		exec('php ' . base_path() . '/artisan update:alias '. $randomString .' > /dev/null 2>/dev/null &');
 

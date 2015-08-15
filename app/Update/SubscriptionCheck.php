@@ -149,74 +149,87 @@ class SubscriptionCheck
 		}
 
 
-		$steamAPI = new SteamAPI($getSmallIds, true);
-		$steamBans = $steamAPI->fetch('ban');
-
-		if(isset($steamBans['error'])) return $this->error($steamBans['error']);
-		if(!isset($steamBans['players'][0])) return $this->error('profile_null');
-
-		$steamBans = $steamBans['players'];
-
-		$indexSave = [];
-		foreach($steamBans as $k => $ban)
+		foreach(array_chunk($getSmallIds, 100) as $chunkedSmallIds)
 		{
-			$indexSave[Steam::toSmallId($ban['SteamId'])] = $k;
-		}
+			$steamAPI = new SteamAPI($chunkedSmallIds, true);
+			$steamBans = $steamAPI->fetch('ban');
 
-		foreach($getSmallIds as $k => $smallId)
-		{
-			if(!isset($indexSave[$smallId])) continue;
-			
-			$steamBan = $steamBans[$indexSave[$smallId]];
-			$profile = $profiles->where('small_id', $smallId)->first();
+			if(isset($steamBans['error'])) return $this->error($steamBans['error']);
+			if(!isset($steamBans['players'][0])) return $this->error('profile_null');
 
-			$apiLatestBanDate = new DateTime();
-			$apiLatestBanDate->sub(new DateInterval("P{$steamBan['DaysSinceLastBan']}D"));
+			$steamBans = $steamBans['players'];
 
-			$apiVacBans = (int) $steamBan['NumberOfVACBans'];
-			$apiGameBans = (int) $steamBan['NumberOfGameBans'];
-
-			$profileBan = [
-				'vac_bans' => $apiVacBans,
-				'game_bans' => $apiGameBans,
-				'last_ban_date' => $apiLatestBanDate->format('Y-m-d'),
-				'community' => $steamBan['CommunityBanned'],
-				'trade' => $steamBan['EconomyBan'] != 'none',
-			];
-
-			if($profile->vac_bans != $profileBan['vac_bans']
-			   || $profile->game_bans != $profileBan['game_bans']
-			   || $profile->community != $profileBan['community']
-			   || $profile->trade != $profileBan['trade'])
+			$indexSave = [];
+			foreach($steamBans as $k => $ban)
 			{
-				$oldProfileBan = ProfileBan::where('profile_id', $profile->id)->first();
+				$indexSave[Steam::toSmallId($ban['SteamId'])] = $k;
+			}
 
-				if($this->community != $steamBan['CommunityBanned']
-				   || $this->trade != ($steamBan['EconomyBan'] != 'none'))
+			foreach($chunkedSmallIds as $k => $smallId)
+			{
+				if(!isset($indexSave[$smallId])) continue;
+				
+				$steamBan = $steamBans[$indexSave[$smallId]];
+				$profile = $profiles->where('small_id', $smallId)->first();
+
+				$apiLatestBanDate = new DateTime();
+				$apiLatestBanDate->sub(new DateInterval("P{$steamBan['DaysSinceLastBan']}D"));
+
+				$profileBan = [
+					'vac_bans' => (int) $steamBan['NumberOfVACBans'],
+					'game_bans' => (int) $steamBan['NumberOfGameBans'],
+					'last_ban_date' => $apiLatestBanDate->format('Y-m-d'),
+					'community' => $steamBan['CommunityBanned'],
+					'trade' => $steamBan['EconomyBan'] != 'none',
+				];
+
+				if($profile->vac_bans != $profileBan['vac_bans']
+				   || $profile->game_bans != $profileBan['game_bans']
+				   || $profile->community != $profileBan['community']
+				   || $profile->trade != $profileBan['trade'])
 				{
-					$oldProfileBan->timestamps = false;
+					$oldProfileBan = ProfileBan::where('profile_id', $profile->id)->first();
+
+					if($profile->community != $profileBan['community']
+					   || $profile->trade != $profileBan['trade'])
+					{
+						$oldProfileBan->timestamps = false;
+					}
+
+					if($profile->vac_bans != 0
+					   && $profile->game_bans != 0
+					   && $profile->last_ban_date->format('Y-m-d') !== $profileBan['last_ban_date'])
+					{
+						$oldProfileBan->timestamps = false;
+					}
+
+					if($profile->vac_bans != $profileBan['vac_bans']
+					   || $profile->game_bans != $profileBan['game_bans'])
+					{
+						$oldProfileBan->timestamps = true;
+					}
+
+					if($profile->vac_bans >= $profileBan['vac_bans']
+					   && $profile->game_bans >= $profileBan['game_bans'])
+					{
+						$oldProfileBan->timestamps = false;
+					}
+
+					$oldProfileBan->vac_bans = $profileBan['vac_bans'];
+					$oldProfileBan->game_bans = $profileBan['game_bans'];
+					$oldProfileBan->community = $profileBan['community'];
+					$oldProfileBan->last_ban_date = $profileBan['last_ban_date'];
+					$oldProfileBan->trade = $profileBan['trade'];
+					$oldProfileBan->save();
+
+					$profile->vac_bans = $profileBan['vac_bans'];
+					$profile->game_bans = $profileBan['game_bans'];
+					$profile->last_ban_date = $profileBan['last_ban_date'];
+					$profile->community = $profileBan['community'];
+					$profile->trade = $profileBan['trade'];
+
+					$profilesToSendForNotification[$profile->id] = $profile;
 				}
-
-				if($profile->vac_bans > $profileBan['vac_bans']
-				   || $profile->game_bans > $profileBan['game_bans'])
-				{
-					$oldProfileBan->timestamps = false;
-				}
-
-				$oldProfileBan->vac_bans = $profileBan['vac_bans'];
-				$oldProfileBan->game_bans = $profileBan['game_bans'];
-				$oldProfileBan->community = $profileBan['community'];
-				$oldProfileBan->last_ban_date = $profileBan['last_ban_date'];
-				$oldProfileBan->trade = $profileBan['trade'];
-				$oldProfileBan->save();
-
-				$profile->vac_bans = $profileBan['vac_bans'];
-				$profile->game_bans = $profileBan['game_bans'];
-				$profile->last_ban_date = $profileBan['last_ban_date'];
-				$profile->community = $profileBan['community'];
-				$profile->trade = $profileBan['trade'];
-
-				$profilesToSendForNotification[$profile->id] = $profile;
 			}
 		}
 
