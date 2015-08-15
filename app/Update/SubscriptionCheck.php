@@ -196,8 +196,7 @@ class SubscriptionCheck
 						$oldProfileBan->timestamps = false;
 					}
 
-					if($profile->vac_bans != 0
-					   && $profile->game_bans != 0
+					if(($profile->vac_bans != 0 || $profile->game_bans != 0)
 					   && $profile->last_ban_date->format('Y-m-d') !== $profileBan['last_ban_date'])
 					{
 						$oldProfileBan->timestamps = false;

@@ -165,8 +165,7 @@ class SingleProfile extends BaseUpdate
 				$profileBan->timestamps = false;
 			}
 
-			if($profileBan->vac_bans != 0
-			   && $profileBan->game_bans != 0
+			if(($profileBan->vac_bans != 0 || $profileBan->game_bans != 0)
 			   && $profileBan->last_ban_date->format('Y-m-d') !== $apiLatestBanDate->format('Y-m-d'))
 			{
 				$skipProfileBan = false;
