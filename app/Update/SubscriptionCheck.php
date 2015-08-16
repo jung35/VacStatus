@@ -31,8 +31,8 @@ class SubscriptionCheck
 	private $profiles;
 	private $error;
 
-	private $sendEmail;
-	private $sendPushbullet;
+	private $sendEmail = false;
+	private $sendPushbullet = false;
 	private $sendProfiles;
 
 	public function __construct($lastCheckedSubscription)
@@ -148,6 +148,7 @@ class SubscriptionCheck
 			}
 		}
 
+		if(count($getSmallIds) == 0) return $this->error('no_small_ids_found');
 
 		foreach(array_chunk($getSmallIds, 100) as $chunkedSmallIds)
 		{
@@ -232,11 +233,14 @@ class SubscriptionCheck
 			}
 		}
 
-		if(count($profilesToSendForNotification) == 0) return $this->error('no_notify_method');
+		if(count($profilesToSendForNotification) == 0) return $this->error('nothing_to_notify');
 
-		$this->sendEmail = $userMail->verify == "verified" ? $userMail->email : false;
-		$this->sendPushbullet = $userMail->pushbullet_verify == "verified" ? $userMail->pushbullet : false;
-		$this->sendProfiles = $profilesToSendForNotification;
+		if(\App::environment('production'))
+		{
+			$this->sendEmail = $userMail->verify == "verified" ? $userMail->email : false;
+			$this->sendPushbullet = $userMail->pushbullet_verify == "verified" ? $userMail->pushbullet : false;
+			$this->sendProfiles = $profilesToSendForNotification;
+		}
 
 		return true;
 	}
