@@ -7,6 +7,8 @@ class Profile extends Model
 	protected $table = 'profile';
 	
 	protected $fillable = ['small_id'];
+	
+	protected $dates = ['last_ban_date'];
 
 	public function ProfileOldAlias()
 	{
