@@ -607,10 +607,10 @@ ip Make the template fluid for portrait or landscape view adaptability. If a flu
                                         {{ $profile->vac_bans > 0 || $profile->game_bans > 0 ? date_format(new DateTime($profile->last_ban_date), 'M j Y') : 'NORMAL' }}
                                     </td>
                                     <td style="color: {{ $profile->vac_bans > 0 ? 'red' : '' }};">
-                                        {{ $profile->vac_bans) }}
+                                        {{ $profile->vac_bans }}
                                     </td>
                                     <td style="color: {{ $profile->game_bans > 0 ? 'red' : '' }};">
-                                        {{ $profile->game_bans) }}
+                                        {{ $profile->game_bans }}
                                     </td>
                                 </tr>
                                 @endforeach
