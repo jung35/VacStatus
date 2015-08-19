@@ -6,7 +6,7 @@
 					<li><a href="{{ route('privacy') }}">Privacy Policy</a></li>
 					<li><a href="{{ route('contact') }}">Contact</a></li>
 					<li><a target="_blank" href="https://github.com/jung3o/VacStatus">Github</a></li>
-					<li><a target="_blank" href="https://trello.com/b/xjhgGSJR/vacstatus">Trello</a></li>
+					<li><a target="_blank" href="https://trello.com/vacstatus">Trello</a></li>
 				</ul>
 			</div>
 
