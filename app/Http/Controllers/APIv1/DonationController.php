@@ -13,6 +13,7 @@ use Mdb\PayPal\Ipn\ListenerBuilder\Guzzle\InputStreamListenerBuilder as Listener
 
 use Cache;
 use Auth;
+use Log;
 
 use VacStatus\Steam\Steam;
 
@@ -108,11 +109,20 @@ class DonationController extends Controller
 
 		$listener->onVerified(function (MessageVerifiedEvent $event) {
 			$ipnMessage = $event->getMessage();
-			if($ipnMessage->get('payment_status') != 'Completed') return;
 
+			$status = $ipnMessage->get('payment_status');
 			$original_amount = $ipnMessage->get('mc_gross');
 			$amount_sub = $ipnMessage->get('mc_fee');
 			$smallId = $ipnMessage->get('custom');
+
+			Log::info('Donation IPN', [
+				'status' => $status,
+				'amount' => $original_amount,
+				'subtracted' => $amount_sub,
+				'small_id' => $smallId
+			]);
+
+			if($status != 'Completed') return;
 
 			$donationLog = new DonationLog;
 			$donationLog->status = 'Completed';
