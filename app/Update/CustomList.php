@@ -104,7 +104,7 @@ class CustomList
 				'users.beta',
 
 				\DB::raw('max(ulp_1.created_at) as created_at'),
-				\DB::raw('count(ulp_2.profile_id) as total'),
+				\DB::raw('count(distinct ulp_2.user_list_id) as total'),
 				\DB::raw('count(distinct subscription.id) as sub_count'),
 			]);
 

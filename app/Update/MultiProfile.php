@@ -157,7 +157,7 @@ class MultiProfile extends BaseUpdate
 					'users.beta',
 
 					\DB::raw('max(user_list_profile.created_at) as last_added_created_at'),
-					\DB::raw('count(user_list_profile.id) as total')
+					\DB::raw('count(distinct user_list_profile.user_list_id) as total')
 				]);
 
 			$profileBans = ProfileBan::whereIn('profile_id', $profiles->lists('id'))->get();
