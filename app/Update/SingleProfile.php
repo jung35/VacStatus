@@ -50,6 +50,7 @@ class SingleProfile extends BaseUpdate
 	private function getTimesAdded($profileId)
 	{
 		$gettingCount = UserListProfile::whereProfileId($profileId)
+			->whereNull('deleted_at')
 			->orderBy('id','desc')
 			->get();
 

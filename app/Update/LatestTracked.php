@@ -56,7 +56,7 @@ class LatestTracked extends BaseUpdate
 				'users.beta',
 
 				\DB::raw('max(user_list_profile.created_at) as created_at'),
-				\DB::raw('count(user_list_profile.id) as total'),
+				\DB::raw('count(distinct user_list_profile.user_list_id) as total'),
 			]);
 
 		$return = [];
