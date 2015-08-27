@@ -52,7 +52,7 @@ class ListChecker extends Command
 		}
 		
 		// send mail if email exists
-		$subscriptionCheck->sendEmail(function($email, $profiles)
+		$subscriptionCheck->sendEmail(function($email, $profiles) use ($log)
 		{
 			Mail::send('emails.hacker', [
 				'profiles' => $profiles
@@ -67,7 +67,7 @@ class ListChecker extends Command
 		});
 
 		// just like sending email, send pushbullet if the subscribed user has it
-		$subscriptionCheck->sendPushBullet(function($email, $profiles)
+		$subscriptionCheck->sendPushBullet(function($email, $profiles) use ($log)
 		{
 			$pushbullet = new PHPushbullet(env('PUSHBULLET_API'));
 			$message = "";
