@@ -109,7 +109,7 @@ class DonationController extends Controller
 
 		if (\App::environment('local', 'staging'))
 		{
-			$listenerBuilder->useSandbox();
+			$listener->useSandbox();
 		}
 
 		$listener = $listener->build();
