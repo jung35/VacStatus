@@ -151,6 +151,22 @@ class DonationController extends Controller
 			$donationLog->save();
 		});
 
+		$listener->onInvalid(function (MessageInvalidEvent $event) {
+		   $ipnMessage = $event->getMessage();
+
+			Log::error('Donation IPN', [
+				'status' => $ipnMessage,
+			]);
+		});
+
+		$listener->onVerificationFailure(function (MessageVerificationFailureEvent $event) {
+			$error = $event->getError();
+
+			Log::error('Donation IPN', [
+				'status' => $error,
+			]);
+		});
+
 		$listener->listen();
 	}
 }
