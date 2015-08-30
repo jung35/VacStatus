@@ -1,4 +1,6 @@
-<?php namespace VacStatus\Http\Controllers\APIv1;
+<?php
+
+namespace VacStatus\Http\Controllers\APIv1;
 
 use Illuminate\Http\Request;
 
@@ -104,6 +106,11 @@ class DonationController extends Controller
 	public function IPNAction()
 	{
 		$listener = new ListenerBuilder;
+
+		if (\App::environment('local', 'staging'))
+		{
+			$listenerBuilder->useSandbox();
+		}
 
 		$listener = $listener->build();
 
