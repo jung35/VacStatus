@@ -1,4 +1,6 @@
-<?php namespace VacStatus\Http\Controllers\APIv1;
+<?php
+
+namespace VacStatus\Http\Controllers\APIv1;
 
 use Illuminate\Http\Request;
 
@@ -105,6 +107,11 @@ class DonationController extends Controller
 	{
 		$listener = new ListenerBuilder;
 
+		if (\App::environment('local', 'staging'))
+		{
+			$listener->useSandbox();
+		}
+
 		$listener = $listener->build();
 
 		$listener->onVerified(function (MessageVerifiedEvent $event) {
@@ -142,6 +149,22 @@ class DonationController extends Controller
 			}
 
 			$donationLog->save();
+		});
+
+		$listener->onInvalid(function (MessageInvalidEvent $event) {
+		   $ipnMessage = $event->getMessage();
+
+			Log::error('Donation IPN', [
+				'status' => $ipnMessage,
+			]);
+		});
+
+		$listener->onVerificationFailure(function (MessageVerificationFailureEvent $event) {
+			$error = $event->getError();
+
+			Log::error('Donation IPN', [
+				'status' => $error,
+			]);
 		});
 
 		$listener->listen();

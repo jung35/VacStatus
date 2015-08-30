@@ -195,7 +195,7 @@ var Profile = React.createClass({
 					<div className="profile-body">
 						<div className="container">
 							<div className="row">
-								<div className="col-xs-12">
+								<div className="col-xs-12 col-lg-10 col-lg-offset-1">
 									<div className="title">
 										User Aliases
 									</div>
@@ -208,7 +208,7 @@ var Profile = React.createClass({
 													<th colSpan="2">Alias History</th>
 												</tr>
 												<tr>
-													<th>Used On</th>
+													<th className="table-timedisplay">Used On</th>
 													<th>Username</th>
 												</tr>
 											</thead>
@@ -226,12 +226,68 @@ var Profile = React.createClass({
 													<th colSpan="2">Recent Aliases</th>
 												</tr>
 												<tr>
-													<th>Used On</th>
+													<th className="table-timedisplay">Used On</th>
 													<th>Username</th>
 												</tr>
 											</thead>
 											<tbody>
 												{ alias_recent }
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<hr className="divider" />
+						</div>
+					</div>
+					<div className="profile-vacstatus">
+						<div className="container">
+							<div className="row">
+								<div className="col-xs-12 col-lg-10 col-lg-offset-1">
+									<div className="title">
+										VacStatus Account
+									</div>
+								</div>
+							</div>
+							<div className="row">
+								<div className="col-xs-12 col-md-6 col-lg-5 col-lg-offset-1">
+									<div className="table-responsive">
+										<table className="table">
+											<thead>
+												<tr>
+													<th className="text-center" colSpan="2">Public Lists Being Tracked In</th>
+												</tr>
+												<tr>
+													<th className="table-timedisplay">Added On</th>
+													<th>Title</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Aug 14 2015</td>
+													<td><a href="#">asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd</a></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div className="col-xs-12 col-md-6 col-lg-5">
+									<div className="table-responsive">
+										<table className="table">
+											<thead>
+												<tr>
+													<th className="text-center" colSpan="2">{ data.display_name }'s Public Lists</th>
+												</tr>
+												<tr>
+													<th className="table-timedisplay">Created At</th>
+													<th>Title</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Aug 14 2015</td>
+													<td><a href="#">asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd</a></td>
+												</tr>
 											</tbody>
 										</table>
 									</div>
