@@ -33,15 +33,10 @@ class ListChecker extends Command
 
 		Cache::forever('last_checked_subscription', $subscriptionCheck->setSubscription());
 
-		if(!$subscriptionCheck->run())
+		if(!$subscriptionCheck->run() && !in_array($subscriptionCheck->errorMessage(), ['no_small_ids_found', 'nothing_to_notify']))
 		{
-			if(in_array($subscriptionCheck->errorMessage(), ['no_small_ids_found', 'nothing_to_notify']))
+			if(!in_array($subscriptionCheck->errorMessage(), ['no_small_ids_found', 'nothing_to_notify']))
 			{
-				$log->info('ListChecker', [
-					'userMail ID' => $subscriptionCheck->setSubscription(),
-					'message' => $subscriptionCheck->errorMessage()
-				]);
-			} else {
 				$log->error('ListChecker', [
 					'userMail ID' => $subscriptionCheck->setSubscription(),
 					'message' => $subscriptionCheck->errorMessage()
@@ -60,7 +55,7 @@ class ListChecker extends Command
 				$message->to($email)->subject('Bans were found from your subscribed lists!');
 			});
 
-			$log->info('listChecker', [
+			$log->info('ListChecker', [
 			    'type' => 'sendEmail',
 				'email' => $email,
 			]);
@@ -81,7 +76,7 @@ class ListChecker extends Command
 			$message .= (count($profiles) > 1 ? " were " : " was")." VAC banned or Game banned from your lists";
 			$pushbullet->user($email)->note("Bans were found from your subscribed lists!", $message);
 
-			$log->info('listChecker', [
+			$log->info('ListChecker', [
 			    'type' => 'sendPushBullet',
 				'email' => $email,
 			]);
