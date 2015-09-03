@@ -1,6 +1,8 @@
 <?php
 
-get('/', [ 'as' => 'home', 'uses' => 'PagesController@indexPage' ]);
+get('/', function() {
+	return view('pages.home');
+});
 
 Route::group(['prefix' => 'auth'], function()
 {
@@ -9,34 +11,34 @@ Route::group(['prefix' => 'auth'], function()
 	get('/logout', [ 'middleware' => 'auth', 'as' => 'auth.logout', 'uses' => 'LoginController@logout' ]);
 });
 
-Route::group(['prefix' => 'list'], function()
-{
-	get('/', [ 'as' => 'list.list', 'uses' => 'PagesController@listListPage' ]);
-	get('/most', [ 'as' => 'tracked.most', 'uses' => 'PagesController@mostTrackedPage' ]);
+// Route::group(['prefix' => 'list'], function()
+// {
+// 	get('/', [ 'as' => 'list.list', 'uses' => 'PagesController@listListPage' ]);
+// 	get('/most', [ 'as' => 'tracked.most', 'uses' => 'PagesController@mostTrackedPage' ]);
 
-	Route::group(['prefix' => 'latest'], function()
-	{
-		get('/', [ 'as' => 'tracked.latest', 'uses' => 'PagesController@latestTrackedPage' ]);
-		get('/vac', [ 'as' => 'tracked.latest.vac', 'uses' => 'PagesController@latestVACPage' ]);
-		get('/game', [ 'as' => 'tracked.latest.game', 'uses' => 'PagesController@latestGameBanPage' ]);
-	});
+// 	Route::group(['prefix' => 'latest'], function()
+// 	{
+// 		get('/', [ 'as' => 'tracked.latest', 'uses' => 'PagesController@latestTrackedPage' ]);
+// 		get('/vac', [ 'as' => 'tracked.latest.vac', 'uses' => 'PagesController@latestVACPage' ]);
+// 		get('/game', [ 'as' => 'tracked.latest.game', 'uses' => 'PagesController@latestGameBanPage' ]);
+// 	});
 
-	get('/{listId}', [ 'as' => 'tracked.custom', 'uses' => 'PagesController@customListPage' ]);
-});
+// 	get('/{listId}', [ 'as' => 'tracked.custom', 'uses' => 'PagesController@customListPage' ]);
+// });
 
-get('/u/{steamid}', [ 'as' => 'profile', 'uses' => 'PagesController@profilePage' ]);
-get('/news/{p?}', [ 'as' => 'news', 'uses' => 'PagesController@newsPage']);
-get('/privacy', [ 'as' => 'privacy', 'uses' => 'PagesController@privacyPage' ]);
-get('/contact', [ 'as' => 'contact', 'uses' => 'PagesController@contactPage' ]);
-get('/donate', [ 'as' => 'donate', 'uses' => 'PagesController@donatePage' ]);
+// get('/u/{steamid}', [ 'as' => 'profile', 'uses' => 'PagesController@profilePage' ]);
+// get('/news/{p?}', [ 'as' => 'news', 'uses' => 'PagesController@newsPage']);
+// get('/privacy', [ 'as' => 'privacy', 'uses' => 'PagesController@privacyPage' ]);
+// get('/contact', [ 'as' => 'contact', 'uses' => 'PagesController@contactPage' ]);
+// get('/donate', [ 'as' => 'donate', 'uses' => 'PagesController@donatePage' ]);
 
-post('/search', [ 'as' => 'search', 'uses' => 'PagesController@searchPage' ]);
+// post('/search', [ 'as' => 'search', 'uses' => 'PagesController@searchPage' ]);
 
-Route::group(['prefix' => 'settings'], function()
-{
-	get('/', [ 'middleware' => 'auth', 'as' => 'settings', 'uses' => 'SettingsController@subscriptionPage' ]);
-	get('/subscribe/{email}/{verify}', [ 'as' => 'settings.subscription.verify', 'uses' => 'SettingsController@subscriptionVerify' ]);
-});
+// Route::group(['prefix' => 'settings'], function()
+// {
+// 	get('/', [ 'middleware' => 'auth', 'as' => 'settings', 'uses' => 'SettingsController@subscriptionPage' ]);
+// 	get('/subscribe/{email}/{verify}', [ 'as' => 'settings.subscription.verify', 'uses' => 'SettingsController@subscriptionVerify' ]);
+// });
 
 
 /**
@@ -146,6 +148,10 @@ Route::group([
 
 Route::model('userList', 'VacStatus\Models\UserList', function() { return ['error' => '404']; });
 Route::model('news', 'VacStatus\Models\News', function() { return ['error' => '404']; });
+
+Route::any('{undefinedRoute}', function ($undefinedRoute) {
+    return view('pages.home');
+})->where('undefinedRoute', '([A-z\d-\/_.]+)?');
 
 // Event::listen('illuminate.query', function($query)
 // {

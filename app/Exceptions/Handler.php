@@ -3,8 +3,6 @@
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
-use Illuminate\Session\TokenMismatchException;
-
 use Auth;
 
 class Handler extends ExceptionHandler {
@@ -28,9 +26,7 @@ class Handler extends ExceptionHandler {
 	 */
 	public function report(Exception $e)
 	{
-		if ($e instanceof TokenMismatchException) {
-			return;
-		}
+		if ($e instanceof \Illuminate\Session\TokenMismatchException) return;
 
 		return parent::report($e);
 	}
@@ -44,12 +40,19 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Exception $e)
 	{
-		if ($e instanceof TokenMismatchException) {
-			\Log::info('TokenMismatchException', [
+		if ($e instanceof \Illuminate\Session\TokenMismatchException) {
+			\Log::info('Illuminate\Session\TokenMismatchException', [
            		'url' => $request->url(),
            		'inputs' => $request->all(),
            		'auth' => Auth::check() ? Auth::user()->id : null
            	]);
+		}
+
+		if($e instanceof \GuzzleHttp\Exception\TransferException) {
+			\Log::info('GuzzleHttp\Exception\TransferException', [
+				'request' => $e->getRequest(),
+				'response' => $e->hasResponse() ? $e->getResponse() : null
+			]);
 		}
 
 		return parent::render($request, $e);

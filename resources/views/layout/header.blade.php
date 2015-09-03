@@ -9,20 +9,20 @@
 				<span class="icon-bar"></span>
 			</button>
 			<div class="{{ Route::currentRouteName() == 'home' ? 'visible-xs-inline': 'navbar-display-logo' }}">
-				<a class="navbar-brand" href="{{ route('home') }}">VacStatus</a>
+				<a class="navbar-brand" href="/">VacStatus</a>
 			</div>
 		</div>
 
 		<div class="collapse navbar-collapse" id="vacstatus-navbar">
 			<ul class="nav navbar-nav">
-				<li class="{{ Route::currentRouteName() != 'home' ? 'visible-xs-inline': '' }} @setActiveLink('home')">
-					<a href="{{ route('home') }}">Home</a>
+				<li>
+					<a href="/home">Home</a>
 				</li>
-				<li class="@setActiveLink('news')">
-					<a href="{{ route('news') }}">News</a>
+				<li>
+					<a href="/news">News</a>
 				</li>
-				<li class="@setActiveLink('list.list')">
-					<a href="{{ route('list.list') }}">Lists</a>
+				<li>
+					<a href="/list">Lists</a>
 				</li>
 
 			@if(\Auth::check())
@@ -31,7 +31,7 @@
 				</li>
 			@endif
 
-				<li class="@setActiveLink('search')">
+				<li>
 					<a href="#searchModal" data-toggle="modal">Look Up Users</a>
 				</li>
 			</ul>
@@ -44,17 +44,17 @@
 					</a>
 					<ul class="dropdown-menu" role="menu">
 						<li>
-							<a href="{{ route('profile', VacStatus\Steam\Steam::to64bit(Auth::user()->small_id)) }}">Profile</a>
+							<a href="/u/{{ VacStatus\Steam\Steam::to64bit(Auth::user()->small_id) }}">Profile</a>
 						</li>
-						<li><a href="{{ route('settings') }}">Settings</a></li>
+						<li><a href="/settings">Settings</a></li>
 						<li class="divider"></li>
-						<li><a href="{{ route('auth.logout') }}">Sign Out</a></li>
+						<li><a href="/auth/logout">Sign Out</a></li>
 					</ul>
 				</li>
 			@else
-				<li><a class="steam-small-login" href="{{ route('auth.login') }}">Sign in through STEAM</a></li>
+				<li><a class="steam-small-login" href="/auth/login">Sign in through STEAM</a></li>
 			@endif
-				<li><a class="heart-red" href="{{ route('donate') }}"><span class="fa fa-heart"></span></a></li>
+				<li><a class="heart-red" href="/donate"><span class="fa fa-heart"></span></a></li>
 			</ul>
 		</div>
 	</div>

@@ -1,6 +1,13 @@
-var ListHandler = React.createClass({
-	submitNewListToServer: function(data)
-	{
+'use strict';
+
+class ListHandler extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {list_info: []};
+		this.notify = new Notify;
+	}
+
+	submitNewListToServer(data) {
 		$.ajax({
 			url: '/api/v1/list',
 			dataType: 'json',
@@ -9,26 +16,25 @@ var ListHandler = React.createClass({
 				title: data.title,
 				privacy: data.privacy
 			},
-			success: function(data) {
+			success: (data) => {
 				if(data.error) {
-					notif.add('danger', data.error).run();
+					this.notify.danger(data.error).run();
 				} else {
-					notif.add('success', 'List has been created!').run();
+					this.notify.success('List has been created!').run();
 					if(this.props.UpdateMyList !== undefined)
 					{
 						this.props.UpdateMyList(data);
 					}
 					this.updateLists(data);
 				}
-			}.bind(this),
-				error: function(xhr, status, err) {
-				notif.add('danger', err).run();
-			}.bind(this)
+			},
+			error: (xhr, status, err) => {
+				this.notify.success(err).run();
+			}
 		});
-	},
+	}
 
-	submitEditedListToServer: function(data)
-	{
+	submitEditedListToServer(data) {
 		this.saveNewDataForParent(data);
 
 		$.ajax({
@@ -39,23 +45,22 @@ var ListHandler = React.createClass({
 				title: data.title,
 				privacy: data.privacy
 			},
-			success: function(data) {
+			success: (data) => {
 				if(data.error) {
-					notif.add('danger', data.error).run();
+					this.notify.danger(data.error).run();
 				} else {
-					notif.add('success', 'List has been saved!').run();
+					this.notify.success('List has been saved!').run();
 					this.updateLists(data);
 					this.sendNewDataToParent();
 				}
-			}.bind(this),
-				error: function(xhr, status, err) {
-				notif.add('danger', err).run();
-			}.bind(this)
+			},
+			error: (xhr, status, err) => {
+				this.notify.danger(err).run();
+			}
 		});
-	},
+	}
 
-	submitNewUserToServer: function(data)
-	{
+	submitNewUserToServer(data) {
 		$.ajax({
 			url: '/api/v1/list/add',
 			dataType: 'json',
@@ -65,35 +70,20 @@ var ListHandler = React.createClass({
 				description: data.description,
 				profile_id: data.profile_id
 			},
-			success: function(data) {
+			success: (data) => {
 				if(data.error) {
-					notif.add('danger', data.error).run();
+					this.notify.danger(data.error).run();
 				} else {
-					notif.add('success', 'User has been added to the list!').run();
+					this.notify.success('User has been added to the list!').run();
 				}
-			}.bind(this),
-				error: function(xhr, status, err) {
-				notif.add('danger', err).run();
-			}.bind(this)
+			},
+			error: (xhr, status, err) => {
+				this.notify.danger(err).run();
+			}
 		});
-	},
+	}
 
-	saveNewDataForParent: function(data)
-	{
-		this.props.newTitle = data.title;
-		this.props.newPrivacy = data.privacy;
-	},
-
-	sendNewDataToParent: function()
-	{
-		this.props.UpdateListTitle({
-			newTitle: this.props.newTitle,
-			newPrivacy: this.props.newPrivacy
-		});
-	},
-
-	submitDeletedListToServer: function(list_id)
-	{
+	submitDeletedListToServer(list_id) {
 		$.ajax({
 			url: '/api/v1/list/'+list_id,
 			dataType: 'json',
@@ -101,23 +91,22 @@ var ListHandler = React.createClass({
 			data: {
 				_method: 'DELETE'
 			},
-			success: function(data) {
+			success: (data) => {
 				if(data.error) {
-					notif.add('danger', data.error).run();
+					this.notify.danger(data.error).run();
 				} else {
-					notif.add('success', 'List has been deleted!').run();
+					this.notify.success('List has been deleted!').run();
 					window.location = "/list";
 				}
-			}.bind(this),
-				error: function(xhr, status, err) {
-				notif.add('danger', err).run();
-			}.bind(this)
+			},
+			error: (xhr, status, err) => {
+				this.notify.danger(err).run();
+			}
 		});
-	},
+	}
 
-	submitSearchUserToServer: function(data)
-	{
-		var searchUsers = $('#searchUsers').text();
+	submitSearchUserToServer(data) {
+		let searchUsers = $('#searchUsers').text();
 
 		$.ajax({
 			url: '/api/v1/list/add/many',
@@ -128,53 +117,55 @@ var ListHandler = React.createClass({
 				list_id: data.list_id,
 				description: data.description
 			},
-			success: function(data) {
+			success: (data) => {
 				if(data.error) {
-					notif.add('danger', data.error).run();
+					this.notify.danger(data.error).run();
 				} else {
-					notif.add('success', 'Users have been added to the list!').run();
+					this.notify.success('Users have been added to the list!').run();
 				}
-			}.bind(this),
-				error: function(xhr, status, err) {
-				notif.add('danger', err).run();
-			}.bind(this)
+			},
+			error: (xhr, status, err) => {
+				this.notify.danger(err).run();
+			}
 		});
-	},
+	}
 
-	fetchLists: function()
-	{
+	fetchLists() {
 		if(!auth_check) return;
+
 		$.ajax({
 			url: '/api/v1/list/simple',
 			dataType: 'json',
-			success: function(data) {
+			success: (data) => {
 				this.updateLists(data);
-			}.bind(this),
-			error: function(xhr, status, err) {
-				notif.add('danger', err).run();
-			}.bind(this)
+			},
+			error: (xhr, status, err) => {
+				this.notify.danger(err).run();
+			}
 		});
-	},
+	}
 
-	updateLists: function(list_info)
-	{
-		this.setState({list_info: list_info});
-	},
+	saveNewDataForParent(data) {
+		this.props.newTitle = data.title;
+		this.props.newPrivacy = data.privacy;
+	}
 
-	componentDidMount: function()
-	{
+	sendNewDataToParent() {
+		this.props.UpdateListTitle({
+			newTitle: this.props.newTitle,
+			newPrivacy: this.props.newPrivacy
+		});
+	}
+
+	updateLists(list_info) {
+		this.setState({list_info});
+	}
+
+	componentDidMount() {
 		this.fetchLists();
-	},
+	}
 
-	getInitialState: function()
-	{
-		return {
-			list_info: []
-		};
-	},
-
-	render: function()
-	{
+	render() {
 		return (
 			<div>
 				<CreateList
@@ -196,7 +187,7 @@ var ListHandler = React.createClass({
 			</div>
 		);
 	}
-});
+}
 
 var CreateList = React.createClass({
 

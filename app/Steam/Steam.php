@@ -212,9 +212,10 @@ class Steam {
 				$steamAPI = new SteamAPI($data);
 				$steamVanityUrl = $steamAPI->fetch('vanityUrl');
 
-				if(isset($steamVanityUrl['type']) && $steamVanityUrl['type'] == 'error'
-					|| !isset($steamVanityUrl['response']['steamid'])
-						&& $steamVanityUrl['response']['success'] == 42) return ['error' => 'Invalid input'];
+				if(isset($steamVanityUrl['type']) && $steamVanityUrl['type'] == 'error' || !isset($steamVanityUrl['response']['steamid']))
+				{
+					return ['error' => 'Invalid input'];
+				}
 
 				$steamid64 = (string) $steamVanityUrl['response']['steamid'];
 
@@ -231,9 +232,7 @@ class Steam {
 			$steamAPI = new SteamAPI($data);
 			$steamVanityUrl = $steamAPI->fetch('vanityUrl');
 
-			if(isset($steamVanityUrl['type']) && $steamVanityUrl['type'] == 'error'
-			   || !isset($steamVanityUrl['response']) ||
-			   !isset($steamVanityUrl['response']['steamid']) && $steamVanityUrl['response']['success'] == 42)
+			if(isset($steamVanityUrl['type']) && $steamVanityUrl['type'] == 'error' || !isset($steamVanityUrl['response']['steamid']))
 			{
 				return ['error' => 'Invalid input'];
 			}

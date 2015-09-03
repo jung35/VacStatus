@@ -13,7 +13,7 @@
 						</div>
 					</div>
 					@if(!Auth::check())
-					<a href="{{ route('auth.login') }}" class="btn">Get Started via STEAM</a>
+					<a href="/auth/login" class="btn">Get Started via STEAM</a>
 					@endif
 					<div id="hero-carousel" class="carousel slide" data-ride="carousel">
 						<div class="carousel-inner" role="listbox">
@@ -60,11 +60,11 @@
 				<div class="col-xs-12">
 					<div class="title">News</div>
 					<ul class="content">
-						@foreach($parsedNews as $singleArticle)
+{{-- 						@foreach($parsedNews as $singleArticle)
 						<li>
 							<strong><a href="{{ route('news') }}">[{{ $singleArticle['created_at'] }}] {{ $singleArticle['title'] }}</a></strong>
 						</li>
-						@endforeach
+						@endforeach --}}
 					</ul>
 				</div>
 			</div>
@@ -158,8 +158,4 @@
 </div>
 
 <div id="listHandler"></div>
-@stop
-
-@section('js')
-	<script src="/js/pages/home.js"></script>
 @stop
