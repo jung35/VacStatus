@@ -339,5 +339,3 @@ var Profile = React.createClass({
 		}
 	}
 });
-
-React.render(<Profile />, document.getElementById('profile'));

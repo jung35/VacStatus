@@ -2,40 +2,43 @@
  
 class Notify {
 	constructor() {
-		this.element = $('.notification');
+		this.element = $(document).find('.notification');
 		this.interval = 0;
 		this.timeEnd = 0;
 	}
 
 	add(type, message) {
-		let newAlert = $('<div />').addClass('alert').addClass('alert-'+type).html(message);
+		let newAlert = $('<div />');
+		newAlert.addClass('alert').addClass('alert-'+type).html(message);
+
 		this.element.append(newAlert);
 		this.interval++;
+
 		return this;
 	}
 
 	success(message) {
-		this.add('success', message);
+		return this.add('success', message);
 	}
 
 	danger(message) {
-		this.add('danger', message);
+		return this.add('danger', message);
 	}
 
 	error(message) {
-		this.add('danger', message);
+		return this.add('danger', message);
 	}
 
 	run(callback) {
+		var initial = this.interval;
 		let alert = this.element.find('.alert');
-		let initial = this.interval;
 
 		alert.each((k , element) =>
 		{
 			setTimeout(() =>
 			{
-       			this.animate($(element), callback);
-       		}, (initial - this.interval) * 100);
+				this.animate($(element), callback);
+			}, (initial - this.interval) * 100);
 
 			this.interval--;
 
@@ -51,10 +54,19 @@ class Notify {
 			}, 500, () =>
 			{
 				item.remove();
-				if(notif.interval == 0 && typeof callback == 'function') {
+				if(this.interval == 0 && typeof callback == 'function') {
 					callback();
 				}
 			});
 		});
 	}
 }
+
+$(function() {
+	if(flashNotification.type)
+	{
+		let notify = new Notify;
+
+		notify[flashNotification.type](flashNotification.message).run();
+	}
+});

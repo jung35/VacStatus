@@ -20,14 +20,7 @@
 	</div>
 </div>
 
-<div class="container">
-	<div class="notification">
-{{-- 		<div class="alert alert-success">There was an error trying to communicate with Steam Server</div>
-		<div class="alert alert-danger">There was an error trying to communicate with Steam Server</div>
-		<div class="alert alert-warning">There was an error trying to communicate with Steam Server</div>
-		<div class="alert alert-info">There was an error trying to communicate with Steam Server</div> --}}
-	</div>
-</div>
+<div class="notification"></div>
 
 <div class="modal fade" id="searchModal" tabIndex="-1" role="dialog">
 	<div class="modal-dialog">

@@ -185,5 +185,3 @@ var ListPortal = React.createClass({
      	);
 	}
 });
-
-React.render(<ListPortal />, document.getElementById('listPortal'));

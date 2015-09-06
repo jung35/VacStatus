@@ -683,7 +683,3 @@ var DisplayPage = React.createClass({
 		return <tbody>{ pagedList }</tbody>;
 	}
 });
-
-
-
-React.render(<List />, document.getElementById('list'));

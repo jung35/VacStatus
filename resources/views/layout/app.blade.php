@@ -8,28 +8,25 @@
 	@include('layout.head')
 </head>
 <body>
-	<div class="wrap">
-		@include('layout.header')
-		
-		@section('content')
-		@show
-		
-		<div class="pushFooter"></div>
-	</div>
 
-	@include('layout.footer')
-
-	@yield('js')
-
+	<div id="app"></div>
+	
 	<script>
-		(function() {
-			@if(session('success'))
-				notif.add('success', '{{ session('success') }}').run()
+		var flashNotification = {
+			 @if(session('success'))
+				type: 'success',
+				message: '{{ session('success') }}'
 			@elseif(session('error'))
-				notif.add('danger', '{{ session('error') }}').run()
+				type: 'error',
+				message: '{{ session('error') }}'
 			@endif
-		})();
+		};
 	</script>
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<script src="/js/all.js"></script>
+
 
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

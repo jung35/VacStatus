@@ -82,7 +82,7 @@ class LoginController extends Controller {
         Auth::logout();
 
 		return redirect()
-			->route('home')
+			->intended('/')
 			->with('success','You have Successfully logged out.');
     }
 

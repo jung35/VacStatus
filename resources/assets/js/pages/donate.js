@@ -201,5 +201,3 @@ var Donate = React.createClass({
         );
 	}
 });
-
-React.render(<Donate />, document.getElementById('donate'))
