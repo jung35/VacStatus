@@ -11,7 +11,7 @@ class Header extends React.Component {
 					<span className="icon-bar"></span>
 				</button>
 				<div className="navbar-display-logo">
-					<a className="navbar-brand" href="/">VacStatus</a>
+					<Link className="navbar-brand" to="app">VacStatus</Link>
 				</div>
 			</div>
         )
@@ -24,7 +24,6 @@ class Header extends React.Component {
 
 		return (
 			<ul className="nav navbar-nav">
-				<li><Link to="app">Home</Link></li>
 				<li><Link to="news">News</Link></li>
 				<li><Link to="list">Lists</Link></li>
 				{ createList }
