@@ -1,61 +1,58 @@
-var currentPage = $('#news').data('page');
+'use strict';
 
-var News = React.createClass({
+class News extends React.Component {
 
-	fetchNews: function()
-	{
+	constructor() {
+		super();
+		this.state = {};
+		this.notify = new Notify;
+	}
+
+	fetchNews(page) {
 		$.ajax({
-			url: '/api/v1/news/?page='+currentPage,
+			url: '/api/v1/news/?page='+page,
 			dataType: 'json',
-			success: function(data) {
-				this.setState({data: data});
-			}.bind(this),
-			error: function(xhr, status, err) {
+			success: (data) => {
+				if(data.error)
+				{
+					this.notify.danger(data.error).run();
+					return;
+				}
+
+				this.setState(data);
+			},
+			error: (xhr, status, err) => {
 				console.error(this.props.url, status, err.toString());
-			}.bind(this)
-		});
-	},
-
-	componentDidMount: function()
-	{
-		this.fetchNews();
-	},
-
-	getInitialState: function()
-	{
-		return {
-			data: null
-		};
-	},
-	
-	render: function() {
-		var data, news, pagination;
-
-		data = this.state.data;
-		
-		if(data !== null)
-		{
-			if(data.error)
-			{
-				return <h1 className="text-center">{data.error}</h1>
 			}
+		});
+	}
 
-			if(data.data !== null)
+	componentDidMount() {
+		let page = this.props.params.page;
+		if(page == undefined || page < 1) page = 1;
+
+		this.fetchNews(page);
+	}
+
+	render() {
+		var state, news, pagination;
+
+		state = this.state;
+		
+		if(state && state.current_page)
+		{
+			if(state.data !== null)
 			{
-				news = data.data.map(function(article, index)
+				news = state.data.map(function(article, index)
 				{
 					return (
-				        <div id={ "news_" + article.id } key={ index } className="article">
-				        	<h3>{ article.title }<br /><small>{ article.created_at }</small></h3>
-				        	<div className="article-content" dangerouslySetInnerHTML={{__html: article.body }} />
-				        	<hr className="divider" />
-				        </div>
-			        );
+						<div id={ "news_" + article.id } key={ index } className="article">
+							<h3>{ article.title }<br /><small>{ article.created_at }</small></h3>
+							<div className="article-content" dangerouslySetInnerHTML={{__html: article.body }} />
+							<hr className="divider" />
+						</div>
+					);
 				});
-			}
-
-			if(data.next_page !== null) {
-
 			}
 
 			return (
@@ -66,11 +63,11 @@ var News = React.createClass({
 							{ news }
 							<nav>
 								<ul className="pager">
-									<li className={"previous" + (data.prev_page === null ? ' disabled' : '')}>
-										<a href={ data.prev_page !== null ? "/news/"+ (data.current_page - 1) : '#'}><span>&larr;</span> Older</a>
+									<li className={"previous" + (state.prev_page === null ? ' disabled' : '')}>
+										<a href={ state.prev_page !== null ? "/news/"+ (state.current_page - 1) : '#'}><span>&larr;</span> Older</a>
 									</li>
-									<li className={"next" + (data.next_page === null ? ' disabled' : '')}>
-										<a href={ data.next_page !== null ? "/news/" + (data.current_page + 1) : '#'}>Newer <span>&rarr;</span></a>
+									<li className={"next" + (state.next_page === null ? ' disabled' : '')}>
+										<a href={ state.next_page !== null ? "/news/" + (state.current_page + 1) : '#'}>Newer <span>&rarr;</span></a>
 									</li>
 								</ul>
 							</nav>
@@ -78,9 +75,9 @@ var News = React.createClass({
 						</div>
 					</div>
 				</div>
-	        );
+			);
 		}
 
 		return <div></div>;
 	}
-});
+}

@@ -40,7 +40,9 @@ class App extends React.Component {
 
 let routes = (
 	<Route name="app" path="/" handler={ App }>
-		<Route name="news" handler={ Home }/>
+		<Route name="news" path="news" handler={ News }>
+			<Route path=":page" handler={ News }/>
+		</Route>
 		<Route name="list" handler={ Home }/>
 		<Route name="donate" handler={ Home }/>
     	<DefaultRoute handler={ Home } />
