@@ -2,8 +2,6 @@
 
 namespace VacStatus\Http\Controllers\APIv1;
 
-use Illuminate\Http\Request;
-
 use VacStatus\Http\Controllers\Controller;
 
 use VacStatus\Models\DonationLog;

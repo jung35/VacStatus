@@ -1,9 +1,8 @@
-<?php namespace VacStatus\Http\Controllers\APIv1;
+<?php
 
-use Illuminate\Http\Request;
+namespace VacStatus\Http\Controllers\APIv1;
 
 use VacStatus\Http\Controllers\Controller;
-use VacStatus\Http\Requests;
 
 use VacStatus\Models\User;
 use VacStatus\Models\UserList;

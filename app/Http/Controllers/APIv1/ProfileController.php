@@ -1,9 +1,8 @@
-<?php namespace VacStatus\Http\Controllers\APIv1;
+<?php
 
-use VacStatus\Http\Requests;
+namespace VacStatus\Http\Controllers\APIv1;
+
 use VacStatus\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
 
 use VacStatus\Update\SingleProfile;
 use VacStatus\Steam\Steam;

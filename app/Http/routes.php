@@ -49,6 +49,8 @@ Route::group(['prefix' => 'api'], function()
 {
 	Route::group(['prefix' => 'v1', 'namespace' => 'APIv1'], function()
 	{
+		get('/', [ 'uses' => 'MainController@index']);
+		get('/me', [ 'uses' => 'MainController@navbar']);
 		get('/profile/{steamid}', [ 'uses' => 'ProfileController@index' ]);
 		get('/search/{searchKey}', [ 'uses' => 'SearchController@search' ]);
 

@@ -51,7 +51,7 @@ class Home extends React.Component {
 						<div className="row">
 							<div className="col-xs-12">
 								<div className="title">Announcement</div>
-								<div className="content">asd</div>
+								<div className="content"></div>
 							</div>
 						</div>
 					</div>
@@ -63,8 +63,8 @@ class Home extends React.Component {
 							<div className="col-xs-12">
 								<div className="title">News</div>
 								<ul className="content">
-									<li><strong><a href="#">[202020] asdasd</a></strong></li>
-									<li><strong><a href="#">[123123] asdasd</a></strong></li>
+									<li><strong><Link to="news">[202020] asdasd</Link></strong></li>
+									<li><strong><Link to="news">[123123] asdasd</Link></strong></li>
 								</ul>
 							</div>
 						</div>

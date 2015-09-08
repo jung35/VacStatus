@@ -15,6 +15,8 @@ class User extends Model implements AuthenticatableContract
 
 	protected $fillable = ['small_id'];
 
+	protected $hidden = ['remember_token', 'user_key'];
+
 	public function isAdmin()
 	{
 		return $this->site_admin >= 1;

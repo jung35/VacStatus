@@ -1,6 +1,36 @@
 'use strict';
 
 class Header extends React.Component {
+	constructor() {
+		super();
+		this.state = {};
+		this.notify = new Notify;
+		this.request = {};
+	}
+
+	fetchMe() {
+		this.request.fetchMe = $.ajax({
+			url: '/api/v1/me',
+			dataType: 'json',
+			success: (data) => {
+				if(data.error)
+				{
+					this.notify.danger(data.error).run();
+					return;
+				}
+
+				this.setState(data);
+			},
+			complete: () => {
+				delete this.request.fetchMe;
+			}
+		});
+	}
+
+	componentDidMount() {
+		this.fetchMe();
+	}
+
 	navHeader () {
 		return (
 			<div className="navbar-header">
@@ -34,17 +64,21 @@ class Header extends React.Component {
 
 	navRight () {
 		let navProfile = <li><a className="steam-small-login" href="/auth/login">Sign in through STEAM</a></li>;
+		let state = this.state;
 
-		if(authCheck)
+		if(authCheck && state.user != undefined && state.user.id != undefined)
 		{
+			let user = state.user;
+			let profile = user.profile;
+
 			navProfile = (
 				<li className="dropdown">
 					<a href="#" className="dropdown-toggle" data-toggle="dropdown">
-						<div className="nav-username">asd</div>
-						<div className="nav-avatar"><img src="" /></div>
+						<div className="nav-username">{ user.display_name }</div>
+						<div className="nav-avatar"><img src={ profile.avatar_thumb } /></div>
 					</a>
 					<ul className="dropdown-menu" role="menu">
-						<li><a href="/u/">Profile</a></li>
+						<li><a href={ "/u/" + user.steam_64_id }>Profile</a></li>
 						<li><a href="/settings">Settings</a></li>
 						<li className="divider" />
 						<li><a href="/auth/logout">Sign Out</a></li>
