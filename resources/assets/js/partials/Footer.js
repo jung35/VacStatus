@@ -26,10 +26,6 @@ class Footer extends React.Component {
 					</div>
 				</div>
 
-				<div className="container">
-					<div className="notification" />
-				</div>
-
 				<div className="modal fade" id="searchModal" tabIndex="-1" role="dialog">
 					<div className="modal-dialog">
 						<div className="modal-content">

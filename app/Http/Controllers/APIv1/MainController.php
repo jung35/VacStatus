@@ -5,6 +5,7 @@ namespace VacStatus\Http\Controllers\APIv1;
 use VacStatus\Http\Controllers\Controller;
 
 use VacStatus\Models\News;
+use VacStatus\Models\Announcement;
 
 use VacStatus\Steam\Steam;
 
@@ -27,7 +28,9 @@ class MainController extends Controller
 			];
 		}
 
-		return compact('parsedNews');
+		$announcement = Announcement::latest();
+
+		return compact('parsedNews', 'announcement');
 	}
 
 	public function navbar ()

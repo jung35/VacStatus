@@ -9,7 +9,7 @@ use VacStatus\Models\Profile;
 class DatabaseController extends Controller {
 	public function index()
 	{
-		return view('admin.pages.database');
+		return view('admin.pages.database.main');
 	}
 
 	public function user()

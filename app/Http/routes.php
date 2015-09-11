@@ -146,6 +146,11 @@ Route::group([
 		post('/{newsId?}', [ 'as' => 'admin.news.save', 'uses' => 'NewsController@saveNews' ]);
 		delete('/{news}', [ 'as' => 'admin.news.delete', 'uses' => 'NewsController@delete' ]);
 	});
+
+	Route::group(['prefix' => 'announcement'], function()
+	{
+		get('/', [ 'as' => 'admin.announcement', 'uses' => 'AnnouncementController@index' ]);
+	});
 });
 
 Route::model('userList', 'VacStatus\Models\UserList', function() { return ['error' => '404']; });

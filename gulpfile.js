@@ -1,11 +1,14 @@
 var elixir = require('laravel-elixir');
 
 var scripts = [
+	'Notify.js',
+	'App.js',
+	'BasicPage.js',
+	'ListHandler.js',
+
 	'partials',
 	'pages',
 
-	'ListHandler.js',
-	'Notify.js',
 	'Router.js',
 ]
 

@@ -1,4 +1,6 @@
-<?php namespace VacStatus\Models;
+<?php
+
+namespace VacStatus\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;

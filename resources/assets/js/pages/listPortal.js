@@ -1,69 +1,34 @@
-var ListPortal = React.createClass({
-	UpdateMyList: function(myNewList)
-	{
-		this.setState($.extend({}, this.state, {my_list: myNewList}));
-	},
+'use strict';
 
-	fetchLists: function()
-	{
-		$.ajax({
+class ListPortal extends BasicPage {
+	constructor(props) {
+		super(props);
+
+		this.state = { my_list: [], friends_list: [] };
+	}
+
+	componentDidMount() {
+		this.fetchLists();
+	}
+
+	fetchLists() {
+		this.request.fetchLists = $.ajax({
 			url: '/api/v1/list',
 			dataType: 'json',
-			success: function(data) {
+			success: (data) => {
 				this.setState($.extend({}, this.state, data));
-			}.bind(this),
-			error: function(xhr, status, err) {
-				console.error(this.props.url, status, err.toString());
-			}.bind(this)
+			},
+			complete: () => {
+				delete this.request.fetchLists;
+			}
 		});
-	},
+	}
 
-	componentDidMount: function()
-	{
-		this.fetchLists();
-	},
+	updateMyList(myNewList) {
+		this.setState($.extend({}, this.state, {my_list: myNewList}));
+	}
 
-	getInitialState: function()
-	{
-		return { my_list: [], friends_list: [] };
-	},
-
-	listPrivacy: function(privacy)
-	{
-		var type = {};
-		switch(privacy)
-		{
-			case "3":
-			case 3:
-				type.name = "Private";
-				type.color = "danger";
-				break;
-			case "2":
-			case 2:
-				type.name = "Friends Only";
-				type.color = "warning";
-				break;
-			default:
-				type.name = "Public";
-				type.color = "success";
-				break;
-		}
-
-		return type;
-	},
-
-	userTitle: function(data)
-	{
-		var title;
-		if(data.beta >= 1) title = "beta-name";
-		if(data.donation >= 10.0) title = "donator-name";
-		if(data.site_admin >= 1) title = "admin-name";
-
-		return title;
-	},
-
-	renderMyList: function(data)
-	{
+	renderMyList(data) {
 		if(data.length < 1) return <div className="custom-list"></div>;
 
 		var myList = data.map(function(list, index)
@@ -104,10 +69,9 @@ var ListPortal = React.createClass({
 				</div>
 			</div>
 		);
-	},
+	}
 
-	renderFriendsList: function(data)
-	{
+	renderFriendsList(data) {
 		if(data.length < 1) return <div className="custom-list"></div>;
 
 		var friendsList = data.map(function(list, index)
@@ -153,10 +117,9 @@ var ListPortal = React.createClass({
 				</div>
 			</div>
 		);
-	},
+	}
 	
-	render: function()
-	{
+	render() {
 		var myList, friendsList;
 
 		myList = this.renderMyList(this.state.my_list);
@@ -180,8 +143,8 @@ var ListPortal = React.createClass({
 				<div className="row">
 					<div className="col-xs-12">{ friendsList }</div>
 				</div>
-				<ListHandler UpdateMyList={this.UpdateMyList} />
+				<ListHandler UpdateMyList={ this.updateMyList } />
 			</div>
      	);
 	}
-});
+}

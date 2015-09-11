@@ -131,7 +131,7 @@ class ListHandler extends React.Component {
 	}
 
 	fetchLists() {
-		if(!auth_check) return;
+		if(!authCheck) return;
 
 		$.ajax({
 			url: '/api/v1/list/simple',

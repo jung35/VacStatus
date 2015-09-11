@@ -11,18 +11,6 @@ use VacStatus\Steam\SteamAPI;
 use DateTime;
 use DateInterval;
 
-/*
-
-	-> Grab all profiles from userlist
-		-> loop through userlist
-			-> add profile_id to an array under userlist_id key
-				e.) user_list_id => [profile_id]
-			-> add 'Profile' to big array and dont add duplicate profile_id
-				e.) $profiles = [Profile] -> not ONLY profile_id
-		->  Loop through
-
- */
-
 class SubscriptionCheck
 {
 	private $userMail;
@@ -190,18 +178,6 @@ class SubscriptionCheck
 				   || $profile->trade != $profileBan['trade'])
 				{
 					$oldProfileBan = ProfileBan::where('profile_id', $profile->id)->first();
-
-					if($profile->community != $profileBan['community']
-					   || $profile->trade != $profileBan['trade'])
-					{
-						$oldProfileBan->timestamps = false;
-					}
-
-					if(($profile->vac_bans != 0 || $profile->game_bans != 0)
-					   && $profile->last_ban_date->format('Y-m-d') !== $profileBan['last_ban_date'])
-					{
-						$oldProfileBan->timestamps = false;
-					}
 
 					if($profile->vac_bans != $profileBan['vac_bans']
 					   || $profile->game_bans != $profileBan['game_bans'])

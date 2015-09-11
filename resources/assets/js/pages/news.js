@@ -1,12 +1,12 @@
 'use strict';
 
-class News extends React.Component {
+class News extends BasicPage {
 
-	constructor() {
-		super();
-		this.state = {};
-		this.notify = new Notify;
-		this.request = {};
+	componentDidMount() {
+		let page = this.props.params.page;
+		if(page == undefined || page < 1) page = 1;
+
+		this.fetchNews(page);
 	}
 
 	fetchNews(page) {
@@ -25,19 +25,6 @@ class News extends React.Component {
 			complete: () => {
 				delete this.request.fetchNews;
 			}
-		});
-	}
-
-	componentDidMount() {
-		let page = this.props.params.page;
-		if(page == undefined || page < 1) page = 1;
-
-		this.fetchNews(page);
-	}
-
-	componentWillUnmount() {
-		$.each(this.request, (k, val) => {
-			if(val) val.abort();
 		});
 	}
 
