@@ -1,6 +1,6 @@
 'use strict';
 
-class News extends BasicPage {
+class News extends BasicComp {
 
 	componentDidMount() {
 		let page = this.props.params.page;

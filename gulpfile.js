@@ -3,7 +3,7 @@ var elixir = require('laravel-elixir');
 var scripts = [
 	'Notify.js',
 	'App.js',
-	'BasicPage.js',
+	'BasicComp.js',
 	'ListHandler.js',
 
 	'partials',

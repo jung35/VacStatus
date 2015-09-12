@@ -1,6 +1,6 @@
 'use strict';
 
-class BasicPage extends React.Component {
+class BasicComp extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -17,7 +17,7 @@ class BasicPage extends React.Component {
 	}
 
 	listPrivacy(privacy) {
-		var type = {};
+		let type = {};
 		switch(privacy)
 		{
 			case "3":
@@ -40,7 +40,8 @@ class BasicPage extends React.Component {
 	}
 
 	userTitle(data) {
-		var title;
+		let title;
+
 		if(data.beta >= 1) title = "beta-name";
 		if(data.donation >= 10.0) title = "donator-name";
 		if(data.site_admin >= 1) title = "admin-name";

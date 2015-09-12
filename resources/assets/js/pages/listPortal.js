@@ -1,10 +1,11 @@
 'use strict';
 
-class ListPortal extends BasicPage {
+class ListPortal extends BasicComp {
 	constructor(props) {
 		super(props);
 
 		this.state = { my_list: [], friends_list: [] };
+
 	}
 
 	componentDidMount() {
@@ -31,9 +32,9 @@ class ListPortal extends BasicPage {
 	renderMyList(data) {
 		if(data.length < 1) return <div className="custom-list"></div>;
 
-		var myList = data.map(function(list, index)
+		let myList = data.map((list, index) =>
 		{
-			privacy = this.listPrivacy(list.privacy);
+			let privacy = this.listPrivacy(list.privacy);
 
 			return (
 				<tr key={index}>
@@ -45,7 +46,7 @@ class ListPortal extends BasicPage {
 					<td className="text-center">{ list.created_at }</td>
 				</tr>
 			);
-		}.bind(this));
+		});
 
 		return (
 			<div className="custom-list">
@@ -74,10 +75,10 @@ class ListPortal extends BasicPage {
 	renderFriendsList(data) {
 		if(data.length < 1) return <div className="custom-list"></div>;
 
-		var friendsList = data.map(function(list, index)
+		let friendsList = data.map((list, index) =>
 		{
-			var privacy = this.listPrivacy(list.privacy);
-			var userTitle = this.userTitle(list);
+			let privacy = this.listPrivacy(list.privacy);
+			let userTitle = this.userTitle(list);
 
 			return (
 				<tr key={index}>
@@ -92,7 +93,7 @@ class ListPortal extends BasicPage {
 					<td className="text-center">{ list.created_at }</td>
 				</tr>
 			);
-		}.bind(this));
+		});
 
 		return (
 			<div className="custom-list">
@@ -120,30 +121,32 @@ class ListPortal extends BasicPage {
 	}
 	
 	render() {
-		var myList, friendsList;
+		let myList, friendsList;
 
 		myList = this.renderMyList(this.state.my_list);
 		friendsList = this.renderFriendsList(this.state.friends_list);
 
 		return (
-			<div className="container">
-				<div className="row">
-					<div className="col-xs-12">
-						<div className="special-list">
-							<a href="/list/most">Most Tracked Users</a>
-							<a href="/list/latest">Latest Added Users</a>
-							<a href="/list/latest/vac">Latest VAC Bans</a>
-							<a href="/list/latest/game">Latest Game Bans</a>
+			<div id="listPortal" className="listPortal-page">
+				<div className="container">
+					<div className="row">
+						<div className="col-xs-12">
+							<div className="special-list">
+								<a href="/list/most">Most Tracked Users</a>
+								<a href="/list/latest">Latest Added Users</a>
+								<a href="/list/latest/vac">Latest VAC Bans</a>
+								<a href="/list/latest/game">Latest Game Bans</a>
+							</div>
 						</div>
 					</div>
+					<div className="row">
+						<div className="col-xs-12">{ myList }</div>
+					</div>
+					<div className="row">
+						<div className="col-xs-12">{ friendsList }</div>
+					</div>
+					<ListHandler UpdateMyList={ this.updateMyList } />
 				</div>
-				<div className="row">
-					<div className="col-xs-12">{ myList }</div>
-				</div>
-				<div className="row">
-					<div className="col-xs-12">{ friendsList }</div>
-				</div>
-				<ListHandler UpdateMyList={ this.updateMyList } />
 			</div>
      	);
 	}

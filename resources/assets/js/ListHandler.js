@@ -1,14 +1,39 @@
 'use strict';
 
-class ListHandler extends React.Component {
+class ListHandler extends BasicComp {
 	constructor(props) {
 		super(props);
-		this.state = {list_info: []};
-		this.notify = new Notify;
+
+		this.state = { list_info: [] };
+
+		this.submitNewListToServer = this.submitNewListToServer.bind(this);
+		this.submitEditedListToServer = this.submitEditedListToServer.bind(this);
+		this.submitDeletedListToServer = this.submitDeletedListToServer.bind(this);
+		this.submitNewUserToServer = this.submitNewUserToServer.bind(this);
+		this.submitSearchUserToServer = this.submitSearchUserToServer.bind(this);
+	}
+
+	componentDidMount() {
+		this.fetchLists();
+	}
+
+	fetchLists() {
+		if(!authCheck) return;
+
+		this.request.fetchLists = $.ajax({
+			url: '/api/v1/list/simple',
+			dataType: 'json',
+			success: (data) => {
+				this.updateLists(data);
+			},
+			complete: () => {
+				delete this.request.fetchLists;
+			}
+		});
 	}
 
 	submitNewListToServer(data) {
-		$.ajax({
+		this.request.submitNewListToServer = $.ajax({
 			url: '/api/v1/list',
 			dataType: 'json',
 			type: 'POST',
@@ -19,17 +44,23 @@ class ListHandler extends React.Component {
 			success: (data) => {
 				if(data.error) {
 					this.notify.danger(data.error).run();
-				} else {
-					this.notify.success('List has been created!').run();
-					if(this.props.UpdateMyList !== undefined)
-					{
-						this.props.UpdateMyList(data);
-					}
-					this.updateLists(data);
+					return;
 				}
+
+				console.log('notify', this.notify);
+
+				this.notify.success('List has been created!').run();
+
+				console.log('typeof', typeof this.props.UpdateMyList);
+				if(this.props.UpdateMyList !== undefined)
+				{
+					this.props.UpdateMyList(data);
+				}
+
+				this.updateLists(data);
 			},
-			error: (xhr, status, err) => {
-				this.notify.success(err).run();
+			complete: () => {
+				delete this.request.submitNewListToServer;
 			}
 		});
 	}
@@ -37,7 +68,7 @@ class ListHandler extends React.Component {
 	submitEditedListToServer(data) {
 		this.saveNewDataForParent(data);
 
-		$.ajax({
+		this.request.submitEditedListToServer = $.ajax({
 			url: '/api/v1/list/'+data.list_id,
 			dataType: 'json',
 			type: 'POST',
@@ -48,20 +79,21 @@ class ListHandler extends React.Component {
 			success: (data) => {
 				if(data.error) {
 					this.notify.danger(data.error).run();
-				} else {
-					this.notify.success('List has been saved!').run();
-					this.updateLists(data);
-					this.sendNewDataToParent();
+					return;
 				}
+
+				this.notify.success('List has been saved!').run();
+				this.updateLists(data);
+				this.sendNewDataToParent();
 			},
-			error: (xhr, status, err) => {
-				this.notify.danger(err).run();
+			complete: () => {
+				delete this.request.submitEditedListToServer;
 			}
 		});
 	}
 
 	submitNewUserToServer(data) {
-		$.ajax({
+		this.request.submitNewUserToServer = $.ajax({
 			url: '/api/v1/list/add',
 			dataType: 'json',
 			type: 'POST',
@@ -73,31 +105,31 @@ class ListHandler extends React.Component {
 			success: (data) => {
 				if(data.error) {
 					this.notify.danger(data.error).run();
-				} else {
-					this.notify.success('User has been added to the list!').run();
+					return;
 				}
+
+				this.notify.success('User has been added to the list!').run();
 			},
-			error: (xhr, status, err) => {
-				this.notify.danger(err).run();
+			complete: () => {
+				delete this.request.submitNewUserToServer;
 			}
 		});
 	}
 
 	submitDeletedListToServer(list_id) {
-		$.ajax({
+		this.request.submitDeletedListToServer = $.ajax({
 			url: '/api/v1/list/'+list_id,
 			dataType: 'json',
 			type: 'POST',
-			data: {
-				_method: 'DELETE'
-			},
+			data: { _method: 'DELETE' },
 			success: (data) => {
 				if(data.error) {
 					this.notify.danger(data.error).run();
-				} else {
-					this.notify.success('List has been deleted!').run();
-					window.location = "/list";
+					return;
 				}
+
+				this.notify.success('List has been deleted!').run();
+				window.location = "/list";
 			},
 			error: (xhr, status, err) => {
 				this.notify.danger(err).run();
@@ -108,7 +140,7 @@ class ListHandler extends React.Component {
 	submitSearchUserToServer(data) {
 		let searchUsers = $('#searchUsers').text();
 
-		$.ajax({
+		this.request.submitSearchUserToServer = $.ajax({
 			url: '/api/v1/list/add/many',
 			dataType: 'json',
 			type: 'POST',
@@ -123,21 +155,6 @@ class ListHandler extends React.Component {
 				} else {
 					this.notify.success('Users have been added to the list!').run();
 				}
-			},
-			error: (xhr, status, err) => {
-				this.notify.danger(err).run();
-			}
-		});
-	}
-
-	fetchLists() {
-		if(!authCheck) return;
-
-		$.ajax({
-			url: '/api/v1/list/simple',
-			dataType: 'json',
-			success: (data) => {
-				this.updateLists(data);
 			},
 			error: (xhr, status, err) => {
 				this.notify.danger(err).run();
@@ -161,15 +178,11 @@ class ListHandler extends React.Component {
 		this.setState({list_info});
 	}
 
-	componentDidMount() {
-		this.fetchLists();
-	}
-
 	render() {
 		return (
 			<div>
 				<CreateList
-					CreateListSend={this.submitNewListToServer}
+					CreateListSend={ this.submitNewListToServer }
 				/>
 				<EditList
 					editData={this.props.editData}
@@ -189,16 +202,22 @@ class ListHandler extends React.Component {
 	}
 }
 
-var CreateList = React.createClass({
+class CreateList extends BasicComp {
 
-	handleSubmit: function(e) {
+	constructor(props) {
+		super(props);
+
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	handleSubmit(e) {
 		e.preventDefault();
 
-		var title = this.refs.createListTitle.getDOMNode().value.trim(),
-			privacy = this.refs.createListPrivacy.getDOMNode().value.trim();
+		let title = this.refs.createListTitle.getDOMNode().value.trim();
+		let privacy = this.refs.createListPrivacy.getDOMNode().value.trim();
 
 		if (!title || !privacy) {
-			notif.add('danger', 'All fields need to be filled out!').run();
+			this.notify.danger('All fields need to be filled out!').run();
 			return;
 		}
 
@@ -211,10 +230,9 @@ var CreateList = React.createClass({
 		this.refs.createListPrivacy.getDOMNode().value = '1';
 
 		$('#createListModal').modal('hide');
-	},
+	}
 
-	render: function()
-	{
+	render() {
 		return (
 			<div className="modal fade" id="createListModal" tabIndex="-1" role="dialog">
 				<div className="modal-dialog">
@@ -248,25 +266,32 @@ var CreateList = React.createClass({
 			</div>
 		);
 	}
-});
+};
 
-var EditList = React.createClass({
+class EditList extends BasicComp {
 
-	handleDelete: function(e) {
-		var list_id = this.props.editData.id;
-		this.props.DeleteListSend(list_id);
+	constructor(props) {
+		super(props);
+
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleDelete = this.handleDelete.bind(this);
+	}
+
+	handleDelete(e) {
+		this.props.DeleteListSend(this.props.editData.id);
+
 		$('#editListModal').modal('hide');
-	},
+	}
 
-	handleSubmit: function(e) {
+	handleSubmit(e) {
 		e.preventDefault();
 
-		var title = this.refs.editListTitle.getDOMNode().value.trim(),
-			privacy = this.refs.editListPrivacy.getDOMNode().value.trim(),
-			list_id = this.props.editData.id;
+		let title = this.refs.editListTitle.getDOMNode().value.trim();
+		let privacy = this.refs.editListPrivacy.getDOMNode().value.trim();
+		let list_id = this.props.editData.id;
 
 		if (!title || !privacy || !list_id) {
-			notif.add('danger', 'All fields need to be filled out!').run();
+			this.notify.danger('All fields need to be filled out!').run();
 			return;
 		}
 
@@ -277,18 +302,12 @@ var EditList = React.createClass({
 		});
 
 		$('#editListModal').modal('hide');
-	},
+	}
 
-	render: function()
-	{
-		var editData; 
+	render() {
+		let editData = this.props.editData;
 
-		editData = this.props.editData;
-
-		if(editData == null || editData.title == null)
-		{
-			return <div></div>;
-		}
+		if(editData == null || editData.title == null) return <div></div>;
 
 		return (
 			<div className="modal fade" id="editListModal" tabIndex="-1" role="dialog">
@@ -324,30 +343,36 @@ var EditList = React.createClass({
 			</div>
 		);
 	}
-});
+};
 
 $(document).on("click", ".open-addUserModal", function()
 {
-	var profileId = $(this).data('id');
+	let profileId = $(this).data('id');
 	$("#addUserModal").find('#addUserProfileId').val(profileId);
 });	
 
-var AddUserToList = React.createClass({
-	handleSubmit: function(e)
-	{
+class AddUserToList extends BasicComp {
+
+	constructor(props) {
+		super(props);
+
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	handleSubmit(e) {
 		e.preventDefault();
 
-		var list_id = this.refs.addUserList.getDOMNode().value.trim(),
-			description = this.refs.addUserDescription.getDOMNode().value.trim(),
-			profile_id = this.refs.addUserProfileId.getDOMNode().value.trim();
+		let list_id = this.refs.addUserList.getDOMNode().value.trim();
+		let description = this.refs.addUserDescription.getDOMNode().value.trim();
+		let profile_id = this.refs.addUserProfileId.getDOMNode().value.trim();
 
 		if (!list_id) {
-			notif.add('danger', 'Please select a list!').run();
+			this.notify.danger('Please select a list!').run();
 			return;
 		}
 
 		if(!profile_id) {
-			notif.add('danger', 'Please select a user!').run();
+			this.notify.danger('Please select a user!').run();
 			return;
 		}
 
@@ -361,11 +386,10 @@ var AddUserToList = React.createClass({
 		this.refs.addUserProfileId.getDOMNode().value = '';
 
 		$('#addUserModal').modal('hide');
-	},
+	}
 
-	render: function()
-	{
-		var listOptions = this.props.myList.map(function(list, key) {
+	render() {
+		let listOptions = this.props.myList.map((list, key) => {
 			return <option key={ key } value={ list.id }>{ list.title }</option>;
 		});
 
@@ -401,18 +425,24 @@ var AddUserToList = React.createClass({
 			</div>
 		);
 	}
-});
+};
 
-var AddUsersFromSearch = React.createClass({
-	handleSubmit: function(e)
-	{
+class AddUsersFromSearch extends BasicComp {
+
+	constructor(props) {
+		super(props);
+
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	handleSubmit(e) {
 		e.preventDefault();
 
-		var list_id = this.refs.addUserList.getDOMNode().value.trim(),
-			description = this.refs.addUserDescription.getDOMNode().value.trim();
+		let list_id = this.refs.addUserList.getDOMNode().value.trim();
+		let description = this.refs.addUserDescription.getDOMNode().value.trim();
 
 		if (!list_id) {
-			notif.add('danger', 'Please select a list!').run();
+			this.notify.danger('Please select a list!').run();
 			return;
 		}
 
@@ -424,10 +454,10 @@ var AddUsersFromSearch = React.createClass({
 		this.refs.addUserDescription.getDOMNode().value = '';
 
 		$('#addAllUsers').modal('hide');
-	},
+	}
 
-	render: function() {
-		var listOptions = this.props.myList.map(function(list, key) {
+	render() {
+		let listOptions = this.props.myList.map((list, key) => {
 			return <option key={ key } value={ list.id }>{ list.title }</option>;
 		});
 
@@ -462,4 +492,4 @@ var AddUsersFromSearch = React.createClass({
 			</div>
 		);
 	}
-})
+}

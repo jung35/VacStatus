@@ -1,10 +1,5 @@
 import React from 'react';
-import Router from 'react-router';
-
-var DefaultRoute = Router.DefaultRoute;
-var Link = Router.Link;
-var Route = Router.Route;
-var RouteHandler = Router.RouteHandler;
+import { Router, Route, RouteHandler, DefaultRoute, Link } from 'react-router'
 
 var authCheck = $('meta[name="auth"]').attr('content');
 var _token = $('meta[name="_token"]').attr('content');
