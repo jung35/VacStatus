@@ -1,18 +1,18 @@
 'use strict';
 
 let routes = (
-	<Route name="app" path="/" handler={ App }>
-		<Route name="news" handler={ News }>
-			<Route path=":page" handler={ News }/>
+	<Router history={ createBrowserHistory() }>
+		<Route path="/" component={ App }>
+			<IndexRoute component={ Home } />
+			<Route path="news" component={ News }>
+				<Route path=":page" component={ News }/>
+			</Route>
+			<Route path="list" component={ ListPortal }/>
+			<Route path="list/:listId" component={ List }/>
+			<Route path="search/:searchId" component={ Search }/>
+			<Route path="donate" component={ Home }/>
 		</Route>
-		<Route name="list" handler={ ListPortal }>
-			<Route path="vac" handler={ ListPortal }/>
-		</Route>
-		<Route name="donate" handler={ Home }/>
-    	<DefaultRoute handler={ Home } />
-    </Route>
+	</Router>
 );
 
-Router.run(routes, Router.HistoryLocation, (Handler) => {
-	React.render(<Handler />, document.getElementById('app'));
-});
+React.render(routes, document.getElementById('app'));

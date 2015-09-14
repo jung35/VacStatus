@@ -1,11 +1,57 @@
+'use strict';
+
 var grab = $('#list').data('grab'),
 	searchKey = $('#list').data('search');
 
 var filterName = ['All', 'Ban', 'No Ban'];
 
-var List = React.createClass({
-	UpdateListTitle: function(newData)
-	{
+class List extends BasicComp {
+
+	constructor(props) {
+		super(props);
+		console.log('list', props);
+
+		if(this.listId == undefined && this.props.search == undefined) {
+			this.notify.error('Invalid List').run();
+		}
+
+		this.state = { list_info: {}, profiles: [], page: 0 };
+	}
+
+	componentDidMount() {
+		this.fetchList();
+	}
+
+	get listId() {
+		return this.props.params == undefined ? undefined : this.props.params.listId;
+	}
+
+	fetchList() {
+		let url;
+
+		if(this.listId != undefined) url = '/api/v1/list/'+this.listId;
+		if(this.props.search != undefined) url = '/api/v1/search/'+this.props.search
+
+		if(url == undefined) return;
+
+		this.request.fetchList = $.ajax({
+			url: url,
+			dataType: 'json',
+			success: (data) => {
+				this.setState($.extend({}, this.state, data));
+				this.profiles = data.profiles;
+			},
+			complete: () => {
+				delete this.request.fetchNews;
+			}
+		});
+	}
+
+	componentDidUpdate() {
+		$('[data-toggle="tooltip"]').tooltip()
+	}
+
+	updateListTitle(newData) {
 		this.state.list_info = $.extend({}, this.state.list_info, {
 			title: newData.newTitle,
 			privacy: newData.newPrivacy
@@ -13,44 +59,10 @@ var List = React.createClass({
 
 
 		this.setState(this.state);
-	},
+	}
 
-	fetchList: function()
-	{
-		var url = '/api/v1/list/'+grab;
-		if(grab == 'search') url = 'api/v1/search/'+searchKey
-
-		$.ajax({
-			url: url,
-			dataType: 'json',
-			success: function(data) {
-				this.setState($.extend({}, this.state, data));
-				this.props.profiles = data.profiles;
-			}.bind(this),
-			error: function(xhr, status, err) {
-				console.error(this.props.url, status, err.toString());
-			}.bind(this)
-		});
-	},
-
-	componentDidMount: function()
-	{
-		this.fetchList();
-	},
-
-	getInitialState: function()
-	{
-		return { list_info: {}, profiles: [], page: 0 };
-	},
-
-	componentDidUpdate: function()
-	{
-		$('[data-toggle="tooltip"]').tooltip()
-	},
-
-	submitDeleteUserToServer: function(profile)
-	{
-		$.ajax({
+	submitDeleteUserToServer(profile) {
+		this.request.submitDeleteUserToServer = $.ajax({
 			url: '/api/v1/list/delete',
 			dataType: 'json',
 			type: 'POST',
@@ -59,70 +71,68 @@ var List = React.createClass({
 				list_id: this.state.list_info.id,
 				profile_id: profile.id
 			},
-			success: function(data) {
+			success: (data) => {
 				if(data.error) {
-					notif.add('danger', data.error).run();
-				} else {
-					notif.add('success', 'User has been removed from the list!').run();
-					this.setState($.extend({}, this.state, data));
-					this.props.profiles = data.profiles;
+					this.notify.danger(data.error).run();
+					return;
 				}
-			}.bind(this),
-				error: function(xhr, status, err) {
-				notif.add('danger', err).run();
-			}.bind(this)
-		});
-	},
 
-	submitSubscriptionToServer: function()
-	{
-		$.ajax({
-			url: '/api/v1/list/subscribe/' + this.state.list_info.id,
-			dataType: 'json',
-			type: 'POST',
-			success: function(data) {
-				if(data.error) {
-					notif.add('danger', data.error).run();
-				} else {
-					notif.add('success', 'You have subscribed to the list!').run();
-					this.setState($.extend({}, this.state, data));
-					this.props.profiles = data.profiles;
-				}
-			}.bind(this),
-				error: function(xhr, status, err) {
-				notif.add('danger', err).run();
-			}.bind(this)
-		});
-
-	},
-
-	submitUnsubscriptionToServer: function()
-	{
-		$.ajax({
-			url: '/api/v1/list/subscribe/' + this.state.list_info.id,
-			dataType: 'json',
-			type: 'POST',
-			data: {
-				_method: 'DELETE',
+				this.notify.success('User has been removed from the list!').run();
+				this.setState($.extend({}, this.state, data));
+				this.profiles = data.profiles;
 			},
-			success: function(data) {
-				if(data.error) {
-					notif.add('danger', data.error).run();
-				} else {
-					notif.add('success', 'You have unsubscribed from the list!').run();
-					this.setState($.extend({}, this.state, data));
-					this.props.profiles = data.profiles;
-				}
-			}.bind(this),
-				error: function(xhr, status, err) {
-				notif.add('danger', err).run();
-			}.bind(this)
+			complete: () => {
+				delete this.request.submitDeleteUserToServer;
+			}
 		});
-	},
+	}
 
-	submitManyUsersToServer: function(data)
-	{
-		$.ajax({
+	submitSubscriptionToServer() {
+		this.request.submitSubscriptionToServer = $.ajax({
+			url: '/api/v1/list/subscribe/' + this.state.list_info.id,
+			dataType: 'json',
+			type: 'POST',
+			success: (data) => {
+				if(data.error) {
+					this.notify.danger(data.error).run();
+					return;
+				}
+
+				this.notify.success('You have subscribed to the list!').run();
+				this.setState($.extend({}, this.state, data));
+				this.profiles = data.profiles;
+			},
+			complete: () => {
+				delete this.request.submitSubscriptionToServer;
+			}
+		});
+
+	}
+
+	submitUnsubscriptionToServer() {
+		this.request.submitUnsubscriptionToServer = $.ajax({
+			url: '/api/v1/list/subscribe/' + this.state.list_info.id,
+			dataType: 'json',
+			type: 'POST',
+			data: { _method: 'DELETE', },
+			success: (data) => {
+				if(data.error) {
+					this.notify.danger(data.error).run();
+					return;
+				}
+
+				this.notify.success('You have unsubscribed from the list!').run();
+				this.setState($.extend({}, this.state, data));
+				this.profiles = data.profiles;
+			},
+			complete: () => {
+				delete this.request.submitUnsubscriptionToServer;
+			}
+		});
+	}
+
+	submitManyUsersToServer(data) {
+		this.request.submitManyUsersToServer = $.ajax({
 			url: '/api/v1/list/add/many',
 			dataType: 'json',
 			type: 'POST',
@@ -131,81 +141,53 @@ var List = React.createClass({
 				description: data.description,
 				list_id: grab
 			},
-			success: function(data) {
+			success: (data) => {
 				this.setState($.extend({}, this.state, data));
-				this.props.profiles = data.profiles;
-			}.bind(this),
-				error: function(xhr, status, err) {
-				notif.add('danger', err).run();
-			}.bind(this)
+				this.profiles = data.profiles;
+			},
+			complete: () => {
+				delete this.request.submitManyUsersToServer;
+			}
 		});
-	},
+	}
 
-	actionChangePage: function(page)
-	{
+	actionChangePage(page) {
 		this.setState($.extend({}, this.state, {page: page}));
-	},
+	}
 
-	listPrivacy: function(privacy)
-	{
-		var type = {};
-		switch(privacy)
-		{
-			case "3":
-			case 3:
-				type.name = "Private";
-				type.color = "danger";
-				break;
-			case "2":
-			case 2:
-				type.name = "Friends Only";
-				type.color = "warning";
-				break;
-			default:
-				type.name = "Public";
-				type.color = "success";
-				break;
-		}
+	displaySimilar(e) {
+		let input = e.target;
+		let searchValue = input.value;
 
-		return type;
-	},
-
-	displaySimilar: function(e)
-	{
-		var input = e.target;
-		var searchValue = input.value;
-
-		this.props.searchValue = searchValue;
+		this.searchValue = searchValue;
 
 		this.sortFilters();
-	},
+	}
 
-	toggleFilterButton: function()
-	{
-		var filterName = ['All', 'Ban', 'No Ban'];
-		if(this.props.filter == undefined) this.props.filter = 0;
+	toggleFilterButton() {
+		let filterName = ['All', 'Ban', 'No Ban'];
+		if(this.filter == undefined) this.filter = 0;
 
-		this.props.filter++;
+		this.filter++;
 
-		if(this.props.filter >= filterName.length)  this.props.filter = 0;
-		$('.btn-filter-list').html('Show: ' + filterName[this.props.filter]);
+		if(this.filter >= filterName.length)  this.filter = 0;
+		$('.btn-filter-list').html('Show: ' + filterName[this.filter]);
 
 		this.sortFilters();
-	},
+	}
 
-	sortFilters: function()
-	{
-		var searchValue, filter;
-		var profiles = [];
+	sortFilters() {
+		let searchValue, filter;
+		let profiles = [];
 
-		searchValue = this.props.searchValue;
-		filter = this.props.filter;
+		searchValue = this.searchValue;
+		filter = this.filter;
 
 		if(searchValue == undefined) searchValue = '';
 		if(filter == undefined) filter = 0;
 
-		this.props.profiles.map(function(val, index) {
-			var displayName = val.display_name;
+		this.profiles.map((val, index) => {
+			let displayName = val.display_name;
 
 			if(displayName.toLowerCase().indexOf(searchValue.toLowerCase()) == -1) return;
 
@@ -223,12 +205,11 @@ var List = React.createClass({
 		});
 
 		this.setState($.extend({}, this.state, {profiles: profiles}));
-	},
+	}
 
-	displayPerPage: function(e)
-	{
-		var input = e.target;
-		var perPageValue = input.value;
+	displayPerPage(e) {
+		let input = e.target;
+		let perPageValue = input.value;
 
 		if(typeof(Storage) !== "undefined")
 		{
@@ -236,12 +217,11 @@ var List = React.createClass({
 		}
 
 		this.actionChangePage(0);
-	},
+	}
 
-	render: function()
-	{
+	render() {
 
-		var listInfo, profiles, page,
+		let listInfo, profiles, page,
 			author, privacy, listDetails,
 			sortedList, listElement,
 			eListAction, storageDisplayPerPage;
@@ -304,7 +284,7 @@ var List = React.createClass({
 			</div>
 		];
 
-		if(auth_check)
+		if(authCheck)
 		{
 			if(grab == "search")
 			{
@@ -394,7 +374,7 @@ var List = React.createClass({
 		);
 
 		return (
-			<div>
+			<div id="list" className="list-page">
 				<div className="list-action-bar hidden-lg">
 					<div className="container">
 						<div className="row">
@@ -411,25 +391,22 @@ var List = React.createClass({
 					</div>
 				</div>
 				{ listElement }
-				<ListHandler UpdateListTitle={this.UpdateListTitle} editData={ listInfo } />
+				<ListHandler UpdateListTitle={this.updateListTitle} editData={ listInfo } />
 			</div>
 		);
 	}
-});
+}
 
-var ListAction = React.createClass({
-	doSub: function()
-	{
+class ListAction extends BasicComp {
+	doSub() {
 		this.props.ListSubscribe();
-	},
+	}
 
-	doUnsub: function()
-	{
+	doUnsub() {
 		this.props.ListUnsubscribe();
-	},
+	}
 
-	addMany: function(e)
-	{
+	addMany(e) {
 		e.preventDefault();
 
 		var search = this.refs.search.getDOMNode().value.trim();
@@ -439,10 +416,9 @@ var ListAction = React.createClass({
 
 		this.refs.search.getDOMNode().value = '';
 		this.refs.description.getDOMNode().value = '';
-	},
+	}
 
-	render: function()
-	{
+	render() {
 		var listInfo, editList,
 		subButton, addUsers;
 
@@ -524,21 +500,15 @@ placeholder="2 ways to search: =================================
 			</div>
 		);
 	}
-});
+}
 
-var ListPagination = React.createClass({
-	changePage: function(page)
-	{
+class ListPagination extends BasicComp {
+	changePage(page) {
 		this.props.listChangePage(page);
-	},
+	}
 
-	render: function()
-	{
-		var list,
-		page,
-		pagePrev,
-		pageNext,
-		pageList;
+	render() {
+		var list, page, pagePrev, pageNext, pageList;
 
 		list = this.props.list;
 		page = this.props.page;
@@ -578,18 +548,16 @@ var ListPagination = React.createClass({
 			</ul>
 		</nav>);
 	}
-});
+}
 
-var DisplayPage = React.createClass({
+class DisplayPage extends BasicComp {
 
-	sendDeleteUserFromList: function(profile)
-	{
-		this.props.deleteUserFromList(profile);
-	},
+	sendDeleteUserFromList(profile) {
+		this.props.defleteUserFromList(profile);
+	}
 
-	render: function()
-	{
-		var list, page, listInfo;
+	render() {
+		let list, page, listInfo, pagedList;
 
 		list = this.props.list;
 		page = this.props.page;
@@ -623,11 +591,11 @@ var DisplayPage = React.createClass({
 			);
 		}
 
-		pagedList = list[page - 1].map(function(profile, index)
+		pagedList = list[page - 1].map((profile, index) =>
 		{
-			var auth, specialColors, profile_description;
+			let auth, specialColors, profile_description;
 
-			if(auth_check) {
+			if(authCheck) {
 				if(listInfo.my_list) {
 					auth = (
 						<span className="pointer userListModify open-addUserModal" onClick={this.sendDeleteUserFromList.bind(this, profile)} data-id={ profile.id }>
@@ -643,10 +611,7 @@ var DisplayPage = React.createClass({
 				}
 			}
 
-			specialColors = "";
-			if(profile.beta >= 1) specialColors = "beta-name";
-			if(profile.donation >= 10.0) specialColors = "donator-name";
-			if(profile.site_admin >= 1) specialColors = "admin-name";
+			specialColors = this.userTitle(profile);
 
 			if(profile.profile_description)
 			{
@@ -674,12 +639,12 @@ var DisplayPage = React.createClass({
 						{ profile.game_bans > 0 ? profile.game_bans : '-'}
 					</td>	
 					<td className="user_track_number text-center">
-						{ profile.times_added.number }
+						{ profile.times_added.number == null ? 0 : profile.times_added.number }
 					</td>
 				</tr>
 			);
-		}.bind(this));
+		});
 
 		return <tbody>{ pagedList }</tbody>;
 	}
-});
+}

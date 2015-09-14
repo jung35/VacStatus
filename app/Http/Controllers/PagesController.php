@@ -98,7 +98,7 @@ class PagesController extends Controller {
 	{
 		$searchQuery = Input::get('search');
 
-		if(!$searchQuery) return redirect()->route('home');
+		if(!$searchQuery) return redirect()->intended('/');
 
 		$randomString = str_random(12);
 		$searchCacheName = "search_key_";
@@ -111,8 +111,6 @@ class PagesController extends Controller {
 
 		Cache::put($searchCacheName.$randomString, $searchQuery, $expiresAt);
 
-		return view('pages/list')
-			->withGrab('search')
-			->withSearch($randomString);
+		return redirect("/search/$randomString");
 	}
 }

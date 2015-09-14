@@ -40,7 +40,7 @@ class BasicComp extends React.Component {
 	}
 
 	userTitle(data) {
-		let title;
+		let title = "";
 
 		if(data.beta >= 1) title = "beta-name";
 		if(data.donation >= 10.0) title = "donator-name";

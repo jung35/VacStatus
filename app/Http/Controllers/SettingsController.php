@@ -22,7 +22,7 @@ class SettingsController extends Controller
 		if(!isset($userMail->id))
 		{
 			if(Auth::check()) return redirect()->route('settings');
-			return redirect()->route('home');
+			return redirect()->intended('/');
 		}
 
 		if($userMail->email == $email && $userMail->verify == $verifyKey)
@@ -34,7 +34,8 @@ class SettingsController extends Controller
 		}
 
 		$userMail->save();
+		
 		if(Auth::check()) return redirect()->route('settings');
-		return redirect()->route('home');
+		return redirect()->intended('/');
 	}
 }

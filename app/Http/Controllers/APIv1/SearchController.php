@@ -22,7 +22,7 @@ class SearchController extends Controller
 
 		if(!Cache::has($searchCache)) return ['error' => 'no values'];
 
-		$search = Steam::parseSearch(Cache::pull($searchCache));
+		$search = Steam::parseSearch(Cache::get($searchCache));
 		
 		if(Auth::check())
 		{

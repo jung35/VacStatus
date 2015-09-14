@@ -1,8 +1,6 @@
 <?php
 
-get('/', function() {
-	return view('pages.home');
-});
+get('/', function() { return view('pages.home'); });
 
 Route::group(['prefix' => 'auth'], function()
 {
@@ -32,7 +30,7 @@ Route::group(['prefix' => 'auth'], function()
 // get('/contact', [ 'as' => 'contact', 'uses' => 'PagesController@contactPage' ]);
 // get('/donate', [ 'as' => 'donate', 'uses' => 'PagesController@donatePage' ]);
 
-// post('/search', [ 'as' => 'search', 'uses' => 'PagesController@searchPage' ]);
+post('/search', [ 'as' => 'search', 'uses' => 'PagesController@searchPage' ]);
 
 // Route::group(['prefix' => 'settings'], function()
 // {

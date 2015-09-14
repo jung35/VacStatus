@@ -6,6 +6,8 @@ class ListPortal extends BasicComp {
 
 		this.state = { my_list: [], friends_list: [] };
 
+		console.log(props);
+
 	}
 
 	componentDidMount() {

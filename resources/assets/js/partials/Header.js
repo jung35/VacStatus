@@ -41,7 +41,7 @@ class Header extends React.Component {
 					<span className="icon-bar"></span>
 				</button>
 				<div className="navbar-display-logo">
-					<Link className="navbar-brand" to="app">VacStatus</Link>
+					<Link className="navbar-brand" to="/" activeClassName="active">VacStatus</Link>
 				</div>
 			</div>
         )
@@ -54,8 +54,8 @@ class Header extends React.Component {
 
 		return (
 			<ul className="nav navbar-nav">
-				<li><Link to="news">News</Link></li>
-				<li><Link to="list">Lists</Link></li>
+				<li><Link to="/news" activeClassName="active">News</Link></li>
+				<li><Link to="/list" activeClassName="active">Lists</Link></li>
 				{ createList }
 				<li><a href="#searchModal" data-toggle="modal">Look Up Users</a></li>
 			</ul>
@@ -91,9 +91,7 @@ class Header extends React.Component {
 			<ul className="nav navbar-nav navbar-right">
 				{ navProfile }
 				<li>
-					<Link className="heart-red" to="donate">
-						<span className="fa fa-heart"></span>
-					</Link>
+					<Link className="heart-red" to="/donate" activeClassName="active"><span className="fa fa-heart"></span></Link>
 				</li>
 			</ul>
 		);
