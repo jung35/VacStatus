@@ -24,8 +24,8 @@ class ListPortal extends BasicComp {
 		});
 	}
 
-	componentWillReceiveProps (props) {
-		let updatedState = $.extend({}, this.state, {my_list: props.updateMyList});
+	componentWillReceiveProps(props) {
+		let updatedState = $.extend({}, this.state, {my_list: props.parentState.my_list});
 
 		this.setState(updatedState);
 	}

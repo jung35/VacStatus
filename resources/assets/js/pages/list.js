@@ -48,6 +48,10 @@ class List extends BasicComp {
 		});
 	}
 
+	componentWillReceiveProps(props) {
+		updateListTitle(props.parentState.listInfo);
+	}
+
 	get listId() {
 		return this.props.params == undefined ? undefined : this.props.params.splat;
 	}
@@ -58,8 +62,8 @@ class List extends BasicComp {
 
 	updateListTitle(newData) {
 		this.state.list_info = $.extend({}, this.state.list_info, {
-			title: newData.newTitle,
-			privacy: newData.newPrivacy
+			title: newData.title,
+			privacy: newData.privacy
 		});
 
 
@@ -401,8 +405,6 @@ class List extends BasicComp {
 					</div>
 				</div>
 				{ listElement }
-
-				<EditList UpdateListTitle={ this.updateListTitle } editData={ listInfo }/>
 			</div>
 		);
 	}

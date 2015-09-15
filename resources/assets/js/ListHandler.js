@@ -9,6 +9,8 @@ class ListHandler extends BasicComp {
 		this.submitNewListToServer = this.submitNewListToServer.bind(this);
 		this.submitNewUserToServer = this.submitNewUserToServer.bind(this);
 		this.submitSearchUserToServer = this.submitSearchUserToServer.bind(this);
+
+		this.updateListTitle = this.updateListTitle.bind(this);
 	}
 
 	componentDidMount() {
@@ -111,16 +113,24 @@ class ListHandler extends BasicComp {
 	}
 
 	updateLists(list_info) {
-		this.setState({list_info});
+		this.setState({ list_info: list_info });
+	}
+
+	updateListTitle(data) {
+		this.props.currentList(data);
 	}
 
 	render() {
+		console.log(this.state.list_info, this.props);
 		return (
 			<div>
 				<CreateList CreateListSend={ this.submitNewListToServer }/>
+
+				<EditList UpdateListTitle={ this.updateListTitle } editData={ this.state.list_info }/>
+
 				<AddUserToList
-					myList={this.state.list_info}
-					AddUserSend={this.submitNewUserToServer}
+					myList={ this.state.list_info }
+					AddUserSend={ this.submitNewUserToServer }
 				/>
 				<AddUsersFromSearch
 					myList={this.state.list_info}
@@ -198,7 +208,6 @@ class CreateList extends BasicComp {
 };
 
 class EditList extends BasicComp {
-
 	constructor(props) {
 		super(props);
 
@@ -254,8 +263,8 @@ class EditList extends BasicComp {
 
 	sendNewDataToParent(data) {
 		this.props.UpdateListTitle({
-			newTitle: data.title,
-			newPrivacy: data.privacy
+			title: data.title,
+			privacy: data.privacy
 		});
 	}
 

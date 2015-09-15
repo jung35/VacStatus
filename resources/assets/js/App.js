@@ -14,12 +14,18 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.state = { my_list: [] };
+
 		this.updateMyList = this.updateMyList.bind(this);
-		this.state = { my_list: [] }
+		this.updateCurrentList = this.updateCurrentList.bind(this);
 	}
 
 	updateMyList(myList) {
 		this.setState($.extend({}, this.state, { my_list: myList }));
+	}
+
+	updateCurrentList(listInfo) {
+		this.setState($.extend({}, this.state, { listInfo: listInfo }));
 	}
 
 	render() {
@@ -27,10 +33,10 @@ class App extends React.Component {
 			<div>
 				<div className="wrap">
 					<Header />
-					{ React.cloneElement(this.props.children, { updateMyList: this.state.my_list }) }
+					{ React.cloneElement(this.props.children, { parentState: this.state, currentList={ this.markCurrentList } }) }
 
 					<div className="pushFooter" />
-					<ListHandler UpdateMyList={ this.updateMyList } />
+					<ListHandler currentList={ this.state.currentList } UpdateMyList={ this.updateMyList } />
 				</div>
 
 				<Footer />
