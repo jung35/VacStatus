@@ -7,8 +7,6 @@ class ListHandler extends BasicComp {
 		this.state = { list_info: [] };
 
 		this.submitNewListToServer = this.submitNewListToServer.bind(this);
-		this.submitEditedListToServer = this.submitEditedListToServer.bind(this);
-		this.submitDeletedListToServer = this.submitDeletedListToServer.bind(this);
 		this.submitNewUserToServer = this.submitNewUserToServer.bind(this);
 		this.submitSearchUserToServer = this.submitSearchUserToServer.bind(this);
 	}
@@ -47,47 +45,13 @@ class ListHandler extends BasicComp {
 					return;
 				}
 
-				console.log('notify', this.notify);
-
 				this.notify.success('List has been created!').run();
 
-				console.log('typeof', typeof this.props.UpdateMyList);
-				if(this.props.UpdateMyList !== undefined)
-				{
-					this.props.UpdateMyList(data);
-				}
-
+				if(this.props.UpdateMyList !== undefined) this.props.UpdateMyList(data);
 				this.updateLists(data);
 			},
 			complete: () => {
 				delete this.request.submitNewListToServer;
-			}
-		});
-	}
-
-	submitEditedListToServer(data) {
-		this.saveNewDataForParent(data);
-
-		this.request.submitEditedListToServer = $.ajax({
-			url: '/api/v1/list/'+data.list_id,
-			dataType: 'json',
-			type: 'POST',
-			data: {
-				title: data.title,
-				privacy: data.privacy
-			},
-			success: (data) => {
-				if(data.error) {
-					this.notify.danger(data.error).run();
-					return;
-				}
-
-				this.notify.success('List has been saved!').run();
-				this.updateLists(data);
-				this.sendNewDataToParent();
-			},
-			complete: () => {
-				delete this.request.submitEditedListToServer;
 			}
 		});
 	}
@@ -112,27 +76,6 @@ class ListHandler extends BasicComp {
 			},
 			complete: () => {
 				delete this.request.submitNewUserToServer;
-			}
-		});
-	}
-
-	submitDeletedListToServer(list_id) {
-		this.request.submitDeletedListToServer = $.ajax({
-			url: '/api/v1/list/'+list_id,
-			dataType: 'json',
-			type: 'POST',
-			data: { _method: 'DELETE' },
-			success: (data) => {
-				if(data.error) {
-					this.notify.danger(data.error).run();
-					return;
-				}
-
-				this.notify.success('List has been deleted!').run();
-				window.location = "/list";
-			},
-			error: (xhr, status, err) => {
-				this.notify.danger(err).run();
 			}
 		});
 	}
@@ -163,15 +106,8 @@ class ListHandler extends BasicComp {
 	}
 
 	saveNewDataForParent(data) {
-		this.props.newTitle = data.title;
-		this.props.newPrivacy = data.privacy;
-	}
-
-	sendNewDataToParent() {
-		this.props.UpdateListTitle({
-			newTitle: this.props.newTitle,
-			newPrivacy: this.props.newPrivacy
-		});
+		this.newTitle = data.title;
+		this.newPrivacy = data.privacy;
 	}
 
 	updateLists(list_info) {
@@ -181,14 +117,7 @@ class ListHandler extends BasicComp {
 	render() {
 		return (
 			<div>
-				<CreateList
-					CreateListSend={ this.submitNewListToServer }
-				/>
-				<EditList
-					editData={this.props.editData}
-					EditListSend={this.submitEditedListToServer}
-					DeleteListSend={this.submitDeletedListToServer}
-				/>
+				<CreateList CreateListSend={ this.submitNewListToServer }/>
 				<AddUserToList
 					myList={this.state.list_info}
 					AddUserSend={this.submitNewUserToServer}
@@ -277,8 +206,61 @@ class EditList extends BasicComp {
 		this.handleDelete = this.handleDelete.bind(this);
 	}
 
+	submitEditedListToServer(listInfo) {
+		this.request.submitEditedListToServer = $.ajax({
+			url: '/api/v1/list/'+listInfo.list_id,
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				title: listInfo.title,
+				privacy: listInfo.privacy
+			},
+			success: (data) => {
+				if(data.error) {
+					this.notify.danger(data.error).run();
+					return;
+				}
+
+				this.notify.success('List has been saved!').run();
+				this.updateLists(data);
+				this.sendNewDataToParent(listInfo);
+			},
+			complete: () => {
+				delete this.request.submitEditedListToServer;
+			}
+		});
+	}
+
+	submitDeletedListToServer(list_id) {
+		this.request.submitDeletedListToServer = $.ajax({
+			url: '/api/v1/list/'+list_id,
+			dataType: 'json',
+			type: 'POST',
+			data: { _method: 'DELETE' },
+			success: (data) => {
+				if(data.error) {
+					this.notify.danger(data.error).run();
+					return;
+				}
+
+				this.notify.success('List has been deleted!').run();
+				window.location = "/list";
+			},
+			error: (xhr, status, err) => {
+				this.notify.danger(err).run();
+			}
+		});
+	}
+
+	sendNewDataToParent(data) {
+		this.props.UpdateListTitle({
+			newTitle: data.title,
+			newPrivacy: data.privacy
+		});
+	}
+
 	handleDelete(e) {
-		this.props.DeleteListSend(this.props.editData.id);
+		this.submitDeletedListToServer(this.props.editData.id);
 
 		$('#editListModal').modal('hide');
 	}
@@ -295,7 +277,7 @@ class EditList extends BasicComp {
 			return;
 		}
 
-		this.props.EditListSend({
+		this.submitEditedListToServer({
 			list_id: list_id,
 			title: title,
 			privacy: privacy

@@ -48,4 +48,8 @@ class BasicComp extends React.Component {
 
 		return title;
 	}
+
+	render() {
+		return <div>test</div>;
+	}
 }

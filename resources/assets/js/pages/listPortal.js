@@ -5,9 +5,6 @@ class ListPortal extends BasicComp {
 		super(props);
 
 		this.state = { my_list: [], friends_list: [] };
-
-		console.log(props);
-
 	}
 
 	componentDidMount() {
@@ -27,8 +24,10 @@ class ListPortal extends BasicComp {
 		});
 	}
 
-	updateMyList(myNewList) {
-		this.setState($.extend({}, this.state, {my_list: myNewList}));
+	componentWillReceiveProps (props) {
+		let updatedState = $.extend({}, this.state, {my_list: props.updateMyList});
+
+		this.setState(updatedState);
 	}
 
 	renderMyList(data) {
@@ -41,7 +40,7 @@ class ListPortal extends BasicComp {
 			return (
 				<tr key={index}>
 					<td className="text-center">{ list.id }</td>
-					<td><a className="list_link" href={"/list/" + list.id}>{ list.title }</a></td>
+					<td><Link className="list_link" to={"/list/" + list.id}>{ list.title }</Link></td>
 					<td className={"text-center text-" + privacy.color}>{ privacy.name }</td>
 					<td className="text-center">{ list.users_in_list }</td>
 					<td className="text-center">{ list.sub_count }</td>
@@ -87,7 +86,7 @@ class ListPortal extends BasicComp {
 					<td className="text-center">
 						<img src={ list.avatar_thumb } />
 					</td>
-					<td><a className="list_link" href={"/list/" + list.user_list_id}>{ list.title }</a></td>
+					<td><Link className="list_link" to={"/list/" + list.user_list_id}>{ list.title }</Link></td>
 					<td className={ userTitle }>{ list.display_name }</td>
 					<td className={"text-center text-" + privacy.color}>{ privacy.name }</td>
 					<td className="text-center">{ list.users_in_list }</td>
@@ -134,10 +133,10 @@ class ListPortal extends BasicComp {
 					<div className="row">
 						<div className="col-xs-12">
 							<div className="special-list">
-								<a href="/list/most">Most Tracked Users</a>
-								<a href="/list/latest">Latest Added Users</a>
-								<a href="/list/latest/vac">Latest VAC Bans</a>
-								<a href="/list/latest/game">Latest Game Bans</a>
+								<Link to="/list/most">Most Tracked Users</Link>
+								<Link to="/list/latest">Latest Added Users</Link>
+								<Link to="/list/latest/vac">Latest VAC Bans</Link>
+								<Link to="/list/latest/game">Latest Game Bans</Link>
 							</div>
 						</div>
 					</div>
@@ -147,7 +146,6 @@ class ListPortal extends BasicComp {
 					<div className="row">
 						<div className="col-xs-12">{ friendsList }</div>
 					</div>
-					<ListHandler UpdateMyList={ this.updateMyList } />
 				</div>
 			</div>
      	);

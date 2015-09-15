@@ -8,7 +8,7 @@ let routes = (
 				<Route path=":page" component={ News }/>
 			</Route>
 			<Route path="list" component={ ListPortal }/>
-			<Route path="list/:listId" component={ List }/>
+			<Route path="list/*" component={ List }/>
 			<Route path="search/:searchId" component={ Search }/>
 			<Route path="donate" component={ Home }/>
 		</Route>

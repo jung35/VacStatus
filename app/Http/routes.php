@@ -61,8 +61,8 @@ Route::group(['prefix' => 'api'], function()
 			get('/simple', [ 'uses' => 'MainController@myLists' ]);
 			get('/most', [ 'uses' => 'MostTrackedController@get' ]);
 			get('/latest', [ 'uses' => 'LatestTrackedController@get' ]);
-			get('/latest_vac', [ 'uses' => 'LatestVACBannedController@get' ]);
-			get('/latest_game_ban', [ 'uses' => 'LatestGameBannedController@get' ]);
+			get('/latest/vac', [ 'uses' => 'LatestVACBannedController@get' ]);
+			get('/latest/game', [ 'uses' => 'LatestGameBannedController@get' ]);
 			get('/{userList}', [ 'uses' => 'CustomListController@get' ]);
 
 			Route::group(['middleware' => 'auth'], function()
