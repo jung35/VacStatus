@@ -27,10 +27,6 @@ class List extends BasicComp {
 		this.fetchList();
 	}
 
-	get listId() {
-		return this.props.params == undefined ? undefined : this.props.params.splat;
-	}
-
 	fetchList() {
 		let url;
 
@@ -47,9 +43,13 @@ class List extends BasicComp {
 				this.profiles = data.profiles;
 			},
 			complete: () => {
-				delete this.request.fetchNews;
+				delete this.request.fetchList;
 			}
 		});
+	}
+
+	get listId() {
+		return this.props.params == undefined ? undefined : this.props.params.splat;
 	}
 
 	componentDidUpdate() {

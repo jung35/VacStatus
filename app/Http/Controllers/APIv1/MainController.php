@@ -15,13 +15,13 @@ class MainController extends Controller
 {
 	public function index ()
 	{
-		$news = News::orderBy('id', 'desc')->take(2)->get();
+		$news_ = News::orderBy('id', 'desc')->take(2)->get();
 
-		$parsedNews = [];
+		$news = [];
 
-		foreach($news as $article)
+		foreach($news_ as $article)
 		{
-			$parsedNews[] = [
+			$news[] = [
 				'id' => $article->id,
 				'title' => $article->title,
 				'created_at' => $article->created_at->format("M j Y"),
@@ -30,7 +30,7 @@ class MainController extends Controller
 
 		$announcement = Announcement::latest();
 
-		return compact('parsedNews', 'announcement');
+		return compact('news', 'announcement');
 	}
 
 	public function navbar ()

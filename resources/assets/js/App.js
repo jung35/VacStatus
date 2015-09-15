@@ -19,12 +19,10 @@ class App extends React.Component {
 	}
 
 	updateMyList(myList) {
-		console.log('myList', myList);
 		this.setState($.extend({}, this.state, { my_list: myList }));
 	}
 
 	render() {
-		console.log('render', this.state);
 		return (
 			<div>
 				<div className="wrap">

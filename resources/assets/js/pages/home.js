@@ -1,7 +1,38 @@
 'use strict';
 
-class Home extends React.Component {
+class Home extends BasicComp {
+	componentDidMount() {
+		this.fetchMain();
+	}
+
+	fetchMain() {
+		this.request.fetchMain = $.ajax({
+			url: '/api/v1/',
+			dataType: 'json',
+			success: (data) => {
+				this.setState(data);
+			},
+			complete: () => {
+				delete this.request.fetchMain;
+			}
+		});
+	}
+
 	render() {
+		let news, announcement;
+
+		if(this.state.news != undefined)
+		{
+			news = this.state.news.map((val, index) => {
+				return <li key={ val.id }><strong><Link to="/news">[{ val.created_at }] { val.title }</Link></strong></li>
+			});
+		}
+
+		if(this.state.announcement != undefined)
+		{
+			announcement = this.state.announcement;
+		}
+
 		return (
 	        <div className="home-page">
 				<div className="hero">
@@ -51,7 +82,7 @@ class Home extends React.Component {
 						<div className="row">
 							<div className="col-xs-12">
 								<div className="title">Announcement</div>
-								<div className="content"></div>
+								<div className="content" dangerouslySetInnerHTML={{ __html: announcement }} />
 							</div>
 						</div>
 					</div>
@@ -62,10 +93,7 @@ class Home extends React.Component {
 						<div className="row">
 							<div className="col-xs-12">
 								<div className="title">News</div>
-								<ul className="content">
-									<li><strong><Link to="news">[202020] asdasd</Link></strong></li>
-									<li><strong><Link to="news">[123123] asdasd</Link></strong></li>
-								</ul>
+								<ul className="content">{ news }</ul>
 							</div>
 						</div>
 					</div>
