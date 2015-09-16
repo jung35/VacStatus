@@ -17,6 +17,7 @@ class App extends React.Component {
 		this.state = { my_list: [] };
 
 		this.updateMyList = this.updateMyList.bind(this);
+		this.markCurrentList = this.markCurrentList.bind(this);
 		this.updateCurrentList = this.updateCurrentList.bind(this);
 	}
 
@@ -24,8 +25,16 @@ class App extends React.Component {
 		this.setState($.extend({}, this.state, { my_list: myList }));
 	}
 
-	updateCurrentList(listInfo) {
-		this.setState($.extend({}, this.state, { listInfo: listInfo }));
+	markCurrentList(listInfo) {
+		this.state.listInfo = $.extend({}, this.state.listInfo, listInfo)
+		this.setState(this.state);
+		console.log('App', 'markCurrentList', this.state);
+	}
+
+	updateCurrentList(currentList) {
+		this.state.listInfo = $.extend({}, this.state.listInfo, currentList)
+		this.setState(this.state);
+		console.log('App', 'updateCurrentList', this.state);
 	}
 
 	render() {
@@ -33,10 +42,10 @@ class App extends React.Component {
 			<div>
 				<div className="wrap">
 					<Header />
-					{ React.cloneElement(this.props.children, { parentState: this.state, currentList={ this.markCurrentList } }) }
+					{ React.cloneElement(this.props.children, { parentState: this.state, currentList: this.markCurrentList }) }
 
 					<div className="pushFooter" />
-					<ListHandler currentList={ this.state.currentList } UpdateMyList={ this.updateMyList } />
+					<ListHandler currentList={ this.state.listInfo } updatedCurrentList={ this.updateCurrentList } UpdateMyList={ this.updateMyList } />
 				</div>
 
 				<Footer />

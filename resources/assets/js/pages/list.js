@@ -41,6 +41,7 @@ class List extends BasicComp {
 			success: (data) => {
 				this.setState($.extend({}, this.state, data));
 				this.profiles = data.profiles;
+				this.props.currentList(data.list_info);
 			},
 			complete: () => {
 				delete this.request.fetchList;
@@ -49,7 +50,7 @@ class List extends BasicComp {
 	}
 
 	componentWillReceiveProps(props) {
-		updateListTitle(props.parentState.listInfo);
+		this.updateListTitle(props.parentState.listInfo);
 	}
 
 	get listId() {
@@ -65,7 +66,6 @@ class List extends BasicComp {
 			title: newData.title,
 			privacy: newData.privacy
 		});
-
 
 		this.setState(this.state);
 	}
@@ -234,11 +234,8 @@ class List extends BasicComp {
 	}
 
 	render() {
-
-		let listInfo, profiles, page,
-			author, privacy, listDetails,
-			sortedList, listElement,
-			eListAction, storageDisplayPerPage;
+		let listInfo, profiles, page, author, privacy, listDetails,
+			sortedList, listElement, eListAction, storageDisplayPerPage;
 
 		listInfo = this.state.list_info;
 		profiles = this.state.profiles;

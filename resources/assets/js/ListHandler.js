@@ -4,7 +4,7 @@ class ListHandler extends BasicComp {
 	constructor(props) {
 		super(props);
 
-		this.state = { list_info: [] };
+		this.state = { list_info: [], current_list: {} };
 
 		this.submitNewListToServer = this.submitNewListToServer.bind(this);
 		this.submitNewUserToServer = this.submitNewUserToServer.bind(this);
@@ -15,6 +15,13 @@ class ListHandler extends BasicComp {
 
 	componentDidMount() {
 		this.fetchLists();
+	}
+
+	componentWillReceiveProps(props) {
+		if(props.currentList == undefined) return;
+
+		this.setState($.extend({}, this.state, {current_list: props.currentList}));
+		console.log('ListHandler', 'componentWillReceiveProps', this.state);
 	}
 
 	fetchLists() {
@@ -117,16 +124,15 @@ class ListHandler extends BasicComp {
 	}
 
 	updateListTitle(data) {
-		this.props.currentList(data);
+		this.props.updatedCurrentList(data);
 	}
 
 	render() {
-		console.log(this.state.list_info, this.props);
 		return (
 			<div>
 				<CreateList CreateListSend={ this.submitNewListToServer }/>
 
-				<EditList UpdateListTitle={ this.updateListTitle } editData={ this.state.list_info }/>
+				<EditList UpdateListTitle={ this.updateListTitle } editData={ this.state.current_list }/>
 
 				<AddUserToList
 					myList={ this.state.list_info }
@@ -215,6 +221,13 @@ class EditList extends BasicComp {
 		this.handleDelete = this.handleDelete.bind(this);
 	}
 
+	componentWillReceiveProps(props) {
+		if(props.editData == undefined || props.editData.title == null) return;
+
+		this.setState({editData: props.editData});
+		console.log('EditList', 'componentWillReceiveProps', this.state);
+	}
+
 	submitEditedListToServer(listInfo) {
 		this.request.submitEditedListToServer = $.ajax({
 			url: '/api/v1/list/'+listInfo.list_id,
@@ -231,8 +244,8 @@ class EditList extends BasicComp {
 				}
 
 				this.notify.success('List has been saved!').run();
-				this.updateLists(data);
 				this.sendNewDataToParent(listInfo);
+				console.log('EditList', 'submitEditedListToServer', listInfo);
 			},
 			complete: () => {
 				delete this.request.submitEditedListToServer;
@@ -269,7 +282,7 @@ class EditList extends BasicComp {
 	}
 
 	handleDelete(e) {
-		this.submitDeletedListToServer(this.props.editData.id);
+		this.submitDeletedListToServer(this.state.editData.id);
 
 		$('#editListModal').modal('hide');
 	}
@@ -279,7 +292,9 @@ class EditList extends BasicComp {
 
 		let title = this.refs.editListTitle.getDOMNode().value.trim();
 		let privacy = this.refs.editListPrivacy.getDOMNode().value.trim();
-		let list_id = this.props.editData.id;
+		let list_id = this.state.editData.id;
+
+		console.log('EditList', 'handleSubmit', title, privacy, this.state.editData);
 
 		if (!title || !privacy || !list_id) {
 			this.notify.danger('All fields need to be filled out!').run();
@@ -296,7 +311,7 @@ class EditList extends BasicComp {
 	}
 
 	render() {
-		let editData = this.props.editData;
+		let editData = this.state.editData;
 
 		if(editData == null || editData.title == null) return <div></div>;
 
@@ -343,7 +358,6 @@ $(document).on("click", ".open-addUserModal", function()
 });	
 
 class AddUserToList extends BasicComp {
-
 	constructor(props) {
 		super(props);
 
