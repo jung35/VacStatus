@@ -49,11 +49,11 @@ class News extends BasicComp {
 			pagination = (
 				<nav>
 					<ul className="pager">
-						<li className={"previous" + (state.prev_page === null ? ' disabled' : '')}>
-							<a href={ state.prev_page !== null ? "/news/"+ (state.current_page - 1) : '#'}><span>&larr;</span> Older</a>
+						<li className={"previous" + (state.prev_page_url === null ? ' disabled' : '')}>
+							<a href={ state.prev_page_url != null ? "/news/"+ (state.current_page - 1) : '#'}><span>&larr;</span> Older</a>
 						</li>
-						<li className={"next" + (state.next_page === null ? ' disabled' : '')}>
-							<a href={ state.next_page !== null ? "/news/" + (state.current_page + 1) : '#'}>Newer <span>&rarr;</span></a>
+						<li className={"next" + (state.next_page_url === null ? ' disabled' : '')}>
+							<a href={ state.next_page_url != null ? "/news/" + (state.current_page + 1) : '#'}>Newer <span>&rarr;</span></a>
 						</li>
 					</ul>
 				</nav>

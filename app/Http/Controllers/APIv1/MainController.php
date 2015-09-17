@@ -13,29 +13,17 @@ use Auth;
 
 class MainController extends Controller
 {
-	public function index ()
+	public function index()
 	{
-		$news_ = News::orderBy('id', 'desc')->take(2)->get();
-
-		$news = [];
-
-		foreach($news_ as $article)
-		{
-			$news[] = [
-				'id' => $article->id,
-				'title' => $article->title,
-				'created_at' => $article->created_at->format("M j Y"),
-			];
-		}
-
+		$news = News::latest();
 		$announcement = Announcement::latest();
 
 		return compact('news', 'announcement');
 	}
 
-	public function navbar ()
+	public function navbar()
 	{
-		$user = new \stdClass;
+		$user = (object) [];
 
 		if(Auth::check())
 		{

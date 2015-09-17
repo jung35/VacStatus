@@ -41,7 +41,11 @@ class List extends BasicComp {
 			success: (data) => {
 				this.setState($.extend({}, this.state, data));
 				this.profiles = data.profiles;
-				this.props.currentList(data.list_info);
+				
+				if(this.props.updatedCurrentList !== undefined)
+				{
+					this.props.updatedCurrentList(data.list_info);
+				}
 			},
 			complete: () => {
 				delete this.request.fetchList;
@@ -656,7 +660,7 @@ class DisplayPage extends BasicComp {
 						{ profile.game_bans > 0 ? profile.game_bans : '-'}
 					</td>	
 					<td className="user_track_number text-center">
-						{ profile.times_added.number == null ? 0 : profile.times_added.number }
+						{ profile.total }
 					</td>
 				</tr>
 			);

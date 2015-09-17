@@ -22,8 +22,7 @@ class LoginController extends Controller {
 	{
 		if(Auth::check() || Auth::viaRemember())
 		{
-			return redirect()
-				->intended('/list')
+			return redirect()->intended('/list')
 				->with('success','You have Successfully logged in!');
 		}
 
@@ -36,22 +35,19 @@ class LoginController extends Controller {
 
     	if(is_null($socUser->getId()))
     	{
-			return redirect()
-				->intended('/')
+			return redirect()->intended('/')
 				->with('error', 'There was an error trying to communicate with Steam Server.');
     	}
 
         $steamAPI = new SteamAPI($socUser->getId());
 		$userSteamFriends = $steamAPI->fetch('friends');
 		
-		$simpleFriends = [];
-
-		if(isset($userSteamFriends['friendslist']))
-		{
-			$simpleFriends = $this->getFriends($userSteamFriends['friendslist']['friends']);
-		}
+		$simpleFriends = isset($userSteamFriends['friendslist']) ? $this->getFriends($userSteamFriends['friendslist']['friends']) : [];
 
 		$smallId = Steam::toSmallId($socUser->getId());
+		
+		// Create a profile row for this user
+		(new SingleProfile($smallId))->getProfile();
 
 		// Try to grab user or create new one
 		$user = User::firstOrNew(['small_id' => $smallId]);
@@ -59,20 +55,15 @@ class LoginController extends Controller {
 		$user->display_name = $socUser->getNickname();
 		$user->friendslist = json_encode($simpleFriends);
 
-		$singleProfile = new SingleProfile($smallId);
-		$singleProfile->getProfile();
-
 		if(!$user->save())
 		{
-			return redirect()
-				->intended('/')
+			return redirect()->intended('/')
 				->with('error', 'There was an error adding user to database');
 		}
 
 		Auth::login($user, true);
 
-		return redirect()
-			->intended('/list')
+		return redirect()->intended('/list')
 			->with('success','You have Successfully logged in.');
 	}
 
@@ -81,8 +72,7 @@ class LoginController extends Controller {
 		$this->middleware('auth');
         Auth::logout();
 
-		return redirect()
-			->intended('/')
+		return redirect()->intended('/')
 			->with('success','You have Successfully logged out.');
     }
 
@@ -90,10 +80,7 @@ class LoginController extends Controller {
     {
     	$return = [];
 
-		foreach($friends as $friend)
-		{
-			$return[] = Steam::toSmallId($friend['steamid']);
-		}
+		foreach($friends as $friend) $return[] = Steam::toSmallId($friend['steamid']);
 
 		return $return;
     }

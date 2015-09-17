@@ -37,7 +37,7 @@ class MultiProfile extends BaseUpdate
 			else return $this->error($updatedProfiles['error']);
 		}
 
-		return array_replace($this->profiles, $updatedProfiles);
+		return array_replace($this->profiles->toArray(), $updatedProfiles);
 	}
 
 	protected function canUpdate($smallId = 0)
@@ -136,30 +136,7 @@ class MultiProfile extends BaseUpdate
 
 			$steamBans = $steamBans['players'];
 
-			$profiles = Profile::whereIn('profile.small_id', $chunkedSmallIds)
-				->groupBy('profile.id')
-				->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
-				->leftjoin('user_list_profile', 'user_list_profile.profile_id', '=', 'profile.id')
-				->whereNull('user_list_profile.deleted_at')
-				->get([
-					'profile.id',
-					'profile.small_id',
-					'profile.display_name',
-					'profile.privacy',
-					'profile.avatar_thumb',
-					'profile.avatar',
-					'profile.profile_created',
-					'profile.alias',
-					'profile.created_at',
-
-					'users.site_admin',
-					'users.donation',
-					'users.beta',
-
-					\DB::raw('max(user_list_profile.created_at) as last_added_created_at'),
-					\DB::raw('count(distinct user_list_profile.user_list_id) as total')
-				]);
-
+			$profiles = Profile::whereIn('profile.small_id', $chunkedSmallIds)->getProfileData();
 			$profileBans = ProfileBan::whereIn('profile_id', $profiles->lists('id'))->get();
 			$profileOldAliases = ProfileOldAlias::whereIn('profile_id', $profiles->lists('id'))->get();
 
@@ -346,33 +323,32 @@ class MultiProfile extends BaseUpdate
 					'avatar'			=> $profile->avatar,
 					'avatar_thumb'		=> $profile->avatar_thumb,
 					'small_id'			=> $profile->small_id,
-					'steam_64_bit'		=> $steam64BitId,
-					'steam_32_bit'		=> Steam::to32Bit($steam64BitId),
-					'profile_created'	=> isset($profile->profile_created) ? date("M j Y", $profile->profile_created) : "Unknown",
+					'steam_64_bit'		=> $profile->steam_64_bit,
+					'steam_32_bit'		=> $profile->steam_32_bit,
+					'profile_created'	=> $profile->profile_created,
 					'privacy'			=> $profile->privacy,
-					'alias'				=> Steam::friendlyAlias(json_decode($profile->alias, true)),
-					'created_at'		=> $profile->created_at->format("M j Y"),
+					'alias'				=> $profile->alias,
+					'created_at'		=> $profile->created_at,
 
 					'vac_bans'			=> $profileBan->vac_bans,
 					'game_bans'			=> $profileBan->game_bans,
-					'last_ban_date'		=> $profileBan->last_ban_date->format("M j Y"),
+					'last_ban_date'		=> $profileBan->last_ban_date,
 					'community'			=> $profileBan->community,
 					'trade'				=> $profileBan->trade,
 
-					'site_admin'		=> $profile->site_admin ?: 0,
-					'donation'			=> $profile->donation ?: 0,
-					'beta'				=> $profile->beta ?: 0,
+					'site_admin'		=> $profile->site_admin,
+					'donation'			=> $profile->donation,
+					'beta'				=> $profile->beta,
 					'profile_old_alias'	=> array_reverse($oldAliasArray),
 
-					'times_added'		=> [
-						'number' => $profile->total,
-						'time' => (new DateTime($profile->last_added_created_at))->format("M j Y")
-					],
+					'total' => $profile->total,
+					'time' => $profile->last_added_at
 				];
 
 				$this->updateCache($profile->small_id, $return);
 
-				if($this->customList) {
+				if($this->customList)
+				{
 					if($userListProfile->profile_name)
 					{
 						$return['display_name'] = $userListProfile->profile_name;
@@ -398,13 +374,11 @@ class MultiProfile extends BaseUpdate
 		$randomString = str_random(12);
 		$updateAliasCacheName = "update_alias_";
 
-		if(Cache::has($updateAliasCacheName . $randomString))
-			while(Cache::has($updateAliasCacheName . $randomString))
-				$randomString = str_random(12);
+		while(Cache::has($updateAliasCacheName.$randomString)) $randomString = str_random(12);
 
-		Cache::forever($updateAliasCacheName.$randomString, $getSmallIds);
+		Cache::put($updateAliasCacheName.$randomString, $getSmallIds, 10);
 
-		exec('php ' . base_path() . '/artisan update:alias '. $randomString .' > /dev/null 2>/dev/null &');
+		exec('php ' . base_path() . '/artisan update:alias ' . $randomString . ' > /dev/null 2>/dev/null &');
 
 		return $newProfiles;
 	}

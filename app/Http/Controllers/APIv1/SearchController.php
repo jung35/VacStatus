@@ -9,6 +9,7 @@ use VacStatus\Steam\Steam;
 use VacStatus\Update\MultiProfile;
 
 use VacStatus\Models\Profile;
+use VacStatus\Models\UserListProfile;
 
 use Cache;
 use Auth;
@@ -19,114 +20,48 @@ class SearchController extends Controller
 	public function search($searchKey)
 	{
 		$searchCache = "search_key_$searchKey";
-
 		if(!Cache::has($searchCache)) return ['error' => 'no values'];
 
 		$search = Steam::parseSearch(Cache::get($searchCache));
-		
+		if(!is_array($search)) return ['error' => 'Invalid Search Option'];
+
 		if(Auth::check())
 		{
 			if(count($search) > Auth::User()->unlockSearch())
 			{
 				return ['error' => 'Too many profiles listed in search box.'];
 			}
-		} else if(count($search) > 30)
+		}
+		elseif(count($search) > 30)
 		{
 			return ['error' => 'Too many profiles listed in search box for a guest.'];
 		}
 
-		if(!is_array($search))
-		{
-			return ['error' => 'Invalid Search Option'];
-		}
-
-		$validProfile = Array();
-		$invalidProfile = Array();
+		$validProfile = [];
 		foreach($search as $potentialProfile)
 		{
 			$steam3Id = Steam::findUser($potentialProfile);
 
-			if(isset($steam3Id['error'])) {
-				$invalidProfile[] = $potentialProfile;
-			} else {
+			if(isset($steam3Id['success'])) {
 				$validProfile[] = $steam3Id['success'];
 			}
 		}
 
-		$smallIds = Steam::toSmallId($validProfile);
-
-		$profiles = Profile::select(
-			'profile.id',
-			'profile.display_name',
-			'profile.avatar_thumb',
-			'profile.small_id',
-			'profile.created_at',
-
-			'profile_ban.vac_bans',
-			'profile_ban.game_bans',
-			'profile_ban.last_ban_date',
-			'profile_ban.community',
-			'profile_ban.trade',
-
-			'users.site_admin',
-			'users.donation',
-			'users.beta',
-
-			\DB::raw('max(user_list_profile.created_at) as created_at'),
-			\DB::raw('count(user_list_profile.id) as total')
-			)->groupBy('profile.id')
-			->leftJoin('user_list_profile', function($join)
-			{
-				$join->on('user_list_profile.profile_id', '=', 'profile.id')
-					->whereNull('user_list_profile.deleted_at');
-			})->whereIn('profile.small_id', $smallIds)
-			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
-			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
-			->get();
-
-		$profilesParsed = [];
-
-		foreach($smallIds as $smallId)
+		if(count($validProfile) == 0)
 		{
-			$profile = $profiles->where('small_id', (int) $smallId)->first();
-
-			if(is_null($profile))
-			{
-				$profilesParsed[] = [
-					'small_id' => $smallId
-				];
-				continue;
-			}
-
-			$lastBanDate = new DateTime($profile->last_ban_date);
-
-			$profilesParsed[] = [
-				'id'			=> $profile->id,
-				'display_name'	=> $profile->display_name,
-				'avatar_thumb'	=> $profile->avatar_thumb,
-				'small_id'		=> (int) $smallId,
-				'steam_64_bit'	=> Steam::to64Bit($profile->small_id),
-				'vac_bans'		=> $profile->vac_bans,
-				'game_bans'		=> $profile->game_bans,
-				'last_ban_date'	=> $lastBanDate->format("M j Y"),
-				'community'		=> $profile->community,
-				'trade'			=> $profile->trade,
-				'site_admin'	=> (int) $profile->site_admin?:0,
-				'donation'		=> (int) $profile->donation?:0,
-				'beta'			=> (int) $profile->beta?:0,
-				'times_added'	=> [
-					'number' => $profile->total?:0,
-					'time' => (new DateTime($profile->created_at))->format("M j Y")
-				],
-			];
+			return ['error' => 'None of the profiles were found to be valid steam accounts'];
 		}
 
-		$multiProfile = new MultiProfile($profilesParsed);
-		$profilesParsed = $multiProfile->run();
+		$smallIds = Steam::toSmallId($validProfile);
+
+		$profiles = Profile::whereIn('profile.small_id', $smallIds)->getProfileData();
+
+		$multiProfile = new MultiProfile($profiles);
+		$profiles = $multiProfile->run();
 
 		$return = [
 			'list_info' => [ 'title' => 'Search Result' ],
-			'profiles' => $profilesParsed
+			'profiles' => $profiles
 		];
 
 		return $return;

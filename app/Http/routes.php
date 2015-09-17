@@ -2,6 +2,8 @@
 
 get('/', function() { return view('pages.home'); });
 
+post('/search', [ 'as' => 'search', 'uses' => 'DisplayController@searchPage' ]);
+
 Route::group(['prefix' => 'auth'], function()
 {
 	get('/login', [ 'as' => 'auth.login', 'uses' => 'LoginController@sendToSteam' ]);
@@ -30,7 +32,6 @@ Route::group(['prefix' => 'auth'], function()
 // get('/contact', [ 'as' => 'contact', 'uses' => 'PagesController@contactPage' ]);
 // get('/donate', [ 'as' => 'donate', 'uses' => 'PagesController@donatePage' ]);
 
-post('/search', [ 'as' => 'search', 'uses' => 'PagesController@searchPage' ]);
 
 // Route::group(['prefix' => 'settings'], function()
 // {
@@ -158,7 +159,7 @@ Route::any('{undefinedRoute}', function ($undefinedRoute) {
     return view('pages.home');
 })->where('undefinedRoute', '([A-z\d-\/_.]+)?');
 
-// Event::listen('illuminate.query', function($query)
-// {
-//     var_dump($query);
-// });
+Event::listen('illuminate.query', function($query)
+{
+    // var_dump($query);
+});
