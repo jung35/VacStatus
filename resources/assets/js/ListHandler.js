@@ -339,7 +339,7 @@ class EditList extends BasicComp {
 								</div>
 							</div>
 							<div className="modal-footer">
-								<button type="button" onClick={ this.handleDelete} className="btn btn-danger pull-left">Delete</button>
+								<button type="button" onClick={ this.handleDelete } className="btn btn-danger pull-left">Delete</button>
 								<button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
 								<button type="submit" className="btn btn-primary">Save changes</button>
 							</div>

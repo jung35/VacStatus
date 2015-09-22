@@ -8,6 +8,8 @@ class DonationPerk extends Model
 {
 	protected $table = 'donation_perk';
 
+	protected $hidden = ['created_at', 'updated_at'];
+
 	public function getAmount()
 	{
 		return number_format($this->amount, 2, '.', '');

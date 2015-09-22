@@ -11,10 +11,17 @@ use Carbon;
 class Profile extends Model
 {
 	protected $table = 'profile';
-	
 	protected $fillable = ['small_id'];
-	
 	protected $dates = ['last_ban_date'];
+    protected $casts = [
+    	// users.*
+        'site_admin' => 'integer', 
+        'donation' => 'integer',
+        'beta' => 'integer',
+
+		// total added
+        'total' => 'integer', 
+    ];
 
 	public function ProfileOldAlias()
 	{
@@ -30,15 +37,6 @@ class Profile extends Model
 	{
 		return $this->hasMany(\VacStatus\Models\UserListProfile::class);
 	}
-
-    public function toArray()
-    {
-        $array = parent::toArray();
-        $array['steam_64_bit'] = $this->steam_64_bit;
-        $array['steam_32_bit'] = $this->steam_32_bit;
-
-        return $array;
-    }
 
 	public function scopeGetProfileData($query)
 	{
@@ -76,6 +74,15 @@ class Profile extends Model
 			]);
 	}
 
+	public function toArray()
+	{
+		$array = parent::toArray();
+		$array['steam_64_bit'] = $this->steam_64_bit;
+		$array['steam_32_bit'] = $this->steam_32_bit;
+
+		return $array;
+	}
+
 	public function getSteam64BitAttribute()
 	{
 		return Steam::to64Bit($this->small_id);
@@ -100,27 +107,7 @@ class Profile extends Model
 	{
 		return (new Carbon($createdAt))->format("M j Y");
 	}
-
-	public function getSiteAdminAttribute($value)
-	{
-		return (int) $value?:0;
-	}
-
-	public function getDonationAttribute($value)
-	{
-		return (int) $value?:0;
-	}
-
-	public function getBetaAttribute($value)
-	{
-		return (int) $value?:0;
-	}
-
-	public function getSiteTotalAttribute($value)
-	{
-		return (int) $value?:0;
-	}
-
+	
 	public function getLastBanDateAttribute($lastBanDate)
 	{
 		return (new Carbon($lastBanDate))->format("M j Y");

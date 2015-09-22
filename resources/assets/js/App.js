@@ -14,7 +14,7 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = { my_list: [] };
+		this.state = {};
 
 		this.updateMyList = this.updateMyList.bind(this);
 		this.markCurrentList = this.markCurrentList.bind(this);
@@ -26,8 +26,7 @@ class App extends React.Component {
 	}
 
 	markCurrentList(listInfo) {
-		this.state.listInfo = $.extend({}, this.state.listInfo, listInfo)
-		this.setState(this.state);
+		this.setState($.extend({}, this.state, { listInfo: listInfo }));
 		console.log('App', 'markCurrentList', this.state);
 	}
 
@@ -42,7 +41,7 @@ class App extends React.Component {
 			<div>
 				<div className="wrap">
 					<Header />
-					{ React.cloneElement(this.props.children, { parentState: this.state, currentList: this.markCurrentList }) }
+					{ React.cloneElement(this.props.children, { parentState: this.state, updateCurrentList: this.markCurrentList }) }
 
 					<div className="pushFooter" />
 					<ListHandler currentList={ this.state.listInfo } updatedCurrentList={ this.updateCurrentList } UpdateMyList={ this.updateMyList } />

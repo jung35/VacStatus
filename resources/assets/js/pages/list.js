@@ -27,6 +27,15 @@ class List extends BasicComp {
 		this.fetchList();
 	}
 
+	componentWillUnmount() {
+		super.componentWillUnmount();
+
+		if(this.props.updateCurrentList !== undefined)
+		{
+			this.props.updateCurrentList({});
+		}
+	}
+
 	fetchList() {
 		let url;
 
@@ -42,9 +51,9 @@ class List extends BasicComp {
 				this.setState($.extend({}, this.state, data));
 				this.profiles = data.profiles;
 				
-				if(this.props.updatedCurrentList !== undefined)
+				if(this.props.updateCurrentList !== undefined)
 				{
-					this.props.updatedCurrentList(data.list_info);
+					this.props.updateCurrentList(data.list_info);
 				}
 			},
 			complete: () => {

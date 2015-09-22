@@ -332,7 +332,7 @@ class MultiProfile extends BaseUpdate
 
 					'vac_bans'			=> $profileBan->vac_bans,
 					'game_bans'			=> $profileBan->game_bans,
-					'last_ban_date'		=> $profileBan->last_ban_date,
+					'last_ban_date'		=> $profileBan->last_ban_date->format('M j Y'),
 					'community'			=> $profileBan->community,
 					'trade'				=> $profileBan->trade,
 

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use DateTime;
 use DateInterval;
+use Carbon;
 
 class ProfileBan extends Model
 {
