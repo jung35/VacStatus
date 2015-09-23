@@ -1,8 +1,8 @@
 'use strict';
 
 class List extends BasicComp {
-
-	constructor(props) {
+	constructor(props)
+	{
 		super(props);
 
 		if(this.listId == undefined && this.props.search == undefined) {
@@ -23,11 +23,13 @@ class List extends BasicComp {
 		this.updateListTitle = this.updateListTitle.bind(this);
 	}
 
-	componentDidMount() {
+	componentDidMount()
+	{
 		this.fetchList();
 	}
 
-	componentWillUnmount() {
+	componentWillUnmount()
+	{
 		super.componentWillUnmount();
 
 		if(this.props.updateCurrentList !== undefined)
@@ -36,7 +38,8 @@ class List extends BasicComp {
 		}
 	}
 
-	fetchList() {
+	fetchList()
+	{
 		let url;
 
 		if(this.listId != undefined) url = '/api/v1/list/'+this.listId;
@@ -62,19 +65,23 @@ class List extends BasicComp {
 		});
 	}
 
-	componentWillReceiveProps(props) {
+	componentWillReceiveProps(props)
+	{
 		this.updateListTitle(props.parentState.listInfo);
 	}
 
-	get listId() {
+	get listId()
+	{
 		return this.props.params == undefined ? undefined : this.props.params.splat;
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate()
+	{
 		$('[data-toggle="tooltip"]').tooltip()
 	}
 
-	updateListTitle(newData) {
+	updateListTitle(newData)
+	{
 		this.state.list_info = $.extend({}, this.state.list_info, {
 			title: newData.title,
 			privacy: newData.privacy
@@ -83,7 +90,8 @@ class List extends BasicComp {
 		this.setState(this.state);
 	}
 
-	submitDeleteUserToServer(profile) {
+	submitDeleteUserToServer(profile)
+	{
 		this.request.submitDeleteUserToServer = $.ajax({
 			url: '/api/v1/list/delete',
 			dataType: 'json',
@@ -109,7 +117,8 @@ class List extends BasicComp {
 		});
 	}
 
-	submitSubscriptionToServer(button) {
+	submitSubscriptionToServer(button)
+	{
 		button.prop('disabled', true);
 
 		this.request.submitSubscriptionToServer = $.ajax({
@@ -134,7 +143,8 @@ class List extends BasicComp {
 
 	}
 
-	submitUnsubscriptionToServer(button) {
+	submitUnsubscriptionToServer(button)
+	{
 		button.prop('disabled', true);
 
 		this.request.submitUnsubscriptionToServer = $.ajax({
@@ -159,7 +169,8 @@ class List extends BasicComp {
 		});
 	}
 
-	submitManyUsersToServer(data) {
+	submitManyUsersToServer(data)
+	{
 		this.request.submitManyUsersToServer = $.ajax({
 			url: '/api/v1/list/add/many',
 			dataType: 'json',
@@ -179,11 +190,13 @@ class List extends BasicComp {
 		});
 	}
 
-	actionChangePage(page) {
+	actionChangePage(page)
+	{
 		this.setState($.extend({}, this.state, {page: page}));
 	}
 
-	displaySimilar(e) {
+	displaySimilar(e)
+	{
 		let input = e.target;
 		let searchValue = input.value;
 
@@ -192,7 +205,8 @@ class List extends BasicComp {
 		this.sortFilters();
 	}
 
-	toggleFilterButton() {
+	toggleFilterButton()
+	{
 		if(this.filter == undefined) this.filter = 0;
 
 		this.filter++;
@@ -203,7 +217,8 @@ class List extends BasicComp {
 		this.sortFilters();
 	}
 
-	sortFilters() {
+	sortFilters()
+	{
 		let searchValue, filter;
 		let profiles = [];
 
@@ -234,7 +249,8 @@ class List extends BasicComp {
 		this.setState($.extend({}, this.state, {profiles: profiles}));
 	}
 
-	displayPerPage(e) {
+	displayPerPage(e)
+	{
 		let input = e.target;
 		let perPageValue = input.value;
 
@@ -246,7 +262,8 @@ class List extends BasicComp {
 		this.actionChangePage(0);
 	}
 
-	render() {
+	render()
+	{
 		let listInfo, profiles, page, author, privacy, listDetails,
 			sortedList, listElement, eListAction, storageDisplayPerPage;
 
@@ -379,7 +396,7 @@ class List extends BasicComp {
 										<th className="text-center" width="100">Tracked By</th>
 									</tr>
 								</thead>
-								<DisplayPage page={page} list={sortedList} listInfo={listInfo} deleteUserFromList={this.submitDeleteUserToServer}/>
+								<DisplayPage page={ page } list={ sortedList } listInfo={ listInfo } deleteUserFromList={ this.submitDeleteUserToServer }/>
 							</table>
 						</div>
 
@@ -421,7 +438,8 @@ class List extends BasicComp {
 }
 
 class ListAction extends BasicComp {
-	constructor(props) {
+	constructor(props)
+	{
 		super(props);
 
 		this.addMany = this.addMany.bind(this);
@@ -429,15 +447,18 @@ class ListAction extends BasicComp {
 		this.doUnsub = this.doUnsub.bind(this);
 	}
 
-	doSub(e) {
+	doSub(e)
+	{
 		this.props.ListSubscribe($(e.target));
 	}
 
-	doUnsub(e) {
+	doUnsub(e)
+	{
 		this.props.ListUnsubscribe($(e.target));
 	}
 
-	addMany(e) {
+	addMany(e)
+	{
 		e.preventDefault();
 
 		let search = this.refs.search.getDOMNode().value.trim();
@@ -449,7 +470,8 @@ class ListAction extends BasicComp {
 		this.refs.description.getDOMNode().value = '';
 	}
 
-	render() {
+	render()
+	{
 		let listInfo, editList, subButton, addUsers;
 
 		listInfo = this.props.listInfo;
@@ -533,11 +555,13 @@ placeholder="2 ways to search: =================================
 }
 
 class ListPagination extends BasicComp {
-	changePage(page) {
+	changePage(page)
+	{
 		this.props.listChangePage(page);
 	}
 
-	render() {
+	render()
+	{
 		var list, page, pagePrev, pageNext, pageList;
 
 		list = this.props.list;
@@ -582,11 +606,13 @@ class ListPagination extends BasicComp {
 
 class DisplayPage extends BasicComp {
 
-	sendDeleteUserFromList(profile) {
+	sendDeleteUserFromList(profile)
+	{
 		this.props.deleteUserFromList(profile);
 	}
 
-	render() {
+	render()
+	{
 		let list, page, listInfo, pagedList;
 
 		list = this.props.list;

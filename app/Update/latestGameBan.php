@@ -1,4 +1,6 @@
-<?php namespace VacStatus\Update;
+<?php
+
+namespace VacStatus\Update;
 
 use VacStatus\Update\BaseUpdate;
 use VacStatus\Update\MultiProfile;
@@ -10,11 +12,6 @@ use DateTime;
 use VacStatus\Models\UserListProfile;
 
 use VacStatus\Steam\Steam;
-
-/*
- * This is almost an exact copy of LatestTracked.php. The only thing that's different is
- * I am now filtering where last_ban_date IS NOT NULL AND vac > 0 ORDER BY last_ban_date DESC
- */
 
 class LatestGameBan extends BaseUpdate
 {

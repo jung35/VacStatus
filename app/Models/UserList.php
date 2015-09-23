@@ -70,6 +70,7 @@ class UserList extends Model
 				$join->on('subscription.user_list_id', '=', 'user_list.id')
 					->whereNull('subscription.deleted_at');
 			})
+			->whereNotNull('profile.id')
 			->groupBy('profile.id')
 			->orderBy('ulp_1.id', 'desc')
 			->get([

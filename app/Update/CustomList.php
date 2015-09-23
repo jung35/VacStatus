@@ -1,4 +1,6 @@
-<?php namespace VacStatus\Update;
+<?php
+
+namespace VacStatus\Update;
 
 use Cache;
 use Carbon;
@@ -56,9 +58,7 @@ class CustomList
 
 	public function myList()
 	{
-		if(Auth::check() && $this->userList->user_id == Auth::user()->id) return true;
-
-		return false;
+		return (Auth::check() && $this->userList->user_id == Auth::user()->id);
 	}
 
 	public function getCustomList()

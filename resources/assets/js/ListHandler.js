@@ -21,7 +21,6 @@ class ListHandler extends BasicComp {
 		if(props.currentList == undefined) return;
 
 		this.setState($.extend({}, this.state, {current_list: props.currentList}));
-		console.log('ListHandler', 'componentWillReceiveProps', this.state);
 	}
 
 	fetchLists() {
@@ -131,17 +130,9 @@ class ListHandler extends BasicComp {
 		return (
 			<div>
 				<CreateList CreateListSend={ this.submitNewListToServer }/>
-
 				<EditList UpdateListTitle={ this.updateListTitle } editData={ this.state.current_list }/>
-
-				<AddUserToList
-					myList={ this.state.list_info }
-					AddUserSend={ this.submitNewUserToServer }
-				/>
-				<AddUsersFromSearch
-					myList={this.state.list_info}
-					addSearchUsers={this.submitSearchUserToServer}
-				/>
+				<AddUserToList myList={ this.state.list_info } AddUserSend={ this.submitNewUserToServer }/>
+				<AddUsersFromSearch myList={this.state.list_info} addSearchUsers={this.submitSearchUserToServer}/>
 			</div>
 		);
 	}
@@ -225,7 +216,6 @@ class EditList extends BasicComp {
 		if(props.editData == undefined || props.editData.title == null) return;
 
 		this.setState({editData: props.editData});
-		console.log('EditList', 'componentWillReceiveProps', this.state);
 	}
 
 	submitEditedListToServer(listInfo) {

@@ -38,10 +38,11 @@ class UserListProfile extends Model
 	public function scopeGetProfiles($query, $amount = 40)
 	{
 		return $query->whereNull('user_list_profile.deleted_at')
-			->groupBy('profile.id')
 			->leftjoin('profile', 'user_list_profile.profile_id', '=', 'profile.id')
 			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
 			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
+			->whereNotNull('profile.id')
+			->groupBy('profile.id')
 			->take($amount)
 			->get([
 				'profile.id',

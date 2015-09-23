@@ -27,13 +27,11 @@ class App extends React.Component {
 
 	markCurrentList(listInfo) {
 		this.setState($.extend({}, this.state, { listInfo: listInfo }));
-		console.log('App', 'markCurrentList', this.state);
 	}
 
 	updateCurrentList(currentList) {
 		this.state.listInfo = $.extend({}, this.state.listInfo, currentList)
 		this.setState(this.state);
-		console.log('App', 'updateCurrentList', this.state);
 	}
 
 	render() {

@@ -1,4 +1,6 @@
-<?php namespace VacStatus\Update;
+<?php
+
+namespace VacStatus\Update;
 
 use VacStatus\Update\BaseUpdate;
 use VacStatus\Update\MultiProfile;
