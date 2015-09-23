@@ -272,9 +272,9 @@ class SingleProfile extends BaseUpdate
 			'community'			=> $profileBan->community,
 			'trade'				=> $profileBan->trade,
 
-			'site_admin'		=> $user->site_admin,
-			'donation'			=> $user->donation,
-			'beta'				=> $user->beta,
+			'site_admin'		=> isset($user->id) ? $user->site_admin : 0,
+			'donation'			=> isset($user->id) ? $user->donation : 0,
+			'beta'				=> isset($user->id) ? $user->beta : 0,
 			'profile_old_alias'	=> array_reverse($oldAliasArray),
 		];
 

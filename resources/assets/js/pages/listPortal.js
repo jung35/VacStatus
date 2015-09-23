@@ -1,17 +1,20 @@
 'use strict';
 
 class ListPortal extends BasicComp {
-	constructor(props) {
+	constructor(props)
+	{
 		super(props);
 
 		this.state = { my_list: [], friends_list: [] };
 	}
 
-	componentDidMount() {
+	componentDidMount()
+	{
 		this.fetchLists();
 	}
 
-	fetchLists() {
+	fetchLists()
+	{
 		this.request.fetchLists = $.ajax({
 			url: '/api/v1/list',
 			dataType: 'json',
@@ -24,13 +27,15 @@ class ListPortal extends BasicComp {
 		});
 	}
 
-	componentWillReceiveProps(props) {
+	componentWillReceiveProps(props)
+	{
 		let updatedState = $.extend({}, this.state, {my_list: props.parentState.my_list});
 
 		this.setState(updatedState);
 	}
 
-	renderMyList(data) {
+	renderMyList(data)
+	{
 		if(data.length < 1) return <div className="custom-list"></div>;
 
 		let myList = data.map((list, index) =>
@@ -73,7 +78,8 @@ class ListPortal extends BasicComp {
 		);
 	}
 
-	renderFriendsList(data) {
+	renderFriendsList(data)
+	{
 		if(data.length < 1) return <div className="custom-list"></div>;
 
 		let friendsList = data.map((list, index) =>
@@ -121,7 +127,8 @@ class ListPortal extends BasicComp {
 		);
 	}
 	
-	render() {
+	render()
+	{
 		let myList, friendsList;
 
 		myList = this.renderMyList(this.state.my_list);

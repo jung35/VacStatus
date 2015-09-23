@@ -78,7 +78,7 @@ class Header extends React.Component {
 						<div className="nav-avatar"><img src={ profile.avatar_thumb } /></div>
 					</a>
 					<ul className="dropdown-menu" role="menu">
-						<li><a href={ "/u/" + user.steam_64_id }>Profile</a></li>
+						<li><Link to={ "/u/" + user.steam_64_id }>Profile</Link></li>
 						<li><a href="/settings">Settings</a></li>
 						<li className="divider" />
 						<li><a href="/auth/logout">Sign Out</a></li>

@@ -17,7 +17,11 @@ class BasicComp extends React.Component {
 	}
 
 	listPrivacy(privacy) {
-		let type = {};
+		let type = {
+			name: "Public",
+			color: "success"
+		};
+
 		switch(privacy)
 		{
 			case "3":
@@ -29,10 +33,6 @@ class BasicComp extends React.Component {
 			case 2:
 				type.name = "Friends Only";
 				type.color = "warning";
-				break;
-			default:
-				type.name = "Public";
-				type.color = "success";
 				break;
 		}
 
