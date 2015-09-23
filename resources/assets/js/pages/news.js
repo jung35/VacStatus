@@ -1,15 +1,16 @@
 'use strict';
 
 class News extends BasicComp {
-
-	componentDidMount() {
+	componentDidMount()
+	{
 		let page = this.props.params.page;
 		if(page == undefined || page < 1) page = 1;
 
 		this.fetchNews(page);
 	}
 
-	fetchNews(page) {
+	fetchNews(page)
+	{
 		this.request.fetchNews = $.ajax({
 			url: '/api/v1/news/?page='+page,
 			dataType: 'json',
@@ -28,7 +29,8 @@ class News extends BasicComp {
 		});
 	}
 
-	render() {
+	render()
+	{
 		var state, news, pagination;
 
 		state = this.state;

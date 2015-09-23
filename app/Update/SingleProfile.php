@@ -29,8 +29,6 @@ class SingleProfile extends BaseUpdate
 	public function getProfile()
 	{
 		return $this->updateUsingAPI();
-		
-		// if($this->canUpdate()) return $this->updateUsingAPI();
 
 		$return = $this->grabCache();
 
@@ -44,7 +42,7 @@ class SingleProfile extends BaseUpdate
 
 		$profileCache = Cache::get($this->cacheName);
 
-		$profileCache['times_added'] = $this->getTimesAdded($profileCache['id']);
+		$profileCache = array_merge($profileCache, $this->getTimesAdded($profileCache['id']));
 
 		return $profileCache;
 	}
@@ -57,7 +55,7 @@ class SingleProfile extends BaseUpdate
 			->get();
 
 		return [
-			'number' => $gettingCount->count(),
+			'total' => $gettingCount->count(),
 			'time' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y") : null
 		];
 	}
@@ -255,20 +253,18 @@ class SingleProfile extends BaseUpdate
 		 * Also save it on cache for set # of minutes
 		 */
 
-		$steam64BitId = Steam::to64Bit($profile->small_id);
-
 		$return = [
 			'id'				=> $profile->id,
 			'display_name'		=> $profile->display_name,
 			'avatar'			=> $profile->avatar,
 			'avatar_thumb'		=> $profile->avatar_thumb,
-			'small_id'			=> $this->smallId,
-			'steam_64_bit'		=> $steam64BitId,
-			'steam_32_bit'		=> Steam::to32Bit($steam64BitId),
-			'profile_created'	=> isset($profile->profile_created) ? date("M j Y", $profile->profile_created) : "Unknown",
+			'small_id'			=> $profile->small_id,
+			'steam_64_bit'		=> $profile->steam_64_bit,
+			'steam_32_bit'		=> $profile->steam_32_bit,
+			'profile_created'	=> $profile->profile_created,
 			'privacy'			=> $profile->privacy,
-			'alias'				=> Steam::friendlyAlias($steamAlias),
-			'created_at'		=> $profile->created_at->format("M j Y"),
+			'alias'				=> $profile->alias,
+			'created_at'		=> $profile->created_at,
 
 			'vac_bans'			=> $profileBan->vac_bans,
 			'game_bans'			=> $profileBan->game_bans,
@@ -276,13 +272,13 @@ class SingleProfile extends BaseUpdate
 			'community'			=> $profileBan->community,
 			'trade'				=> $profileBan->trade,
 
-			'site_admin'		=> isset($user->id) ? $user->site_admin : 0,
-			'donation'			=> isset($user->id) ? $user->donation : 0,
-			'beta'				=> isset($user->id) ? $user->beta : 0,
+			'site_admin'		=> $user->site_admin,
+			'donation'			=> $user->donation,
+			'beta'				=> $user->beta,
 			'profile_old_alias'	=> array_reverse($oldAliasArray),
-
-			'times_added'		=> $this->getTimesAdded($profile->id),
 		];
+
+		$return = array_merge($return, $this->getTimesAdded($profile->id));
 
 		/* YAY nothing broke :D time to return the data (and update cache) */
 		$this->updateCache($return);
@@ -291,32 +287,8 @@ class SingleProfile extends BaseUpdate
 
 	private function grabFromDB()
 	{
-		$profile = Profile::where('profile.small_id', $this->smallId)
-			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
-			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
-			->first([
-				'profile.id',
-				'profile.display_name',
-				'profile.avatar',
-				'profile.avatar_thumb',
-				'profile.small_id',
-				'profile.profile_created',
-				'profile.privacy',
-				'profile.alias',
-				'profile.created_at',
+		$profile = Profile::where('profile.small_id', $this->smallId)->getProfileData();
 
-				'profile_ban.vac_bans',
-				'profile_ban.game_bans',
-				'profile_ban.last_ban_date',
-				'profile_ban.community',
-				'profile_ban.trade',
-
-				'users.site_admin',
-				'users.donation',
-				'users.beta',
-			]);
-
-		$steam64BitId = Steam::to64Bit($profile->small_id);
 		$oldAliasArray = $this->cleanOldAlias($profile->ProfileOldAlias);
 
 		$return = [
@@ -324,12 +296,12 @@ class SingleProfile extends BaseUpdate
 			'display_name'		=> $profile->display_name,
 			'avatar'			=> $profile->avatar,
 			'small_id'			=> $profile->small_id,
-			'steam_64_bit'		=> $steam64BitId,
-			'steam_32_bit'		=> Steam::to32Bit($steam64BitId),
-			'profile_created'	=> isset($profile->profile_created) ? date("M j Y", $profile->profile_created) : "Unknown",
+			'steam_64_bit'		=> $profile->steam_64_bit,
+			'steam_32_bit'		=> $profile->steam_32_bit,
+			'profile_created'	=> $profile->profile_created,
 			'privacy'			=> $profile->privacy,
-			'alias'				=> Steam::friendlyAlias(json_decode($profile->alias, true)),
-			'created_at'		=> $profile->created_at->format("M j Y"),
+			'alias'				=> $profile->alias,
+			'created_at'		=> $profile->created_at,
 
 			'vac_bans'			=> $profile->vac_bans,
 			'game_bans'			=> $profile->game_bans,
@@ -340,10 +312,10 @@ class SingleProfile extends BaseUpdate
 			'site_admin'		=> $profile->site_admin,
 			'donation'			=> $profile->donation,
 			'beta'				=> $profile->beta,
-
 			'profile_old_alias'	=> array_reverse($oldAliasArray),
-			'times_added'		=> $this->getTimesAdded($profile->id),
 		];
+
+		$return = array_merge($return, $this->getTimesAdded($profile->id));
 
 		return $return;
 	}

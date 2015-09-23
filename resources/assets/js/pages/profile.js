@@ -1,32 +1,29 @@
 var steam64BitId = $('#profile').data('steam64bitid');
 
-var Profile = React.createClass({
-	fetchProfile: function()
+class Profile extends BasicComp {
+	componentDidMount()
 	{
+		this.fetchProfile();
+	}
+
+	fetchProfile()
+	{
+		let steamId = this.props.params.steamId;
+		if(steamId == undefined) return;
+
 		$.ajax({
-			url: '/api/v1/profile/'+steam64BitId,
+			url: '/api/v1/profile/'+this.props.params.steamId,
 			dataType: 'json',
-			success: function(data) {
+			success: (data) => {
 				this.setState({data: data});
 			}.bind(this),
 			error: function(xhr, status, err) {
 				console.error(this.props.url, status, err.toString());
 			}.bind(this)
 		});
-	},
-	componentDidMount: function()
-	{
-		this.fetchProfile();
-	},
+	}
 
-	getInitialState: function()
-	{
-		return {
-			data: null
-		};
-	},
-
-	render: function()
+	render()
 	{
 		var data, specialColors, auth, privacy, alias_history, alias_recent;
 
@@ -338,4 +335,4 @@ var Profile = React.createClass({
 			)
 		}
 	}
-});
+}

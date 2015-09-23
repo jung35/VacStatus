@@ -9,6 +9,7 @@ let routes = (
 			</Route>
 			<Route path="list" component={ ListPortal }/>
 			<Route path="list/*" component={ List }/>
+			<Route path="u/:steamId" component={ Profile }/>
 			<Route path="search/:searchId" component={ Search }/>
 			<Route path="donate" component={ Home }/>
 		</Route>
