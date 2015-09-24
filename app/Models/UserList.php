@@ -102,14 +102,15 @@ class UserList extends Model
 	public function toArray()
 	{
 		$array = parent::toArray();
-		$array['steam_64_bit'] = $this->steam_64_bit;
+
+		if($this->steam_64_bit) $array['steam_64_bit'] = $this->steam_64_bit;
 
 		return $array;
 	}
 
 	public function getSteam64BitAttribute()
 	{
-		return Steam::to64Bit($this->small_id);
+		return $this->small_id ? Steam::to64Bit($this->small_id) : null;
 	}
 	
 	public function getLastBanDateAttribute($lastBanDate)
@@ -120,5 +121,10 @@ class UserList extends Model
 	public function getAddedAtAttribute($addedAt)
 	{
 		return (new Carbon($addedAt))->format("M j Y");
+	}
+	
+	public function getCreatedAtAttribute($createdAt)
+	{
+		return (new Carbon($createdAt))->format("M j Y");
 	}
 }

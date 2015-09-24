@@ -39,7 +39,9 @@ class MultiProfile extends BaseUpdate
 			else return $this->error($updatedProfiles['error']);
 		}
 
-		return array_replace($this->profiles->toArray(), $updatedProfiles);
+		$profiles = is_array($this->profiles) ? $this->profiles : $this->profiles->toArray();
+
+		return array_replace($profiles, $updatedProfiles);
 	}
 
 	protected function canUpdate($smallId = 0)

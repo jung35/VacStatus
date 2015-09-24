@@ -43,8 +43,8 @@ class Profile extends BasicComp {
 				<div className="container">
 					<div className="row">
 						<div className="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
-							<ProfileDisqus profile={ state }/>
 							<div id="disqus_thread" className="disqus_thread"></div>
+							<ProfileDisqus profile={ state }/>
 						</div>
 					</div>
 				</div>
@@ -63,7 +63,7 @@ class ProfileHeader extends BasicComp {
 	{
 		let state = this.state;
 		let specialColors = this.userTitle(state);
-		let privacy = this.listPrivacy(state.privacy);
+		let privacy = this.listPrivacy(4 - state.privacy);
 
 		let auth;
 
@@ -206,7 +206,7 @@ class ProfileBody extends BasicComp {
 		let alias_history, alias_recent;
 
 		if(state.profile_old_alias) {
-			alias_history = state.profile_old_alias.map(function(alias, index) {
+			alias_history = state.profile_old_alias.map((alias, index) => {
 				return (
 					<tr key={index}>
 						<td>{ alias.timechanged }</td>
@@ -217,7 +217,7 @@ class ProfileBody extends BasicComp {
 		} 
 
 		if(state.alias) {
-			alias_recent = state.alias.map(function(alias, index) {
+			alias_recent = state.alias.map((alias, index) => {
 				return (
 					<tr key={index}>
 						<td>{ alias.timechanged }</td>
@@ -289,6 +289,25 @@ class ProfileVacStatus extends BasicComp {
 	render()
 	{
 		let state = this.state;
+		let beingTrackedOn, authorOf;
+
+		if(state.being_tracked_on != undefined) beingTrackedOn = state.being_tracked_on.map((data, index) => {
+			return (
+				<tr key={ index }>
+					<td>{ data.added_at }</td>
+					<td><a target="_blank" href={ "/list/" + data.id }>{ data.title }</a></td>
+				</tr>
+			);
+		});
+
+		if(state.author_of != undefined) authorOf = state.author_of.map((data, index) => {
+			return (
+				<tr key={ index }>
+					<td>{ data.created_at }</td>
+					<td><a target="_blank" href={ "/list/" + data.id }>{ data.title }</a></td>
+				</tr>
+	        );
+		});
 
 		return (
 			<div className="profile-vacstatus">
@@ -313,12 +332,7 @@ class ProfileVacStatus extends BasicComp {
 											<th>Title</th>
 										</tr>
 									</thead>
-									<tbody>
-										<tr>
-											<td>Aug 14 2015</td>
-											<td><a href="#">asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd</a></td>
-										</tr>
-									</tbody>
+									<tbody>{ beingTrackedOn }</tbody>
 								</table>
 							</div>
 						</div>
@@ -334,12 +348,7 @@ class ProfileVacStatus extends BasicComp {
 											<th>Title</th>
 										</tr>
 									</thead>
-									<tbody>
-										<tr>
-											<td>Aug 14 2015</td>
-											<td><a href="#">asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd</a></td>
-										</tr>
-									</tbody>
+									<tbody>{ authorOf }</tbody>
 								</table>
 							</div>
 						</div>
@@ -391,11 +400,14 @@ class ProfileDisqus extends BasicComp {
 
 		let state = props.profile;
 		
+		if(document.getElementById('disqusJS') != null) return;
+
 		var disqus_identifier = state.steam_64_bit;
 
 		(function () {
 			var dsq = document.createElement('script');
 
+			dsq.id = "disqusJS";
 			dsq.type = 'text/javascript';
 			dsq.async = true;
 			dsq.src = '//vbanstatus.disqus.com/embed.js';
@@ -411,7 +423,7 @@ class ProfileDisqus extends BasicComp {
 
 	render()
 	{
-		if(typeof DISQUS != 'undefined')
+		if(typeof DISQUS != 'undefined' && document.getElementById('disqus_thread') != null)
 		{
 			var state = this.state;
 

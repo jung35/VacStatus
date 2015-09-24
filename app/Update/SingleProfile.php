@@ -3,6 +3,7 @@
 namespace VacStatus\Update;
 
 use VacStatus\Models\Profile;
+use VacStatus\Models\UserList;
 use VacStatus\Models\UserListProfile;
 use VacStatus\Models\User;
 use VacStatus\Models\ProfileBan;
@@ -28,21 +29,20 @@ class SingleProfile extends BaseUpdate
 
 	public function getProfile()
 	{
-		return $this->updateUsingAPI();
-
+		if($this->canUpdate()) return $this->updateUsingAPI();
+		
 		$return = $this->grabCache();
-
-		if($return !== false) return $return;
-		return $this->grabFromDB();
 	}
 
 	protected function grabCache()
 	{
-		if(!Cache::has($this->cacheName)) return false;
-
 		$profileCache = Cache::get($this->cacheName);
 
-		$profileCache = array_merge($profileCache, $this->getTimesAdded($profileCache['id']));
+		$profileCache = array_merge(
+			$profileCache,
+			$this->getTimesAdded($profileCache['id']),
+			$this->getUserListData($profileCache['id'])
+		);
 
 		return $profileCache;
 	}
@@ -57,6 +57,39 @@ class SingleProfile extends BaseUpdate
 		return [
 			'total' => $gettingCount->count(),
 			'time' => isset($gettingCount[0]) ? (new DateTime($gettingCount[0]->created_at))->format("M j Y") : null
+		];
+	}
+
+	private function getUserListData($profileId)
+	{
+		$beingTrackedOn = UserList::where('user_list.privacy', "1")
+			->leftJoin('user_list_profile', 'user_list_profile.user_list_id', '=', 'user_list.id')
+			->leftJoin('profile', 'profile.id', '=', 'user_list_profile.profile_id')
+			->whereNull('user_list.deleted_at')
+			->whereNull('user_list_profile.deleted_at')
+			->where('profile.id', $profileId)
+			->get([
+				  'user_list.id',
+				  'user_list.title',
+
+				  'user_list_profile.created_at as added_at',
+			]);
+
+		$authorOf = UserList::where('user_list.privacy', "1")
+			->leftJoin('users', 'users.id', '=', 'user_list.user_id')
+			->leftJoin('profile', 'profile.small_id', '=', 'users.small_id')
+			->whereNull('user_list.deleted_at')
+			->where('profile.id', $profileId)
+			->get([
+				  'user_list.id',
+				  'user_list.title',
+
+				  'user_list.created_at',
+			]);
+
+		return [
+			'being_tracked_on' => $beingTrackedOn,
+			'author_of' => $authorOf,
 		];
 	}
 
@@ -278,45 +311,14 @@ class SingleProfile extends BaseUpdate
 			'profile_old_alias'	=> array_reverse($oldAliasArray),
 		];
 
-		$return = array_merge($return, $this->getTimesAdded($profile->id));
+		$return = array_merge(
+			$return,
+			$this->getTimesAdded($profile->id),
+			$this->getUserListData($profile->id)
+		);
 
 		/* YAY nothing broke :D time to return the data (and update cache) */
 		$this->updateCache($return);
-		return $return;
-	}
-
-	private function grabFromDB()
-	{
-		$profile = Profile::where('profile.small_id', $this->smallId)->getProfileData();
-
-		$oldAliasArray = $this->cleanOldAlias($profile->ProfileOldAlias);
-
-		$return = [
-			'id'				=> $profile->id,
-			'display_name'		=> $profile->display_name,
-			'avatar'			=> $profile->avatar,
-			'small_id'			=> $profile->small_id,
-			'steam_64_bit'		=> $profile->steam_64_bit,
-			'steam_32_bit'		=> $profile->steam_32_bit,
-			'profile_created'	=> $profile->profile_created,
-			'privacy'			=> $profile->privacy,
-			'alias'				=> $profile->alias,
-			'created_at'		=> $profile->created_at,
-
-			'vac_bans'			=> $profile->vac_bans,
-			'game_bans'			=> $profile->game_bans,
-			'last_ban_date'		=> $profile->last_ban_date->format("M j Y"),
-			'community'			=> $profile->community,
-			'trade'				=> $profile->trade,
-			
-			'site_admin'		=> $profile->site_admin,
-			'donation'			=> $profile->donation,
-			'beta'				=> $profile->beta,
-			'profile_old_alias'	=> array_reverse($oldAliasArray),
-		];
-
-		$return = array_merge($return, $this->getTimesAdded($profile->id));
-
 		return $return;
 	}
 }
