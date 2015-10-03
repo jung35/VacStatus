@@ -1,4 +1,6 @@
-<?php namespace VacStatus\Jobss;
+<?php
+
+namespace VacStatus\Jobs;
 
 abstract class Jobs {
 

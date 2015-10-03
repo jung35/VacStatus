@@ -1,4 +1,6 @@
-<?php namespace VacStatus\Console\Commands;
+<?php
+
+namespace VacStatus\Console\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
