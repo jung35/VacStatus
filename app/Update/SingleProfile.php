@@ -29,9 +29,9 @@ class SingleProfile extends BaseUpdate
 
 	public function getProfile()
 	{
-		if($this->canUpdate()) return $this->updateUsingAPI();
+		if(!$this->canUpdate()) return $this->updateUsingAPI();
 		
-		$return = $this->grabCache();
+		return $this->grabCache();
 	}
 
 	protected function grabCache()

@@ -12,6 +12,7 @@ let routes = (
 			<Route path="u/:steamId" component={ Profile }/>
 			<Route path="search/:searchId" component={ Search }/>
 			<Route path="donate" component={ Home }/>
+			<Route path="privacy" component={ Privacy }/>
 		</Route>
 	</Router>
 );

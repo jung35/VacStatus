@@ -9,7 +9,7 @@ class Footer extends React.Component {
 						<div className="row">
 							<div className="col-xs-12 col-md-6 col-md-push-6">
 								<ul className="left-footer">
-									<li><a href="/privacy">Privacy Policy</a></li>
+									<li><Link to="/privacy">Privacy Policy</Link></li>
 									<li><a href="/contact">Contact</a></li>
 									<li><a target="_blank" href="https://github.com/jung3o/VacStatus">Github</a></li>
 									<li><a target="_blank" href="https://trello.com/vacstatus">Trello</a></li>

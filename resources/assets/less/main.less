@@ -19,6 +19,11 @@ html, body {
 
 .navbar {
 	.navbar-brand {
+		display: inline-block;
+		color: white;
+		font-size: 2.5em;
+		margin: 25px 0 0 10px;
+
 		@media (min-width: @screen-sm-min) {
 			font-size: 2em;
 			margin: 0;
@@ -26,11 +31,6 @@ html, body {
 			padding-top: 13.75px;
 			height: 61px;
 		}
-
-		display: inline-block;
-		color: white;
-		font-size: 2.5em;
-		margin: 25px 0 0 10px;
 	}
 
 	.navbar-toggle {
@@ -89,6 +89,10 @@ html, body {
 	}
 
 	.dropdown-menu {
+		padding: 0;
+		font-size: 11px;
+		background: #424242;
+
 		li {
 			&.divider {
 				margin: 0 0;
@@ -97,17 +101,14 @@ html, body {
 			}
 
 			a {
+				padding: 7px 15px;
+				color: white;
+
 				&:hover, &:focus {
 					background: rgba(0, 0, 0, 0.5);
 				}
-				padding: 7px 15px;
-				color: white;
 			}
 		}
-		
-		padding: 0;
-		font-size: 11px;
-		background: #424242;
 	}
 
 	@media (min-width: @screen-sm-min) {
@@ -120,36 +121,48 @@ html, body {
 }
 
 .footer {
+	margin-top: 36px;
+	min-height: 64px;
+	background: #212121;
+	color: white;
+	font-size: 1.2em;
+
 	.left-footer {
-		li {
-			@media (min-width: @screen-sm-min) {
-				float: none;
-				width: auto;
-			}
-			
-			display: inline-block;
-			float: left;
-			width: 50%;
-		}
-	
-		a {
-			&:hover {
-				background: rgba(255, 255, 255, .05);
-			}
-
-			display: block;
-			padding: 20px;
-			color: white;
-			text-decoration: none;
-		}
-
 		text-align: center;
 		list-style: none;
 		padding: 0;
 		margin: 0;
+
+		li {
+			display: inline-block;
+			float: left;
+			width: 50%;
+
+			@media (min-width: @screen-sm-min) {
+				float: none;
+				width: auto;
+			}
+		}
+	
+		a {
+			display: block;
+			padding: 20px;
+			color: white;
+			text-decoration: none;
+
+			&:hover {
+				background: rgba(255, 255, 255, .05);
+			}
+		}
 	}
 
 	.copyright {
+		text-align: center;
+
+		@media (min-width: @screen-md-min) {
+			text-align: left;
+		}
+
 		div {
 			padding: 20px;
 			float: left;
@@ -163,16 +176,7 @@ html, body {
 			}
 		}
 
-		text-align: center;
-
-		@media (min-width: @screen-md-min) {
-			text-align: left;
-		}
 	}
-	min-height: 64px;
-	background: #212121;
-	color: white;
-	font-size: 1.2em;
 }
 
 #app {
@@ -186,14 +190,18 @@ html, body {
 
 .wrap {
 	min-height: 100%;
-	margin-bottom: -64px;
+	margin-bottom: -100px;
 }
 
 .pushFooter {
-	height: 64px;
+	height: 100px;
 }
 
 .flash {
+	background: #212121;
+	color: white;
+	min-height: 70px;
+
 	&.flash-announcement {
 		background: #3f51b5;
 	}
@@ -233,16 +241,6 @@ html, body {
 	}
 
 	ul.content {
-		li {
-			display: block;
-			padding: 5px 20px 0;
-
-			@media (min-width: @screen-sm-min) {
-				display: inline-block;
-				padding: 0 20px;
-			}
-		}
-
 		text-align: center;
 		font-weight: 700;
 		padding: 5px 0 25px;
@@ -253,23 +251,23 @@ html, body {
 			padding: 25px 0;
 		}
 
+		li {
+			display: block;
+			padding: 5px 20px 0;
+
+			@media (min-width: @screen-sm-min) {
+				display: inline-block;
+				padding: 0 20px;
+			}
+		}
 	}
 
 	a {
 		color: #fff;
 	}
-
-	background: #212121;
-	color: white;
-	min-height: 70px;
 }
 
 .steam-small-login {
-	&:hover, &:focus {
-		background: transparent url(/img/steam-small.png) no-repeat center !important;
-		opacity: 0.9;
-	}
-
 	background: transparent url(/img/steam-small.png) no-repeat center;
 	display: inline-block !important;
 	font-weight: 400;
@@ -282,6 +280,11 @@ html, body {
 	margin-top: 7px;
 	opacity: 0.7;
 	text-align: center;
+
+	&:hover, &:focus {
+		background: transparent url(/img/steam-small.png) no-repeat center !important;
+		opacity: 0.9;
+	}
 }
 
 hr.divider {
@@ -290,7 +293,22 @@ hr.divider {
 }
 
 .notification {
+	max-width: 240px;
+	width: 240px;
+	z-index: 1050;
+	position: fixed;
+	top: 0;
+	right: 0;
+
 	.alert {
+		display: block;
+		max-width: 200px;
+		width: 200px;
+		padding: 5px 10px;
+		cursor: pointer;
+		margin-left: 240px;
+		margin-top: 20px;
+
 		&.alert-info {
 			background: #212121 /* rgba(144, 202, 249, .05) */;
 			border-color: #42A5F5;
@@ -314,23 +332,7 @@ hr.divider {
 			border-color: #E57373;
 			color: #E57373;
 		}
-		
-		display: block;
-		max-width: 200px;
-		width: 200px;
-		padding: 5px 10px;
-		cursor: pointer;
-		margin-left: 240px;
-		margin-top: 20px;
-
 	}
-
-	max-width: 240px;
-	width: 240px;
-	z-index: 1050;
-	position: fixed;
-	top: 0;
-	right: 0;
 }
 
 .faText-align {
