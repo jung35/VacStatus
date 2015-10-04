@@ -19,3 +19,6 @@ notifications:
 install: travis_retry composer install --no-interaction --prefer-source
 
 script: vendor/bin/phpunit
+
+before_script:
+  - mysql -e 'create database vacstatus_test;'
