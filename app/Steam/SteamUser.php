@@ -27,15 +27,17 @@ class SteamUser {
 		$data = $this->data;
 		$isArray = $this->isArray;
 
+		if(!$isArray) $data = [$data];
+
 		$validIds = [];
 		$max = $isArray ? count($data) : 1;
 
 		for($i = 0; $i < $max; $i++)
 		{
-			$value = $isArray ? $data[$i] : $data;
+			$value = $data[$i];
 
-			if(substr($value, 0, 6) == 'steam_') $validIds[] = $this->convert32Bit($value);
-			elseif(substr($value, 0, 2) == 'u:') $validIds[] = $this->convertUID($value);
+			if($this->verify32Bit($value)) $validIds[] = $this->convert32Bit($value);
+			elseif($this->verifyUID($value)) $validIds[] = $this->convertUID($value);
 			elseif($this->verifyId($value)) $validIds[] = $value;
 			else $validIds[] = $this->convertVanityURL($value);
 		}
@@ -77,6 +79,16 @@ class SteamUser {
 		return is_numeric($value) && preg_match('/7656119/', $value);
 	}
 
+	private function verify32Bit($value)
+	{
+		return substr($value, 0, 6) == 'steam_';
+	}
+
+	private function verifyUID($value)
+	{
+		return substr($value, 0, 2) == 'u:';
+	}
+
 	private function convert32Bit($value)
 	{
 		$tmp = explode(':', $value);
@@ -103,7 +115,9 @@ class SteamUser {
 
 	private function convertVanityURL($value)
 	{
-		$tmp = array_values(array_filter(explode('/', $value)));
+		$tmp = explode('/', $value);
+		$tmp = array_filter($tmp);
+		$tmp = array_values($tmp);
 
 		foreach ($tmp as $key => $item)
 		{
@@ -112,11 +126,10 @@ class SteamUser {
 			if ($item == 'profiles')
 			{
 				$value = $tmp[$key + 1];
-				if($this->verifyId($value)) return $value;
-
-				return;
+				return $this->verifyId($value) ? $value : null;
 			}
-			else if ($item == 'id')
+			
+			if ($item == 'id')
 			{
 				$tmp = $tmp[$key + 1];
 				break;
