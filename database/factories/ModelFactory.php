@@ -46,7 +46,7 @@ $mainUser = [
 /**
  * VacStatus\Models\Profile
  */
-$factory->define(Profile::class, function () {
+$factory->define(Profile::class, function () use ($mainUser) {
 	return [
 		'small_id'			=> $mainUser['small_id'],
 		'display_name'		=> $mainUser['display_name'],
@@ -67,7 +67,7 @@ $factory->defineAs(Profile::class, 'private', function () {
 /**
  * VacStatus\Models\User
  */
-$factory->define(User::class, function () {
+$factory->define(User::class, function () use ($mainUser) {
 	return [
 		'small_id'		=> $mainUser['small_id'],
 		'display_name'	=> $mainUser['display_name'],
@@ -107,7 +107,7 @@ $factory->define(Announcement::class, function () {
 /**
  * VacStatus\Models\DonationLog
  */
-$factory->define(DonationLog::class, function () {
+$factory->define(DonationLog::class, function () use ($mainUser) {
 	return [
 		'small_id'			=> $mainUser['small_id'],
 		'status'			=> 'Completed',

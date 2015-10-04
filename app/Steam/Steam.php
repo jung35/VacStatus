@@ -28,54 +28,42 @@ class Steam {
 		Cache::put("profile_$smallId", time(), self::$UPDATE_TIME / 60);
 	}
 
+	public static function converter($values, $convert)
+	{
+		$isArray = is_array($values);
+		$max = $isArray ? count($values) : 1;
+
+		$converted = [];
+
+		for($i = 0; $i < $max; $i++)
+		{
+			$value = $isArray ? $values[$i] : $values;
+
+			if(!is_numeric($value)) continue;
+
+			$converted[$i] = $convert($value);
+		}
+
+		return $isArray ? $converted : $converted[0];
+	}
+
 	public static function toSmallId($steam64BitId)
 	{
-		if(is_array($steam64BitId))
-		{
-			$smallIds = [];
-			foreach($steam64BitId as $key => $value)
-			{
-				$smallIds[$key] = (int) explode('.', bcsub($value,'76561197960265728'))[0];
-			}
-
-			return $smallIds;
-		}
-
-		if(is_numeric($steam64BitId))
-		{
-			$steam64BitId .= '';
-			return (int) explode('.', bcsub($steam64BitId,'76561197960265728'))[0];
-		}
-
-		return ['type' => 'error'];
+		return self::converter($steam64BitId, function($steam64BitId) {
+			return (int) explode('.', bcsub($steam64BitId, '76561197960265728'))[0];
+		});
 	}
 
 	public static function to64bit($smallId)
 	{
-		if(is_array($smallId))
-		{
-			$steam64BitIds = [];
-			foreach($smallId as $key => $value)
-			{
-				$steam64BitIds[$key] = ''.explode('.', bcadd($value,'76561197960265728'))[0];
-			}
-
-			return $steam64BitIds;
-		}
-
-		if(is_numeric($smallId))
-		{
-			$smallId .= '';
+		return self::converter($smallId, function($smallId) {
 			return ''.explode('.', bcadd($smallId,'76561197960265728'))[0];
-		}
-
-		return ['type' => 'error'];
+		});
 	}
 
 	public static function to32Bit($steam64BitId)
 	{
-		if(is_numeric($steam64BitId))
-		{
+		return self::converter($steam64BitId, function($steam64BitId) {
 			$steamIdPartOne = substr($steam64BitId, -1) % 2 == 0 ? 0 : 1;
 			$steamIdPartTwo = bcsub($steam64BitId, '76561197960265728');
 
@@ -86,16 +74,16 @@ class Steam {
 
 				return "STEAM_0:$steamIdPartOne:".explode('.', $steamIdPartTwo)[0];
 			}
-		}
 
-		return ['type' => 'error'];
+			return;
+		});
 	}
 
 	public static function toSteam3Id($steam64BitId)
 	{
-		if(is_numeric($steam64BitId)) return 'U:1:'.self::toSmallId($steam64BitId);
-
-		return ['type' => 'error'];
+		return self::converter($steam64BitId, function($steam64BitId) {
+			return 'U:1:'.self::toSmallId($steam64BitId);
+		});
 	}
 
 	public static function imgToHTTPS($url)
