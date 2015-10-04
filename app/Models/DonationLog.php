@@ -51,19 +51,4 @@ class DonationLog extends Model
 	{
 		return Steam::to64Bit($this->small_id);
 	}
-
-	// public function getSiteAdminAttribute($value)
-	// {
-	// 	return (int) $value?:0;
-	// }
-
-	// public function getDonationAttribute($value)
-	// {
-	// 	return (int) $value?:0;
-	// }
-
-	// public function getBetaAttribute($value)
-	// {
-	// 	return (int) $value?:0;
-	// }
 }

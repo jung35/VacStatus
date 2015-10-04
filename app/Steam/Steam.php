@@ -67,15 +67,12 @@ class Steam {
 			$steamIdPartOne = substr($steam64BitId, -1) % 2 == 0 ? 0 : 1;
 			$steamIdPartTwo = bcsub($steam64BitId, '76561197960265728');
 
-			if (bccomp($steamIdPartTwo,'0') == 1)
-			{
-				$steamIdPartTwo = bcsub($steamIdPartTwo, $steamIdPartOne);
-				$steamIdPartTwo = bcdiv($steamIdPartTwo, 2);
+			if (bccomp($steamIdPartTwo,'0') != 1) return;
 
-				return "STEAM_0:$steamIdPartOne:".explode('.', $steamIdPartTwo)[0];
-			}
+			$steamIdPartTwo = bcsub($steamIdPartTwo, $steamIdPartOne);
+			$steamIdPartTwo = bcdiv($steamIdPartTwo, 2);
 
-			return;
+			return "STEAM_0:$steamIdPartOne:".explode('.', $steamIdPartTwo)[0];
 		});
 	}
 
@@ -84,13 +81,6 @@ class Steam {
 		return self::converter($steam64BitId, function($steam64BitId) {
 			return 'U:1:'.self::toSmallId($steam64BitId);
 		});
-	}
-
-	public static function imgToHTTPS($url)
-	{
-		preg_match('/^(.*)?\/avatars\/(.*)$/i', $url, $newURL);
-
-		return self::$HTTPS_URL.$newURL[2];
 	}
 
 	public static function aliasSort($a, $b) {

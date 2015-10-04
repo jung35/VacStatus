@@ -192,8 +192,8 @@ class MultiProfile extends BaseUpdate
 				if(isset($steamInfo['timecreated']))  $profile->profile_created = $steamInfo['timecreated'];
 
 				$profile->display_name = $steamInfo['personaname'];
-				$profile->avatar = Steam::imgToHTTPS($steamInfo['avatarfull']);
-				$profile->avatar_thumb = Steam::imgToHTTPS($steamInfo['avatar']);
+				$profile->avatar = $steamInfo['avatarfull'];
+				$profile->avatar_thumb = $steamInfo['avatar'];
 				$profile->privacy = $steamInfo['communityvisibilitystate'];
 
 				if(!$profile->save()) continue;
