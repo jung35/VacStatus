@@ -1,34 +1,18 @@
-<?php namespace VacStatus\Steam;
+<?php
+
+namespace VacStatus\Steam;
 
 use Cache;
 
 class Steam {
+
 	/**
-	 * Minimum timeout for steam updates on profile
+	 * Minimum timeout for steam updates on profile cache
 	 * @var integer
 	 */
 	public static $UPDATE_TIME = 3600; // 1 HOUR = 3600 seconds
-	protected static $HTTPS_URL = 'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/';
 
-	public static function getAPI()
-	{
-		return env('STEAM_API');
-	}
-
-	public static function canUpdate($smallId)
-	{
-		if(Cache::has("profile_$smallId")
-		   && Cache::get("profile_$smallId") + self::$UPDATE_TIME > time()) return false;
-
-		return true;
-	}
-
-	public static function setUpdate($smallId)
-	{
-		Cache::put("profile_$smallId", time(), self::$UPDATE_TIME / 60);
-	}
-
-	public static function converter($values, $convert)
+	private static function converter($values, $convert)
 	{
 		$isArray = is_array($values);
 		$max = $isArray ? count($values) : 1;
@@ -45,6 +29,21 @@ class Steam {
 		}
 
 		return $isArray ? $converted : $converted[0];
+	}
+
+	public static function getAPI()
+	{
+		return env('STEAM_API');
+	}
+
+	public static function canUpdate($smallId)
+	{
+		return !(Cache::has("profile_$smallId") && Cache::get("profile_$smallId") + self::$UPDATE_TIME > time());
+	}
+
+	public static function setUpdate($smallId)
+	{
+		Cache::put("profile_$smallId", time(), self::$UPDATE_TIME / 60);
 	}
 
 	public static function toSmallId($steam64BitId)
@@ -120,10 +119,10 @@ class Steam {
 		{
 			if(substr(trim($status), 0, 1) == "#")
 			{
-				preg_match("(STEAM_.*?\s)", trim($status), $foundSteam);
+				preg_match("/STEAM_.*?\s/", trim($status), $foundSteam);
 				if(count($foundSteam) == 0) continue;
 
-				$searchArray[] = $foundSteam[0];
+				$searchArray[] = trim($foundSteam[0]);
 				$statusConfirm = true;
 			}
 		}
@@ -138,7 +137,6 @@ class Steam {
 		$data = strtolower(trim($data));
 
 		if(empty($data)) return ['error' => 'Invalid or empty input'];
-
 		if(strlen($data) > 100) return ['error' => 'Field too long'];
 		
 		if(substr($data, 0, 6) == 'steam_')
