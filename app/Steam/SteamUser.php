@@ -30,12 +30,9 @@ class SteamUser {
 		if(!$isArray) $data = [$data];
 
 		$validIds = [];
-		$max = $isArray ? count($data) : 1;
 
-		for($i = 0; $i < $max; $i++)
+		foreach($data as $value)
 		{
-			$value = $data[$i];
-
 			if($this->verify32Bit($value)) $validIds[] = $this->convert32Bit($value);
 			elseif($this->verifyUID($value)) $validIds[] = $this->convertUID($value);
 			elseif($this->verifyId($value)) $validIds[] = $value;
@@ -44,7 +41,10 @@ class SteamUser {
 
 		$validIds = $this->cleanArray($validIds);
 
-		return $isArray ? $validIds : $validIds[0];
+		if(!isset($validIds[0])) return 'Invalid Input';
+		
+		if($isArray) return $validIds;
+		return $validIds[0];
 	}
 
 	private function cleanArray($array)
@@ -68,7 +68,7 @@ class SteamUser {
 		if(($isArray && count($data) == 0)
 			|| (!$isArray && (strlen($data) < 1 || strlen($data) > 100)))
 		{
-			return 'Invalid or empty input';
+			return 'Invalid Input';
 		}
 
 		return false;
@@ -122,14 +122,12 @@ class SteamUser {
 		foreach ($tmp as $key => $item)
 		{
 			if(!isset($tmp[$key + 1]) || empty($tmp[$key + 1])) break;
-
-			if ($item == 'profiles')
+			elseif ($item == 'profiles')
 			{
 				$value = $tmp[$key + 1];
 				return $this->verifyId($value) ? $value : null;
 			}
-			
-			if ($item == 'id')
+			elseif ($item == 'id')
 			{
 				$tmp = $tmp[$key + 1];
 				break;
@@ -139,8 +137,7 @@ class SteamUser {
 		$steamAPI = new SteamAPI($tmp);
 		$steamVanityUrl = $steamAPI->fetch('vanityUrl');
 
-		if(isset($steamVanityUrl['type']) && $steamVanityUrl['type'] == 'error'
-		   || !isset($steamVanityUrl['response']['steamid'])) return;
+		if(!isset($steamVanityUrl['response']['steamid'])) return;
 
 		$steamid64 = (string) $steamVanityUrl['response']['steamid'];
 

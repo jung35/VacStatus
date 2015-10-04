@@ -26,7 +26,9 @@ class SteamUserTest extends TestCase
 
 	public function test_steamuser_invalid()
 	{
-		$this->assertEquals('Invalid or empty input', (new SteamUser([]))->fetch());
-		$this->assertEquals('Invalid or empty input', (new SteamUser(''))->fetch());
+		$this->assertEquals('Invalid Input', (new SteamUser([]))->fetch());
+		$this->assertEquals('Invalid Input', (new SteamUser(['123iojasdfoijasdom']))->fetch());
+		$this->assertEquals('Invalid Input', (new SteamUser(''))->fetch());
+		$this->assertEquals('Invalid Input', (new SteamUser('123iojasdfoijasdom'))->fetch());
 	}
 }
