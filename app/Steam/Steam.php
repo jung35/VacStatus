@@ -12,25 +12,6 @@ class Steam {
 	 */
 	public static $UPDATE_TIME = 3600; // 1 HOUR = 3600 seconds
 
-	private static function converter($values, $convert)
-	{
-		$isArray = is_array($values);
-		$max = $isArray ? count($values) : 1;
-
-		$converted = [];
-
-		for($i = 0; $i < $max; $i++)
-		{
-			$value = $isArray ? $values[$i] : $values;
-
-			if(!is_numeric($value)) continue;
-
-			$converted[$i] = $convert($value);
-		}
-
-		return $isArray ? $converted : $converted[0];
-	}
-
 	public static function getAPI()
 	{
 		return env('STEAM_API');
@@ -132,91 +113,22 @@ class Steam {
 		return array_filter($searchArray);
 	}
 
-	public static function findUser($data)
+	private static function converter($values, $convert)
 	{
-		$data = strtolower(trim($data));
+		$isArray = is_array($values);
+		$max = $isArray ? count($values) : 1;
 
-		if(empty($data)) return ['error' => 'Invalid or empty input'];
-		if(strlen($data) > 100) return ['error' => 'Field too long'];
-		
-		if(substr($data, 0, 6) == 'steam_')
+		$converted = [];
+
+		for($i = 0; $i < $max; $i++)
 		{
-			$tmp = explode(':', $data);
+			$value = $isArray ? $values[$i] : $values;
 
-			if ((count($tmp) == 3)
-			    && is_numeric($tmp[1])
-			    && is_numeric($tmp[2]))
-			{
-				$steam3Id = bcadd(($tmp[2] * 2) + $tmp[1], '76561197960265728');
-				return ['success' => $steam3Id];
-			}
-			return ['error' => 'Invalid Steam ID'];
+			if(!is_numeric($value)) continue;
+
+			$converted[$i] = $convert($value);
 		}
-		else if (substr($data, 0, 2) == 'u:')
-		{
-			$tmp = explode(':', $data);
 
-			if ((count($tmp) == 3) && is_numeric($tmp[2]))
-			{
-				$steam3Id = bcadd($tmp[2], '76561197960265728');
-				return ['success' => $steam3Id];
-			}
-
-			return ['error' => 'Invalid Steam ID'];
-		} else if ($p = strrpos($data, '/'))
-		{
-			$tmp = array_values(array_filter(explode('/',$data)));
-			$a = null;
-
-			foreach ($tmp as $key => $item)
-			{
-				if(!isset($tmp[$key+1]) || empty($tmp[$key+1])) return ['error' => 'Invalid input'];
-
-				if ($item == 'profiles')
-				{
-					$a = $tmp[$key+1];
-					break;
-				} else if ($item == 'id')
-				{
-					$data = $tmp[$key+1];
-					break;
-				}
-			}
-
-			if (is_numeric($a) && preg_match('/7656119/', $a)) return ['success' => $a];
-			else {
-				$steamAPI = new SteamAPI($data);
-				$steamVanityUrl = $steamAPI->fetch('vanityUrl');
-
-				if(isset($steamVanityUrl['type']) && $steamVanityUrl['type'] == 'error' || !isset($steamVanityUrl['response']['steamid']))
-				{
-					return ['error' => 'Invalid input'];
-				}
-
-				$steamid64 = (string) $steamVanityUrl['response']['steamid'];
-
-				if (!preg_match('/7656119/', $steamid64)) return ['error' => 'Invalid link'];
-				else return ['success' => $steamid64];
-			}
-		}
-		else if (is_numeric($data) && preg_match('/7656119/', $data))
-		{
-			return ['success' => $data];
-		}
-		else
-		{
-			$steamAPI = new SteamAPI($data);
-			$steamVanityUrl = $steamAPI->fetch('vanityUrl');
-
-			if(isset($steamVanityUrl['type']) && $steamVanityUrl['type'] == 'error' || !isset($steamVanityUrl['response']['steamid']))
-			{
-				return ['error' => 'Invalid input'];
-			}
-
-			$steamid64 = (string) $steamVanityUrl['response']['steamid'];
-
-			if (!preg_match('/7656119/', $steamid64)) return ['error' => 'Invalid input'];
-			else return ['success' => $steamid64];
-		}
+		return $isArray ? $converted : $converted[0];
 	}
 }

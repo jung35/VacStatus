@@ -14,7 +14,6 @@ class SteamTest extends TestCase
 
 	public function test_for_api_key()
 	{
-		dump(Steam::class);
 		$this->assertEquals('string', gettype(Steam::getAPI()));
 	}
 

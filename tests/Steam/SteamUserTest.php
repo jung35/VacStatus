@@ -8,9 +8,25 @@ use VacStatus\Steam\SteamUser;
 
 class SteamUserTest extends TestCase
 {
-
-    public function test_start()
+    public function test_steamuser()
     {
-		dump(SteamUser::class);
-    }
+    	$test = [
+			'jung3o', 'http://steamcommunity.com/id/Jung3o/',
+			'U:1:60051399', 'STEAM_0:1:30025699', '76561198020317127'
+		];
+
+		$expected = [
+			'76561198020317127', '76561198020317127', '76561198020317127',
+			'76561198020317127', '76561198020317127'
+		];
+
+		$this->assertEquals($expected, (new SteamUser($test))->fetch());
+		$this->assertEquals($expected[0], (new SteamUser($test[0]))->fetch());
+	}
+
+	public function test_steamuser_invalid()
+	{
+		$this->assertEquals('Invalid or empty input', (new SteamUser([]))->fetch());
+		$this->assertEquals('Invalid or empty input', (new SteamUser(''))->fetch());
+	}
 }

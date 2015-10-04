@@ -283,16 +283,9 @@ class CustomListController extends Controller
 	{
 		if(!is_array($search)) return $this->error('search_invalid');
 
-		$validProfile = [];
+		$validProfile = (new SteamUser($search))->fetch();
 
-		foreach($search as $potentialProfile)
-		{
-			$steam3Id = Steam::findUser($potentialProfile);
-
-			if(isset($steam3Id['success'])) {
-				$validProfile[] = $steam3Id['success'];
-			}
-		}
+		if(!is_array($validProfile)) return $this->error($validProfile);
 
 		return Steam::toSmallId($validProfile);
 	}

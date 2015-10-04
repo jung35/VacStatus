@@ -5,6 +5,7 @@ namespace VacStatus\Http\Controllers\APIv1;
 use VacStatus\Http\Controllers\Controller;
 
 use VacStatus\Steam\Steam;
+use VacStatus\Steam\SteamUser;
 
 use VacStatus\Update\MultiProfile;
 
@@ -37,17 +38,9 @@ class SearchController extends Controller
 			return ['error' => 'Too many profiles listed in search box for a guest.'];
 		}
 
-		$validProfile = [];
-		foreach($search as $potentialProfile)
-		{
-			$steam3Id = Steam::findUser($potentialProfile);
+		$validProfile = (new SteamUser($search))->fetch();
 
-			if(isset($steam3Id['success'])) {
-				$validProfile[] = $steam3Id['success'];
-			}
-		}
-
-		if(count($validProfile) == 0)
+		if(!is_array($validProfile) || count($validProfile) == 0)
 		{
 			return ['error' => 'None of the profiles were found to be valid steam accounts'];
 		}
