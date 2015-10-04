@@ -2,16 +2,7 @@
 
 namespace VacStatus\Update;
 
-use VacStatus\Update\BaseUpdate;
-use VacStatus\Update\MultiProfile;
-
-use Cache;
-use Carbon;
-use DateTime;
-
 use VacStatus\Models\UserListProfile;
-
-use VacStatus\Steam\Steam;
 
 class LatestTracked extends MostTracked
 {
