@@ -19,7 +19,7 @@ class MostTracked extends BaseUpdate
 		$this->cacheName = "mostTracked";
 	}
 
-	public function getMostTracked()
+	public function getList()
 	{
 		if(!$this->canUpdate())
 		{
@@ -27,19 +27,17 @@ class MostTracked extends BaseUpdate
 			if($return !== false) return $return;
 		}
 
-		return $this->grabFromDB();
-	}
-
-	private function grabFromDB()
-	{
-		$userListProfiles = UserListProfile::orderBy('total', 'desc')
-			->getProfiles();
-
-		$multiProfile = new MultiProfile($userListProfiles);
+		$multiProfile = new MultiProfile($this->grabFromDB());
 		$return = $multiProfile->run();
 
 		$this->updateCache($return);
 
 		return $return;
+	}
+
+	protected function grabFromDB()
+	{
+		return UserListProfile::orderBy('total', 'desc')
+			->getProfiles();
 	}
 }

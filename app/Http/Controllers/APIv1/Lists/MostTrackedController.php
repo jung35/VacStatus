@@ -13,7 +13,7 @@ class MostTrackedController extends Controller
 
 		$return = [
 			'list_info' => [ 'title' => 'Most Tracked Users' ],
-			'profiles' => $mostTracked->getMostTracked()
+			'profiles' => $mostTracked->getList()
 		];
 
 		return $return;

@@ -13,12 +13,7 @@ use VacStatus\Models\UserListProfile;
 
 use VacStatus\Steam\Steam;
 
-/*
- * This is almost an exact copy of LatestTracked.php. The only thing that's different is
- * I am now filtering where last_ban_date IS NOT NULL AND vac > 0 ORDER BY last_ban_date DESC
- */
-
-class LatestVAC extends BaseUpdate
+class LatestVAC extends MostTracked
 {
 	function __construct()
 	{
@@ -26,29 +21,11 @@ class LatestVAC extends BaseUpdate
 		$this->cacheName = "latestVAC";
 	}
 
-	public function getLatestVAC()
+	protected function grabFromDB()
 	{
-		if(!$this->canUpdate())
-		{
-			$return = $this->grabCache();
-			if($return !== false) return $return;
-		}
-
-		return $this->grabFromDB();
-	}
-
-	private function grabFromDB()
-	{
-		$userListProfiles = UserListProfile::orderBy('profile_ban.last_ban_date', 'desc')
+		return UserListProfile::orderBy('profile_ban.last_ban_date', 'desc')
 			->where('profile_ban.vac_bans', '>', '0')
 			->whereNotNull('profile_ban.last_ban_date')
 			->getProfiles(200);
-
-		$multiProfile = new MultiProfile($userListProfiles);
-		$return = $multiProfile->run();
-
-		$this->updateCache($return);
-		
-		return $return;
 	}
 }

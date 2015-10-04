@@ -13,7 +13,7 @@ class LatestGameBannedController extends Controller
 
 		$return = [
 			'list_info' => [ 'title' => 'Latest Game Banned Users' ],
-			'profiles' => $latestGameBan->getLatestGameBan()
+			'profiles' => $latestGameBan->getList()
 		];
 
 		return $return;

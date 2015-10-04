@@ -13,7 +13,7 @@ use VacStatus\Models\UserListProfile;
 
 use VacStatus\Steam\Steam;
 
-class LatestGameBan extends BaseUpdate
+class LatestGameBan extends MostTracked
 {
 	function __construct()
 	{
@@ -21,29 +21,11 @@ class LatestGameBan extends BaseUpdate
 		$this->cacheName = "latestGameBan";
 	}
 
-	public function getLatestGameBan()
+	protected function grabFromDB()
 	{
-		if(!$this->canUpdate())
-		{
-			$return = $this->grabCache();
-			if($return !== false) return $return;
-		}
-
-		return $this->grabFromDB();
-	}
-
-	private function grabFromDB()
-	{
-		$userListProfiles = UserListProfile::orderBy('profile_ban.last_ban_date', 'desc')
+		return UserListProfile::orderBy('profile_ban.last_ban_date', 'desc')
 			->where('profile_ban.game_bans', '>', '0')
 			->whereNotNull('profile_ban.last_ban_date')
 			->getProfiles(200);
-
-		$multiProfile = new MultiProfile($userListProfiles);
-		$return = $multiProfile->run();
-
-		$this->updateCache($return);
-		
-		return $return;
 	}
 }

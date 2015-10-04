@@ -13,7 +13,7 @@ use VacStatus\Models\UserListProfile;
 
 use VacStatus\Steam\Steam;
 
-class LatestTracked extends BaseUpdate
+class LatestTracked extends MostTracked
 {
 	function __construct()
 	{
@@ -21,27 +21,9 @@ class LatestTracked extends BaseUpdate
 		$this->cacheName = "latestTracked";
 	}
 
-	public function getLatestTracked()
+	protected function grabFromDB()
 	{
-		if(!$this->canUpdate())
-		{
-			$return = $this->grabCache();
-			if($return !== false) return $return;
-		}
-
-		return $this->grabFromDB();
-	}
-
-	private function grabFromDB()
-	{
-		$userListProfiles = UserListProfile::orderBy('user_list_profile.id', 'desc')
+		return UserListProfile::orderBy('user_list_profile.id', 'desc')
 			->getProfiles();
-
-		$multiProfile = new MultiProfile($userListProfiles);
-		$return = $multiProfile->run();
-
-		$this->updateCache($return);
-		
-		return $return;
 	}
 }
