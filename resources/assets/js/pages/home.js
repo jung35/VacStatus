@@ -1,6 +1,10 @@
 'use strict';
 
-class Home extends BasicComp {
+import React from 'react';
+import { Link } from 'react-router';
+import BasicComp from '../BasicComp';
+
+export default class Home extends BasicComp {
 	componentDidMount() {
 		this.fetchMain();
 	}
@@ -47,7 +51,7 @@ class Home extends BasicComp {
 
 								</div>
 
-								{ !authCheck ? <a href="/auth/login" className="btn">Get Started via STEAM</a> : null}
+								{ !this.authCheck ? <a href="/auth/login" className="btn">Get Started via STEAM</a> : null}
 
 								<div id="hero-carousel" className="carousel slide" data-ride="carousel">
 									<div className="carousel-inner" role="listbox">

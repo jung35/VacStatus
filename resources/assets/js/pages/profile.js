@@ -1,17 +1,18 @@
-class Profile extends BasicComp {
+'use strict';
 
-	componentDidMount()
-	{
+import React from 'react';
+import BasicComp from '../BasicComp';
+
+export default class Profile extends BasicComp {
+	componentDidMount() {
 		this.fetchProfile(this.props.params.steamId);
 	}
 
-	componentWillReceiveProps(props)
-	{
+	componentWillReceiveProps(props) {
 		this.fetchProfile(props.params.steamId);
 	}
 
-	fetchProfile(steamId)
-	{
+	fetchProfile(steamId) {
 		this.request.fetchProfile = $.ajax({
 			url: '/api/v1/profile/'+steamId,
 			dataType: 'json',
@@ -24,8 +25,7 @@ class Profile extends BasicComp {
 		});
 	}
 
-	render()
-	{
+	render() {
 		let state;
 
 		state = this.state;
@@ -54,20 +54,18 @@ class Profile extends BasicComp {
 }
 
 class ProfileHeader extends BasicComp {
-	componentWillReceiveProps(props)
-	{
+	componentWillReceiveProps(props) {
 		this.setState(props.profile);
 	}
 
-	render()
-	{
+	render() {
 		let state = this.state;
 		let specialColors = this.userTitle(state);
 		let privacy = this.listPrivacy(4 - state.privacy);
 
 		let auth;
 
-		if(authCheck) auth = (
+		if(this.authCheck) auth = (
 			<a className="open-addUserModal" href="#addUserModal" data-toggle="modal" data-id={ state.id }>
 				<span className="fa fa-plus faText-align"></span>
 			</a>
@@ -169,13 +167,11 @@ class ProfileHeader extends BasicComp {
 }
 
 class ProfileBadge extends BasicComp {
-	componentWillReceiveProps(props)
-	{
+	componentWillReceiveProps(props) {
 		this.setState(props.profile);
 	}
 
-	render()
-	{
+	render() {
 		let state = this.state;
 
 		return (
@@ -195,13 +191,11 @@ class ProfileBadge extends BasicComp {
 }
 
 class ProfileBody extends BasicComp {
-	componentWillReceiveProps(props)
-	{
+	componentWillReceiveProps(props) {
 		this.setState(props.profile);
 	}
 
-	render()
-	{
+	render() {
 		let state = this.state;
 		let alias_history, alias_recent;
 
@@ -281,13 +275,11 @@ class ProfileBody extends BasicComp {
 }
 
 class ProfileVacStatus extends BasicComp {
-	componentWillReceiveProps(props)
-	{
+	componentWillReceiveProps(props) {
 		this.setState(props.profile);
 	}
 
-	render()
-	{
+	render() {
 		let state = this.state;
 		let beingTrackedOn, authorOf;
 
@@ -394,8 +386,7 @@ class ProfileVacStatus extends BasicComp {
 }
 
 class ProfileDisqus extends BasicComp {
-	constructor(props)
-	{
+	constructor(props) {
 		super(props);
 
 		let state = props.profile;
@@ -416,13 +407,11 @@ class ProfileDisqus extends BasicComp {
 		})();
 	}
 
-	componentWillReceiveProps(props)
-	{
+	componentWillReceiveProps(props) {
 		this.setState(props.profile);
 	}
 
-	render()
-	{
+	render() {
 		if(typeof DISQUS != 'undefined' && document.getElementById('disqus_thread') != null)
 		{
 			var state = this.state;

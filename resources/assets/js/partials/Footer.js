@@ -1,6 +1,10 @@
 'use strict';
 
-class Footer extends React.Component {
+import React from 'react';
+import { Link } from 'react-router';
+import BasicComp from '../BasicComp';
+
+export default class Footer extends BasicComp {
 	render () {
 		return (
 	        <div>
@@ -47,7 +51,7 @@ class Footer extends React.Component {
 									</div>
 								</div>
 								<div className="modal-footer">
-									<input type="hidden" name="_token" value={ _token } />
+									<input type="hidden" name="_token" value={ this._token } />
 									<button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
 									<button type="submit" className="btn btn-primary">Search</button>
 								</div>

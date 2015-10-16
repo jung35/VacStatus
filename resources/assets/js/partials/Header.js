@@ -1,13 +1,10 @@
 'use strict';
 
-class Header extends React.Component {
-	constructor() {
-		super();
-		this.state = {};
-		this.notify = new Notify;
-		this.request = {};
-	}
+import React from 'react';
+import { Link } from 'react-router';
+import BasicComp from '../BasicComp';
 
+export default class Header extends BasicComp {
 	fetchMe() {
 		this.request.fetchMe = $.ajax({
 			url: '/api/v1/me',
@@ -50,7 +47,7 @@ class Header extends React.Component {
 	navLeft () {
 		let createList;
 
-		if(authCheck) createList = <li><a href="#createListModal" data-toggle="modal">Create List</a></li>;
+		if(this.authCheck) createList = <li><a href="#createListModal" data-toggle="modal">Create List</a></li>;
 
 		return (
 			<ul className="nav navbar-nav">
@@ -66,16 +63,15 @@ class Header extends React.Component {
 		let navProfile = <li><a className="steam-small-login" href="/auth/login">Sign in through STEAM</a></li>;
 		let state = this.state;
 
-		if(authCheck && state.user != undefined && state.user.id != undefined)
+		if(this.authCheck && state.user != undefined && state.user.id != undefined)
 		{
 			let user = state.user;
-			let profile = user.profile;
 
 			navProfile = (
 				<li className="dropdown">
 					<a href="#" className="dropdown-toggle" data-toggle="dropdown">
 						<div className="nav-username">{ user.display_name }</div>
-						<div className="nav-avatar"><img src={ profile.avatar_thumb } /></div>
+						<div className="nav-avatar"><img src={ user.profile.avatar_thumb } /></div>
 					</a>
 					<ul className="dropdown-menu" role="menu">
 						<li><Link to={ "/u/" + user.steam_64_id }>Profile</Link></li>

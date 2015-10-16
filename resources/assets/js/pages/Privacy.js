@@ -1,8 +1,9 @@
 'use strict';
 
-class Privacy extends React.Component {
-	render()
-	{
+import React from 'react';
+
+export default class Privacy extends React.Component {
+	render() {
 		return (
 			<div className="container">
 				<div className="row">

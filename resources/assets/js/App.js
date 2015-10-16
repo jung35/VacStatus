@@ -1,37 +1,14 @@
 'use strict';
 
 import React from 'react';
-import { Router, Route, Link, IndexRoute } from 'react-router'
+import ListHandler from './ListHandler';
+import autobind from 'autobind-decorator';
+import { Header, Footer } from './Partials';
 
-import createBrowserHistory from 'history/lib/createBrowserHistory'
-
-var authCheck = $('meta[name="auth"]').attr('content');
-var _token = $('meta[name="_token"]').attr('content');
-
-$.ajaxSetup({ headers: { 'X-CSRF-TOKEN': _token } });
-
-class App extends React.Component {
+export default class App extends React.Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {};
-
-		this.updateMyList = this.updateMyList.bind(this);
-		this.markCurrentList = this.markCurrentList.bind(this);
-		this.updateCurrentList = this.updateCurrentList.bind(this);
-	}
-
-	updateMyList(myList) {
-		this.setState($.extend({}, this.state, { my_list: myList }));
-	}
-
-	markCurrentList(listInfo) {
-		this.setState($.extend({}, this.state, { listInfo: listInfo }));
-	}
-
-	updateCurrentList(currentList) {
-		this.state.listInfo = $.extend({}, this.state.listInfo, currentList)
-		this.setState(this.state);
 	}
 
 	render() {
@@ -48,5 +25,21 @@ class App extends React.Component {
 				<Footer />
 			</div>
 		);
+	}
+
+	@autobind
+	updateMyList(myList) {
+		this.setState($.extend({}, this.state, { my_list: myList }));
+	}
+
+	@autobind
+	markCurrentList(listInfo) {
+		this.setState($.extend({}, this.state, { listInfo: listInfo }));
+	}
+
+	@autobind
+	updateCurrentList(currentList) {
+		this.state.listInfo = $.extend({}, this.state.listInfo, currentList)
+		this.setState(this.state);
 	}
 }

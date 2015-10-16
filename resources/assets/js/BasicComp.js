@@ -1,6 +1,9 @@
 'use strict';
 
-class BasicComp extends React.Component {
+import React from 'react';
+import Notify from './Notify';
+
+export default class BasicComp extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -8,6 +11,11 @@ class BasicComp extends React.Component {
 		this.state = {};
 		this.request = {};
 		this.notify = new Notify;
+
+		this.authCheck = $('meta[name="auth"]').attr('content');
+		this._token = $('meta[name="_token"]').attr('content');
+
+		$.ajaxSetup({ headers: { 'X-CSRF-TOKEN': this._token } });
 	}
 
 	componentWillUnmount() {

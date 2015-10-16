@@ -1,6 +1,6 @@
 'use strict';
  
-class Notify {
+export default class Notify {
 	constructor() {
 		this.element = $(document).find('.notification');
 		this.interval = 0;

@@ -1,8 +1,11 @@
 'use strict';
 
-class List extends BasicComp {
-	constructor(props)
-	{
+import React from 'react';
+import autobind from 'autobind-decorator';
+import BasicComp from '../BasicComp';
+
+export default class List extends BasicComp {
+	constructor(props) {
 		super(props);
 
 		if(this.listId == undefined && this.props.search == undefined) {
@@ -12,24 +15,14 @@ class List extends BasicComp {
 		this.state = { list_info: {}, profiles: [], page: 0 };
 		this.filterName = ['All', 'Ban', 'No Ban'];
 
-		this.actionChangePage = this.actionChangePage.bind(this);
-		this.displayPerPage = this.displayPerPage.bind(this);
-		this.displaySimilar = this.displaySimilar.bind(this);
-		this.toggleFilterButton = this.toggleFilterButton.bind(this);
-		this.submitManyUsersToServer = this.submitManyUsersToServer.bind(this);
-		this.submitSubscriptionToServer = this.submitSubscriptionToServer.bind(this);
-		this.submitUnsubscriptionToServer = this.submitUnsubscriptionToServer.bind(this);
-		this.submitDeleteUserToServer = this.submitDeleteUserToServer.bind(this);
 		this.updateListTitle = this.updateListTitle.bind(this);
 	}
 
-	componentDidMount()
-	{
+	componentDidMount() {
 		this.fetchList();
 	}
 
-	componentWillUnmount()
-	{
+	componentWillUnmount() {
 		super.componentWillUnmount();
 
 		if(this.props.updateCurrentList !== undefined)
@@ -38,8 +31,7 @@ class List extends BasicComp {
 		}
 	}
 
-	fetchList()
-	{
+	fetchList() {
 		let url;
 
 		if(this.listId != undefined) url = '/api/v1/list/'+this.listId;
@@ -65,23 +57,20 @@ class List extends BasicComp {
 		});
 	}
 
-	componentWillReceiveProps(props)
-	{
+	componentWillReceiveProps(props) {
 		this.updateListTitle(props.parentState.listInfo);
 	}
 
-	get listId()
-	{
+	get listId() {
 		return this.props.params == undefined ? undefined : this.props.params.splat;
 	}
 
-	componentDidUpdate()
-	{
+	componentDidUpdate() {
 		$('[data-toggle="tooltip"]').tooltip()
 	}
 
-	updateListTitle(newData)
-	{
+	@autobind
+	updateListTitle(newData) {
 		this.state.list_info = $.extend({}, this.state.list_info, {
 			title: newData.title,
 			privacy: newData.privacy
@@ -90,8 +79,8 @@ class List extends BasicComp {
 		this.setState(this.state);
 	}
 
-	submitDeleteUserToServer(profile)
-	{
+	@autobind
+	submitDeleteUserToServer(profile) {
 		this.request.submitDeleteUserToServer = $.ajax({
 			url: '/api/v1/list/delete',
 			dataType: 'json',
@@ -117,8 +106,8 @@ class List extends BasicComp {
 		});
 	}
 
-	submitSubscriptionToServer(button)
-	{
+	@autobind
+	submitSubscriptionToServer(button) {
 		button.prop('disabled', true);
 
 		this.request.submitSubscriptionToServer = $.ajax({
@@ -143,8 +132,8 @@ class List extends BasicComp {
 
 	}
 
-	submitUnsubscriptionToServer(button)
-	{
+	@autobind
+	submitUnsubscriptionToServer(button) {
 		button.prop('disabled', true);
 
 		this.request.submitUnsubscriptionToServer = $.ajax({
@@ -169,8 +158,8 @@ class List extends BasicComp {
 		});
 	}
 
-	submitManyUsersToServer(data)
-	{
+	@autobind
+	submitManyUsersToServer(data) {
 		this.request.submitManyUsersToServer = $.ajax({
 			url: '/api/v1/list/add/many',
 			dataType: 'json',
@@ -190,13 +179,13 @@ class List extends BasicComp {
 		});
 	}
 
-	actionChangePage(page)
-	{
+	@autobind
+	actionChangePage(page) {
 		this.setState($.extend({}, this.state, {page: page}));
 	}
 
-	displaySimilar(e)
-	{
+	@autobind
+	displaySimilar(e) {
 		let input = e.target;
 		let searchValue = input.value;
 
@@ -205,8 +194,8 @@ class List extends BasicComp {
 		this.sortFilters();
 	}
 
-	toggleFilterButton()
-	{
+	@autobind
+	toggleFilterButton() {
 		if(this.filter == undefined) this.filter = 0;
 
 		this.filter++;
@@ -217,8 +206,7 @@ class List extends BasicComp {
 		this.sortFilters();
 	}
 
-	sortFilters()
-	{
+	sortFilters() {
 		let searchValue, filter;
 		let profiles = [];
 
@@ -249,8 +237,8 @@ class List extends BasicComp {
 		this.setState($.extend({}, this.state, {profiles: profiles}));
 	}
 
-	displayPerPage(e)
-	{
+	@autobind
+	displayPerPage(e) {
 		let input = e.target;
 		let perPageValue = input.value;
 
@@ -262,8 +250,7 @@ class List extends BasicComp {
 		this.actionChangePage(0);
 	}
 
-	render()
-	{
+	render() {
 		let listInfo, profiles, page, author, privacy, listDetails,
 			sortedList, listElement, eListAction, storageDisplayPerPage;
 
@@ -319,13 +306,13 @@ class List extends BasicComp {
 						<label className="label-control">
 							<strong>Toggle Filter List</strong>
 						</label>
-						<button className="btn btn-block form-control btn-filter-list" onClick={this.toggleFilterButton}>Show: All</button>
+						<button className="btn btn-block form-control btn-filter-list" onClick={ this.toggleFilterButton }>Show: All</button>
 					</div>
 				</div>
 			</div>
 		];
 
-		if(authCheck)
+		if(this.authCheck)
 		{
 			if(this.props.search != undefined)
 			{
@@ -651,10 +638,10 @@ class DisplayPage extends BasicComp {
 		{
 			let auth, specialColors, profile_description;
 
-			if(authCheck) {
+			if(this.authCheck) {
 				if(listInfo.my_list) {
 					auth = (
-						<span className="pointer userListModify open-addUserModal" onClick={this.sendDeleteUserFromList.bind(this, profile)} data-id={ profile.id }>
+						<span className="pointer userListModify open-addUserModal" onClick={ this.sendDeleteUserFromList.bind(this, profile) } data-id={ profile.id }>
 							<span className="fa fa-minus faText-align text-danger"></span>
 						</span>
 					);
