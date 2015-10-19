@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel {
 		'VacStatus\Console\Commands\UpdateMultiAlias',
 		'VacStatus\Console\Commands\ListChecker',
 		'VacStatus\Console\Commands\profileBanConvert',
+		'VacStatus\Console\Commands\announce',
 	];
 
 	/**

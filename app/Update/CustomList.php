@@ -1,4 +1,6 @@
-<?php namespace VacStatus\Update;
+<?php
+
+namespace VacStatus\Update;
 
 use Cache;
 use Carbon;
@@ -56,9 +58,7 @@ class CustomList
 
 	public function myList()
 	{
-		if(Auth::check() && $this->userList->user_id == Auth::user()->id) return true;
-
-		return false;
+		return (Auth::check() && $this->userList->user_id == Auth::user()->id);
 	}
 
 	public function getCustomList()
@@ -66,48 +66,7 @@ class CustomList
 		if($this->error()) return $this->error();
 		$userList = $this->userList;
 
-		$userListProfiles = UserList::where('user_list.id', $userList->id)
-			->leftjoin('user_list_profile as ulp_1', 'ulp_1.user_list_id', '=', 'user_list.id')
-			->whereNull('ulp_1.deleted_at')
-			->leftJoin('user_list_profile as ulp_2', function($join)
-			{
-				$join->on('ulp_2.profile_id', '=', 'ulp_1.profile_id')
-					->whereNull('ulp_2.deleted_at');
-			})
-			->leftjoin('profile', 'ulp_1.profile_id', '=', 'profile.id')
-			->leftjoin('profile_ban', 'profile.id', '=', 'profile_ban.profile_id')
-			->leftjoin('users', 'profile.small_id', '=', 'users.small_id')
-			->leftJoin('subscription', function($join)
-			{
-				$join->on('subscription.user_list_id', '=', 'user_list.id')
-					->whereNull('subscription.deleted_at');
-			})->groupBy('profile.id')
-			->orderBy('ulp_1.id', 'desc')
-			->get([
-		      	'ulp_1.profile_name',
-		      	'ulp_1.profile_description',
-		      	'ulp_1.created_at as added_at',
-
-				'profile.id',
-				'profile.display_name',
-				'profile.avatar_thumb',
-				'profile.small_id',
-
-				'profile_ban.vac_bans',
-				'profile_ban.game_bans',
-				'profile_ban.last_ban_date',
-				'profile_ban.community',
-				'profile_ban.trade',
-
-				'users.site_admin',
-				'users.donation',
-				'users.beta',
-
-				\DB::raw('max(ulp_1.created_at) as created_at'),
-				\DB::raw('count(distinct ulp_2.user_list_id) as total'),
-				\DB::raw('count(distinct subscription.id) as sub_count'),
-			]);
-
+		$userListProfiles = UserList::getListProfiles($userList->id);
 
 		$canSub = false;
 		$subscription = null;
@@ -123,6 +82,8 @@ class CustomList
 			   ($userMail->verify == "verified" || $userMail->pushbullet_verify == "verified")) $canSub = true;
 		}
 
+		$multiProfile = new MultiProfile($userListProfiles, $userList->id);
+
 		$return = [
 			'list_info' => [
 				'id'			=> $userList->id,
@@ -134,39 +95,8 @@ class CustomList
 				'privacy'		=> $userList->privacy,
 				'sub_count'		=> isset($userListProfiles[0]) ? $userListProfiles[0]->sub_count : 0,
 			],
-			'profiles'			=> [],
+			'profiles'			=> $multiProfile->run(),
 		];
-
-		foreach($userListProfiles as $userListProfile)
-		{
-			if(is_null($userListProfile->id)) continue;
-			$lastBanDate = new DateTime($userListProfile->last_ban_date);
-
-			$return['profiles'][] = [
-				'id'					=> $userListProfile->id,
-				'display_name'			=> $userListProfile->profile_name?:$userListProfile->display_name,
-				'avatar_thumb'			=> $userListProfile->avatar_thumb,
-				'small_id'				=> $userListProfile->small_id,
-				'steam_64_bit'			=> Steam::to64Bit($userListProfile->small_id),
-				'vac_bans'				=> $userListProfile->vac_bans,
-				'game_bans'				=> $userListProfile->game_bans,
-				'last_ban_date'			=> $lastBanDate->format("M j Y"),
-				'community'				=> $userListProfile->community,
-				'trade'					=> $userListProfile->trade,
-				'site_admin'			=> (int) $userListProfile->site_admin?:0,
-				'donation'				=> (int) $userListProfile->donation?:0,
-				'beta'					=> (int) $userListProfile->beta?:0,
-				'profile_description'	=> $userListProfile->profile_description,
-				'added_at'				=> (new DateTime($userListProfile->added_at))->format("M j Y"),
-				'times_added'			=> [
-					'number'	=> $userListProfile->total,
-					'time'		=> (new DateTime($userListProfile->created_at))->format("M j Y")
-				],
-			];
-		}
-
-		$multiProfile = new MultiProfile($return['profiles'], $userList->id);
-		$return['profiles'] = $multiProfile->run();
 
 		return $return;
 	}

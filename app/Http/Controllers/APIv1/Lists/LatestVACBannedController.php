@@ -13,7 +13,7 @@ class LatestVACBannedController extends Controller
 
 		$return = [
 			'list_info' => [ 'title' => 'Latest VAC Banned Users' ],
-			'profiles' => $latestVac->getLatestVAC()
+			'profiles' => $latestVac->getList()
 		];
 
 		return $return;

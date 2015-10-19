@@ -1,10 +1,14 @@
-<?php namespace VacStatus\Models;
+<?php
+
+namespace VacStatus\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class DonationPerk extends Model
 {
 	protected $table = 'donation_perk';
+
+	protected $hidden = ['created_at', 'updated_at'];
 
 	public function getAmount()
 	{

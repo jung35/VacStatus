@@ -13,7 +13,7 @@ class LatestTrackedController extends Controller
 
 		$return = [
 			'list_info' => [ 'title' => 'Latest Tracked Users' ],
-			'profiles' => $latestTracked->getLatestTracked()
+			'profiles' => $latestTracked->getList()
 		];
 
 		return $return;

@@ -1,9 +1,12 @@
-<?php namespace VacStatus\Models;
+<?php
+
+namespace VacStatus\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 use DateTime;
 use DateInterval;
+use Carbon;
 
 class ProfileBan extends Model
 {
@@ -13,7 +16,7 @@ class ProfileBan extends Model
 	
 	protected $dates = ['last_ban_date'];
 
-	public $timestamps = true;
+	public $timestamps = false;
 
 	public function Profile()
 	{

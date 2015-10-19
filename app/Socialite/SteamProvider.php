@@ -8,6 +8,7 @@ use Laravel\Socialite\Two\User;
 
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\TransferException;
 
 class SteamProvider extends AbstractProvider implements ProviderInterface
 {
@@ -54,12 +55,7 @@ class SteamProvider extends AbstractProvider implements ProviderInterface
 	{
 		$url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/";
 
-		$params = [
-			'key'      => env('STEAM_API'),
-			'steamids' => $token,
-		];
-
-		$response = $this->getHttpClient()->get($url . '?' . http_build_query($params), [
+		$response = $this->getHttpClient()->get($url . '?' . http_build_query([ 'key' => env('STEAM_API'), 'steamids' => $token ]), [
 			'headers' => [ 'Accept' => 'application/json' ]
 		]);
 

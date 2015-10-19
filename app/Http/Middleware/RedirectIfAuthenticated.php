@@ -1,4 +1,6 @@
-<?php namespace VacStatus\Http\Middleware;
+<?php
+
+namespace VacStatus\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;

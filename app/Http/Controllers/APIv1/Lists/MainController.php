@@ -76,20 +76,7 @@ class MainController extends Controller
 				DB::raw('count(DISTINCT subscription.id) as sub_count'),
 			]);
 
-		foreach($myLists as $myList)
-		{
-			$return[] = [
-				'id'			=> $myList->id,
-				'title'			=> $myList->title,
-				'privacy'		=> $myList->privacy,
-				'created_at'	=> $myList->created_at->format("M j Y"),
-				
-				'users_in_list'	=> $myList->users_in_list,
-				'sub_count'		=> $myList->sub_count,
-			];
-		}
-
-		return $return;
+		return $myLists;
 	}
 
 	private function getManyListsDetailed($smallIds)

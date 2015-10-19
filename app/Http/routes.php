@@ -1,6 +1,6 @@
 <?php
 
-get('/', [ 'as' => 'home', 'uses' => 'PagesController@indexPage' ]);
+post('/search', [ 'as' => 'search', 'uses' => 'DisplayController@searchPage' ]);
 
 Route::group(['prefix' => 'auth'], function()
 {
@@ -8,36 +8,6 @@ Route::group(['prefix' => 'auth'], function()
 	get('/check', [ 'as' => 'auth.check', 'uses' => 'LoginController@handleSteamLogin' ]);
 	get('/logout', [ 'middleware' => 'auth', 'as' => 'auth.logout', 'uses' => 'LoginController@logout' ]);
 });
-
-Route::group(['prefix' => 'list'], function()
-{
-	get('/', [ 'as' => 'list.list', 'uses' => 'PagesController@listListPage' ]);
-	get('/most', [ 'as' => 'tracked.most', 'uses' => 'PagesController@mostTrackedPage' ]);
-
-	Route::group(['prefix' => 'latest'], function()
-	{
-		get('/', [ 'as' => 'tracked.latest', 'uses' => 'PagesController@latestTrackedPage' ]);
-		get('/vac', [ 'as' => 'tracked.latest.vac', 'uses' => 'PagesController@latestVACPage' ]);
-		get('/game', [ 'as' => 'tracked.latest.game', 'uses' => 'PagesController@latestGameBanPage' ]);
-	});
-
-	get('/{listId}', [ 'as' => 'tracked.custom', 'uses' => 'PagesController@customListPage' ]);
-});
-
-get('/u/{steamid}', [ 'as' => 'profile', 'uses' => 'PagesController@profilePage' ]);
-get('/news/{p?}', [ 'as' => 'news', 'uses' => 'PagesController@newsPage']);
-get('/privacy', [ 'as' => 'privacy', 'uses' => 'PagesController@privacyPage' ]);
-get('/contact', [ 'as' => 'contact', 'uses' => 'PagesController@contactPage' ]);
-get('/donate', [ 'as' => 'donate', 'uses' => 'PagesController@donatePage' ]);
-
-post('/search', [ 'as' => 'search', 'uses' => 'PagesController@searchPage' ]);
-
-Route::group(['prefix' => 'settings'], function()
-{
-	get('/', [ 'middleware' => 'auth', 'as' => 'settings', 'uses' => 'SettingsController@subscriptionPage' ]);
-	get('/subscribe/{email}/{verify}', [ 'as' => 'settings.subscription.verify', 'uses' => 'SettingsController@subscriptionVerify' ]);
-});
-
 
 /**
  * API ROUTING STARTS HERE
@@ -47,6 +17,8 @@ Route::group(['prefix' => 'api'], function()
 {
 	Route::group(['prefix' => 'v1', 'namespace' => 'APIv1'], function()
 	{
+		get('/', [ 'uses' => 'MainController@index']);
+		get('/me', [ 'uses' => 'MainController@navbar']);
 		get('/profile/{steamid}', [ 'uses' => 'ProfileController@index' ]);
 		get('/search/{searchKey}', [ 'uses' => 'SearchController@search' ]);
 
@@ -59,8 +31,8 @@ Route::group(['prefix' => 'api'], function()
 			get('/simple', [ 'uses' => 'MainController@myLists' ]);
 			get('/most', [ 'uses' => 'MostTrackedController@get' ]);
 			get('/latest', [ 'uses' => 'LatestTrackedController@get' ]);
-			get('/latest_vac', [ 'uses' => 'LatestVACBannedController@get' ]);
-			get('/latest_game_ban', [ 'uses' => 'LatestGameBannedController@get' ]);
+			get('/latest/vac', [ 'uses' => 'LatestVACBannedController@get' ]);
+			get('/latest/game', [ 'uses' => 'LatestGameBannedController@get' ]);
 			get('/{userList}', [ 'uses' => 'CustomListController@get' ]);
 
 			Route::group(['middleware' => 'auth'], function()
@@ -100,6 +72,7 @@ Route::group(['prefix' => 'api'], function()
 			Route::group(['prefix' => 'subscribe'], function()
 			{
 				get('/', [ 'uses' => 'SettingsController@subscribeIndex' ]);
+				get('/{email}/{code}', [ 'uses' => 'SettingsController@subscriptionVerify' ]);
 				post('/', [ 'uses' => 'SettingsController@makeSubscription' ]);
 				delete('/email', [ 'uses' => 'SettingsController@deleteEmail' ]);
 				delete('/pushbullet', [ 'uses' => 'SettingsController@deletePushBullet' ]);
@@ -142,12 +115,21 @@ Route::group([
 		post('/{newsId?}', [ 'as' => 'admin.news.save', 'uses' => 'NewsController@saveNews' ]);
 		delete('/{news}', [ 'as' => 'admin.news.delete', 'uses' => 'NewsController@delete' ]);
 	});
+
+	Route::group(['prefix' => 'announcement'], function()
+	{
+		get('/', [ 'as' => 'admin.announcement', 'uses' => 'AnnouncementController@index' ]);
+	});
 });
 
 Route::model('userList', 'VacStatus\Models\UserList', function() { return ['error' => '404']; });
 Route::model('news', 'VacStatus\Models\News', function() { return ['error' => '404']; });
 
-// Event::listen('illuminate.query', function($query)
-// {
-//     var_dump($query);
-// });
+Route::any('{undefinedRoute}', function ($undefinedRoute) {
+    return view('app');
+})->where('undefinedRoute', '([A-z\d-\/_.]+)?');
+
+Event::listen('illuminate.query', function($query)
+{
+    // var_dump($query);
+});

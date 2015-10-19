@@ -1,26 +1,28 @@
-<?php namespace VacStatus\Models;
+<?php
+
+namespace VacStatus\Models;
 
 use Illuminate\Database\Eloquent\Model;
+
+use Michelf\Markdown;
+use Carbon;
 
 class News extends Model
 {
 	protected $table = 'news';
 
-	public function getPrev()
+	public function getBodyAttribute($body)
 	{
-		$prevNews = News::find($this->id - 1);
-
-		if(!isset($prevNews->id)) return '';
-
-		return '<a href="/news/'.$prevNews->id.'">&#8606; '.$prevNews->title.'</a>';
+		return Markdown::defaultTransform($body);
 	}
 
-	public function getNext()
+	public function getCreatedAtAttribute($createdAt)
 	{
-		$nextNews = News::find($this->id + 1);
+		return (new Carbon($createdAt))->format("M j Y");
+	}
 
-		if(!isset($nextNews->id)) return '';
-
-		return '<a href="/news/'.$nextNews->id.'">'.$nextNews->title.' &#8608;</a>';
+	public function scopeLatest($query, $amount = 2)
+	{
+		return $query->orderBy('id', 'desc')->take($amount)->get();
 	}
 }

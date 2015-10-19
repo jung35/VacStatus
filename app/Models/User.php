@@ -1,19 +1,29 @@
-<?php namespace VacStatus\Models;
+<?php
+
+namespace VacStatus\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 
 use VacStatus\Steam\Steam;
 
-class User extends Model implements AuthenticatableContract
+class User extends Model implements AuthenticatableContract, AuthorizableContract
 { 
-	use Authenticatable;
+	use Authenticatable, Authorizable;
 
 	protected $table = 'users';
-
 	protected $fillable = ['small_id'];
+	protected $hidden = ['remember_token', 'user_key'];
+    protected $casts = [
+    	// users.*
+        'site_admin' => 'integer', 
+        'donation' => 'integer',
+        'beta' => 'integer',
+    ];
 
 	public function isAdmin()
 	{
@@ -38,6 +48,34 @@ class User extends Model implements AuthenticatableContract
 	public function UserMail()
 	{
 		return $this->hasOne('VacStatus\Models\UserMail');
+	}
+
+	public function scopeMostDonation($query, $amount = 10)
+	{
+		return $query->where('donation', '>', '0')
+			->orderBy('donation', 'desc')
+			->take(10)
+			->get([
+				'users.display_name',
+				'users.small_id',
+
+				'users.donation',
+				'users.beta',
+				'users.site_admin',
+			]);
+	}
+
+	public function toArray()
+	{
+		$array = parent::toArray();
+		$array['steam_64_bit'] = $this->steam_64_bit;
+
+		return $array;
+	}
+
+	public function getSteam64BitAttribute()
+	{
+		return Steam::to64Bit($this->small_id);
 	}
 
 	public function getSteam3Id()

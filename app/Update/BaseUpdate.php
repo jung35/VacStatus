@@ -1,4 +1,6 @@
-<?php namespace VacStatus\Update;
+<?php
+
+namespace VacStatus\Update;
 
 use Cache;
 use Carbon;
@@ -10,9 +12,7 @@ class BaseUpdate
 
 	protected function canUpdate()
 	{
-		if(Cache::has($this->cacheName)) return false;
-
-		return true;
+		return Cache::has($this->cacheName);
 	}
 
 	protected function updateCache($data)
@@ -26,9 +26,7 @@ class BaseUpdate
 
 	protected function grabCache()
 	{
-		if(Cache::has($this->cacheName)) return Cache::get($this->cacheName);
-
-		return false;
+		return Cache::has($this->cacheName) ? Cache::get($this->cacheName) : false;
 	}
 
 	protected function error($reason)

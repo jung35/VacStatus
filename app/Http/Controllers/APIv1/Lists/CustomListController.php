@@ -12,6 +12,7 @@ use VacStatus\Update\CustomList;
 use VacStatus\Update\MultiProfile;
 
 use VacStatus\Steam\Steam;
+use VacStatus\Steam\SteamUser;
 
 use Auth;
 use DB;
@@ -263,36 +264,16 @@ class CustomListController extends Controller
 				DB::raw('count(DISTINCT subscription.id) as sub_count'),
 			]);
 
-		foreach($myLists as $myList)
-		{
-			$return[] = [
-				'id'			=> $myList->id,
-				'title'			=> $myList->title,
-				'privacy'		=> $myList->privacy,
-				'created_at'	=> $myList->created_at->format("M j Y"),
-				
-				'users_in_list'	=> $myList->users_in_list,
-				'sub_count'		=> $myList->sub_count,
-			];
-		}
-
-		return $return;
+		return $myLists;
 	}
 
 	private function findValidProfiles($search)
 	{
 		if(!is_array($search)) return $this->error('search_invalid');
 
-		$validProfile = [];
+		$validProfile = (new SteamUser($search))->fetch();
 
-		foreach($search as $potentialProfile)
-		{
-			$steam3Id = Steam::findUser($potentialProfile);
-
-			if(isset($steam3Id['success'])) {
-				$validProfile[] = $steam3Id['success'];
-			}
-		}
+		if(!is_array($validProfile)) return $this->error($validProfile);
 
 		return Steam::toSmallId($validProfile);
 	}

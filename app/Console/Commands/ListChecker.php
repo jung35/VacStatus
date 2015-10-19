@@ -1,4 +1,6 @@
-<?php namespace VacStatus\Console\Commands;
+<?php
+
+namespace VacStatus\Console\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -37,7 +39,7 @@ class ListChecker extends Command
 		{
 			if(!in_array($subscriptionCheck->errorMessage(), ['no_small_ids_found', 'nothing_to_notify']))
 			{
-				$log->error('ListChecker', [
+				$log->error('VacStatus\Console\Commands\ListChecker', [
 					'userMail ID' => $subscriptionCheck->setSubscription(),
 					'message' => $subscriptionCheck->errorMessage()
 				]);
@@ -55,7 +57,7 @@ class ListChecker extends Command
 				$message->to($email)->subject('Bans were found from your subscribed lists!');
 			});
 
-			$log->info('ListChecker', [
+			$log->info('VacStatus\Console\Commands\ListChecker', [
 			    'type' => 'sendEmail',
 				'email' => $email,
 			]);
@@ -76,7 +78,7 @@ class ListChecker extends Command
 			$message .= (count($profiles) > 1 ? " were " : " was")." VAC banned or Game banned from your lists";
 			$pushbullet->user($email)->note("Bans were found from your subscribed lists!", $message);
 
-			$log->info('ListChecker', [
+			$log->info('VacStatus\Console\Commands\ListChecker', [
 			    'type' => 'sendPushBullet',
 				'email' => $email,
 			]);
