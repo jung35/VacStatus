@@ -6,6 +6,8 @@ use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use VacStatus\Models\User;
 
+use Input;
+
 class Authenticate {
 
 	/**
@@ -37,24 +39,22 @@ class Authenticate {
 	{
 		if ($this->auth->guest())
 		{
-			if ($request->ajax()) return response('Unauthorized.', 401);
-			else {
-				$thisRoute = explode('.', $request->route()->getName());
-				if($thisRoute[0] == 'api')
-				{
-					$userKey = $request->input('_key');
-					if($userKey && !empty($userKey))
-					{
-						$user = User::where('user_key', $userKey)->first();
 
-						if(isset($user->id)) return $next($request);
-					}
-					return ['error' => 'forbidden'];
+			$thisRoute = explode('/', $request->route()->getURI());
+			if($thisRoute[0] == 'api')
+			{
+				if(Input::has('_key'))
+				{
+					$user = User::where('user_key', Input::get('_key'))->first();
+
+					if(isset($user->id)) return $next($request);
 				}
 
-				return redirect()->guest('auth/login');
+				return Response()->json(['error' => 'forbidden'], 403);
 			}
-		}
+
+			return redirect()->guest('auth/login');
+		} 
 
 		return $next($request);
 	}

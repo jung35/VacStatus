@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<link href='http://fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>
 
 		<style>
 			body {
@@ -8,9 +8,9 @@
 				padding: 0;
 				width: 100%;
 				height: 100%;
-				color: #B0BEC5;
+				background: #212121;
+				color: #fff;
 				display: table;
-				font-weight: 100;
 				font-family: 'Lato';
 			}
 
@@ -34,7 +34,7 @@
 	<body>
 		<div class="container">
 			<div class="content">
-				<div class="title">Website is being pushed with new changes. Be right back.</div>
+				<div class="title">VacStatus is being pushed with new changes<br>Be right back</div>
 			</div>
 		</div>
 	</body>

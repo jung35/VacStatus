@@ -2,18 +2,7 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var babelify = require('babelify');
 var source = require('vinyl-source-stream');
-
-var scripts = [
-	'Notify.js',
-	'App.js',
-	'BasicComp.js',
-	'ListHandler.js',
-
-	'partials',
-	'pages',
-
-	'Router.js',
-]
+var less = require('gulp-less');
 
 gulp.task('scripts', function() {
 	browserify('resources/assets/js/main.js')
@@ -23,13 +12,15 @@ gulp.task('scripts', function() {
 		.pipe(gulp.dest('public/js'))
 });
 
-gulp.task('watch', function() {
-	gulp.watch('resources/assets/js/**/*.js', ['scripts']);
+gulp.task('less', function () {
+	return gulp.src('resources/assets/less/app.less')
+		.pipe(less())
+		.pipe(gulp.dest('public/css'));
 });
 
-gulp.task('default', ['watch', 'scripts']);
+gulp.task('watch', function() {
+	gulp.watch('resources/assets/js/**/*.js', ['scripts']);
+	gulp.watch('resources/assets/less/**/*.less', ['less']);
+});
 
-// elixir(function(mix) {
-// 	mix.less('app.less');
-// 	mix.babel(scripts).browserify('all.js', null, 'public/js');
-// });
+gulp.task('default', ['watch', 'scripts', 'less']);

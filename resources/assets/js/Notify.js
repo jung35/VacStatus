@@ -21,6 +21,10 @@ export default class Notify {
 		return this.add('success', message);
 	}
 
+	warning(message) {
+		return this.add('warning', message);
+	}
+	
 	danger(message) {
 		return this.add('danger', message);
 	}
@@ -54,7 +58,7 @@ export default class Notify {
 			}, 500, () =>
 			{
 				item.remove();
-				if(this.interval == 0 && typeof callback == 'function') {
+				if(this.interval === 0 && typeof callback === 'function') {
 					callback();
 				}
 			});

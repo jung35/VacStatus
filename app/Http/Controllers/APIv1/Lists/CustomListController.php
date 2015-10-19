@@ -12,6 +12,7 @@ use VacStatus\Update\CustomList;
 use VacStatus\Update\MultiProfile;
 
 use VacStatus\Steam\Steam;
+use VacStatus\Steam\SteamUser;
 
 use Auth;
 use DB;

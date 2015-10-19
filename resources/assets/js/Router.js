@@ -18,8 +18,12 @@ export default (
 			<Route path="list/*" component={ Pages.List }/>
 			<Route path="u/:steamId" component={ Pages.Profile }/>
 			<Route path="search/:searchId" component={ Pages.Search }/>
-			<Route path="donate" component={ Pages.Home }/>
+			<Route path="donate" component={ Pages.Donate }/>
 			<Route path="privacy" component={ Pages.Privacy }/>
+			<Route path="settings" component={ Pages.Settings }>
+				<Route path=":email/:code" component={ Pages.settings }/>
+			</Route>
+			<Route path="contact" component={ Pages.Contact }/>
 		</Route>
 	</Router>
 );

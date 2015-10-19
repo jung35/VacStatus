@@ -44,9 +44,9 @@ class SettingsController extends Controller
 		return compact('userMail', 'userLists');
 	}
 
-	public function makeSubscription(Request $request)
+	public function makeSubscription()
 	{
-		if($request->input('_key')) return ['error' => 'forbidden'];
+		if(Input::has('_key')) return ['error' => 'forbidden'];
 
 		$email = Input::get('email');
 		$pushBullet = Input::get('push_bullet');
@@ -104,20 +104,21 @@ class SettingsController extends Controller
 
 		if(!$userMail->save()) return ['error' => 'There was an error trying to save the emails'];
 
-		foreach($sendVerificationTo as $email) {
+		$appURL = env('APP_URL');
+		foreach($sendVerificationTo as $data) {
 			Mail::send('emails.verification', [
-				'email' => $email
-			], function($message) use ($email) {
-				$message->to($email['email'])->subject('Thank you for subscribing!');
+				'url' => "$appURL/settings/" . $data['email'] . "/" . $data['verify'],
+			], function($message) use ($data) {
+				$message->to($data['email'])->subject('Thank you for subscribing!');
 			});
 		}
 
 		return $this->subscribeIndex();
 	}
 
-	public function deleteEmail(Request $request)
+	public function deleteEmail()
 	{
-		if($request->input('_key')) return ['error' => 'forbidden'];
+		if(Input::has('_key')) return ['error' => 'forbidden'];
 
 		$user = Auth::user();
 		$userMail = $user->UserMail;
@@ -130,9 +131,9 @@ class SettingsController extends Controller
 		return $this->subscribeIndex();
 	}
 
-	public function deletePushBullet(Request $request)
+	public function deletePushBullet()
 	{
-		if($request->input('_key')) return ['error' => 'forbidden'];
+		if(Input::has('_key')) return ['error' => 'forbidden'];
 
 		$user = Auth::user();
 		$userMail = $user->UserMail;
@@ -149,12 +150,12 @@ class SettingsController extends Controller
 	{
 		$user = Auth::user();
 
-		return [$user->user_key];
+		return ['key' => $user->user_key];
 	}
 
-	public function newUserKey(Request $request)
+	public function newUserKey()
 	{
-		if($request->input('_key')) return ['error' => 'forbidden'];
+		if(Input::has('_key')) return ['error' => 'forbidden'];
 
 		$user = Auth::user();
 
@@ -169,6 +170,27 @@ class SettingsController extends Controller
 			}
 		}
 
-		return [$user->user_key];
+		return ['key' => $user->user_key];
+	}
+
+	public function subscriptionVerify($email, $code)
+	{
+		$userMail = UserMail::whereRaw('(email = ? and verify = ?) or (pushbullet = ? and pushbullet_verify = ?)', [
+			$email, $code, $email, $code
+		])->first();
+
+		if(!isset($userMail->id)) return 'error';
+
+		if($userMail->email == $email && $userMail->verify == $code)
+		{
+			$userMail->verify = "verified";
+		}
+		else if($userMail->pushbullet == $email && $userMail->pushbullet_verify == $code)
+		{
+			$userMail->pushbullet_verify = "verified";
+		}
+
+		$userMail->save();
+		return 'success';
 	}
 }
