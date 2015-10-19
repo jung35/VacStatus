@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import autobind from 'autobind-decorator';
 import BasicComp from '../../BasicComp';
 import Subscription from './Subscription';
 import UserKey from './UserKey';
@@ -12,11 +13,19 @@ export default class Settings extends BasicComp {
 				<div className="row">
 					<div className="col-xs-12">
 						<h1>Settings</h1>
-						<Subscription params={ this.props.params } />
-						<UserKey />
+						{ this.authCheck ? [
+							<Subscription params={ this.props.params } />,
+							<UserKey />
+						] : this.redirectMe() }
 					</div>
 				</div>
 			</div>
 		)
+	}
+
+	@autobind
+	redirectMe() {
+		window.location.replace("/auth/login");
+		return "Redirecting...";
 	}
 }
