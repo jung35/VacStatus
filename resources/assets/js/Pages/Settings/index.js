@@ -13,10 +13,12 @@ export default class Settings extends BasicComp {
 				<div className="row">
 					<div className="col-xs-12">
 						<h1>Settings</h1>
-						{ this.authCheck ? [
-							<Subscription params={ this.props.params } />,
-							<UserKey />
-						] : this.redirectMe() }
+						{ this.authCheck ? (
+							<div>
+								<Subscription params={ this.props.params } />
+								<UserKey />
+							</div>
+						) : this.redirectMe() }
 					</div>
 				</div>
 			</div>
