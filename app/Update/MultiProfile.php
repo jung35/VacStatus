@@ -353,17 +353,17 @@ class MultiProfile extends BaseUpdate
 
 				if($this->customList)
 				{
-					if($userListProfile->profile_name)
+					if(isset($userListProfile->profile_name))
 					{
 						$return['display_name'] = $userListProfile->profile_name;
 					}
 
-					if($userListProfile->profile_description)
+					if(isset($userListProfile->profile_description))
 					{
 						$return['profile_description'] = $userListProfile->profile_description;
 					}
 
-					if($userListProfile->created_at)
+					if(isset($userListProfile->created_at))
 					{
 						$return['added_at'] = $userListProfile->created_at->format("M j Y");
 					}

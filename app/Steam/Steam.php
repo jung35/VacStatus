@@ -118,7 +118,7 @@ class Steam {
 		$isArray = is_array($values);
 		$max = $isArray ? count($values) : 1;
 
-		$converted = [];
+		$converted = [0];
 
 		for($i = 0; $i < $max; $i++)
 		{
