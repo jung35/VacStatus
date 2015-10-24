@@ -231,7 +231,7 @@ class CustomListController extends Controller
 
 	private function error($message)
 	{
-		$errorMessage = $this->errorMessages[$message];
+		$errorMessage = isset($this->errorMessages[$message]) ? $this->errorMessages[$message] : null;
 		if($errorMessage) return ['error' => $errorMessage];
 
 		return ['error' => $message];
