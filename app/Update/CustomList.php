@@ -2,7 +2,6 @@
 
 namespace VacStatus\Update;
 
-use Cache;
 use Carbon;
 use DateTime;
 use Auth;
