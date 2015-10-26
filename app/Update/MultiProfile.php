@@ -44,9 +44,9 @@ class MultiProfile extends BaseUpdate
 		return array_replace($profiles, $updatedProfiles);
 	}
 
-	protected function canUpdateCache($smallId = 0)
+	protected function hasCache($smallId = 0)
 	{
-		return !Cache::has($this->cacheName . $smallId);
+		return Cache::has($this->cacheName . $smallId);
 	}
 
 	protected function updateCache($smallId = 0, $data = [])
@@ -65,7 +65,7 @@ class MultiProfile extends BaseUpdate
 
 		foreach($this->profiles as $k => $profile)
 		{
-			if(!$this->canUpdateCache($profile['small_id']) && count($profile) != 1) continue;
+			if($this->hasCache($profile['small_id']) && count($profile) != 1) continue;
 
 			$refreshProfiles[] = [
 				'profile_key' => $k,
