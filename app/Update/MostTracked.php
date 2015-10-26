@@ -13,11 +13,8 @@ class MostTracked extends BaseUpdate
 
 	public function getList()
 	{
-		if(!$this->canUpdate())
-		{
-			$return = $this->grabCache();
-			if($return !== false) return $return;
-		}
+		$return = $this->grabCache();
+		if($return !== false) return $return;
 
 		$multiProfile = new MultiProfile($this->grabFromDB());
 		$return = $multiProfile->run();
