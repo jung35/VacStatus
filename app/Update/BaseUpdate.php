@@ -10,14 +10,17 @@ class BaseUpdate
 	protected $cacheName;
 	protected $cacheLength = 60; // in minutes
 
-	protected function canUpdate()
+	protected function canUpdateCache()
 	{
-		return Cache::has($this->cacheName);
+		// false: cache exists
+		// true: cache does not exist
+		// if cache exists, then dont update
+		return !Cache::has($this->cacheName);
 	}
 
 	protected function updateCache($data)
 	{
-		if(Cache::has($this->cacheName)) Cache::forget($this->cacheName);
+		if(!$this->canUpdateCache()) Cache::forget($this->cacheName);
 
 		$expireTime = Carbon::now()->addMinutes($this->cacheLength);
 
@@ -26,7 +29,7 @@ class BaseUpdate
 
 	protected function grabCache()
 	{
-		return Cache::has($this->cacheName) ? Cache::get($this->cacheName) : false;
+		return !$this->canUpdateCache() ? Cache::get($this->cacheName) : false;
 	}
 
 	protected function error($reason)
