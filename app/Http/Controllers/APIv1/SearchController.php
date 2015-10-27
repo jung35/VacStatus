@@ -49,6 +49,14 @@ class SearchController extends Controller
 
 		$profiles = Profile::whereIn('profile.small_id', $smallIds)->getProfileData();
 
+		$duplicateIds = array_merge($smallIds, $profiles->lists('small_id')->toArray());
+		$notFoundIds = array_unique($duplicateIds);
+		$tempProfile = array_map(function($smallId) {
+			return ['small_id' => $smallId];
+		}, $notFoundIds);
+
+		$profiles = array_merge($profiles->toArray(), $tempProfile);
+
 		$multiProfile = new MultiProfile($profiles);
 		$profiles = $multiProfile->run();
 
