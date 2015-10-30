@@ -180,7 +180,7 @@ class MultiProfile extends BaseUpdate
 				 * Dont break, but move on to next profile
 				 * if this one doesnt save for some reason
 				 */
-				$profile = $profiles->where('small_id', $smallId)->first();
+				$profile = $profiles->whereLoose('small_id', $smallId)->first();
 
 				if(is_null($profile))
 				{
