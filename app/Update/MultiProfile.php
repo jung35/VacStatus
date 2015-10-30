@@ -351,7 +351,7 @@ class MultiProfile extends BaseUpdate
 
 				if($this->customList)
 				{
-					if(isset($userListProfile->profile_name))
+					if(isset($userListProfile->profile_name) && !empty($userListProfile->profile_name))
 					{
 						$return['display_name'] = $userListProfile->profile_name;
 					}

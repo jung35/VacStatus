@@ -1,6 +1,5 @@
 <?php namespace VacStatus\Steam;
 
-use VacStatus\Steam\Steam;
 use Cache;
 use Carbon;
 
