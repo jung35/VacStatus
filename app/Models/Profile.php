@@ -118,11 +118,6 @@ class Profile extends Model
 		return (new Carbon($lastAddedAt))->format("M j Y");
 	}
 
-	public function getTotalAttribute($total)
-	{
-		return is_numeric($total) ? $total : 0;
-	}
-
 	public function isPrivate()
 	{
 		return $this->privacy != 3;
