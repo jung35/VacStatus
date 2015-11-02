@@ -33,7 +33,7 @@ Route::group(['prefix' => 'api'], function()
 			get('/latest', [ 'uses' => 'LatestTrackedController@get' ]);
 			get('/latest/vac', [ 'uses' => 'LatestVACBannedController@get' ]);
 			get('/latest/game', [ 'uses' => 'LatestGameBannedController@get' ]);
-			get('/{userList}', [ 'uses' => 'CustomListController@get' ]);
+			get('/{UserList}', [ 'uses' => 'CustomListController@get' ]);
 
 			Route::group(['middleware' => 'auth'], function()
 			{

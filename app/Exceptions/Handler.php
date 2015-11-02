@@ -26,7 +26,7 @@ class Handler extends ExceptionHandler {
 	 */
 	public function report(Exception $e)
 	{
-		if ($e instanceof \Illuminate\Session\TokenMismatchException) return;
+		if ($e instanceof Illuminate\Session\TokenMismatchException) return;
 
 		return parent::report($e);
 	}
@@ -40,22 +40,30 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Exception $e)
 	{
-		if ($e instanceof \Illuminate\Session\TokenMismatchException) {
-			\Log::info('Illuminate\Session\TokenMismatchException', [
-           		'url' => $request->url(),
-           		'inputs' => $request->all(),
-           		'auth' => Auth::check() ? Auth::user()->id : null
-           	]);
-		}
+		$this->recordLog($e, Illuminate\Session\TokenMismatchException, function($e) {
+			return [
+				'url' => $request->url(),
+				'inputs' => $request->all(),
+				'auth' => Auth::check() ? Auth::user()->id : null
+			];
+		});
 
-		if($e instanceof \GuzzleHttp\Exception\TransferException) {
-			\Log::info('GuzzleHttp\Exception\TransferException', [
+		$this->recordLog($e, GuzzleHttp\Exception\TransferException, function($e) {
+			return [
 				'request' => $e->getRequest(),
 				'response' => $e->hasResponse() ? $e->getResponse() : null
-			]);
-		}
+			];
+		});
 
 		return parent::render($request, $e);
+	}
+
+	private function recordLog($e, $exception, $callback)
+	{
+		if($e instanceof $exception)
+		{
+			\Log::info($exception, $callback($e));
+		}
 	}
 
 }

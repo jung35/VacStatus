@@ -169,7 +169,11 @@ class CustomListController extends Controller
 
 		if(!$userListProfile->save()) return $this->error('user_save_error');
 
-		return $this->get(UserList::where('id', $input['list_id'])->first());
+		$userList = UserList::where('id', $input['list_id'])->first();
+
+		if($userList == null || !isset($userList->id)) return $this->error('invalid_list_error');
+
+		return $this->get($userList);
 	}
 
 	public function deleteProfileFromList()
