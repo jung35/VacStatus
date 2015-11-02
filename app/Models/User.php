@@ -23,6 +23,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'site_admin' => 'integer', 
         'donation' => 'integer',
         'beta' => 'integer',
+
+        'original_amount' => 'double',
     ];
 
 	public function isAdmin()

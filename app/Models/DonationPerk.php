@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class DonationPerk extends Model
 {
 	protected $table = 'donation_perk';
+    protected $casts = [
+        'amount' => 'double',
+    ];
 
 	protected $hidden = ['created_at', 'updated_at'];
 
