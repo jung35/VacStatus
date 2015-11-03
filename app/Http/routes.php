@@ -1,5 +1,8 @@
 <?php
 
+Route::model('userList', 'VacStatus\Models\UserList', function() { return ['error' => '404']; });
+Route::model('news', 'VacStatus\Models\News', function() { return ['error' => '404']; });
+
 post('/search', [ 'as' => 'search', 'uses' => 'DisplayController@searchPage' ]);
 
 Route::group(['prefix' => 'auth'], function()
@@ -122,6 +125,7 @@ Route::group([
 	});
 });
 
+Route::model('userList', 'VacStatus\Models\UserList', function() { return ['error' => '404']; });
 Route::any('{undefinedRoute}', function ($undefinedRoute) {
     return view('app');
 })->where('undefinedRoute', '([A-z\d-\/_.]+)?');
