@@ -53,9 +53,7 @@ class CustomListController extends Controller
 
 	public function get(UserList $userList)
 	{
-		if(!isset($userList->id)) {
-			return ['error' => '404'];
-		}
+		if(!isset($userList->id)) return ['error' => '404'];
 
 		$customList = new CustomList($userList);
 		if($customList->error()) return $customList->error();
