@@ -33,7 +33,7 @@ Route::group(['prefix' => 'api'], function()
 			get('/latest', [ 'uses' => 'LatestTrackedController@get' ]);
 			get('/latest/vac', [ 'uses' => 'LatestVACBannedController@get' ]);
 			get('/latest/game', [ 'uses' => 'LatestGameBannedController@get' ]);
-			get('/{UserList}', [ 'uses' => 'CustomListController@get' ]);
+			get('/{userList}', [ 'uses' => 'CustomListController@get' ]);
 
 			Route::group(['middleware' => 'auth'], function()
 			{
@@ -121,9 +121,6 @@ Route::group([
 		get('/', [ 'as' => 'admin.announcement', 'uses' => 'AnnouncementController@index' ]);
 	});
 });
-
-Route::model('userList', 'VacStatus\Models\UserList', function() { return ['error' => '404']; });
-Route::model('news', 'VacStatus\Models\News', function() { return ['error' => '404']; });
 
 Route::any('{undefinedRoute}', function ($undefinedRoute) {
     return view('app');
