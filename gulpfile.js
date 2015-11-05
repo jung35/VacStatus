@@ -23,4 +23,4 @@ gulp.task('watch', function() {
 	gulp.watch('resources/assets/less/**/*.less', ['less']);
 });
 
-gulp.task('default', ['watch', 'scripts', 'less']);
+gulp.task('default', ['scripts', 'less']);
