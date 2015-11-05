@@ -143,11 +143,11 @@ class CustomListController extends Controller
 		$validator = Validator::make($input, $this->addUserValidationParam, $this->messages);
 		if ($validator->fails()) return $this->error($validator->errors()->all()[0]);
 
-		$userListProfile = UserListProfile::where('user_list_id', (int) $input['list_id'])->get();
-
 		$userList = UserList::where('id', $input['list_id'])->first();
 
 		if(Auth::user()->id !== $userList->user_id) return $this->error('invalid_user');
+
+		$userListProfile = UserListProfile::where('user_list_id', (int) $input['list_id'])->get();
 
 		if(Auth::user()->unlockUser() <= $userListProfile->count()) return $this->error('user_reached_max');
 
@@ -176,6 +176,9 @@ class CustomListController extends Controller
 	public function deleteProfileFromList()
 	{
 		$input = Input::all();
+		$userList = UserList::where('id', $input['list_id'])->first();
+
+		if(Auth::user()->id !== $userList->user_id) return $this->error('invalid_user');
 
 		$userListProfile = UserListProfile::where('user_list_id', $input['list_id'])
 			->where('profile_id', $input['profile_id'])
@@ -186,20 +189,21 @@ class CustomListController extends Controller
 			return $this->error('user_delete_error');
 		}
 
-		return $this->get(UserList::where('id', $input['list_id'])->first());
+		return $this->get($userList);
 	}
 
 	public function addManyProfilesToList()
 	{
 		$input = Input::all();
+		$listId = (int) $input['list_id'];
+		$userList = UserList::where('id', $listId)->first();
+
+		if(Auth::user()->id !== $userList->user_id) return $this->error('invalid_user');
 
 		$smallIds = $this->findValidProfiles(Steam::parseSearch($input['search']));
 		if(isset($smallIds['error'])) return $smallIds;
 
 		$this->updateValidProfiles($smallIds);
-
-		$listId = (int) $input['list_id'];
-		$userList = UserList::where('id', $listId)->first();
 
 		$userListProfiles = UserListProfile::whereIn('profile.small_id', $smallIds)
 			->where('user_list_profile.user_list_id', $listId)
