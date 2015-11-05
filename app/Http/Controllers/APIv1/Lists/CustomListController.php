@@ -145,10 +145,11 @@ class CustomListController extends Controller
 
 		$userListProfile = UserListProfile::where('user_list_id', (int) $input['list_id'])->get();
 
-		if(Auth::user()->unlockUser() <= $userListProfile->count())
-		{
-			return $this->error('user_reached_max');
-		}
+		$userList = UserList::where('id', $input['list_id'])->first();
+
+		if(Auth::user()->id !== $userList->user_id) return $this->error('invalid_user');
+
+		if(Auth::user()->unlockUser() <= $userListProfile->count()) return $this->error('user_reached_max');
 
 		$userListProfile = $userListProfile
 			->where('profile_id', (int) $input['profile_id'])
@@ -166,8 +167,6 @@ class CustomListController extends Controller
 		$userListProfile->profile_description = $input['description'];
 
 		if(!$userListProfile->save()) return $this->error('user_save_error');
-
-		$userList = UserList::where('id', $input['list_id'])->first();
 
 		if($userList == null || !isset($userList->id)) return $this->error('invalid_list_error');
 
