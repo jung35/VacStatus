@@ -486,7 +486,7 @@ class ListAction extends BasicComp {
 							</label>
 							<textarea ref="search" className="form-control" rows="10"
 placeholder="2 ways to search: =================================
-- type in steam URL/id/profile and split them in spaces or newlines or both =================================
+- Type in steam URL/id/profile and split them in spaces or newlines or both =================================
 - Type 'status' on console and paste the output here"></textarea>
 						</div>
 						<div className="form-group">

@@ -46,7 +46,7 @@ export default class Footer extends BasicComp {
 											rows="10"
 											className="form-control"
 											placeholder="2 ways to search:
- - type in steam URL/id/profile and split them in spaces or newlines or both
+ - Type in steam URL/id/profile and split them in spaces or newlines or both
  - Type 'status' on console and paste the output here" />
 									</div>
 								</div>
