@@ -387,7 +387,7 @@ export default class List extends BasicComp {
 							</table>
 						</div>
 
-						<ListPagination listChangePage={this.actionChangePage} page={page} list={sortedList}/>
+						<ListPagination listChangePage={ this.actionChangePage } page={page} list={sortedList}/>
 					</div>
 					<div className="col-lg-3">
 						<div className="list-actions visible-lg-block">
@@ -668,7 +668,10 @@ class DisplayPage extends BasicComp {
 					</td>
 					<td className="user_name">
 						{ profile_description } <a className={specialColors} href={"/u/" + profile.steam_64_bit} target="_blank">{profile.display_name}</a>
-						<div className="username_subtext">{ profile.steam_64_bit }{ profile.added_at ? ' — ' + profile.added_at : '' }</div>
+						<div className="username_subtext">
+							<a href={"http://steamcommunity.com/profiles/" + profile.steam_64_bit} target="_blank">{ profile.steam_64_bit }</a>
+							{ profile.added_at ? ' — ' + profile.added_at : '' }
+						</div>
 					</td>
 					<td className="user_last_ban_day text-center">
 						<span className={"text-" + (profile.vac_bans > 0 || profile.game_bans > 0 ? "danger" : "")}>
