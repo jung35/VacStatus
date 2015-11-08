@@ -36,10 +36,11 @@ Route::group(['prefix' => 'api'], function()
 			get('/latest', [ 'uses' => 'LatestTrackedController@get' ]);
 			get('/latest/vac', [ 'uses' => 'LatestVACBannedController@get' ]);
 			get('/latest/game', [ 'uses' => 'LatestGameBannedController@get' ]);
-			get('/{userList}', [ 'uses' => 'CustomListController@get' ]);
 
 			Route::group(['middleware' => 'auth'], function()
 			{
+				get('/friends', [ 'uses' => 'FriendsController@get' ]);
+
 				Route::any('/add/many', [ 'uses' => 'CustomListController@addManyProfilesToList' ]);
 
 				post('/add', [ 'uses' => 'CustomListController@addProfileToList' ]);
@@ -49,6 +50,8 @@ Route::group(['prefix' => 'api'], function()
 				delete('/delete', [ 'uses' => 'CustomListController@deleteProfileFromList' ]);
 				delete('/{userList}', [ 'uses' => 'CustomListController@delete' ]);
 			});
+
+			get('/{userList}', [ 'uses' => 'CustomListController@get' ]);
 		});
 		
 		/**
