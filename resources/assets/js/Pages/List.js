@@ -43,13 +43,24 @@ export default class List extends BasicComp {
 			url: url,
 			dataType: 'json',
 			success: (data) => {
+				if(data.error)
+				{
+					let errorMessage = data.error;
+					$('.table-responsive').find('tbody td').html('<strong><em class="text-danger">Error: '+ errorMessage +'</em></strong>');
+					this.notify.error(errorMessage).run();
+					return;
+				}
+
 				this.setState($.extend({}, this.state, data));
 				this.profiles = data.profiles;
 				
-				if(this.props.updateCurrentList !== undefined)
-				{
-					this.props.updateCurrentList(data.list_info);
-				}
+				if(this.props.updateCurrentList !== undefined) this.props.updateCurrentList(data.list_info);
+			},
+			error: (jqXHR, textStatus, errorThrown) => {
+				let errorMessage = jqXHR.responseJSON.error;
+
+				$('.table-responsive').find('tbody td').html('<strong><em class="text-danger">Error: '+ errorMessage +'</em></strong>');
+				this.notify.error(errorThrown).run();
 			},
 			complete: () => {
 				delete this.request.fetchList;
