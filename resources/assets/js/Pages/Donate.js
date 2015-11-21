@@ -109,7 +109,7 @@ export default class Donate extends BasicComp {
 									<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 										<input type="hidden" name="cmd" value="_donations" />
 										<input type="hidden" name="item_name" value="Donation" />
-										<input type="hidden" name="business" value="jung3o@yahoo.com" />
+										<input type="hidden" name="business" value="hello@jung35.com" />
 										<input type="hidden" name="notify_url" value={ IPNPath } />
 										<input type="hidden" name="return" value={ donatePath } />
 										<input type="hidden" name="rm" value="2" />
