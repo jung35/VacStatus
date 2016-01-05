@@ -49,14 +49,16 @@ class CustomListController extends Controller
 		'user_save_error' => 'There was an error trying to add user to list.',
 		'user_delete_error' => 'There was an error trying to remove user from list.',
 		'search_invalid' => 'Invalid search option.',
+		'forbidden' => 'You do not have permission.',
+		'404' => 'Invalid list.',
 	];
 
 	public function get(UserList $userList)
 	{
-		if(!isset($userList->id)) return ['error' => '404'];
+		if(!isset($userList->id)) return $this->error('404');
 
 		$customList = new CustomList($userList);
-		if($customList->error()) return $customList->error();
+		if($customList->error()) return $this->error($customList->error());
 		
 		return $customList->getCustomList();
 	}
@@ -145,7 +147,7 @@ class CustomListController extends Controller
 
 		$userList = UserList::where('id', $input['list_id'])->first();
 
-		if(Auth::user()->id !== $userList->user_id) return $this->error('invalid_user');
+		if(Auth::user()->id !== $userList->user_id) return $this->error('forbidden');
 
 		$userListProfile = UserListProfile::where('user_list_id', (int) $input['list_id'])->get();
 
@@ -178,7 +180,7 @@ class CustomListController extends Controller
 		$input = Input::all();
 		$userList = UserList::where('id', $input['list_id'])->first();
 
-		if(Auth::user()->id !== $userList->user_id) return $this->error('invalid_user');
+		if(Auth::user()->id !== $userList->user_id) return $this->error('forbidden');
 
 		$userListProfile = UserListProfile::where('user_list_id', $input['list_id'])
 			->where('profile_id', $input['profile_id'])
@@ -198,7 +200,7 @@ class CustomListController extends Controller
 		$listId = (int) $input['list_id'];
 		$userList = UserList::where('id', $listId)->first();
 
-		if(Auth::user()->id !== $userList->user_id) return $this->error('invalid_user');
+		if(Auth::user()->id !== $userList->user_id) return $this->error('forbidden');
 
 		$smallIds = $this->findValidProfiles(Steam::parseSearch($input['search']));
 		if(isset($smallIds['error'])) return $smallIds;

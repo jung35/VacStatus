@@ -39,9 +39,8 @@ class Authenticate {
 	{
 		if ($this->auth->guest())
 		{
-
-			$thisRoute = explode('/', $request->route()->getURI());
-			if($thisRoute[0] == 'api')
+			$thisRoute = explode('/', $request->route()->getURI())[0];
+			if($thisRoute == 'api')
 			{
 				if(Input::has('_key'))
 				{
@@ -50,7 +49,7 @@ class Authenticate {
 					if(isset($user->id)) return $next($request);
 				}
 
-				return Response()->json(['error' => 'forbidden'], 403);
+				return Response()->json(['error' => 'Please Login'], 403);
 			}
 
 			return redirect()->guest('auth/login');

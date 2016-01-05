@@ -130,12 +130,17 @@ export default class ListPortal extends BasicComp {
 		myList = this.renderMyList(this.state.my_list);
 		friendsList = this.renderFriendsList(this.state.friends_list);
 
+		let friends;
+
+		if(this.authCheck) friends = <Link to="/list/friends">Friends</Link>;
+
 		return (
 			<div id="listPortal" className="listPortal-page">
 				<div className="container">
 					<div className="row">
 						<div className="col-xs-12">
 							<div className="special-list">
+								{ friends }
 								<Link to="/list/most">Most Tracked Users</Link>
 								<Link to="/list/latest">Latest Added Users</Link>
 								<Link to="/list/latest/vac">Latest VAC Bans</Link>

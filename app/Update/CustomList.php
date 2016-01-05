@@ -21,7 +21,7 @@ class CustomList
 	{
 		if(!isset($userList->id))
 		{
-			$this->error = "list_invalid";
+			$this->error = "404";
 			return;
 		}
 
@@ -36,14 +36,14 @@ class CustomList
 				$listAuthor = User::whereId($userList->user_id)->first();
 				if(($listAuthor->exists() && !empty($userFriends) && !in_array($listAuthor->small_id, $userFriends) && $userList->privacy == 2) || $userList->privacy == 3)
 				{
-					$this->error = "list_no_permission";
+					$this->error = "forbidden";
 					return;
 				}
 			}
 
 		} else if($userList->privacy == 2 || $userList->privacy == 3)
 		{
-			$this->error = "list_no_permission";
+			$this->error = "forbidden";
 			return;
 		}
 
@@ -52,7 +52,7 @@ class CustomList
 
 	public function error()
 	{
-		return is_null($this->error) ? false : ['error' => $this->error];
+		return is_null($this->error) ? false : $this->error;
 	}
 
 	public function myList()
