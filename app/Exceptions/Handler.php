@@ -40,7 +40,7 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Exception $e)
 	{
-		$this->recordLog($e, \Illuminate\Session\TokenMismatchException, function($e) {
+		$this->recordLog($e, \Illuminate\Session\TokenMismatchException::class, function($e) {
 			return [
 				'url' => $request->url(),
 				'inputs' => $request->all(),
@@ -48,7 +48,7 @@ class Handler extends ExceptionHandler {
 			];
 		});
 
-		$this->recordLog($e, \GuzzleHttp\Exception\TransferException, function($e) {
+		$this->recordLog($e, \GuzzleHttp\Exception\TransferException::class, function($e) {
 			return [
 				'request' => $e->getRequest(),
 				'response' => $e->hasResponse() ? $e->getResponse() : null
